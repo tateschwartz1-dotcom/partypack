@@ -689,7 +689,7 @@ io.on('connection', (socket) => {
   socket.on('create-room', async ({ hostName }) => {
     const pin = generatePIN();
     const localIP = getLocalIP();
-    const playerURL = `http://${localIP}:3000`;
+    const playerURL = process.env.PUBLIC_URL || `http://${localIP}:3000`;
     const qrDataURL = await QRCode.toDataURL(playerURL, { width: 200, margin: 2 });
 
     const hostPlayer = { id: socket.id, name: hostName };
