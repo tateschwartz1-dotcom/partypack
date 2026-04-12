@@ -1,0 +1,2687 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
+  <title>Johnbox Games</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #08041a;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.10) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(76,29,149,0.08) 0%, transparent 50%);
+      color: #ede9f8;
+      font-family: 'Nunito', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+    }
+    body.mafia-phase-discussion {
+      background-color: #06120b;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(34,197,94,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(21,128,61,0.10) 0%, transparent 50%);
+    }
+    body.mafia-phase-voting, body.mafia-phase-revote {
+      background-color: #1a1005;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(245,158,11,0.14) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(180,83,9,0.10) 0%, transparent 50%);
+    }
+    body.mafia-phase-night {
+      background-color: #090514;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.16) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(91,33,182,0.12) 0%, transparent 50%);
+    }
+    body.mafia-phase-day-result {
+      background-color: #18070d;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(225,29,72,0.16) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(190,24,93,0.10) 0%, transparent 50%);
+    }
+    body.mafia-phase-winner-town {
+      background-color: #07140b;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(34,197,94,0.18) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(22,163,74,0.12) 0%, transparent 50%);
+    }
+    body.mafia-phase-winner-killers {
+      background-color: #18070d;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(244,63,94,0.20) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(225,29,72,0.12) 0%, transparent 50%);
+    }
+    body.mafia-phase-winner-joker {
+      background-color: #140917;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(245,158,11,0.16) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(168,85,247,0.12) 0%, transparent 50%);
+    }
+
+    .screen { display: none; text-align: center; width: 100%; max-width: 400px; }
+    .screen.active { display: block; }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 2rem;
+      color: #cfb991;
+      margin-bottom: 0.25rem;
+      text-shadow: 0 0 30px rgba(207,185,145,0.3);
+    }
+    h2 { font-size: 1rem; color: #8b7aa8; margin-bottom: 1.5rem; }
+
+    input {
+      padding: 0.9rem;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      border: 2px solid #2d1f50;
+      background: #0f0a20;
+      color: #ede9f8;
+      width: 100%;
+      text-align: center;
+      margin-bottom: 0.75rem;
+      outline: none;
+      font-family: 'Nunito', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus { border-color: #7c3aed; box-shadow: 0 0 12px rgba(124,58,237,0.22); }
+    input#pin-input { letter-spacing: 0.4rem; font-size: 1.6rem; font-family: 'Cinzel', serif; }
+
+    textarea {
+      padding: 1rem;
+      font-size: 1rem;
+      border-radius: 8px;
+      border: 2px solid #2d1f50;
+      background: #0f0a20;
+      color: #ede9f8;
+      width: 100%;
+      outline: none;
+      resize: none;
+      font-family: 'Nunito', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    textarea:focus { border-color: #7c3aed; box-shadow: 0 0 12px rgba(124,58,237,0.22); }
+
+    .btn {
+      padding: 0.9rem;
+      font-size: 1.05rem;
+      border-radius: 8px;
+      border: none;
+      background: #cfb991;
+      color: #08041a;
+      cursor: pointer;
+      width: 100%;
+      margin-top: 0.6rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn:active { background: #b8995e; }
+    .btn:disabled { background: #2d1f50; color: #5a4a7a; cursor: not-allowed; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #4c1d95;
+      color: #c084fc;
+      padding: 0.5rem 0.9rem;
+      font-size: 0.85rem;
+      width: auto;
+      display: inline-block;
+    }
+    .btn-ghost:active { background: #1a1232; }
+
+    .divider {
+      text-align: center;
+      color: #4a3a6a;
+      font-size: 0.85rem;
+      margin: 0.75rem 0;
+      position: relative;
+    }
+    .divider::before, .divider::after {
+      content: '';
+      position: absolute;
+      top: 50%;
+      width: 42%;
+      height: 1px;
+      background: #2d1f50;
+    }
+    .divider::before { left: 0; }
+    .divider::after { right: 0; }
+
+    .error { color: #c084fc; font-size: 0.9rem; margin-top: 0.75rem; min-height: 1.2rem; }
+
+    /* ── Host-only controls ── */
+    .host-only { display: none; }
+    body.host-mode .host-only { display: block; }
+    .guest-only { display: block; }
+    body.host-mode .guest-only { display: none; }
+
+    /* ── Lobby ── */
+    .lobby-pin-label { font-size: 0.75rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.2rem; }
+    .lobby-pin {
+      font-family: 'Cinzel', serif;
+      font-size: 4rem; font-weight: 900; color: #cfb991;
+      letter-spacing: 0.5rem; line-height: 1; margin-bottom: 0.6rem;
+      text-shadow: 0 0 40px rgba(207,185,145,0.45);
+    }
+    .lobby-qr { margin: 0 auto 0.4rem; }
+    .lobby-qr img { border-radius: 8px; border: 2px solid #2d1f50; display: block; margin: 0 auto; }
+    .lobby-url { font-size: 0.85rem; color: #8b7aa8; margin-bottom: 1rem; }
+    .player-list-label { font-size: 0.75rem; color: #5a4a7a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.6rem; text-align: left; }
+    .player-item {
+      padding: 0.6rem 0.9rem; background: #1a1232; border: 1px solid #2d1f50;
+      border-radius: 8px; margin-bottom: 0.4rem; font-size: 0.95rem;
+      text-align: left; display: flex; align-items: center; justify-content: space-between; gap: 0.5rem;
+    }
+    .player-item.host-item { border-color: #cfb991; }
+    .host-badge { font-size: 0.7rem; color: #cfb991; background: rgba(207,185,145,0.1); padding: 0.15rem 0.5rem; border-radius: 10px; white-space: nowrap; }
+    .start-hint { font-size: 0.85rem; color: #8b7aa8; margin-top: 0.5rem; }
+    .dot { display: inline-block; width: 7px; height: 7px; background: #7c3aed; border-radius: 50%; margin-right: 0.4rem; animation: pulse 1.5s infinite; }
+    @keyframes pulse { 0%, 100% { opacity: 1; } 50% { opacity: 0.3; } }
+    .waiting { font-size: 0.95rem; color: #8b7aa8; margin-top: 1rem; }
+
+    /* ── Game selector ── */
+    .game-list { margin-top: 1rem; }
+    .game-card {
+      background: #1a1232; border-radius: 12px; padding: 1.1rem 1.25rem;
+      cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      border: 2px solid #2d1f50; text-align: left; margin-bottom: 0.75rem;
+      display: flex; align-items: center; gap: 1rem;
+    }
+    .game-card:active { transform: scale(0.98); border-color: #cfb991; box-shadow: 0 6px 20px rgba(207,185,145,0.15); }
+    .game-card.disabled { opacity: 0.4; cursor: not-allowed; }
+    .game-icon { font-size: 2rem; flex-shrink: 0; }
+    .game-title { font-size: 1rem; font-weight: 700; color: #ede9f8; }
+    .game-desc { font-size: 0.8rem; color: #8b7aa8; margin-top: 0.15rem; line-height: 1.3; }
+
+    /* ── Timer bar ── */
+    .timer-bar-wrap { background: #0f0a20; border-radius: 4px; height: 6px; margin: 0.75rem 0; overflow: hidden; border: 1px solid #2d1f50; }
+    .timer-bar { height: 100%; background: linear-gradient(90deg, #4c1d95, #7c3aed, #cfb991); border-radius: 4px; transition: width 1s linear; width: 100%; }
+
+    /* ── Type toggle ── */
+    .type-toggle { display: flex; gap: 0.5rem; margin-bottom: 0.75rem; }
+    .type-btn {
+      flex: 1; padding: 0.7rem; font-size: 0.95rem; border-radius: 8px;
+      border: 2px solid #2d1f50; background: #0f0a20; color: #8b7aa8;
+      cursor: pointer; font-family: 'Nunito', sans-serif; transition: all 0.2s;
+    }
+    .type-btn.active { border-color: #7c3aed; color: #e9d5ff; background: #1a1232; }
+
+    /* ── Submit count ── */
+    .submit-count-wrap { margin-top: 1rem; padding: 0.65rem 1rem; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; font-size: 0.9rem; color: #8b7aa8; }
+    .submit-count-wrap span { color: #cfb991; font-weight: 700; }
+
+    /* ── Q&C watch ── */
+    .watch-label { font-size: 0.75rem; color: #5a4a7a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.4rem; }
+    .watch-name { font-family: 'Cinzel', serif; font-size: 1.9rem; font-weight: 700; color: #cfb991; margin-bottom: 1.25rem; text-shadow: 0 0 25px rgba(207,185,145,0.3); }
+    .watch-reveal-box {
+      background: #1a1232; border: 1px solid #2d1f50; border-radius: 12px;
+      padding: 1.25rem; margin-top: 0.75rem; display: none;
+    }
+    .watch-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #cfb991; margin-bottom: 0.4rem; }
+    .watch-text { font-size: 1.15rem; font-weight: 700; line-height: 1.4; color: #ede9f8; }
+
+    /* ── Your turn ── */
+    .your-turn-label { font-family: 'Cinzel', serif; font-size: 2.4rem; font-weight: 700; color: #cfb991; margin-bottom: 0.4rem; text-shadow: 0 0 30px rgba(207,185,145,0.35); }
+    .your-turn-sub { font-size: 0.95rem; color: #8b7aa8; margin-bottom: 1.25rem; }
+
+    /* ── Spin overlay ── */
+    #spin-overlay {
+      position: fixed; inset: 0; background: rgba(8,4,26,0.93);
+      z-index: 200; display: none;
+      align-items: center; justify-content: center; flex-direction: column;
+    }
+    #spin-overlay-emoji {
+      font-size: 9rem; line-height: 1;
+      transition: transform 0.18s ease, opacity 0.18s ease;
+    }
+    #spin-overlay-label {
+      font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700;
+      color: #cfb991; margin-top: 1.25rem; letter-spacing: 0.05em;
+      opacity: 0; transition: opacity 0.3s ease;
+      text-shadow: 0 0 30px rgba(207,185,145,0.5);
+    }
+
+    /* ── Photo Roulette upload ── */
+    .pr-upload-count { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; color: #cfb991; margin: 0.75rem 0 0.2rem; }
+    .pr-upload-sub { font-size: 0.85rem; color: #8b7aa8; margin-bottom: 1rem; }
+    .pr-total-count { font-size: 0.8rem; color: #5a4a7a; margin-bottom: 0.5rem; }
+    .pr-upload-label {
+      display: block; padding: 0.9rem; font-size: 1.05rem; border-radius: 8px;
+      background: #cfb991; color: #08041a; cursor: pointer; margin-top: 0.6rem;
+      font-family: 'Nunito', sans-serif; font-weight: 700; transition: background 0.2s;
+      text-align: center;
+    }
+    .pr-upload-label:active { background: #b8995e; }
+    .pr-upload-label.disabled { background: #2d1f50; color: #5a4a7a; cursor: not-allowed; pointer-events: none; }
+
+    /* ── Photo Roulette guess ── */
+    .pr-photo-number { font-size: 0.75rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.4rem; }
+    .pr-your-photo-hint {
+      background: rgba(207,185,145,0.1); border: 1px solid rgba(207,185,145,0.3);
+      border-radius: 8px; padding: 0.5rem 0.75rem; font-size: 0.85rem; color: #cfb991;
+      margin-bottom: 0.5rem; display: none;
+    }
+    .pr-guess-count-label { font-size: 0.8rem; color: #5a4a7a; margin: 0.35rem 0; }
+    .pr-guess-btn {
+      padding: 0.75rem 1rem; font-size: 1rem; border-radius: 8px;
+      border: 2px solid #2d1f50; background: #1a1232; color: #ede9f8;
+      cursor: pointer; width: 100%; margin-bottom: 0.4rem;
+      font-family: 'Nunito', sans-serif; font-weight: 600;
+      transition: all 0.15s; text-align: left;
+    }
+    .pr-guess-btn:active { border-color: #7c3aed; background: #1e1540; }
+    .pr-guess-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .pr-guess-ack { min-height: 1.3rem; margin-top: 0.35rem; color: #4ade80; font-size: 0.9rem; }
+
+    /* ── Photo Roulette reveal ── */
+    .pr-reveal-guess-row {
+      display: flex; justify-content: space-between; align-items: center;
+      padding: 0.35rem 0.65rem; border-radius: 6px; margin-bottom: 0.3rem;
+      font-size: 0.85rem;
+    }
+    .pr-reveal-guess-row.correct { background: #0d2b1a; border-left: 3px solid #4ade80; }
+    .pr-reveal-guess-row.wrong { background: #200a1a; border-left: 3px solid #c084fc; }
+    .pr-reveal-guess-row.no-guess { background: #1a1232; color: #5a4a7a; }
+    .pr-my-points { font-size: 1.1rem; margin: 0.5rem 0 0.35rem; }
+
+    /* ── Game over / scores ── */
+    .pr-score-row { display: flex; justify-content: space-between; padding: 0.6rem 0.5rem; border-bottom: 1px solid #2d1f50; font-size: 1rem; }
+    .pr-score-pts { color: #cfb991; font-weight: 700; }
+    .over-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
+
+    .et-topic-list, .et-stats-list { text-align: left; margin-top: 1rem; }
+    .et-topic-row, .et-score-row, .et-stat-row {
+      background: #1a1232; border: 1px solid #2d1f50; border-radius: 10px;
+      padding: 0.8rem 0.95rem; margin-bottom: 0.5rem;
+    }
+    .et-topic-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
+    }
+    .et-topic-name { font-weight: 700; color: #ede9f8; }
+    .et-topic-meta { font-size: 0.82rem; color: #8b7aa8; margin-top: 0.15rem; }
+    .et-status {
+      font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px;
+      color: #cfb991; white-space: nowrap;
+    }
+    .et-answer-btn {
+      width: 100%; padding: 0.9rem 1rem; font-size: 1rem; border-radius: 10px;
+      border: 2px solid #2d1f50; background: #1a1232; color: #ede9f8;
+      cursor: pointer; margin-bottom: 0.5rem; text-align: left; font-family: 'Nunito', sans-serif;
+      font-weight: 700; transition: all 0.15s;
+    }
+    .et-answer-btn:active { transform: scale(0.98); border-color: #cfb991; }
+    .et-answer-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .et-lock-msg { min-height: 1.2rem; color: #4ade80; font-size: 0.92rem; margin-top: 0.4rem; }
+    .et-reveal-row {
+      display: flex; justify-content: space-between; gap: 0.75rem; align-items: center;
+      font-size: 0.9rem; text-align: left;
+    }
+    .et-reveal-row.correct { border-left: 3px solid #4ade80; }
+    .et-reveal-row.wrong { border-left: 3px solid #c084fc; }
+    .et-reveal-row.missed { border-left: 3px solid #5a4a7a; color: #8b7aa8; }
+    .et-score-row {
+      display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;
+    }
+    .et-score-main { display: flex; flex-direction: column; gap: 0.12rem; text-align: left; }
+    .et-score-name { font-weight: 700; }
+    .et-score-sub { font-size: 0.78rem; color: #8b7aa8; }
+    .et-score-total { color: #cfb991; font-weight: 700; }
+    .et-stat-label { color: #8b7aa8; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.2rem; }
+    .et-stat-value { font-size: 1rem; color: #ede9f8; font-weight: 700; }
+    .et-correct-answer-big { font-size: 2.3rem !important; line-height: 1.15; }
+
+    .mafia-wrap {
+      --mafia-accent: #fca5a5;
+      --mafia-accent-strong: #b91c1c;
+      --mafia-accent-soft: #fecaca;
+      --mafia-chip-bg: #2b1020;
+      --mafia-chip-border: #7f1d1d;
+      --mafia-hero-bg: linear-gradient(180deg, #29121d, #160d14);
+      --mafia-hero-border: #7f1d1d;
+      --mafia-card-bg: linear-gradient(180deg, #1a1221, #120c19);
+      --mafia-card-border: #35213e;
+      --mafia-news-bg: linear-gradient(180deg, #3b111a, #210b11);
+      --mafia-news-border: #b91c1c;
+      --mafia-button-bg: #18111f;
+      --mafia-button-selected-bg: linear-gradient(180deg, #2b1320, #180d14);
+      text-align: left;
+      transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
+    }
+    .mafia-dead-mode { filter: grayscale(1); }
+    .mafia-chip {
+      display: inline-block; padding: 0.35rem 0.7rem; border-radius: 999px;
+      background: var(--mafia-chip-bg); color: var(--mafia-accent); border: 1px solid var(--mafia-chip-border); font-size: 0.75rem;
+      letter-spacing: 1.5px; text-transform: uppercase; margin-bottom: 0.9rem;
+    }
+    .mafia-phase-hero {
+      background: var(--mafia-hero-bg);
+      border: 1px solid var(--mafia-hero-border); border-radius: 16px; padding: 1rem 1rem 0.9rem; margin-bottom: 0.8rem; text-align: center;
+      box-shadow: 0 10px 30px rgba(0,0,0,0.22);
+    }
+    .mafia-phase-title { font-family: 'Cinzel', serif; font-size: 2rem; color: #fef2f2; margin-bottom: 0.25rem; }
+    .mafia-phase-timer { color: var(--mafia-accent-soft); font-size: 1rem; font-weight: 800; }
+    .mafia-card, .mafia-player-row, .mafia-vote-row {
+      background: var(--mafia-card-bg);
+      border: 1px solid var(--mafia-card-border); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 0.65rem;
+    }
+    .mafia-news-card {
+      background: var(--mafia-news-bg);
+      border-color: var(--mafia-news-border);
+      color: #fee2e2;
+      box-shadow: 0 8px 24px rgba(0,0,0,0.18);
+      font-size: 1.2rem;
+      font-weight: 800;
+      line-height: 1.35;
+      padding: 1.25rem 1.15rem;
+      text-align: center;
+    }
+    .mafia-news-card.good {
+      background: linear-gradient(180deg, #133a20, #0d2213);
+      border-color: #22c55e;
+      color: #dcfce7;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.2);
+    }
+    .mafia-news-card.bad {
+      background: linear-gradient(180deg, #4a1220, #240d13);
+      border-color: #f43f5e;
+      color: #ffe4e6;
+      box-shadow: 0 12px 30px rgba(244,63,94,0.2);
+    }
+    .mafia-news-card.joker {
+      background:
+        radial-gradient(circle at top, rgba(250,204,21,0.16), transparent 35%),
+        linear-gradient(180deg, #2f123d, #170d22);
+      border-color: #f59e0b;
+      color: #fef3c7;
+      box-shadow: 0 12px 34px rgba(245,158,11,0.22);
+    }
+    .mafia-player-row.dead { opacity: 0.45; text-decoration: line-through; }
+    .mafia-player-row {
+      display: flex; justify-content: space-between; align-items: center; gap: 0.8rem;
+    }
+    button.mafia-player-row { width: 100%; cursor: pointer; text-align: left; }
+    button.mafia-player-row.selected-vote {
+      border-color: var(--mafia-accent); box-shadow: 0 0 0 1px rgba(255,255,255,0.08) inset;
+      background: var(--mafia-button-selected-bg);
+    }
+    .mafia-player-main { display: flex; flex-direction: column; gap: 0.15rem; }
+    .mafia-player-name { font-weight: 800; font-size: 1rem; }
+    .mafia-player-sub { font-size: 0.78rem; color: #a78bfa; }
+    .mafia-count { color: var(--mafia-accent); font-weight: 800; }
+    .mafia-vote-icons { color: var(--mafia-accent); font-size: 0.95rem; letter-spacing: 0.12rem; }
+    .mafia-role-hidden {
+      min-height: 4rem; border: 1px dashed #4b2d57; border-radius: 12px; display: flex;
+      align-items: center; justify-content: center; background: #0f0a16; color: #8b7aa8; padding: 1rem; text-align: center;
+    }
+    .mafia-role-reveal { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #fef2f2; }
+    .mafia-hold-btn {
+      width: 100%; padding: 1rem; border-radius: 12px; border: 2px solid var(--mafia-chip-border); background: var(--mafia-chip-bg); color: var(--mafia-accent-soft);
+      font-size: 1rem; font-weight: 800; cursor: pointer; margin-top: 1rem;
+    }
+    .mafia-action-btn, .mafia-host-btn {
+      width: 100%; padding: 0.95rem; border-radius: 10px; border: 2px solid var(--mafia-card-border); background: var(--mafia-button-bg); color: #f8fafc;
+      font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 0.5rem; text-align: left;
+    }
+    .mafia-action-btn.selected-vote {
+      border-color: var(--mafia-accent);
+      background: var(--mafia-button-selected-bg);
+    }
+    .mafia-action-btn:disabled, .mafia-host-btn:disabled { opacity: 0.45; cursor: not-allowed; }
+    .mafia-host-btn { background: linear-gradient(180deg, #f59e0b, #d97706); border-color: #fbbf24; color: #1f1300; text-align: center; }
+    #mafia-host-controls { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.85rem; }
+    #mafia-host-controls .mafia-host-btn { margin-bottom: 0; }
+    #screen-mafia-setup .mafia-host-btn,
+    #screen-mafia-setup .mafia-rules-btn {
+      background: linear-gradient(180deg, #dc2626, #991b1b);
+      border-color: #f87171;
+      color: #fff1f2;
+      box-shadow: 0 10px 24px rgba(220,38,38,0.18);
+    }
+    .mafia-banner-dead { color: var(--mafia-accent); font-family: 'Cinzel', serif; font-size: 1.6rem; text-align: center; margin-bottom: 0.6rem; }
+    .mafia-note { color: #a78bfa; font-size: 0.88rem; margin-bottom: 0.8rem; text-align: center; }
+    .mafia-poll-result { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.9rem; }
+    .mafia-majority-note { color: var(--mafia-accent-soft); font-size: 0.9rem; margin-bottom: 0.6rem; text-align: center; }
+    .mafia-toggle-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; text-align: left; position: relative; padding-right: 5.8rem; }
+    #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row {
+      opacity: 0.72;
+      border-style: dashed;
+      border-color: #fca5a5;
+      background: linear-gradient(180deg, rgba(90,18,18,0.5), rgba(30,10,14,0.88));
+      box-shadow: inset 0 0 0 1px rgba(248,113,113,0.16);
+    }
+    #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row::after {
+      content: 'Host Only';
+      position: absolute;
+      right: 0.95rem;
+      top: 50%;
+      transform: translateY(-50%);
+      padding: 0.28rem 0.55rem;
+      border-radius: 999px;
+      border: 1px solid rgba(252,165,165,0.45);
+      background: rgba(127,29,29,0.35);
+      color: #fecaca;
+      font-size: 0.66rem;
+      font-weight: 800;
+      letter-spacing: 0.12rem;
+      text-transform: uppercase;
+    }
+    #screen-mafia-setup.mafia-setup-locked .mafia-toggle {
+      cursor: not-allowed;
+      opacity: 1;
+    }
+    .mafia-setup-actions { display: flex; flex-direction: column; gap: 0.6rem; margin-bottom: 0.9rem; }
+    .mafia-rules-btn { text-align: center; }
+    .mafia-rules-panel {
+      text-align: left;
+      margin-bottom: 0;
+      border-left: 3px solid var(--mafia-accent);
+      overflow: hidden;
+      max-height: 0;
+      opacity: 0;
+      padding-top: 0;
+      padding-bottom: 0;
+      border-top-width: 0;
+      border-right-width: 0;
+      border-bottom-width: 0;
+      transition: max-height 0.28s ease, opacity 0.22s ease, margin-bottom 0.22s ease, padding 0.22s ease, border-width 0.22s ease;
+    }
+    .mafia-rules-panel.open {
+      max-height: 420px;
+      opacity: 1;
+      margin-bottom: 0.8rem;
+      padding-top: 0.9rem;
+      padding-bottom: 0.9rem;
+      border-top-width: 1px;
+      border-right-width: 1px;
+      border-bottom-width: 1px;
+    }
+    .mafia-rules-panel .et-topic-name { margin-bottom: 0.5rem; }
+    .mafia-rules-list { display: flex; flex-direction: column; gap: 0.55rem; }
+    .mafia-rule-row { font-size: 0.9rem; color: #ede9f8; line-height: 1.35; }
+    .mafia-rule-row strong { color: #fff7ed; }
+    .mafia-killer-mark { color: #fbbf24; margin-right: 0.4rem; }
+    .mafia-toggle {
+      appearance: none; width: 56px; height: 32px; border-radius: 999px; background: #2c1a34; position: relative; cursor: pointer;
+      border: 1px solid #4b2d57;
+      flex-shrink: 0;
+    }
+    .mafia-toggle::after {
+      content: ''; width: 24px; height: 24px; border-radius: 50%; background: #f8fafc; position: absolute; top: 3px; left: 4px; transition: transform 0.2s;
+    }
+    .mafia-toggle:checked { background: #7f1d1d; }
+    .mafia-toggle:checked::after { transform: translateX(24px); }
+    .mafia-toggle:disabled { opacity: 1; }
+    .mafia-team-card {
+      background: var(--mafia-card-bg);
+      border: 1px solid var(--mafia-card-border);
+      border-radius: 14px;
+      padding: 0.9rem;
+      margin-bottom: 0.8rem;
+      text-align: left;
+    }
+    .mafia-team-heading {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: var(--mafia-accent);
+      margin-bottom: 0.7rem;
+      text-align: center;
+    }
+    .mafia-over-grid { margin-top: 1rem; }
+    .mafia-over-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.9rem;
+      line-height: 1.2;
+      color: #fff7ed;
+      margin-bottom: 1rem;
+      text-shadow: 0 0 26px rgba(255,255,255,0.08);
+    }
+    .mafia-player-sub.joker-tag {
+      color: #fbbf24;
+      font-weight: 800;
+      letter-spacing: 0.08rem;
+      text-transform: uppercase;
+    }
+    .mafia-joker-ult {
+      position: relative;
+      overflow: hidden;
+      border-radius: 24px;
+      padding: 2rem 1.4rem;
+      background:
+        radial-gradient(circle at 20% 20%, rgba(250,204,21,0.3), transparent 22%),
+        radial-gradient(circle at 80% 25%, rgba(244,63,94,0.25), transparent 25%),
+        radial-gradient(circle at 50% 80%, rgba(168,85,247,0.25), transparent 28%),
+        linear-gradient(180deg, #32123d, #140d1f);
+      border: 2px solid #f59e0b;
+      box-shadow: 0 24px 60px rgba(245,158,11,0.22);
+      animation: mafiaJokerPulse 1.2s ease-in-out infinite;
+    }
+    .mafia-joker-badge {
+      display: inline-block;
+      padding: 0.35rem 0.7rem;
+      border-radius: 999px;
+      background: rgba(250,204,21,0.14);
+      border: 1px solid #fbbf24;
+      color: #fde68a;
+      text-transform: uppercase;
+      letter-spacing: 0.18rem;
+      font-size: 0.72rem;
+      font-weight: 800;
+      margin-bottom: 1rem;
+    }
+    .mafia-joker-title {
+      font-family: 'Cinzel', serif;
+      font-size: 2.2rem;
+      color: #fff7ed;
+      margin-bottom: 0.65rem;
+      text-shadow: 0 0 24px rgba(245,158,11,0.5);
+    }
+    .mafia-joker-name {
+      font-size: 2rem;
+      font-weight: 900;
+      color: #fbbf24;
+      margin-bottom: 0.65rem;
+    }
+    .mafia-joker-sub {
+      color: #fce7f3;
+      font-size: 1rem;
+      line-height: 1.45;
+    }
+    .mafia-joker-ult.win-town {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(34,197,94,0.24), transparent 22%),
+        radial-gradient(circle at 80% 25%, rgba(134,239,172,0.18), transparent 25%),
+        radial-gradient(circle at 50% 80%, rgba(74,222,128,0.18), transparent 28%),
+        linear-gradient(180deg, #14311e, #0a170f);
+      border-color: #22c55e;
+      box-shadow: 0 24px 60px rgba(34,197,94,0.24);
+    }
+    .mafia-joker-ult.win-killers {
+      background:
+        radial-gradient(circle at 20% 20%, rgba(244,63,94,0.26), transparent 22%),
+        radial-gradient(circle at 80% 25%, rgba(251,113,133,0.18), transparent 25%),
+        radial-gradient(circle at 50% 80%, rgba(225,29,72,0.18), transparent 28%),
+        linear-gradient(180deg, #3a1019, #18090d);
+      border-color: #f43f5e;
+      box-shadow: 0 24px 60px rgba(244,63,94,0.24);
+    }
+    .mafia-win-title { font-family: 'Cinzel', serif; font-size: 2.2rem; color: #fff7ed; margin-bottom: 0.65rem; }
+    @keyframes mafiaJokerPulse {
+      0%, 100% { transform: scale(1); box-shadow: 0 24px 60px rgba(245,158,11,0.22); }
+      50% { transform: scale(1.02); box-shadow: 0 28px 72px rgba(244,63,94,0.24); }
+    }
+
+    /* ── Hot Takes ── */
+    .mafia-theme-role .mafia-wrap {
+      --mafia-accent: #93c5fd;
+      --mafia-accent-strong: #2563eb;
+      --mafia-accent-soft: #dbeafe;
+      --mafia-chip-bg: #10203a;
+      --mafia-chip-border: #1d4ed8;
+      --mafia-hero-bg: linear-gradient(180deg, #122545, #0d1728);
+      --mafia-hero-border: #1d4ed8;
+      --mafia-card-bg: linear-gradient(180deg, #101a2a, #0c1220);
+      --mafia-card-border: #274067;
+      --mafia-news-bg: linear-gradient(180deg, #11294d, #0c1c31);
+      --mafia-news-border: #2563eb;
+      --mafia-button-bg: #101828;
+      --mafia-button-selected-bg: linear-gradient(180deg, #13294b, #0d1c31);
+    }
+    .mafia-theme-discussion .mafia-wrap {
+      --mafia-accent: #86efac;
+      --mafia-accent-strong: #16a34a;
+      --mafia-accent-soft: #dcfce7;
+      --mafia-chip-bg: #102218;
+      --mafia-chip-border: #15803d;
+      --mafia-hero-bg: linear-gradient(180deg, #163622, #0d1e14);
+      --mafia-hero-border: #15803d;
+      --mafia-card-bg: linear-gradient(180deg, #131f19, #0d1510);
+      --mafia-card-border: #23442f;
+      --mafia-news-bg: linear-gradient(180deg, #14341f, #0d2013);
+      --mafia-news-border: #16a34a;
+      --mafia-button-bg: #111b15;
+      --mafia-button-selected-bg: linear-gradient(180deg, #173122, #0f1c14);
+    }
+    .mafia-theme-voting .mafia-wrap,
+    .mafia-theme-revote .mafia-wrap {
+      --mafia-accent: #fbbf24;
+      --mafia-accent-strong: #d97706;
+      --mafia-accent-soft: #fde68a;
+      --mafia-chip-bg: #2c1908;
+      --mafia-chip-border: #b45309;
+      --mafia-hero-bg: linear-gradient(180deg, #3a240f, #1c130c);
+      --mafia-hero-border: #b45309;
+      --mafia-card-bg: linear-gradient(180deg, #22170f, #14100d);
+      --mafia-card-border: #4a3218;
+      --mafia-news-bg: linear-gradient(180deg, #43270e, #24160c);
+      --mafia-news-border: #d97706;
+      --mafia-button-bg: #1f150f;
+      --mafia-button-selected-bg: linear-gradient(180deg, #36210e, #1d140d);
+    }
+    .mafia-theme-night .mafia-wrap {
+      --mafia-accent: #c4b5fd;
+      --mafia-accent-strong: #7c3aed;
+      --mafia-accent-soft: #ede9fe;
+      --mafia-chip-bg: #1d1338;
+      --mafia-chip-border: #6d28d9;
+      --mafia-hero-bg: linear-gradient(180deg, #25184a, #120d27);
+      --mafia-hero-border: #6d28d9;
+      --mafia-card-bg: linear-gradient(180deg, #1a1430, #100d1f);
+      --mafia-card-border: #3d2c64;
+      --mafia-news-bg: linear-gradient(180deg, #27174c, #160f2b);
+      --mafia-news-border: #7c3aed;
+      --mafia-button-bg: #171225;
+      --mafia-button-selected-bg: linear-gradient(180deg, #241844, #140f28);
+    }
+    .mafia-theme-day-result .mafia-wrap {
+      --mafia-accent: #fda4af;
+      --mafia-accent-strong: #e11d48;
+      --mafia-accent-soft: #ffe4e6;
+      --mafia-chip-bg: #37121d;
+      --mafia-chip-border: #be123c;
+      --mafia-hero-bg: linear-gradient(180deg, #431322, #220d14);
+      --mafia-hero-border: #be123c;
+      --mafia-card-bg: linear-gradient(180deg, #22131a, #150d11);
+      --mafia-card-border: #5a2433;
+      --mafia-news-bg: linear-gradient(180deg, #4a1220, #240d13);
+      --mafia-news-border: #e11d48;
+      --mafia-button-bg: #211118;
+      --mafia-button-selected-bg: linear-gradient(180deg, #39131f, #1f0f15);
+    }
+    .mafia-theme-night-result .mafia-wrap {
+      --mafia-accent: #67e8f9;
+      --mafia-accent-strong: #0891b2;
+      --mafia-accent-soft: #cffafe;
+      --mafia-chip-bg: #0f2230;
+      --mafia-chip-border: #0e7490;
+      --mafia-hero-bg: linear-gradient(180deg, #143244, #0c1a27);
+      --mafia-hero-border: #0e7490;
+      --mafia-card-bg: linear-gradient(180deg, #10202b, #0b1319);
+      --mafia-card-border: #255169;
+      --mafia-news-bg: linear-gradient(180deg, #133646, #0b1e28);
+      --mafia-news-border: #0891b2;
+      --mafia-button-bg: #101a21;
+      --mafia-button-selected-bg: linear-gradient(180deg, #13313f, #0d1a24);
+    }
+    .ht-round-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1rem; }
+    .ht-p-question { font-size: 1.25rem; font-weight: 700; line-height: 1.4; color: #ede9f8; margin-bottom: 1rem; }
+    .ht-vote-btn {
+      width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 10px;
+      border: 2px solid #2d1f50; background: #0f0a20; color: #ede9f8;
+      cursor: pointer; margin-bottom: 0.6rem; font-family: 'Nunito', sans-serif;
+      font-weight: 700; transition: all 0.15s; text-align: center;
+    }
+    .ht-vote-btn:active { transform: scale(0.97); }
+    .ht-vote-btn:disabled { opacity: 0.4; cursor: not-allowed; }
+    .ht-voted-msg { color: #4ade80; font-size: 0.95rem; margin-top: 0.5rem; }
+    .ht-p-result-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; }
+    .ht-p-result-name { font-weight: 700; font-size: 1rem; min-width: 80px; text-align: right; }
+    .ht-p-result-bar-wrap { flex: 1; background: #0f0a20; border-radius: 4px; height: 10px; overflow: hidden; border: 1px solid #2d1f50; }
+    .ht-p-result-bar { height: 100%; border-radius: 4px; transition: width 0.9s ease; width: 0%; }
+    .ht-p-result-pct { font-size: 1rem; font-weight: 700; min-width: 36px; }
+    .ht-expose-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: #c084fc; margin: 1.25rem 0 0.6rem; }
+    .ht-vote-row { font-size: 0.9rem; margin-bottom: 0.35rem; }
+    .ht-advance-text { font-size: 0.8rem; color: #4a3a6a; margin-top: 1.25rem; }
+  </style>
+</head>
+<body>
+
+  <!-- ── Screen 1: Home ── -->
+  <div id="screen-home" class="screen active">
+    <h1>Johnbox Games</h1>
+    <h2>Enter your name and room PIN to get started</h2>
+    <input id="home-name-input" type="text" placeholder="Your name" maxlength="20" autocomplete="off" />
+    <input id="home-pin-input" type="text" placeholder="PIN" maxlength="4" inputmode="numeric" autocomplete="off" />
+    <button class="btn" onclick="joinRoomFromHome()">Join Room</button>
+    <button class="btn" style="background:#1a1232;border:2px solid #4c1d95;color:#c084fc;" onclick="goCreate()">Create Room</button>
+    <div class="error" id="home-error"></div>
+  </div>
+
+  <!-- ── Screen 2: Join PIN ── -->
+  <div id="screen-join" class="screen">
+    <h1>Join Room</h1>
+    <h2>Enter the PIN shown on someone's screen</h2>
+    <input id="pin-input" type="text" placeholder="PIN" maxlength="4" inputmode="numeric" autocomplete="off" />
+    <button class="btn" onclick="joinRoom()">Join Game</button>
+    <button class="btn btn-ghost" style="margin-top:0.5rem;" onclick="showScreen('screen-home')">Back</button>
+    <div class="error" id="join-error"></div>
+  </div>
+
+  <!-- ── Screen 3: Lobby ── -->
+  <div id="screen-lobby" class="screen">
+    <h1>Johnbox Games</h1>
+    <div class="lobby-pin-label">Room PIN</div>
+    <div class="lobby-pin" id="lobby-pin"></div>
+    <div class="lobby-qr" id="lobby-qr"></div>
+    <div class="lobby-url" id="lobby-url"></div>
+    <div class="player-list-label">Players &mdash; <span id="player-count">0</span> in room</div>
+    <div id="players"></div>
+    <!-- Host only -->
+    <div class="host-only">
+      <button class="btn" id="start-btn" disabled onclick="goToGameSelect()">Start Game</button>
+      <div class="start-hint" id="start-hint">Need at least 2 players to start</div>
+    </div>
+    <!-- Non-host -->
+    <div class="guest-only waiting"><span class="dot"></span> Waiting for host to start...</div>
+  </div>
+
+  <!-- ── Screen 4: Game Selector (host navigates here locally) ── -->
+  <div id="screen-game-select" class="screen">
+    <h1>Pick a Game</h1>
+    <div class="game-list">
+      <div class="game-card" onclick="selectGame('questions-challenges')">
+        <div class="game-icon">🎡</div>
+        <div>
+          <div class="game-title">Questions &amp; Challenges</div>
+          <div class="game-desc">Submit prompts. The wheel decides your fate.</div>
+        </div>
+      </div>
+      <div class="game-card" onclick="selectGame('hot-takes')">
+        <div class="game-icon">🔥</div>
+        <div>
+          <div class="game-title">Hot Takes</div>
+          <div class="game-desc">Two players, one question. Everyone votes.</div>
+        </div>
+      </div>
+      <div class="game-card" onclick="selectGame('photo-roulette')">
+        <div class="game-icon">📸</div>
+        <div>
+          <div class="game-title">Photo Roulette</div>
+          <div class="game-desc">Upload photos. Can you guess who took what?</div>
+        </div>
+      </div>
+      <div class="game-card" onclick="selectGame('everything-trivia')">
+        <div class="game-icon">🧠</div>
+        <div>
+          <div class="game-title">Everything Trivia</div>
+          <div class="game-desc">Everyone submits a topic. Fastest correct answers score.</div>
+        </div>
+      </div>
+      <div class="game-card" onclick="selectGame('mafia')">
+        <div class="game-icon">🕵️</div>
+        <div>
+          <div class="game-title">Mafia</div>
+          <div class="game-desc">Find the killers, survive the night, and watch the votes.</div>
+        </div>
+      </div>
+    </div>
+    <button class="btn btn-ghost" onclick="backToLobby()">Back to Lobby</button>
+  </div>
+
+  <div id="screen-et-topic" class="screen">
+    <h1>Everything Trivia</h1>
+    <h2>Submit one trivia topic for the game</h2>
+    <input id="et-topic-input" type="text" placeholder="Your topic" maxlength="60" autocomplete="off" />
+    <button class="btn" id="et-topic-submit-btn" onclick="submitETTopic()">Submit Topic</button>
+    <div class="et-lock-msg" id="et-topic-message"></div>
+    <div class="submit-count-wrap">
+      Topics ready: <span id="et-topic-ready-count">0</span>/<span id="et-topic-total-count">0</span>
+    </div>
+    <div class="et-topic-list" id="et-topic-list"></div>
+    <div class="host-only" style="margin-top:0.85rem;">
+      <button class="btn btn-ghost" onclick="exitGame()">Quit Game</button>
+    </div>
+  </div>
+
+  <div id="screen-et-intro" class="screen">
+    <div class="watch-label">Next topic</div>
+    <div class="watch-name" id="et-intro-topic"></div>
+    <div class="your-turn-sub" id="et-intro-submitted-by"></div>
+  </div>
+
+  <div id="screen-et-question" class="screen">
+    <div class="ht-round-label">Section <span id="et-section-number">1</span> of <span id="et-section-total">1</span></div>
+    <div class="watch-label">Question <span id="et-question-number">1</span> of <span id="et-question-total">3</span></div>
+    <div class="watch-name" id="et-question-topic" style="font-size:1.3rem;margin-bottom:0.4rem;"></div>
+    <div class="ht-p-question" id="et-question-text"></div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="et-question-bar"></div></div>
+    <div class="pr-guess-count-label" id="et-answer-count"></div>
+    <div id="et-answer-options"></div>
+    <div class="et-lock-msg" id="et-answer-message"></div>
+  </div>
+
+  <div id="screen-et-reveal" class="screen">
+    <div class="watch-label">Correct Answer</div>
+    <div class="watch-name et-correct-answer-big" id="et-correct-answer"></div>
+    <div class="pr-guess-count-label" id="et-reveal-points-summary"></div>
+    <div class="et-topic-list" id="et-reveal-list"></div>
+    <div class="ht-advance-text" id="et-reveal-advance"></div>
+  </div>
+
+  <div id="screen-et-section" class="screen">
+    <h1>Section Results</h1>
+    <h2 id="et-section-title"></h2>
+    <div id="et-section-scores"></div>
+    <div class="ht-advance-text" id="et-section-advance"></div>
+  </div>
+
+  <div id="screen-et-over" class="screen">
+    <div class="over-emoji">🏆</div>
+    <h1>Everything Trivia</h1>
+    <h2>Final rankings</h2>
+    <div id="et-final-rankings"></div>
+    <div class="et-stats-list" id="et-final-stats"></div>
+    <div class="host-only">
+      <button class="btn" onclick="selectGame('everything-trivia')" style="margin-top:1rem;">Play Again</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+    </div>
+    <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
+  </div>
+
+  <div id="screen-mafia-setup" class="screen">
+    <h1>Mafia</h1>
+    <div class="mafia-setup-actions">
+      <button class="btn btn-ghost mafia-rules-btn" type="button" onclick="toggleMafiaRules()">Roles &amp; Rules</button>
+    </div>
+    <div class="mafia-card mafia-rules-panel" id="mafia-rules-panel">
+      <div class="mafia-rules-list">
+        <div class="mafia-rule-row"><strong>🔪 Killer:</strong> Blend in by day, choose a victim at night, and win when killers equal or outnumber everyone else.</div>
+        <div class="mafia-rule-row"><strong>🩺 Doctor:</strong> Protect one player each night, but you cannot protect the same player two nights in a row.</div>
+        <div class="mafia-rule-row"><strong>👤 Villager:</strong> Vote out the killers and survive the nights. You also answer the overnight poll.</div>
+        <div class="mafia-rule-row"><strong>🃏 Joker:</strong> Optional chaos role. If the Joker gets voted out, the Joker wins instantly.</div>
+        <div class="mafia-rule-row"><strong>Voting:</strong> Votes are public, including abstain. A true majority instantly resolves the vote.</div>
+      </div>
+    </div>
+    <div class="mafia-card mafia-toggle-row">
+      <div>
+        <div class="et-topic-name">Joker Mode</div>
+        <div class="et-topic-meta">Joker wins instantly if voted out.</div>
+      </div>
+      <input class="mafia-toggle" type="checkbox" id="mafia-joker-toggle" onchange="updateMafiaSettings()" />
+    </div>
+    <div class="mafia-card mafia-toggle-row">
+      <div>
+        <div class="et-topic-name">Show Polls During Day</div>
+        <div class="et-topic-meta">Turn on to reveal poll results during the day.</div>
+      </div>
+      <input class="mafia-toggle" type="checkbox" id="mafia-polls-toggle" onchange="updateMafiaSettings()" />
+    </div>
+    <div class="mafia-card">
+      <div class="et-topic-meta">One doctor every game. For every 4 players, there is one killer.</div>
+      <div class="et-topic-meta" id="mafia-role-scaling-live">There are 0 players and 0 killers.</div>
+    </div>
+    <div class="mafia-note" id="mafia-setup-note">Mafia needs at least 4 players.</div>
+    <div class="host-only">
+      <button class="mafia-host-btn" id="mafia-begin-btn" onclick="beginMafia()">Start Day 1</button>
+      <button class="btn btn-ghost" onclick="exitGame()">Quit Game</button>
+    </div>
+    <div class="guest-only waiting"><span class="dot"></span> Waiting for host to start the game...</div>
+  </div>
+
+  <div id="screen-mafia-role" class="screen">
+    <h1>Mafia</h1>
+    <h2 id="mafia-role-subtitle">Hold to reveal your role</h2>
+    <div class="mafia-role-hidden" id="mafia-role-box">Press and hold below</div>
+    <button
+      class="mafia-hold-btn"
+      id="mafia-hold-btn"
+      onmousedown="showMafiaRole()" onmouseup="hideMafiaRole()" onmouseleave="hideMafiaRole()"
+      ontouchstart="showMafiaRole(event)" ontouchend="hideMafiaRole(event)" ontouchcancel="hideMafiaRole(event)"
+    >Hold To Reveal Role</button>
+    <div class="mafia-note" id="mafia-role-note"></div>
+    <div class="host-only" id="mafia-role-host-controls" style="display:none;">
+      <button class="mafia-host-btn" onclick="startMafiaDiscussion()">Start Day 1</button>
+    </div>
+  </div>
+
+  <div id="screen-mafia-main" class="screen">
+    <div class="mafia-wrap">
+      <div class="mafia-banner-dead" id="mafia-dead-banner" style="display:none;">You are dead</div>
+      <div class="mafia-phase-hero">
+        <div class="mafia-chip" id="mafia-phase-chip">Mafia</div>
+        <div class="mafia-phase-title" id="mafia-main-title">Mafia</div>
+        <div class="mafia-phase-timer" id="mafia-main-subtitle"></div>
+        <div id="mafia-host-controls"></div>
+      </div>
+      <div class="mafia-card mafia-news-card" id="mafia-event-card"></div>
+      <div class="mafia-card" id="mafia-poll-card" style="display:none;"></div>
+      <div class="mafia-card" id="mafia-killer-card" style="display:none;"></div>
+      <div class="mafia-majority-note" id="mafia-majority-note" style="display:none;"></div>
+      <div id="mafia-action-area"></div>
+      <div class="mafia-card">
+        <div class="et-topic-name" style="margin-bottom:0.5rem;">Players</div>
+        <div id="mafia-player-list"></div>
+      </div>
+      <div class="mafia-card">
+        <div class="et-topic-name" style="margin-bottom:0.5rem;">Your Role</div>
+        <div class="mafia-role-hidden" id="mafia-main-role-box">Hold below to view</div>
+        <button
+          class="mafia-hold-btn"
+          onmousedown="showMafiaRole('mafia-main-role-box')" onmouseup="hideMafiaRole('mafia-main-role-box')" onmouseleave="hideMafiaRole('mafia-main-role-box')"
+          ontouchstart="showMafiaRole(event, 'mafia-main-role-box')" ontouchend="hideMafiaRole(event, 'mafia-main-role-box')" ontouchcancel="hideMafiaRole(event, 'mafia-main-role-box')"
+        >Hold To View Role</button>
+        <div class="mafia-note" id="mafia-main-role-note">0 killers remain.</div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-mafia-joker-win" class="screen">
+    <div class="mafia-joker-ult">
+      <div class="mafia-joker-badge" id="mafia-win-badge">Instant Win</div>
+      <div class="mafia-win-title" id="mafia-win-title">Joker Unleashed</div>
+      <div class="mafia-joker-name" id="mafia-joker-winner-name"></div>
+      <div class="mafia-joker-sub" id="mafia-win-sub">The Joker got voted out and stole the whole game.</div>
+    </div>
+  </div>
+
+  <div id="screen-mafia-over" class="screen">
+    <div class="over-emoji">🕵️</div>
+    <h1>Mafia</h1>
+    <h2 id="mafia-over-title" class="mafia-over-title"></h2>
+    <div class="mafia-over-grid">
+      <div class="mafia-team-card">
+        <div class="mafia-team-heading">Killers</div>
+        <div id="mafia-over-killers"></div>
+      </div>
+      <div class="mafia-team-card">
+        <div class="mafia-team-heading">Town</div>
+        <div id="mafia-over-town"></div>
+      </div>
+    </div>
+    <div class="mafia-card" id="mafia-over-poll" style="display:none;"></div>
+    <div class="host-only">
+      <button class="btn" onclick="selectGame('mafia')" style="margin-top:1rem;">Play Again</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+    </div>
+    <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
+  </div>
+
+  <!-- ── Screen 5: Q&C — Submit ── -->
+  <div id="screen-qc-submit" class="screen">
+    <h1>Submit</h1>
+    <h2>Add questions or challenges for the group</h2>
+
+    <div class="type-toggle">
+      <button class="type-btn active" id="btn-question" onclick="setType('question')">❓ Question</button>
+      <button class="type-btn" id="btn-challenge" onclick="setType('challenge')">⚡ Challenge</button>
+    </div>
+
+    <textarea id="qc-input" rows="3" placeholder="Type here..."></textarea>
+    <button class="btn" id="qc-submit-btn" onclick="submitQC()">Submit</button>
+
+    <div class="submit-count-wrap">
+      You've submitted <span id="qc-my-count">0</span> thing(s) — submit as many as you want!
+    </div>
+
+    <!-- Host only -->
+    <div class="host-only" style="margin-top:0.75rem;">
+      <button class="btn btn-ghost" onclick="closeSubmissions()">Begin Game</button>
+    </div>
+  </div>
+
+  <!-- ── Screen 6: Q&C — Watch/Spin ── -->
+  <div id="screen-qc-watch" class="screen">
+
+    <div id="qc-watch-other" style="display:block;">
+      <div class="watch-label">It's</div>
+      <div class="watch-name" id="watch-player-name"></div>
+    </div>
+
+    <div id="qc-watch-my-turn" style="display:none;">
+      <div class="your-turn-label">Your turn!</div>
+      <div class="your-turn-sub">You're up — check the result below</div>
+    </div>
+
+    <!-- Spin button: shown only for the player whose turn it is -->
+    <div id="spin-btn-wrap" style="display:none;">
+      <button class="btn" id="spin-btn" onclick="doSpin()">🎡 Spin!</button>
+    </div>
+
+    <div class="watch-reveal-box" id="watch-reveal-box">
+      <div class="watch-type" id="watch-type"></div>
+      <div class="watch-text" id="watch-text"></div>
+    </div>
+
+    <!-- Host: post-spin controls -->
+    <div class="host-only" id="qc-post-spin-controls" style="display:none;">
+      <button class="btn" onclick="nextPlayer()" style="margin-top:0.75rem;">Next Player &rarr;</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+    </div>
+
+  </div>
+
+  <!-- ── Spin overlay (fixed, sits above all screens) ── -->
+  <div id="spin-overlay">
+    <div id="spin-overlay-emoji"></div>
+    <div id="spin-overlay-label"></div>
+  </div>
+
+  <!-- ── Screen 7: Q&C — Game Over ── -->
+  <div id="screen-qc-over" class="screen">
+    <div class="over-emoji">🎉</div>
+    <h1>That's a wrap!</h1>
+    <h2>Everyone had a turn</h2>
+    <!-- Host only -->
+    <div class="host-only">
+      <button class="btn" onclick="selectGame('questions-challenges')" style="margin-top:1rem;">Play Again</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+    </div>
+    <div class="guest-only waiting"><span class="dot"></span> Waiting for host...</div>
+  </div>
+
+  <!-- ── Screen 8: Photo Roulette — Upload ── -->
+  <div id="screen-pr-upload" class="screen">
+    <h1>📸</h1>
+    <h2>Upload your 3 photos!</h2>
+    <div class="pr-upload-count"><span id="pr-my-count">0</span>/3</div>
+    <div class="pr-upload-sub">your photos uploaded</div>
+    <div class="pr-total-count" id="pr-total-count"></div>
+    <label class="pr-upload-label" id="pr-upload-label">
+      + Add Photos
+      <input type="file" id="pr-file-input" accept="image/*" multiple style="display:none;" onchange="handlePhotoSelect(event)" />
+    </label>
+    <div class="error" id="pr-upload-error"></div>
+    <!-- Host only -->
+    <div class="host-only" style="margin-top:1.25rem;">
+      <button class="btn btn-ghost" onclick="closePRUploads()">Begin Game</button>
+    </div>
+    <div class="guest-only waiting" style="margin-top:1.25rem;"><span class="dot"></span> Waiting for host to start...</div>
+  </div>
+
+  <!-- ── Screen 9: Photo Roulette — Guess ── -->
+  <div id="screen-pr-guess" class="screen">
+    <div class="pr-photo-number" id="pr-guess-number"></div>
+    <img id="pr-guess-img" src="" alt="" style="width:100%;max-height:55vh;object-fit:contain;border-radius:10px;background:#0d0d1a;margin-bottom:0.5rem;" />
+    <div class="timer-bar-wrap" style="margin:0.4rem 0;"><div class="timer-bar" id="pr-guess-bar"></div></div>
+    <div class="pr-your-photo-hint" id="pr-your-photo-hint" style="display:none;"></div>
+    <div class="pr-guess-count-label" id="pr-guess-count-label"></div>
+    <div id="pr-guess-options"></div>
+    <div class="pr-guess-ack" id="pr-guess-ack"></div>
+    <!-- Host only -->
+    <div class="host-only">
+      <button class="btn btn-ghost" onclick="revealNow()" style="margin-top:0.4rem;">Reveal Now &rarr;</button>
+    </div>
+  </div>
+
+  <!-- ── Screen 10: Photo Roulette — Reveal ── -->
+  <div id="screen-pr-reveal" class="screen">
+    <div class="watch-label">It was</div>
+    <div class="watch-name" id="pr-reveal-name" style="font-size:1.6rem;margin-bottom:0.4rem;"></div>
+    <img id="pr-reveal-img" src="" alt="" style="width:100%;max-height:35vh;object-fit:contain;border-radius:8px;background:#0d0d1a;margin-bottom:0.5rem;" />
+    <div id="pr-reveal-guesses"></div>
+    <div class="pr-my-points" id="pr-reveal-my-points"></div>
+    <!-- Host only -->
+    <div class="host-only">
+      <button class="btn" id="pr-next-btn" onclick="prNextPhoto()" style="margin-top:0.4rem;">Next Photo &rarr;</button>
+    </div>
+    <!-- Non-host -->
+    <div class="guest-only waiting"><span class="dot"></span> Waiting for next photo...</div>
+    <div class="ht-advance-text" id="pr-advance-text" style="display:none;"></div>
+  </div>
+
+  <!-- ── Screen 12: Hot Takes — Vote ── -->
+  <div id="screen-ht-vote" class="screen">
+    <div class="ht-round-label">🔥 Round <span id="ht-p-round-num">1</span> of 20</div>
+    <div class="ht-p-question" id="ht-p-question"></div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="ht-p-timer-bar"></div></div>
+    <div id="ht-p-vote-buttons">
+      <button class="ht-vote-btn" id="ht-vote-btn-a" onclick="htVote('A')"></button>
+      <button class="ht-vote-btn" id="ht-vote-btn-b" onclick="htVote('B')"></button>
+    </div>
+    <div class="ht-voted-msg" id="ht-voted-msg" style="display:none;">Locked in! Waiting for results...</div>
+  </div>
+
+  <!-- ── Screen 13: Hot Takes — Reveal ── -->
+  <div id="screen-ht-reveal-p" class="screen">
+    <div class="ht-round-label">Results</div>
+    <div class="ht-p-question" id="ht-p-rev-question"></div>
+    <div id="ht-p-rev-bars" style="margin:1rem 0;"></div>
+    <div id="ht-p-expose-section" style="display:none;">
+      <div class="ht-expose-label">🔍 votes exposed</div>
+      <div id="ht-p-vote-list"></div>
+    </div>
+    <div class="ht-advance-text" id="ht-p-advance-text">Next round in 10...</div>
+  </div>
+
+  <!-- ── Screen 14: Hot Takes — Game Over ── -->
+  <div id="screen-ht-over" class="screen">
+    <div class="over-emoji">🔥</div>
+    <h1>Hot Takes</h1>
+    <h2>All 20 rounds done!</h2>
+    <div class="host-only">
+      <button class="btn" onclick="selectGame('hot-takes')" style="margin-top:1rem;">Play Again</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+    </div>
+    <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
+  </div>
+
+  <!-- ── Screen 11: Photo Roulette — Game Over ── -->
+  <div id="screen-pr-over" class="screen">
+    <div class="over-emoji">🏆</div>
+    <h1>Photo Roulette</h1>
+    <h2>Final Scores</h2>
+    <div id="pr-player-scores"></div>
+    <!-- Host only -->
+    <div class="host-only">
+      <button class="btn" onclick="selectGame('photo-roulette')" style="margin-top:1rem;">Play Again</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+    </div>
+    <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    const PLAYER_COLORS = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#38bdf8', '#818cf8', '#e879f9', '#f472b6', '#a3e635', '#34d399'];
+    let myName    = '';
+    let myPin     = '';
+    let isHost    = false;
+    let roomHostId = '';
+    let currentPlayers = [];
+    let selType   = 'question';
+    let myQCCount = 0;
+    let prMyUploadCount = 0;
+    let prHasGuessed    = false;
+    let etHasAnswered   = false;
+    let mafiaState      = null;
+
+    // ── Screens ────────────────────────────────────────────────────
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    function setHostMode(h) {
+      isHost = h;
+      document.body.classList.toggle('host-mode', h);
+    }
+
+    function getPlayerColor(name) {
+      const index = currentPlayers.findIndex((player) => player.name === name);
+      if (index >= 0) return PLAYER_COLORS[index % PLAYER_COLORS.length];
+
+      let hash = 0;
+      for (let i = 0; i < name.length; i++) {
+        hash = ((hash << 5) - hash) + name.charCodeAt(i);
+        hash |= 0;
+      }
+      return PLAYER_COLORS[Math.abs(hash) % PLAYER_COLORS.length];
+    }
+
+    // ── Home screen ────────────────────────────────────────────────
+    function goCreate() {
+      const name = document.getElementById('home-name-input').value.trim();
+      if (!name) { document.getElementById('home-error').textContent = 'Enter your name first'; return; }
+      document.getElementById('home-error').textContent = '';
+      myName = name;
+      socket.emit('create-room', { hostName: name });
+    }
+
+    function joinRoomFromHome() {
+      const name = document.getElementById('home-name-input').value.trim();
+      const pin = document.getElementById('home-pin-input').value.trim();
+      if (!name) { document.getElementById('home-error').textContent = 'Enter your name first'; return; }
+      if (!pin) { document.getElementById('home-error').textContent = 'Enter the PIN'; return; }
+      if (pin.length < 4) { document.getElementById('home-error').textContent = 'PIN is 4 digits'; return; }
+      document.getElementById('home-error').textContent = '';
+      myName = name;
+      socket.emit('join-room', { pin, name: myName });
+    }
+
+    socket.on('room-created', ({ pin, playerURL, qrDataURL, players }) => {
+      myPin = pin;
+      roomHostId = socket.id;
+      setHostMode(true);
+      setupLobby(pin, playerURL, qrDataURL, players, socket.id);
+      showScreen('screen-lobby');
+    });
+
+    // ── Join screen ────────────────────────────────────────────────
+    function joinRoom() {
+      const pin  = document.getElementById('pin-input').value.trim();
+      document.getElementById('join-error').textContent = '';
+      if (!pin)           { document.getElementById('join-error').textContent = 'Enter the PIN'; return; }
+      if (pin.length < 4) { document.getElementById('join-error').textContent = 'PIN is 4 digits'; return; }
+      socket.emit('join-room', { pin, name: myName });
+    }
+
+    socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId }) => {
+      myName = name;
+      myPin = pin;
+      roomHostId = hostId;
+      setHostMode(false);
+      setupLobby(pin, playerURL, qrDataURL, players, hostId);
+      showScreen('screen-lobby');
+    });
+
+    socket.on('join-error', ({ message }) => {
+      document.getElementById('join-error').textContent = message;
+    });
+
+    // ── Lobby ──────────────────────────────────────────────────────
+    function setupLobby(pin, playerURL, qrDataURL, players, hostId) {
+      document.getElementById('lobby-pin').textContent = pin;
+      document.getElementById('lobby-url').textContent = playerURL;
+
+      const qrContainer = document.getElementById('lobby-qr');
+      qrContainer.innerHTML = '';
+      if (qrDataURL) {
+        const img = document.createElement('img');
+        img.src = qrDataURL; img.width = 140; img.height = 140;
+        qrContainer.appendChild(img);
+      }
+
+      renderPlayers(players, hostId);
+    }
+
+    socket.on('player-list-updated', ({ players, hostId }) => {
+      if (hostId) roomHostId = hostId;
+      renderPlayers(players, roomHostId);
+    });
+
+    function renderPlayers(players, hostId) {
+      currentPlayers = players;
+      const container  = document.getElementById('players');
+      const countEl    = document.getElementById('player-count');
+      const startBtn   = document.getElementById('start-btn');
+      const startHint  = document.getElementById('start-hint');
+
+      countEl.textContent = players.length;
+      container.innerHTML = '';
+
+      players.forEach(p => {
+        const div = document.createElement('div');
+        const isThisHost = p.id === hostId;
+        div.className = 'player-item' + (isThisHost ? ' host-item' : '');
+
+        let inner = `<span>${p.name}${p.name === myName ? ' <span style="font-size:0.75rem;color:#5a4a7a;">(you)</span>' : ''}</span>`;
+        if (isThisHost) inner += '<span class="host-badge">Host</span>';
+
+        div.innerHTML = inner;
+        container.appendChild(div);
+      });
+
+      if (startBtn) {
+        startBtn.disabled = players.length < 2;
+        if (startHint) {
+          startHint.textContent = players.length < 2
+            ? 'Need at least 2 players to start'
+            : `${players.length} players ready — let's go!`;
+        }
+      }
+    }
+
+    // ── Host transfer ──────────────────────────────────────────────
+    socket.on('you-are-now-host', () => {
+      setHostMode(true);
+      // Refresh start button state if on lobby
+      const lobbyActive = document.getElementById('screen-lobby').classList.contains('active');
+      if (lobbyActive) {
+        const players = document.getElementById('players').children.length;
+        const startBtn = document.getElementById('start-btn');
+        if (startBtn) startBtn.disabled = players < 2;
+      }
+    });
+
+    socket.on('host-transferred', () => {
+      setHostMode(false);
+    });
+
+    socket.on('host-changed', ({ newHostId }) => {
+      roomHostId = newHostId;
+      // Re-render players to update host badge
+      const items = document.querySelectorAll('.player-item');
+      // Just trigger a re-render via the current player list — but we don't store it locally.
+      // The server will send player-list-updated after host-changed in disconnect cases.
+    });
+
+    // ── Game selector ──────────────────────────────────────────────
+    hydrateMafiaRulesPanel();
+    function goToGameSelect() { showScreen('screen-game-select'); }
+    function backToGameSelect() { showScreen('screen-game-select'); }
+
+    function backToLobby() {
+      socket.emit('back-to-lobby');
+    }
+
+    function exitGame() {
+      socket.emit('back-to-lobby');
+    }
+
+    socket.on('returned-to-lobby', () => {
+      showScreen('screen-lobby');
+    });
+
+    function selectGame(game) {
+      socket.emit('start-game', { game });
+    }
+
+    socket.on('game-started', ({ game }) => {
+      if (game === 'questions-challenges') {
+        myQCCount = 0;
+        document.getElementById('qc-my-count').textContent = '0';
+        document.getElementById('qc-input').value = '';
+        document.getElementById('qc-submit-btn').disabled = false;
+        setType('question');
+        showScreen('screen-qc-submit');
+        if (isHost) socket.emit('qc-start-collecting');
+      } else if (game === 'photo-roulette') {
+        prMyUploadCount = 0;
+        document.getElementById('pr-my-count').textContent = '0';
+        document.getElementById('pr-total-count').textContent = '';
+        document.getElementById('pr-upload-error').textContent = '';
+        document.getElementById('pr-upload-label').classList.remove('disabled');
+        document.getElementById('pr-file-input').value = '';
+        showScreen('screen-pr-upload');
+      } else if (game === 'everything-trivia') {
+        etHasAnswered = false;
+        document.getElementById('et-topic-input').value = '';
+        document.getElementById('et-topic-message').textContent = '';
+        document.getElementById('et-topic-submit-btn').disabled = false;
+        document.getElementById('et-topic-ready-count').textContent = '0';
+        document.getElementById('et-topic-total-count').textContent = '0';
+        document.getElementById('et-topic-list').innerHTML = '';
+        showScreen('screen-et-topic');
+      } else if (game === 'mafia') {
+        mafiaState = null;
+        document.getElementById('mafia-joker-toggle').checked = false;
+        showScreen('screen-mafia-setup');
+      } else if (game === 'hot-takes') {
+        htHasVoted = false;
+        // server immediately fires ht-round-start — just wait for it
+      }
+    });
+
+    // ── Q&C — Submit phase ─────────────────────────────────────────
+    function updateMafiaSettings() {
+      socket.emit('mafia-update-settings', {
+        jokerEnabled: document.getElementById('mafia-joker-toggle').checked,
+        hiddenPollsUntilEnd: !document.getElementById('mafia-polls-toggle').checked,
+      });
+    }
+
+    function beginMafia() {
+      socket.emit('mafia-begin');
+    }
+
+    function toggleMafiaRules() {
+      const panel = document.getElementById('mafia-rules-panel');
+      if (!panel) return;
+      panel.classList.toggle('open');
+    }
+
+    function hydrateMafiaRulesPanel() {
+      const rulesList = document.querySelector('#mafia-rules-panel .mafia-rules-list');
+      if (!rulesList) return;
+      rulesList.innerHTML = `
+        <div class="mafia-rule-row">🔪 Killer: Choose a victim at night. Win when the killers outnumber everyone else.</div>
+        <div class="mafia-rule-row">🩺 Doctor: Protect one player each night, but you cannot protect the same player two nights in a row.</div>
+        <div class="mafia-rule-row">👤 Villager: Win by voting out the killers.</div>
+        <div class="mafia-rule-row">🃏 Joker: Optional chaos role. If the Joker dies by vote, the Joker wins instantly.</div>
+        <div class="mafia-rule-row">A majority vote is needed to kill someone. When someone dies, it is revealed if they are a killer or not.</div>
+      `;
+    }
+
+    function startMafiaDiscussion() {
+      socket.emit('mafia-start-discussion');
+    }
+
+    function startMafiaVoting() {
+      socket.emit('mafia-start-voting');
+    }
+
+    function startMafiaNight() {
+      socket.emit('mafia-start-night');
+    }
+
+    function showMafiaRole(eventOrTarget, maybeTarget) {
+      const targetId = typeof eventOrTarget === 'string' ? eventOrTarget : (maybeTarget || 'mafia-role-box');
+      const event = typeof eventOrTarget === 'string' ? null : eventOrTarget;
+      if (event) event.preventDefault();
+      if (!mafiaState || !mafiaState.myRole) return;
+      const labelMap = { killer: 'Killer', doctor: 'Doctor', villager: 'Villager', joker: 'Joker' };
+      document.getElementById(targetId).innerHTML = `<div class="mafia-role-reveal">${labelMap[mafiaState.myRole] || mafiaState.myRole}</div>`;
+    }
+
+    function getMafiaRoleEmoji(role) {
+      return role === 'killer' ? '🔪' : role === 'doctor' ? '🩺' : role === 'joker' ? '🃏' : '👤';
+    }
+
+    function escapeRegExp(value) {
+      return value.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function formatMafiaEventMessage(message, players) {
+      let html = (message || '').replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const sortedNames = [...players].map((player) => player.name).sort((a, b) => b.length - a.length);
+      sortedNames.forEach((name) => {
+        const color = getPlayerColor(name);
+        html = html.replace(new RegExp(`\\b${escapeRegExp(name)}\\b`, 'g'), `<span style="color:${color}">${name}</span>`);
+      });
+      return html.replace(/\n/g, '<br>');
+    }
+
+    function formatMafiaWinnerMessage(winner, players) {
+      if (!winner || !winner.text) return 'Game over';
+      let html = winner.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
+      const sortedNames = [...players].map((player) => player.name).sort((a, b) => b.length - a.length);
+      sortedNames.forEach((name) => {
+        const color = getPlayerColor(name);
+        html = html.replace(new RegExp(`\\b${escapeRegExp(name)}\\b`, 'g'), `<span style="color:${color}">${name}</span>`);
+      });
+      return html;
+    }
+
+    function hideMafiaRole(eventOrTarget, maybeTarget) {
+      const targetId = typeof eventOrTarget === 'string' ? eventOrTarget : (maybeTarget || 'mafia-role-box');
+      const event = typeof eventOrTarget === 'string' ? null : eventOrTarget;
+      if (event) event.preventDefault();
+      const box = document.getElementById(targetId);
+      if (box) box.textContent = targetId === 'mafia-role-box' ? 'Press and hold below' : 'Hold below to view';
+    }
+
+    function mafiaVote(targetId) {
+      socket.emit('mafia-cast-vote', { targetId });
+    }
+
+    function mafiaNightAction(targetId) {
+      socket.emit('mafia-night-action', { targetId });
+    }
+
+    function mafiaNightPoll(choice) {
+      socket.emit('mafia-night-poll', { choice });
+    }
+
+    function renderMafiaStateLegacy(state) {
+      mafiaState = state;
+      const mafiaMainScreen = document.getElementById('screen-mafia-main');
+      if (mafiaMainScreen) mafiaMainScreen.classList.toggle('mafia-dead-mode', !!state.started && !state.isAlive && state.phase !== 'game-over');
+      const mafiaRoleScreen = document.getElementById('screen-mafia-role');
+      ['mafia-theme-role', 'mafia-theme-discussion', 'mafia-theme-voting', 'mafia-theme-revote', 'mafia-theme-night', 'mafia-theme-day-result', 'mafia-theme-night-result']
+        .forEach((className) => {
+          mafiaRoleScreen.classList.remove(className);
+          mafiaMainScreen.classList.remove(className);
+        });
+      const themeClass = state.phase === 'role-reveal'
+        ? 'mafia-theme-role'
+        : state.phase === 'discussion'
+          ? 'mafia-theme-discussion'
+          : state.phase === 'voting'
+            ? 'mafia-theme-voting'
+            : state.phase === 'revote'
+              ? 'mafia-theme-revote'
+              : state.phase === 'night'
+                ? 'mafia-theme-night'
+                : state.phase === 'day-result'
+                  ? 'mafia-theme-day-result'
+                  : state.phase === 'night-result'
+                    ? 'mafia-theme-night-result'
+                    : '';
+      if (themeClass) {
+        mafiaRoleScreen.classList.add(themeClass);
+        mafiaMainScreen.classList.add(themeClass);
+      }
+
+      if (!state.started) {
+        document.getElementById('mafia-joker-toggle').checked = !!state.jokerEnabled;
+        const setupNote = document.getElementById('mafia-setup-note');
+        if (setupNote) {
+          setupNote.textContent = state.players.length >= state.minPlayers
+            ? `${state.players.length} players ready. Deal roles when you want.`
+            : `Mafia needs at least ${state.minPlayers} players. ${state.players.length} joined.`;
+        }
+        const beginBtn = document.getElementById('mafia-begin-btn');
+        if (beginBtn) beginBtn.disabled = !state.canHostStartGame;
+        showScreen('screen-mafia-setup');
+        return;
+      }
+
+      if (state.phase === 'role-reveal') {
+        document.getElementById('mafia-role-box').textContent = 'Press and hold below';
+        document.getElementById('mafia-role-note').textContent = `${state.aliveKillers} killer${state.aliveKillers === 1 ? '' : 's'} in this game.`;
+        document.getElementById('mafia-role-host-controls').style.display = state.canHostStartDiscussion ? 'block' : 'none';
+        showScreen('screen-mafia-role');
+        return;
+      }
+
+      if (state.phase === 'game-over') {
+        document.getElementById('mafia-over-title').innerHTML = formatMafiaWinnerMessage(state.winner, state.players || []);
+        const wrap = document.getElementById('mafia-over-roles');
+        wrap.innerHTML = '';
+        state.revealedRoles.forEach(({ name, role }) => {
+          const row = document.createElement('div');
+          row.className = 'mafia-player-row';
+          row.innerHTML = `<div class="mafia-player-main"><div class="mafia-player-name" style="color:${getPlayerColor(name)}">${name}</div><div class="mafia-player-sub">${role}</div></div>`;
+          wrap.appendChild(row);
+        });
+        showScreen('screen-mafia-over');
+        return;
+      }
+
+      document.getElementById('mafia-phase-chip').textContent =
+        state.phase === 'discussion' ? `Day ${state.dayNumber} Discussion` :
+        state.phase === 'voting' ? `Day ${state.dayNumber} Voting` :
+        state.phase === 'revote' ? `Day ${state.dayNumber} Revote` :
+        state.phase === 'night' ? `Night ${state.nightNumber}` :
+        state.phase === 'day-result' ? `Day ${state.dayNumber} Result` :
+        state.phase === 'night-result' ? `Night ${state.nightNumber} Result` :
+        'Mafia';
+
+      document.getElementById('mafia-main-title').textContent = state.isAlive ? 'Mafia' : 'Mafia';
+      document.getElementById('mafia-main-subtitle').textContent =
+        state.phase === 'discussion' ? `${state.timer.discussion}s on the discussion clock` :
+        state.phase === 'night' ? `${state.timer.night}s remaining in the night` :
+        ['voting', 'revote'].includes(state.phase) ? `${state.timer.voting}s remaining to vote` :
+        `${state.aliveKillers} killer${state.aliveKillers === 1 ? '' : 's'} left in the game`;
+      document.getElementById('mafia-dead-banner').style.display = state.isAlive ? 'none' : 'block';
+      document.getElementById('mafia-event-card').textContent = state.eventMessage || '';
+      const majorityNote = document.getElementById('mafia-majority-note');
+      if (['voting', 'revote'].includes(state.phase)) {
+        majorityNote.style.display = 'block';
+        majorityNote.textContent = `A majority is needed (${state.majorityNeeded}).`;
+      } else {
+        majorityNote.style.display = 'none';
+      }
+
+      const pollCard = document.getElementById('mafia-poll-card');
+      if (state.lastPollResult) {
+        pollCard.style.display = 'block';
+        pollCard.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">Last Night's Poll: ${state.lastPollResult.question}</div>`;
+        state.lastPollResult.counts.forEach(({ option, count }) => {
+          const row = document.createElement('div');
+          row.className = 'mafia-poll-result';
+          row.innerHTML = `<span>${option}</span><span class="mafia-count">${count}</span>`;
+          pollCard.appendChild(row);
+        });
+      } else {
+        pollCard.style.display = 'none';
+        pollCard.innerHTML = '';
+      }
+
+      const killerCard = document.getElementById('mafia-killer-card');
+      if (state.killerTeam && state.killerTeam.length > 0) {
+        killerCard.style.display = 'block';
+        killerCard.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">Killer Team</div>`;
+        state.killerVoteView.forEach(({ killerName, targetName }) => {
+          const row = document.createElement('div');
+          row.className = 'mafia-poll-result';
+          row.innerHTML = `<span style="color:${getPlayerColor(killerName)}">${killerName}</span><span>${targetName}</span>`;
+          killerCard.appendChild(row);
+        });
+      } else {
+        killerCard.style.display = 'none';
+        killerCard.innerHTML = '';
+      }
+
+      const playerWrap = document.getElementById('mafia-player-list');
+      playerWrap.innerHTML = '';
+      state.players.forEach((player) => {
+        const isVoteTarget = ['voting', 'revote'].includes(state.phase) && state.isAlive && player.alive && (!state.revoteCandidates.length || state.revoteCandidates.includes(player.id));
+        const row = document.createElement(isVoteTarget ? 'button' : 'div');
+        row.className = `mafia-player-row${player.alive ? '' : ' dead'}${state.currentVote === player.id ? ' selected-vote' : ''}`;
+        if (isVoteTarget) {
+          row.type = 'button';
+          row.onclick = () => mafiaVote(player.id);
+        }
+        const voteIcons = ['voting', 'revote'].includes(state.phase)
+          ? `<span class="mafia-vote-icons">${player.voteCount > 0 ? '● '.repeat(Math.min(player.voteCount, 6)).trim() : ''}</span>`
+          : '';
+        row.innerHTML = `
+          <div class="mafia-player-main">
+            <div class="mafia-player-name" style="color:${getPlayerColor(player.name)}">${player.name}</div>
+            <div class="mafia-player-sub">${player.alive ? 'Alive' : 'Dead'}${state.currentVote === player.id ? ' • Your vote' : ''}</div>
+          </div>
+          <div class="mafia-count">${['voting', 'revote'].includes(state.phase) ? `${voteIcons}${player.voteCount ? ` ${player.voteCount}` : ''}` : ''}</div>
+        `;
+        playerWrap.appendChild(row);
+      });
+
+      const actionArea = document.getElementById('mafia-action-area');
+      actionArea.innerHTML = '';
+      if (state.isAlive) {
+        if (['voting', 'revote'].includes(state.phase)) {
+          const abstainBtn = document.createElement('button');
+          abstainBtn.className = `mafia-action-btn${state.currentVote === '__abstain__' ? ' selected-vote' : ''}`;
+          abstainBtn.textContent = state.currentVote === '__abstain__' ? 'Abstain (Your vote)' : 'Abstain / No Vote';
+          abstainBtn.onclick = () => mafiaVote('__abstain__');
+          actionArea.appendChild(abstainBtn);
+        } else if (state.phase === 'night') {
+          if (state.selectedNightChoice) {
+            const waitingCard = document.createElement('div');
+            waitingCard.className = 'mafia-card';
+            waitingCard.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.4rem;">Selection locked</div><div class="et-topic-meta">Waiting for the night to resolve...</div>`;
+            actionArea.appendChild(waitingCard);
+          } else if (state.pendingPoll && state.actionType === 'poll') {
+            const card = document.createElement('div');
+            card.className = 'mafia-card';
+            card.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">${state.pendingPoll.question}</div>`;
+            state.actionOptions.forEach((option) => {
+              const btn = document.createElement('button');
+              btn.className = 'mafia-action-btn';
+              btn.textContent = option.name;
+              btn.onclick = () => mafiaNightPoll(option.id);
+              card.appendChild(btn);
+            });
+            actionArea.appendChild(card);
+          } else if (state.actionOptions.length > 0) {
+            const card = document.createElement('div');
+            card.className = 'mafia-card';
+            card.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">${state.actionType === 'killer' ? 'Choose a kill target' : 'Choose someone to protect'}</div>`;
+            state.actionOptions.forEach((option) => {
+              const btn = document.createElement('button');
+              btn.className = 'mafia-action-btn';
+              btn.textContent = option.name;
+              btn.onclick = () => mafiaNightAction(option.id);
+              card.appendChild(btn);
+            });
+            actionArea.appendChild(card);
+          }
+        }
+      }
+
+      const hostWrap = document.getElementById('mafia-host-controls');
+      hostWrap.innerHTML = '';
+      if (state.canHostAdvanceDiscussion) {
+        const btn = document.createElement('button');
+        btn.className = 'mafia-host-btn';
+        btn.textContent = 'Start Voting';
+        btn.onclick = startMafiaVoting;
+        hostWrap.appendChild(btn);
+      }
+      if (state.canHostStartDiscussion) {
+        const btn = document.createElement('button');
+        btn.className = 'mafia-host-btn';
+        btn.textContent = state.phase === 'role-reveal' ? 'Start Day 1' : `Start Day ${state.dayNumber + 1}`;
+        btn.onclick = startMafiaDiscussion;
+        hostWrap.appendChild(btn);
+      }
+
+      showScreen('screen-mafia-main');
+    }
+
+    function renderMafiaState(state) {
+      mafiaState = state;
+      const mafiaMainScreen = document.getElementById('screen-mafia-main');
+      const mafiaRoleScreen = document.getElementById('screen-mafia-role');
+      if (mafiaMainScreen) mafiaMainScreen.classList.toggle('mafia-dead-mode', !!state.started && !state.isAlive && !['game-over', 'winner-splash'].includes(state.phase));
+      ['mafia-theme-role', 'mafia-theme-discussion', 'mafia-theme-voting', 'mafia-theme-revote', 'mafia-theme-night', 'mafia-theme-day-result', 'mafia-theme-night-result']
+        .forEach((className) => {
+          mafiaRoleScreen.classList.remove(className);
+          mafiaMainScreen.classList.remove(className);
+        });
+      const themeClass = state.phase === 'discussion'
+        ? 'mafia-theme-discussion'
+        : state.phase === 'voting'
+          ? 'mafia-theme-voting'
+          : state.phase === 'revote'
+            ? 'mafia-theme-revote'
+            : state.phase === 'night'
+              ? 'mafia-theme-night'
+              : state.phase === 'day-result'
+                ? 'mafia-theme-day-result'
+                : state.phase === 'night-result'
+                  ? 'mafia-theme-night-result'
+                  : '';
+      if (themeClass) mafiaMainScreen.classList.add(themeClass);
+
+      if (!state.started) {
+        const setupScreen = document.getElementById('screen-mafia-setup');
+        document.getElementById('mafia-joker-toggle').checked = !!state.jokerEnabled;
+        document.getElementById('mafia-polls-toggle').checked = !state.hiddenPollsUntilEnd;
+        document.getElementById('mafia-joker-toggle').disabled = !state.isHost;
+        document.getElementById('mafia-polls-toggle').disabled = !state.isHost;
+        const roleScalingLive = document.getElementById('mafia-role-scaling-live');
+        if (roleScalingLive) {
+          roleScalingLive.textContent = `There are ${state.players.length} players and ${state.roleCounts.killers} killer${state.roleCounts.killers === 1 ? '' : 's'}.`;
+        }
+        if (setupScreen) setupScreen.classList.toggle('mafia-setup-locked', !state.isHost);
+        const setupNote = document.getElementById('mafia-setup-note');
+        if (setupNote) {
+          setupNote.textContent = state.players.length >= state.minPlayers
+            ? ''
+            : `Mafia needs at least ${state.minPlayers} players. ${state.players.length} joined.`;
+          setupNote.style.display = setupNote.textContent ? 'block' : 'none';
+        }
+        const beginBtn = document.getElementById('mafia-begin-btn');
+        if (beginBtn) beginBtn.disabled = !state.canHostStartGame;
+        showScreen('screen-mafia-setup');
+        return;
+      }
+
+      if (state.phase === 'winner-splash') {
+        const winnerNameEl = document.getElementById('mafia-joker-winner-name');
+        document.body.classList.remove('mafia-phase-discussion', 'mafia-phase-voting', 'mafia-phase-revote', 'mafia-phase-night', 'mafia-phase-day-result', 'mafia-phase-winner-town', 'mafia-phase-winner-killers', 'mafia-phase-winner-joker');
+        document.body.classList.add(
+          state.winner?.team === 'town' ? 'mafia-phase-winner-town' :
+          state.winner?.team === 'killers' ? 'mafia-phase-winner-killers' :
+          'mafia-phase-winner-joker'
+        );
+        document.getElementById('mafia-win-badge').textContent = state.winner?.team === 'joker' ? 'Instant Win' : 'Game Over';
+        document.getElementById('mafia-win-title').textContent =
+          state.winner?.team === 'town' ? 'Town Triumphs' :
+          state.winner?.team === 'killers' ? 'Killers Take Over' :
+          'Joker Unleashed';
+        winnerNameEl.textContent = '';
+        winnerNameEl.style.display = 'none';
+        document.getElementById('mafia-win-sub').textContent =
+          state.winner?.team === 'town' ? 'Every killer is gone. The village holds the line.' :
+          state.winner?.team === 'killers' ? 'The killers now control the town.' :
+          'The Joker got voted out and stole the whole game.';
+        const winWrap = document.querySelector('#screen-mafia-joker-win .mafia-joker-ult');
+        if (winWrap) {
+          winWrap.classList.remove('win-town', 'win-killers');
+          if (state.winner?.team === 'town') winWrap.classList.add('win-town');
+          if (state.winner?.team === 'killers') winWrap.classList.add('win-killers');
+        }
+        showScreen('screen-mafia-joker-win');
+        return;
+      }
+      document.getElementById('mafia-joker-winner-name').style.display = 'block';
+
+      if (state.phase === 'game-over') {
+        const overTitle = document.getElementById('mafia-over-title');
+        if (overTitle) overTitle.innerHTML = formatMafiaWinnerMessage(state.winner, state.players || []);
+        const killerWrap = document.getElementById('mafia-over-killers');
+        const townWrap = document.getElementById('mafia-over-town');
+        killerWrap.innerHTML = '';
+        townWrap.innerHTML = '';
+        state.revealedRoles.forEach(({ name, role }) => {
+          const row = document.createElement('div');
+          row.className = 'mafia-player-row';
+          const playerState = state.players.find((player) => player.name === name);
+          row.innerHTML = `<div class="mafia-player-main"><div class="mafia-player-name" style="color:${getPlayerColor(name)}">${getMafiaRoleEmoji(role)} ${name}${playerState && !playerState.alive ? ' 🪦' : ''}</div><div class="mafia-player-sub${role === 'joker' ? ' joker-tag' : ''}">${role === 'joker' ? 'Joker' : role}</div></div>`;
+          if (['killer', 'joker'].includes(role)) killerWrap.appendChild(row);
+          else townWrap.appendChild(row);
+        });
+        const overPoll = document.getElementById('mafia-over-poll');
+        if (state.finalPolarizedPoll) {
+          overPoll.style.display = 'block';
+          overPoll.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">Most Split Poll: Night ${state.finalPolarizedPoll.nightNumber}</div><div class="et-topic-meta" style="margin-bottom:0.7rem;">${state.finalPolarizedPoll.question}</div>`;
+          state.finalPolarizedPoll.counts.forEach(({ option, count }) => {
+            const row = document.createElement('div');
+            row.className = 'mafia-poll-result';
+            row.innerHTML = `<span>${option}</span><span class="mafia-count">${count}</span>`;
+            overPoll.appendChild(row);
+          });
+        } else {
+          overPoll.style.display = 'none';
+          overPoll.innerHTML = '';
+        }
+        showScreen('screen-mafia-over');
+        return;
+      }
+
+      document.getElementById('mafia-phase-chip').textContent =
+        state.phase === 'discussion' ? `Day ${state.dayNumber} Discussion` :
+        state.phase === 'voting' ? `Day ${state.dayNumber} Voting` :
+        state.phase === 'revote' ? `Day ${state.dayNumber} Revote` :
+        state.phase === 'night' ? `Night ${state.nightNumber}` :
+        state.phase === 'day-result' ? `Day ${state.dayNumber} Result` :
+        state.phase === 'night-result' ? `Night ${state.nightNumber} Result` :
+        'Mafia';
+
+      document.getElementById('mafia-main-title').textContent = 'Mafia';
+      document.getElementById('mafia-main-subtitle').textContent =
+        state.phase === 'discussion' ? `${state.timer.discussion}s on the discussion clock` :
+        state.phase === 'night' ? `${state.timer.night}s remaining in the night` :
+        ['voting', 'revote'].includes(state.phase) ? `${state.timer.voting}s remaining to vote` :
+        `${state.aliveKillers} killer${state.aliveKillers === 1 ? '' : 's'} left in the game`;
+      const mainRoleNote = document.getElementById('mafia-main-role-note');
+      if (mainRoleNote) {
+        mainRoleNote.textContent = state.aliveKillers === 1
+          ? '1 killer remains.'
+          : `${state.aliveKillers} killers remain.`;
+      }
+      document.body.classList.remove('mafia-phase-discussion', 'mafia-phase-voting', 'mafia-phase-revote', 'mafia-phase-night', 'mafia-phase-day-result', 'mafia-phase-winner-town', 'mafia-phase-winner-killers', 'mafia-phase-winner-joker');
+      if (state.phase === 'discussion') document.body.classList.add('mafia-phase-discussion');
+      if (state.phase === 'voting') document.body.classList.add('mafia-phase-voting');
+      if (state.phase === 'revote') document.body.classList.add('mafia-phase-revote');
+      if (state.phase === 'night') document.body.classList.add('mafia-phase-night');
+      if (state.phase === 'day-result') document.body.classList.add('mafia-phase-day-result');
+      document.getElementById('mafia-dead-banner').style.display = state.isAlive ? 'none' : 'block';
+
+      const eventCard = document.getElementById('mafia-event-card');
+      eventCard.classList.remove('good', 'bad', 'joker');
+      if (state.eventTone === 'good' || state.eventTone === 'bad' || state.eventTone === 'joker') eventCard.classList.add(state.eventTone);
+      eventCard.innerHTML = formatMafiaEventMessage(state.eventMessage || '', state.players || []);
+
+      const majorityNote = document.getElementById('mafia-majority-note');
+      if (['voting', 'revote'].includes(state.phase)) {
+        majorityNote.style.display = 'block';
+        majorityNote.textContent = `A majority is needed (${state.majorityNeeded}).`;
+      } else {
+        majorityNote.style.display = 'none';
+      }
+
+      const pollCard = document.getElementById('mafia-poll-card');
+      if (state.lastPollResult) {
+        pollCard.style.display = 'block';
+        pollCard.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">Last Night's Poll: ${state.lastPollResult.question}</div>`;
+        state.lastPollResult.counts.forEach(({ option, count }) => {
+          const row = document.createElement('div');
+          row.className = 'mafia-poll-result';
+          row.innerHTML = `<span>${option}</span><span class="mafia-count">${count}</span>`;
+          pollCard.appendChild(row);
+        });
+      } else {
+        pollCard.style.display = 'none';
+        pollCard.innerHTML = '';
+      }
+
+      const killerCard = document.getElementById('mafia-killer-card');
+      killerCard.style.display = 'none';
+      killerCard.innerHTML = '';
+
+      const actionArea = document.getElementById('mafia-action-area');
+      actionArea.innerHTML = '';
+      if (state.isAlive) {
+        if (state.phase === 'night') {
+          if (state.selectedNightChoice) {
+            const waitingCard = document.createElement('div');
+            waitingCard.className = 'mafia-card';
+            waitingCard.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.4rem;">Selection locked</div><div class="et-topic-meta">Waiting for the night to resolve...</div>`;
+            actionArea.appendChild(waitingCard);
+          } else if (state.pendingPoll && state.actionType === 'poll') {
+            const card = document.createElement('div');
+            card.className = 'mafia-card';
+            card.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">${state.pendingPoll.question}</div>`;
+            state.actionOptions.forEach((option) => {
+              const btn = document.createElement('button');
+              btn.className = 'mafia-action-btn';
+              btn.textContent = option.name;
+              btn.onclick = () => mafiaNightPoll(option.id);
+              card.appendChild(btn);
+            });
+            actionArea.appendChild(card);
+          } else if (state.actionOptions.length > 0) {
+            const card = document.createElement('div');
+            card.className = 'mafia-card';
+            card.innerHTML = `<div class="et-topic-name" style="margin-bottom:0.5rem;">${state.actionType === 'killer' ? 'Choose a kill target' : 'Choose someone to protect'}</div>`;
+            state.actionOptions.forEach((option) => {
+              const btn = document.createElement('button');
+              btn.className = 'mafia-action-btn';
+              btn.textContent = option.name;
+              btn.onclick = () => mafiaNightAction(option.id);
+              card.appendChild(btn);
+            });
+            actionArea.appendChild(card);
+          }
+        }
+      }
+
+      const playerWrap = document.getElementById('mafia-player-list');
+      playerWrap.innerHTML = '';
+      const renderVoteRow = ({ id, name, alive, voteCount, subtitle, color, selectable, isSelected, isKnownKiller }) => {
+        const row = document.createElement(selectable ? 'button' : 'div');
+        row.className = `mafia-player-row${alive ? '' : ' dead'}${isSelected ? ' selected-vote' : ''}`;
+        if (selectable) {
+          row.type = 'button';
+          row.onclick = () => mafiaVote(id);
+        }
+        const voteIcons = ['voting', 'revote'].includes(state.phase)
+          ? `<span class="mafia-vote-icons">${voteCount > 0 ? 'â— '.repeat(Math.min(voteCount, 6)).trim() : ''}</span>`
+          : '';
+        row.innerHTML = `
+          <div class="mafia-player-main">
+            <div class="mafia-player-name" style="color:${color}">${name}</div>
+            <div class="mafia-player-sub">${subtitle}${isSelected ? ' â€¢ Your vote' : ''}</div>
+          </div>
+          <div class="mafia-count">${['voting', 'revote'].includes(state.phase) ? `${voteIcons}${voteCount ? ` ${voteCount}` : ''}` : ''}</div>
+        `;
+        playerWrap.appendChild(row);
+      };
+
+      state.players.forEach((player) => {
+        const isVoteTarget = ['voting', 'revote'].includes(state.phase) && state.isAlive && player.alive && (!state.revoteCandidates.length || state.revoteCandidates.includes(player.id));
+        renderVoteRow({
+          id: player.id,
+          name: player.name,
+          alive: player.alive,
+          voteCount: player.voteCount,
+          subtitle: player.alive ? 'Alive' : 'Dead',
+          color: getPlayerColor(player.name),
+          selectable: isVoteTarget,
+          isSelected: state.currentVote === player.id,
+        });
+      });
+
+      if (['voting', 'revote'].includes(state.phase)) {
+        renderVoteRow({
+          id: '__abstain__',
+          name: 'Abstain',
+          alive: true,
+          voteCount: state.abstainVoteCount || 0,
+          subtitle: 'Public no-elimination vote',
+          color: '#fde68a',
+          selectable: state.isAlive,
+          isSelected: state.currentVote === '__abstain__',
+        });
+      }
+
+      playerWrap.innerHTML = '';
+      const renderVoteRowFixed = ({ id, name, alive, voteCount, subtitle, color, selectable, isSelected, isKnownKiller }) => {
+        const row = document.createElement(selectable ? 'button' : 'div');
+        row.className = `mafia-player-row${alive ? '' : ' dead'}${isSelected ? ' selected-vote' : ''}`;
+        if (selectable) {
+          row.type = 'button';
+          row.onclick = () => mafiaVote(id);
+        }
+        const voteIcons = ['voting', 'revote'].includes(state.phase)
+          ? `<span class="mafia-vote-icons">${voteCount > 0 ? '&bull; '.repeat(Math.min(voteCount, 6)).trim() : ''}</span>`
+          : '';
+        const killerMarker = state.canShowNightKillerMarkers && state.phase === 'night' && isKnownKiller ? '<span class="mafia-killer-mark">🔪</span>' : '';
+        row.innerHTML = `
+          <div class="mafia-player-main">
+            <div class="mafia-player-name" style="color:${color}">${killerMarker}${name}</div>
+            <div class="mafia-player-sub">${subtitle}${isSelected ? ' - Your vote' : ''}</div>
+          </div>
+          <div class="mafia-count">${['voting', 'revote'].includes(state.phase) ? `${voteIcons}${voteCount ? ` ${voteCount}` : ''}` : ''}</div>
+        `;
+        playerWrap.appendChild(row);
+      };
+
+      state.players.forEach((player) => {
+        const isVoteTarget = ['voting', 'revote'].includes(state.phase) && state.isAlive && player.alive && player.id !== state.playerId && (!state.revoteCandidates.length || state.revoteCandidates.includes(player.id));
+        renderVoteRowFixed({
+          id: player.id,
+          name: player.name,
+          alive: player.alive,
+          voteCount: player.voteCount,
+          subtitle: player.alive ? 'Alive' : 'Dead',
+          color: getPlayerColor(player.name),
+          selectable: isVoteTarget,
+          isSelected: state.currentVote === player.id,
+          isKnownKiller: !!player.isKnownKiller,
+        });
+      });
+
+      if (['voting', 'revote'].includes(state.phase)) {
+        renderVoteRowFixed({
+          id: '__abstain__',
+          name: 'Abstain',
+          alive: true,
+          voteCount: state.abstainVoteCount || 0,
+          subtitle: 'Public no-elimination vote',
+          color: '#fde68a',
+          selectable: state.isAlive,
+          isSelected: state.currentVote === '__abstain__',
+          isKnownKiller: false,
+        });
+      }
+
+      const hostWrap = document.getElementById('mafia-host-controls');
+      hostWrap.innerHTML = '';
+      if (state.canHostAdvanceDiscussion) {
+        const btn = document.createElement('button');
+        btn.className = 'mafia-host-btn';
+        btn.textContent = 'Skip to Voting';
+        btn.onclick = startMafiaVoting;
+        hostWrap.appendChild(btn);
+      }
+      if (state.canHostStartDiscussion) {
+        const btn = document.createElement('button');
+        btn.className = 'mafia-host-btn';
+        btn.textContent = `Start Day ${state.dayNumber + 1}`;
+        btn.onclick = startMafiaDiscussion;
+        hostWrap.appendChild(btn);
+      }
+
+      showScreen('screen-mafia-main');
+    }
+
+    socket.on('mafia-state', renderMafiaState);
+
+    function submitETTopic() {
+      const input = document.getElementById('et-topic-input');
+      const topic = input.value.trim();
+      if (!topic) return;
+      document.getElementById('et-topic-message').textContent = 'Checking topic...';
+      document.getElementById('et-topic-submit-btn').disabled = true;
+      socket.emit('et-submit-topic', { topic });
+    }
+
+    socket.on('et-topic-status', ({ readyCount, total, topics }) => {
+      document.getElementById('et-topic-ready-count').textContent = readyCount;
+      document.getElementById('et-topic-total-count').textContent = total;
+
+      const list = document.getElementById('et-topic-list');
+      list.innerHTML = '';
+      topics.forEach(({ playerName, topic, status }) => {
+        const row = document.createElement('div');
+        row.className = 'et-topic-row';
+
+        let statusLabel = 'Waiting';
+        if (status === 'validating') statusLabel = 'Checking';
+        if (status === 'ready') statusLabel = 'Ready';
+        if (status === 'needs-resubmit') statusLabel = 'Redo';
+
+        row.innerHTML = `
+          <div>
+            <div class="et-topic-name" style="color:${getPlayerColor(playerName)}">${playerName}</div>
+            <div class="et-topic-meta">${topic || 'No topic yet'}</div>
+          </div>
+          <div class="et-status">${statusLabel}</div>
+        `;
+        list.appendChild(row);
+      });
+    });
+
+    socket.on('et-topic-accepted', ({ topic }) => {
+      document.getElementById('et-topic-message').textContent = `"${topic}" locked in! Waiting for the rest...`;
+      document.getElementById('et-topic-input').value = topic;
+      document.getElementById('et-topic-submit-btn').disabled = true;
+    });
+
+    socket.on('et-topic-invalid', ({ message }) => {
+      document.getElementById('et-topic-message').textContent = message;
+      document.getElementById('et-topic-submit-btn').disabled = false;
+      document.getElementById('et-topic-input').focus();
+    });
+
+    socket.on('et-section-intro', ({ topic, submittedBy }) => {
+      document.getElementById('et-intro-topic').textContent = topic;
+      document.getElementById('et-intro-submitted-by').textContent = `Submitted by ${submittedBy}`;
+      showScreen('screen-et-intro');
+    });
+
+    socket.on('et-question-start', ({ topic, sectionNumber, totalSections, questionNumber, totalQuestionsInSection, question, answers }) => {
+      etHasAnswered = false;
+      document.getElementById('et-section-number').textContent = sectionNumber;
+      document.getElementById('et-section-total').textContent = totalSections;
+      document.getElementById('et-question-number').textContent = questionNumber;
+      document.getElementById('et-question-total').textContent = totalQuestionsInSection;
+      document.getElementById('et-question-topic').textContent = topic;
+      document.getElementById('et-question-text').textContent = question;
+      document.getElementById('et-answer-message').textContent = '';
+      document.getElementById('et-answer-count').textContent = '';
+      resetBar('et-question-bar');
+
+      const wrap = document.getElementById('et-answer-options');
+      wrap.innerHTML = '';
+      answers.forEach((answer) => {
+        const btn = document.createElement('button');
+        btn.className = 'et-answer-btn';
+        btn.textContent = answer;
+        btn.onclick = () => {
+          if (etHasAnswered) return;
+          etHasAnswered = true;
+          wrap.querySelectorAll('.et-answer-btn').forEach((button) => { button.disabled = true; });
+          socket.emit('et-answer', { answer });
+        };
+        wrap.appendChild(btn);
+      });
+
+      showScreen('screen-et-question');
+    });
+
+    socket.on('et-answer-locked', () => {
+      document.getElementById('et-answer-message').textContent = 'Answer locked in!';
+    });
+
+    socket.on('et-answer-count', ({ count, total }) => {
+      document.getElementById('et-answer-count').textContent = `${count} / ${total} answered`;
+    });
+
+    socket.on('et-timer-tick', ({ timeLeft, totalTime }) => {
+      setBar('et-question-bar', timeLeft, totalTime);
+      if (timeLeft <= 0) {
+        document.getElementById('et-answer-options').querySelectorAll('.et-answer-btn').forEach((button) => {
+          button.disabled = true;
+        });
+      }
+    });
+
+    socket.on('et-reveal', ({ correctAnswer, answersByPlayer, pointsAwarded, soloBonusPlayer }) => {
+      document.getElementById('et-correct-answer').textContent = correctAnswer;
+      document.getElementById('et-reveal-points-summary').textContent =
+        soloBonusPlayer ? `${soloBonusPlayer} got the solo-correct bonus.` : 'Points awarded by correct finish rank.';
+
+      const list = document.getElementById('et-reveal-list');
+      list.innerHTML = '';
+      answersByPlayer.forEach(({ playerName, answer, isCorrect }) => {
+        const row = document.createElement('div');
+        row.className = `et-topic-row et-reveal-row ${answer ? (isCorrect ? 'correct' : 'wrong') : 'missed'}`;
+        const guessedText = answer || 'No answer';
+        const points = pointsAwarded[playerName] || 0;
+        row.innerHTML = `
+          <div>
+            <div class="et-topic-name" style="color:${getPlayerColor(playerName)}">${playerName}</div>
+            <div class="et-topic-meta">${guessedText}</div>
+          </div>
+          <div class="et-status">${points > 0 ? `+${points}` : '0'}</div>
+        `;
+        list.appendChild(row);
+      });
+
+      document.getElementById('et-reveal-advance').textContent = 'Next question in a moment...';
+      showScreen('screen-et-reveal');
+    });
+
+    socket.on('et-section-scoreboard', ({ topic, leaderboard }) => {
+      document.getElementById('et-section-title').textContent = topic;
+      const wrap = document.getElementById('et-section-scores');
+      wrap.innerHTML = '';
+      [...leaderboard]
+        .sort((a, b) => (b.sectionScore - a.sectionScore) || (b.score - a.score) || a.name.localeCompare(b.name))
+        .forEach(({ name, score, sectionScore }) => {
+        const row = document.createElement('div');
+        row.className = 'et-score-row';
+        row.innerHTML = `
+          <div class="et-score-main">
+            <div class="et-score-name" style="color:${getPlayerColor(name)}">${name}</div>
+            <div class="et-score-sub">Section +${sectionScore}</div>
+          </div>
+          <div class="et-score-total">${score} pts</div>
+        `;
+        wrap.appendChild(row);
+      });
+      document.getElementById('et-section-advance').textContent = 'Next topic loading...';
+      showScreen('screen-et-section');
+    });
+
+    socket.on('et-game-over', ({ rankings, stats }) => {
+      const rankingsWrap = document.getElementById('et-final-rankings');
+      rankingsWrap.innerHTML = '';
+      rankings.forEach(({ name, score }, index) => {
+        const row = document.createElement('div');
+        row.className = 'et-score-row';
+        row.innerHTML = `
+          <div class="et-score-main">
+            <div class="et-score-name" style="color:${getPlayerColor(name)}">${index + 1}. ${name}</div>
+          </div>
+          <div class="et-score-total">${score} pts</div>
+        `;
+        rankingsWrap.appendChild(row);
+      });
+
+      const statsWrap = document.getElementById('et-final-stats');
+      statsWrap.innerHTML = '';
+      const statRows = [
+        stats.mostCorrect ? { label: 'Most Correct', value: `${stats.mostCorrect.name} • ${stats.mostCorrect.value}` } : null,
+        stats.mostFirsts ? { label: 'Most Firsts', value: `${stats.mostFirsts.name} • ${stats.mostFirsts.value}` } : null,
+        stats.fastestCorrect ? { label: 'Fastest Correct', value: `${stats.fastestCorrect.name} • ${(stats.fastestCorrect.value / 1000).toFixed(2)}s` } : null,
+        stats.bestTopicSection ? { label: 'Best Topic Section', value: `${stats.bestTopicSection.name} • ${stats.bestTopicSection.topic} • ${stats.bestTopicSection.value} pts` } : null,
+      ].filter(Boolean);
+
+      statRows.forEach(({ label, value }) => {
+        const row = document.createElement('div');
+        row.className = 'et-stat-row';
+        row.innerHTML = `<div class="et-stat-label">${label}</div><div class="et-stat-value">${value}</div>`;
+        statsWrap.appendChild(row);
+      });
+
+      [statsWrap].forEach((container) => {
+        container.querySelectorAll('.et-stat-value').forEach((el) => {
+          currentPlayers.forEach((player) => {
+            const safeName = player.name.replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+            el.innerHTML = el.innerHTML.replace(
+              new RegExp(safeName, 'g'),
+              `<span style="color:${getPlayerColor(player.name)}">${player.name}</span>`
+            );
+          });
+        });
+      });
+
+      showScreen('screen-et-over');
+    });
+
+    socket.on('qc-timer-tick', ({ timeLeft, totalTime }) => {
+      if (timeLeft <= 0) {
+        document.getElementById('qc-submit-btn').disabled = true;
+      }
+    });
+
+    function setType(type) {
+      selType = type;
+      document.getElementById('btn-question').classList.toggle('active', type === 'question');
+      document.getElementById('btn-challenge').classList.toggle('active', type === 'challenge');
+    }
+
+    function submitQC() {
+      const text = document.getElementById('qc-input').value.trim();
+      if (!text) return;
+      socket.emit('qc-submit', { text, type: selType });
+      document.getElementById('qc-input').value = '';
+    }
+
+    socket.on('qc-submit-ack', () => {
+      myQCCount++;
+      document.getElementById('qc-my-count').textContent = myQCCount;
+    });
+
+    function closeSubmissions() {
+      socket.emit('qc-close-submissions');
+    }
+
+    socket.on('qc-no-submissions', () => {
+      showScreen('screen-game-select');
+    });
+
+    // ── Q&C — Watch/Spin phase ─────────────────────────────────────
+    function setupWatchScreen(currentPlayer) {
+      const isMyTurn = currentPlayer.name === myName;
+
+      document.getElementById('qc-watch-other').style.display   = isMyTurn ? 'none' : 'block';
+      document.getElementById('qc-watch-my-turn').style.display = isMyTurn ? 'block' : 'none';
+      if (!isMyTurn) {
+        document.getElementById('watch-player-name').textContent = currentPlayer.name + "'s turn!";
+      }
+
+      document.getElementById('watch-reveal-box').style.display = 'none';
+      document.getElementById('qc-post-spin-controls').style.display = 'none';
+      const spinWrap = document.getElementById('spin-btn-wrap');
+      if (spinWrap) {
+        spinWrap.style.display = isMyTurn ? 'block' : 'none';
+        document.getElementById('spin-btn').disabled = false;
+        document.getElementById('spin-btn').classList.remove('spinning');
+      }
+    }
+
+    socket.on('qc-round-start', ({ currentPlayer }) => {
+      setupWatchScreen(currentPlayer);
+      showScreen('screen-qc-watch');
+    });
+
+    socket.on('qc-next-turn', ({ currentPlayer }) => {
+      setupWatchScreen(currentPlayer);
+    });
+
+    let spinAnimInterval = null;
+
+    function doSpin() {
+      document.getElementById('spin-btn').disabled = true;
+
+      const overlay   = document.getElementById('spin-overlay');
+      const emojiEl   = document.getElementById('spin-overlay-emoji');
+      const labelEl   = document.getElementById('spin-overlay-label');
+      const emojis    = ['❓', '⚡'];
+      let i = 0;
+
+      emojiEl.textContent    = emojis[0];
+      emojiEl.style.opacity  = '1';
+      emojiEl.style.transform = 'scale(1)';
+      labelEl.style.opacity  = '0';
+      labelEl.textContent    = '';
+      overlay.style.display  = 'flex';
+
+      spinAnimInterval = setInterval(() => {
+        emojiEl.style.opacity   = '0';
+        emojiEl.style.transform = 'scale(0.75)';
+        setTimeout(() => {
+          i++;
+          emojiEl.textContent     = emojis[i % 2];
+          emojiEl.style.opacity   = '1';
+          emojiEl.style.transform = 'scale(1)';
+        }, 90);
+      }, 200);
+
+      socket.emit('qc-spin');
+    }
+
+    socket.on('qc-spin-result', ({ picked }) => {
+      if (spinAnimInterval) { clearInterval(spinAnimInterval); spinAnimInterval = null; }
+
+      const overlay   = document.getElementById('spin-overlay');
+      const emojiEl   = document.getElementById('spin-overlay-emoji');
+      const labelEl   = document.getElementById('spin-overlay-label');
+      const isQ       = picked.type === 'question';
+
+      // Slam to final emoji with a bounce
+      emojiEl.style.transition = 'none';
+      emojiEl.textContent      = isQ ? '❓' : '⚡';
+      emojiEl.style.opacity    = '1';
+      emojiEl.style.transform  = 'scale(1.5)';
+      void emojiEl.offsetWidth;
+      emojiEl.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
+      emojiEl.style.transform  = 'scale(1)';
+
+      labelEl.textContent   = isQ ? 'Question' : 'Challenge';
+      labelEl.style.opacity = '1';
+
+      // Hold, then fade overlay out and reveal result box
+      setTimeout(() => {
+        overlay.style.transition = 'opacity 0.4s ease';
+        overlay.style.opacity    = '0';
+        setTimeout(() => {
+          overlay.style.display    = 'none';
+          overlay.style.opacity    = '';
+          overlay.style.transition = '';
+          emojiEl.style.transition = '';
+
+          const typeLabel = isQ ? '❓ Question' : '⚡ Challenge';
+          document.getElementById('watch-type').textContent = typeLabel;
+          document.getElementById('watch-text').textContent = picked.text;
+          document.getElementById('watch-reveal-box').style.display = 'block';
+          if (isHost) {
+            document.getElementById('qc-post-spin-controls').style.display = 'block';
+          }
+        }, 400);
+      }, 1400);
+    });
+
+    function nextPlayer() {
+      socket.emit('qc-next-player');
+    }
+
+    socket.on('qc-game-over', () => {
+      showScreen('screen-qc-over');
+    });
+
+    // ── Photo Roulette — Upload ────────────────────────────────────
+    socket.on('pr-photo-count', ({ count }) => {
+      document.getElementById('pr-total-count').textContent = `${count} total uploaded to the game`;
+    });
+
+    function closePRUploads() { socket.emit('pr-close-uploads'); }
+
+    socket.on('pr-no-photos', () => {
+      document.getElementById('pr-upload-error').textContent = 'No photos uploaded yet!';
+    });
+
+    socket.on('pr-upload-ack', ({ myCount }) => {
+      prMyUploadCount = myCount;
+      document.getElementById('pr-my-count').textContent = myCount;
+      if (myCount >= 3) {
+        document.getElementById('pr-upload-label').classList.add('disabled');
+        document.getElementById('pr-upload-error').textContent = 'Max 3 photos reached!';
+      }
+    });
+
+    socket.on('pr-upload-error', ({ message }) => {
+      document.getElementById('pr-upload-error').textContent = message;
+    });
+
+    async function handlePhotoSelect(event) {
+      const files = Array.from(event.target.files);
+      const canUpload = 3 - prMyUploadCount;
+      const toProcess = files.slice(0, canUpload);
+
+      document.getElementById('pr-upload-error').textContent = '';
+
+      for (const file of toProcess) {
+        if (prMyUploadCount >= 3) break;
+        try {
+          const dataURL = await compressPhoto(file);
+          socket.emit('pr-upload-photo', { dataURL });
+        } catch (e) {
+          document.getElementById('pr-upload-error').textContent = "Couldn't load a photo. Try another.";
+        }
+      }
+
+      event.target.value = '';
+    }
+
+    // ── Photo Roulette — Guess ─────────────────────────────────────
+    socket.on('pr-guess-prompt', ({ guessOptions, photoNumber, totalPhotos, photoData, isYourPhoto }) => {
+      prHasGuessed = false;
+
+      document.getElementById('pr-guess-number').textContent = `Photo ${photoNumber} of ${totalPhotos}`;
+      document.getElementById('pr-guess-img').src = photoData;
+      resetBar('pr-guess-bar');
+      document.getElementById('pr-guess-ack').textContent = '';
+      document.getElementById('pr-guess-count-label').textContent = '';
+
+      const hint = document.getElementById('pr-your-photo-hint');
+      hint.style.display = isYourPhoto ? 'block' : 'none';
+
+      const container = document.getElementById('pr-guess-options');
+      container.innerHTML = '';
+
+      guessOptions.forEach(name => {
+        const btn = document.createElement('button');
+        btn.className = 'pr-guess-btn';
+        btn.textContent = name;
+        btn.onclick = () => {
+          if (prHasGuessed) return;
+          prHasGuessed = true;
+          socket.emit('pr-guess', { guessedName: name });
+          container.querySelectorAll('.pr-guess-btn').forEach(b => b.disabled = true);
+        };
+        container.appendChild(btn);
+      });
+
+      showScreen('screen-pr-guess');
+    });
+
+    socket.on('pr-guess-ack', () => {
+      document.getElementById('pr-guess-ack').textContent = '✓ Guess locked in!';
+    });
+
+    socket.on('pr-guess-count', ({ count, total }) => {
+      const el = document.getElementById('pr-guess-count-label');
+      if (el) el.textContent = `${count} / ${total} guessed`;
+    });
+
+    socket.on('pr-timer-tick', ({ timeLeft, totalTime }) => {
+      setBar('pr-guess-bar', timeLeft, totalTime);
+      if (timeLeft <= 0) {
+        document.getElementById('pr-guess-options').querySelectorAll('.pr-guess-btn').forEach(b => b.disabled = true);
+      }
+    });
+
+    // ── Photo Roulette — Reveal ────────────────────────────────────
+    socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound, hasMorePhotos }) => {
+      document.getElementById('pr-reveal-name').textContent = photographerName + "'s photo!";
+      document.getElementById('pr-reveal-img').src = document.getElementById('pr-guess-img').src;
+
+      // Show all guesses
+      const guessContainer = document.getElementById('pr-reveal-guesses');
+      guessContainer.innerHTML = '';
+      if (guesses.length === 0) {
+        const row = document.createElement('div');
+        row.className = 'pr-reveal-guess-row no-guess';
+        row.textContent = 'Nobody guessed in time';
+        guessContainer.appendChild(row);
+      } else {
+        guesses.forEach(({ guesserName, guessedName }) => {
+          const correct = guessedName === photographerName;
+          const row = document.createElement('div');
+          row.className = 'pr-reveal-guess-row ' + (correct ? 'correct' : 'wrong');
+          row.innerHTML = `<span>${guesserName}</span><span>${guessedName} ${correct ? '✓' : '✗'}</span>`;
+          guessContainer.appendChild(row);
+        });
+      }
+
+      // My points this round
+      const myPoints = pointsThisRound[myName] || 0;
+      const ptEl = document.getElementById('pr-reveal-my-points');
+      ptEl.textContent = myPoints > 0 ? `+${myPoints} point${myPoints > 1 ? 's' : ''}!` : 'No points this round';
+      ptEl.style.color = myPoints > 0 ? '#4ade80' : '#5a4a7a';
+
+      // Host controls
+      if (isHost) {
+        document.getElementById('pr-next-btn').textContent =
+          hasMorePhotos ? 'Next Photo →' : 'See Final Scores';
+      }
+
+      showScreen('screen-pr-reveal');
+    });
+
+    function revealNow()    { socket.emit('pr-reveal-now'); }
+    function prNextPhoto()  { socket.emit('pr-next-photo'); }
+
+    socket.on('pr-advance-tick', ({ timeLeft }) => {
+      const el = document.getElementById('pr-advance-text');
+      if (!el) return;
+      el.style.display = 'block';
+      el.textContent = timeLeft > 0 ? `Next photo in ${timeLeft}...` : 'Loading next photo...';
+    });
+
+    socket.on('pr-game-over', ({ scores }) => {
+      const container = document.getElementById('pr-player-scores');
+      container.innerHTML = '';
+      const medals = ['🥇', '🥈', '🥉'];
+      scores.forEach((s, i) => {
+        const div = document.createElement('div');
+        div.className = 'pr-score-row';
+        div.innerHTML = `<span>${medals[i] || (i + 1) + '.'} ${s.name}</span><span class="pr-score-pts">${s.score} pts</span>`;
+        container.appendChild(div);
+      });
+      showScreen('screen-pr-over');
+    });
+
+    // ── Hot Takes ──────────────────────────────────────────────────
+    let htHasVoted = false;
+    let htPlayerColors = {};
+
+    socket.on('ht-round-start', ({ question, optionA, optionB, roundNumber, playerColors }) => {
+      htHasVoted = false;
+      htPlayerColors = playerColors;
+
+      document.getElementById('ht-p-round-num').textContent = roundNumber;
+      document.getElementById('ht-p-question').textContent = question;
+      resetBar('ht-p-timer-bar');
+      document.getElementById('ht-voted-msg').style.display = 'none';
+      document.getElementById('ht-p-vote-buttons').style.display = 'block';
+
+      const colorA = playerColors[optionA.name] || '#cfb991';
+      const colorB = playerColors[optionB.name] || '#cfb991';
+
+      const btnA = document.getElementById('ht-vote-btn-a');
+      const btnB = document.getElementById('ht-vote-btn-b');
+      btnA.textContent = optionA.name;
+      btnB.textContent = optionB.name;
+      btnA.disabled = false;
+      btnB.disabled = false;
+      btnA.style.borderColor = colorA;
+      btnA.style.color = colorA;
+      btnB.style.borderColor = colorB;
+      btnB.style.color = colorB;
+
+      showScreen('screen-ht-vote');
+    });
+
+    function htVote(choice) {
+      if (htHasVoted) return;
+      htHasVoted = true;
+      socket.emit('ht-vote', { votedFor: choice });
+      document.getElementById('ht-vote-btn-a').disabled = true;
+      document.getElementById('ht-vote-btn-b').disabled = true;
+      document.getElementById('ht-p-vote-buttons').style.display = 'none';
+      document.getElementById('ht-voted-msg').style.display = 'block';
+    }
+
+    socket.on('ht-timer-tick', ({ timeLeft, totalTime }) => {
+      setBar('ht-p-timer-bar', timeLeft, totalTime);
+      if (timeLeft <= 0 && !htHasVoted) {
+        document.getElementById('ht-vote-btn-a').disabled = true;
+        document.getElementById('ht-vote-btn-b').disabled = true;
+      }
+    });
+
+    socket.on('ht-reveal', ({ question, optionA, optionB, pctA, pctB, revealVotes, voteDetails, playerColors }) => {
+      htPlayerColors = playerColors;
+
+      document.getElementById('ht-p-rev-question').textContent = question;
+
+      const colorA = playerColors[optionA.name] || '#cfb991';
+      const colorB = playerColors[optionB.name] || '#cfb991';
+
+      const barsEl = document.getElementById('ht-p-rev-bars');
+      barsEl.innerHTML = `
+        <div class="ht-p-result-row">
+          <div class="ht-p-result-name" style="color:${colorA}">${optionA.name}</div>
+          <div class="ht-p-result-bar-wrap"><div class="ht-p-result-bar" style="background:${colorA}" data-target="${pctA}"></div></div>
+          <div class="ht-p-result-pct" style="color:${colorA}">${pctA}%</div>
+        </div>
+        <div class="ht-p-result-row">
+          <div class="ht-p-result-name" style="color:${colorB}">${optionB.name}</div>
+          <div class="ht-p-result-bar-wrap"><div class="ht-p-result-bar" style="background:${colorB}" data-target="${pctB}"></div></div>
+          <div class="ht-p-result-pct" style="color:${colorB}">${pctB}%</div>
+        </div>
+      `;
+      setTimeout(() => {
+        barsEl.querySelectorAll('.ht-p-result-bar').forEach(bar => {
+          bar.style.width = bar.dataset.target + '%';
+        });
+      }, 80);
+
+      const exposeSection = document.getElementById('ht-p-expose-section');
+      if (revealVotes && voteDetails.length > 0) {
+        exposeSection.style.display = 'block';
+        const listEl = document.getElementById('ht-p-vote-list');
+        listEl.innerHTML = '';
+        voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
+          const row = document.createElement('div');
+          row.className = 'ht-vote-row';
+          row.innerHTML = `<span style="color:${voterColor};font-weight:700">${voterName}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:700">${votedForName}</span>`;
+          listEl.appendChild(row);
+        });
+      } else {
+        exposeSection.style.display = 'none';
+      }
+
+      document.getElementById('ht-p-advance-text').textContent = 'Next round in 8...';
+      showScreen('screen-ht-reveal-p');
+    });
+
+    socket.on('ht-advance-tick', ({ timeLeft }) => {
+      const el = document.getElementById('ht-p-advance-text');
+      if (el) el.textContent = timeLeft > 0 ? `Next round in ${timeLeft}...` : 'Starting next round...';
+    });
+
+    socket.on('ht-game-over', () => {
+      showScreen('screen-ht-over');
+    });
+
+    // ── Helpers ────────────────────────────────────────────────────
+    socket.on('returned-to-lobby', () => {
+      showScreen('screen-lobby');
+    });
+
+    function setBar(id, timeLeft, totalTime) {
+      const bar = document.getElementById(id);
+      if (bar) bar.style.width = Math.max(0, (timeLeft / totalTime) * 100) + '%';
+    }
+
+    // Reset a timer bar to 100% instantly (bypasses CSS transition so it doesn't animate backwards)
+    function resetBar(id) {
+      const bar = document.getElementById(id);
+      if (!bar) return;
+      bar.style.transition = 'none';
+      bar.style.width = '100%';
+      void bar.offsetWidth; // force reflow so 'none' takes effect before restoring transition
+      bar.style.transition = '';
+    }
+
+    function compressPhoto(file) {
+      return new Promise((resolve, reject) => {
+        const reader = new FileReader();
+        reader.onload = (e) => {
+          const img = new Image();
+          img.onload = () => {
+            const MAX = 800;
+            let w = img.width, h = img.height;
+            if (w > MAX || h > MAX) {
+              if (w > h) { h = Math.round(h * MAX / w); w = MAX; }
+              else        { w = Math.round(w * MAX / h); h = MAX; }
+            }
+            const canvas = document.createElement('canvas');
+            canvas.width = w; canvas.height = h;
+            canvas.getContext('2d').drawImage(img, 0, 0, w, h);
+            resolve(canvas.toDataURL('image/jpeg', 0.72));
+          };
+          img.onerror = reject;
+          img.src = e.target.result;
+        };
+        reader.onerror = reject;
+        reader.readAsDataURL(file);
+      });
+    }
+
+    // ── Keyboard nav ───────────────────────────────────────────────
+    document.getElementById('home-name-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') joinRoomFromHome();
+    });
+    document.getElementById('home-pin-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') joinRoomFromHome();
+    });
+    document.getElementById('pin-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') joinRoom();
+    });
+    document.getElementById('et-topic-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') submitETTopic();
+    });
+    document.getElementById('qc-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter' && !e.shiftKey) { e.preventDefault(); submitQC(); }
+    });
+  </script>
+
+</body>
+</html>

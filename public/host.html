@@ -1,0 +1,808 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta http-equiv="refresh" content="0; url=/" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Johnbox Games — Host</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <style>
+    * { margin: 0; padding: 0; box-sizing: border-box; }
+
+    body {
+      background: #08041a;
+      background-image:
+        radial-gradient(ellipse at 15% 40%, rgba(124,58,237,0.12) 0%, transparent 55%),
+        radial-gradient(ellipse at 85% 15%, rgba(207,185,145,0.07) 0%, transparent 50%),
+        radial-gradient(ellipse at 70% 80%, rgba(76,29,149,0.10) 0%, transparent 45%);
+      color: #ede9f8;
+      font-family: 'Nunito', Arial, sans-serif;
+      min-height: 100vh;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+    }
+
+    .screen { display: none; text-align: center; padding: 2rem; width: 100%; }
+    .screen.active { display: block; }
+
+    h1 {
+      font-family: 'Cinzel', serif;
+      font-size: 3rem;
+      color: #cfb991;
+      margin-bottom: 0.5rem;
+      text-shadow: 0 0 40px rgba(207,185,145,0.3), 0 2px 4px rgba(0,0,0,0.5);
+    }
+    h2 { font-size: 1.2rem; color: #8b7aa8; margin-bottom: 2rem; }
+
+    input {
+      padding: 1rem 1.5rem;
+      font-size: 1.2rem;
+      border-radius: 8px;
+      border: 2px solid #2d1f50;
+      background: #0f0a20;
+      color: #ede9f8;
+      width: 300px;
+      text-align: center;
+      outline: none;
+      font-family: 'Nunito', sans-serif;
+      transition: border-color 0.2s, box-shadow 0.2s;
+    }
+    input:focus { border-color: #7c3aed; box-shadow: 0 0 14px rgba(124,58,237,0.25); }
+
+    .btn {
+      display: inline-block;
+      padding: 1rem 2.5rem;
+      font-size: 1.1rem;
+      border-radius: 8px;
+      border: none;
+      background: #cfb991;
+      color: #08041a;
+      cursor: pointer;
+      margin-top: 1rem;
+      font-family: 'Nunito', sans-serif;
+      font-weight: 700;
+      letter-spacing: 0.02em;
+      transition: background 0.2s, box-shadow 0.2s;
+    }
+    .btn:hover { background: #ddd0aa; box-shadow: 0 0 20px rgba(207,185,145,0.35); }
+    .btn:disabled { background: #2d1f50; color: #5a4a7a; cursor: not-allowed; box-shadow: none; }
+    .btn-ghost {
+      background: transparent;
+      border: 1px solid #4c1d95;
+      color: #c084fc;
+      padding: 0.4rem 0.9rem;
+      font-size: 0.85rem;
+    }
+    .btn-ghost:hover { background: #1a1232; color: #e9d5ff; box-shadow: 0 0 10px rgba(192,132,252,0.2); }
+    .btn-small { padding: 0.6rem 1.5rem; font-size: 0.9rem; margin-top: 0.5rem; }
+
+    /* ── Lobby ── */
+    .lobby-wrap { max-width: 900px; margin: 0 auto; }
+    .lobby-grid {
+      display: flex; gap: 4rem; justify-content: center;
+      align-items: flex-start; margin-top: 2rem; flex-wrap: wrap;
+    }
+    .join-info { text-align: center; }
+    .url-label { font-size: 1rem; color: #8b7aa8; margin-bottom: 0.25rem; }
+    .player-url { font-size: 1.4rem; color: #ede9f8; font-weight: bold; margin-bottom: 1rem; }
+    .pin-label { font-size: 0.9rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.25rem; }
+    .pin {
+      font-family: 'Cinzel', serif;
+      font-size: 5rem; font-weight: 900; color: #cfb991;
+      letter-spacing: 0.5rem; line-height: 1; margin-bottom: 1rem;
+      text-shadow: 0 0 50px rgba(207,185,145,0.45);
+    }
+    #qrcode { margin: 0 auto; }
+    #qrcode img { border-radius: 8px; display: block; border: 3px solid #2d1f50; }
+    .player-list { text-align: left; min-width: 240px; }
+    .player-list-header { font-size: 0.8rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 1rem; }
+    .player-item { display: flex; align-items: center; justify-content: space-between; padding: 0.8rem 1rem; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; margin-bottom: 0.5rem; gap: 1rem; }
+    .player-name { font-size: 1.05rem; }
+    .start-section { margin-top: 2.5rem; }
+    .start-hint { color: #8b7aa8; font-size: 0.95rem; margin-top: 0.75rem; }
+
+    /* ── Game selector ── */
+    .game-cards { display: flex; gap: 1.5rem; justify-content: center; flex-wrap: wrap; margin-top: 2rem; }
+    .game-card {
+      background: #1a1232; border-radius: 14px; padding: 2rem; width: 220px;
+      cursor: pointer; transition: transform 0.15s, border-color 0.15s, box-shadow 0.15s;
+      border: 2px solid #2d1f50; text-align: center;
+    }
+    .game-card:hover { transform: translateY(-6px); border-color: #cfb991; box-shadow: 0 10px 30px rgba(207,185,145,0.15); }
+    .game-icon { font-size: 3rem; margin-bottom: 1rem; }
+    .game-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: #ede9f8; }
+    .game-desc { font-size: 0.85rem; color: #8b7aa8; line-height: 1.4; }
+
+    /* ── Timer bar ── */
+    .timer-bar-wrap { background: #0f0a20; border-radius: 4px; height: 10px; margin: 1.5rem auto; overflow: hidden; max-width: 500px; border: 1px solid #2d1f50; }
+    .timer-bar { height: 100%; background: linear-gradient(90deg, #4c1d95, #7c3aed, #cfb991); border-radius: 4px; transition: width 1s linear; width: 100%; }
+    .timer-text { font-size: 1.1rem; color: #8b7aa8; margin-bottom: 1rem; }
+
+    /* ── Q&C collect ── */
+    .sub-count-big { font-family: 'Cinzel', serif; font-size: 5rem; font-weight: 900; color: #cfb991; line-height: 1; text-shadow: 0 0 50px rgba(207,185,145,0.35); }
+    .sub-count-label { font-size: 1rem; color: #8b7aa8; margin-bottom: 2rem; }
+
+    /* ── Wheel ── */
+    .wheel-wrap { margin: 2rem auto; max-width: 600px; }
+    .wheel-reel {
+      background: #0f0a20; border: 3px solid #cfb991; border-radius: 14px;
+      padding: 2rem 2.5rem; font-size: 1.6rem; min-height: 110px;
+      display: flex; align-items: center; justify-content: center;
+      transition: background 0.4s, border-color 0.4s, box-shadow 0.4s;
+      word-break: break-word; line-height: 1.3; font-family: 'Nunito', sans-serif; font-weight: 700;
+      box-shadow: 0 0 20px rgba(207,185,145,0.12);
+    }
+    .wheel-reel.landed { background: #140930; border-color: #c084fc; color: #e9d5ff; box-shadow: 0 0 35px rgba(192,132,252,0.3); }
+
+    /* ── Reveal ── */
+    .reveal-type { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1rem; }
+    .reveal-text { font-size: 2.2rem; font-weight: 700; max-width: 640px; margin: 0 auto 2rem; line-height: 1.3; color: #ede9f8; }
+    .player-turn-label { font-size: 1rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    .player-turn-name { font-family: 'Cinzel', serif; font-size: 3rem; font-weight: 700; color: #cfb991; margin-bottom: 2rem; text-shadow: 0 0 35px rgba(207,185,145,0.35); }
+
+    /* ── Game over ── */
+    .over-emoji { font-size: 4rem; margin-bottom: 1rem; }
+
+    /* ── Photo Roulette ── */
+    .pr-photo-wrap { margin: 1rem auto; max-width: 700px; }
+    .pr-photo-wrap img { width: 100%; max-height: 55vh; object-fit: contain; border-radius: 12px; background: #0f0a20; border: 1px solid #2d1f50; }
+    .pr-photo-wrap-small img { max-height: 220px; }
+    .pr-photo-number { font-size: 0.9rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
+    .pr-guess-count { font-size: 1.2rem; color: #8b7aa8; margin-top: 0.75rem; }
+    .pr-guesses-wrap { margin: 1rem auto; max-width: 480px; text-align: left; }
+    .pr-guess-row { display: flex; justify-content: space-between; align-items: center; padding: 0.6rem 1rem; border-radius: 8px; margin-bottom: 0.4rem; font-size: 1rem; }
+    .pr-guess-row.correct { background: #0d2b1a; border-left: 3px solid #4ade80; }
+    .pr-guess-row.wrong { background: #200a1a; border-left: 3px solid #c084fc; }
+    .pr-guess-row.no-guess { background: #1a1232; color: #5a4a7a; }
+    .pr-points-wrap { margin: 0.75rem 0; }
+    .pr-point-badge { display: inline-block; background: #cfb991; color: #08041a; padding: 0.3rem 0.9rem; border-radius: 20px; margin: 0.25rem; font-size: 0.95rem; font-weight: 700; }
+    .pr-score-row { display: flex; align-items: center; padding: 0.8rem 1rem; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; margin: 0.4rem auto; max-width: 400px; }
+    .pr-score-row.first { background: #140930; border: 1px solid #cfb991; box-shadow: 0 0 20px rgba(207,185,145,0.18); }
+    .pr-rank { font-size: 1.5rem; margin-right: 0.75rem; min-width: 2rem; }
+    .pr-score-name { font-size: 1.1rem; flex: 1; text-align: left; }
+    .pr-score-pts { font-size: 1.2rem; font-weight: 700; color: #cfb991; }
+
+    /* ── Hot Takes ── */
+    .ht-round-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1.5rem; }
+    .ht-question { font-size: 2.2rem; font-weight: 700; max-width: 720px; margin: 0 auto 1.5rem; line-height: 1.3; color: #ede9f8; }
+    .ht-vote-count { font-size: 1rem; color: #8b7aa8; margin-bottom: 0.5rem; }
+    .ht-options { display: flex; align-items: center; justify-content: center; gap: 3rem; margin: 2rem 0; flex-wrap: wrap; }
+    .ht-option-name { font-family: 'Cinzel', serif; font-size: 2.8rem; font-weight: 700; text-shadow: 0 0 30px currentColor; }
+    .ht-option-vs { font-size: 1.1rem; color: #4a3a6a; letter-spacing: 2px; }
+    .ht-result-wrap { display: flex; gap: 2rem; justify-content: center; align-items: flex-start; margin: 1.5rem auto; max-width: 680px; flex-wrap: wrap; }
+    .ht-result-col { flex: 1; min-width: 200px; text-align: center; }
+    .ht-result-name { font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700; margin-bottom: 0.5rem; }
+    .ht-result-pct { font-size: 4rem; font-weight: 900; margin-bottom: 0.75rem; line-height: 1; }
+    .ht-result-bar-track { background: #0f0a20; border-radius: 6px; height: 14px; overflow: hidden; border: 1px solid #2d1f50; }
+    .ht-result-bar { height: 100%; border-radius: 6px; transition: width 0.9s ease; }
+    .ht-expose-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: #c084fc; margin: 2rem 0 0.75rem; }
+    .ht-vote-row { font-size: 1.05rem; margin-bottom: 0.4rem; }
+    .ht-advance-text { font-size: 0.9rem; color: #4a3a6a; margin-top: 1.5rem; }
+
+    /* ── Photo guess screen — full-height layout ── */
+    #screen-pr-guess {
+      height: 100vh;
+      display: none;
+      flex-direction: column;
+      align-items: stretch;
+      padding: 1.5rem 2rem 1rem;
+      box-sizing: border-box;
+    }
+    #screen-pr-guess.active { display: flex; }
+    #screen-pr-guess .pr-photo-wrap {
+      flex: 1;
+      min-height: 0;
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      margin: 0.5rem 0;
+    }
+    #screen-pr-guess .pr-photo-wrap img {
+      max-height: 100%;
+      max-width: 100%;
+      width: auto;
+      height: auto;
+      object-fit: contain;
+      border-radius: 12px;
+      background: #0f0a20;
+      border: 1px solid #2d1f50;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- ── Screen 1: Setup ── -->
+  <div id="screen-setup" class="screen active">
+    <h1>Johnbox Games</h1>
+    <h2>Enter your name to create a room</h2>
+    <input id="host-name" type="text" placeholder="Your name" maxlength="20" />
+    <br />
+    <button class="btn" onclick="createRoom()">Create Room</button>
+  </div>
+
+  <!-- ── Screen 2: Lobby ── -->
+  <div id="screen-lobby" class="screen">
+    <div class="lobby-wrap">
+      <h1>Johnbox Games</h1>
+      <div class="lobby-grid">
+        <div class="join-info">
+          <div class="url-label">Players go to</div>
+          <div class="player-url" id="player-url"></div>
+          <div class="pin-label">or enter PIN</div>
+          <div class="pin" id="room-pin"></div>
+          <div id="qrcode"></div>
+        </div>
+        <div class="player-list">
+          <div class="player-list-header">Players &mdash; <span id="player-count">0</span> joined</div>
+          <div id="players"></div>
+        </div>
+      </div>
+      <div class="start-section">
+        <button class="btn" id="start-btn" disabled onclick="goToGameSelect()">Start Game</button>
+        <div class="start-hint" id="start-hint">Need at least 2 players to start</div>
+      </div>
+    </div>
+  </div>
+
+  <!-- ── Screen 3: Game Selector ── -->
+  <div id="screen-game-select" class="screen">
+    <h1>Pick a Game</h1>
+    <div class="game-cards">
+      <div class="game-card" onclick="selectGame('questions-challenges')">
+        <div class="game-icon">🎡</div>
+        <div class="game-title">Questions &amp; Challenges</div>
+        <div class="game-desc">Submit prompts. The wheel decides your fate.</div>
+      </div>
+      <div class="game-card" onclick="selectGame('hot-takes')">
+        <div class="game-icon">🔥</div>
+        <div class="game-title">Hot Takes</div>
+        <div class="game-desc">Two players, one question. Everyone votes.</div>
+      </div>
+      <div class="game-card" onclick="selectGame('photo-roulette')">
+        <div class="game-icon">📸</div>
+        <div class="game-title">Photo Roulette</div>
+        <div class="game-desc">Upload photos. Can you guess who took what?</div>
+      </div>
+    </div>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="backToLobby()">Back to Lobby</button>
+  </div>
+
+  <!-- ── Screen 4: Q&C — Collecting Submissions ── -->
+  <div id="screen-qc-collect" class="screen">
+    <h1>Questions &amp; Challenges</h1>
+    <h2>Players are submitting on their phones...</h2>
+    <div class="sub-count-big" id="qc-sub-count">0</div>
+    <div class="sub-count-label">submissions</div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="qc-collect-bar"></div></div>
+    <div class="timer-text" id="qc-collect-time"></div>
+    <button class="btn" onclick="closeSubmissions()">Begin Game</button>
+  </div>
+
+  <!-- ── Screen 5: Q&C — Spin / Reveal ── -->
+  <div id="screen-qc-spin" class="screen">
+
+    <div id="qc-pre-spin">
+      <div class="player-turn-label">It's</div>
+      <div class="player-turn-name" id="qc-current-player"></div>
+      <div class="wheel-wrap">
+        <div class="wheel-reel" id="wheel-reel">?</div>
+      </div>
+      <button class="btn" id="spin-btn" onclick="hostSpin()">Spin!</button>
+      <br />
+      <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
+    </div>
+
+    <div id="qc-post-spin" style="display:none;">
+      <div class="reveal-type" id="reveal-type"></div>
+      <div class="reveal-text" id="reveal-text"></div>
+      <button class="btn" onclick="nextPlayer()">Next Player &rarr;</button>
+      <br />
+      <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
+    </div>
+
+  </div>
+
+  <!-- ── Screen 6: Q&C — Game Over ── -->
+  <div id="screen-qc-over" class="screen">
+    <div class="over-emoji">🎉</div>
+    <h1>That's a wrap!</h1>
+    <h2>Everyone had a turn</h2>
+    <br />
+    <button class="btn" onclick="selectGame('questions-challenges')">Play Again</button>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="backToGameSelect()">Pick a Different Game</button>
+  </div>
+
+  <!-- ── Screen 7: Photo Roulette — Upload ── -->
+  <div id="screen-pr-upload" class="screen">
+    <h1>Photo Roulette</h1>
+    <h2>Players are uploading their photos on their phones...</h2>
+    <div class="sub-count-big" id="pr-photo-count">0</div>
+    <div class="sub-count-label">photos uploaded</div>
+    <br />
+    <button class="btn" onclick="closePRUploads()">Begin Game</button>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
+  </div>
+
+  <!-- ── Screen 8: Photo Roulette — Guessing ── -->
+  <div id="screen-pr-guess" class="screen">
+    <div class="pr-photo-number" id="pr-photo-number"></div>
+    <div class="pr-photo-wrap">
+      <img id="pr-photo-img" src="" alt="Mystery photo" />
+    </div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="pr-timer-bar"></div></div>
+    <div class="timer-text" id="pr-timer-text"></div>
+    <div class="pr-guess-count" id="pr-guess-count"></div>
+    <button class="btn" style="margin-top:1rem;" onclick="revealNow()">Reveal &rarr;</button>
+  </div>
+
+  <!-- ── Screen 9: Photo Roulette — Reveal ── -->
+  <div id="screen-pr-reveal" class="screen">
+    <div class="reveal-type">📸 It was...</div>
+    <div class="player-turn-name" id="pr-photographer-name"></div>
+    <div class="pr-photo-wrap pr-photo-wrap-small">
+      <img id="pr-reveal-photo" src="" alt="" />
+    </div>
+    <div class="pr-guesses-wrap" id="pr-guesses-wrap"></div>
+    <div class="pr-points-wrap" id="pr-points-wrap"></div>
+    <div class="ht-advance-text" id="pr-advance-text" style="margin-top:1rem;"></div>
+    <br />
+    <button class="btn" id="pr-next-btn" onclick="prNextPhoto()">Next Photo &rarr;</button>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
+  </div>
+
+  <!-- ── Screen 10: Photo Roulette — Game Over ── -->
+  <div id="screen-pr-over" class="screen">
+    <div class="over-emoji">🏆</div>
+    <h1>Photo Roulette</h1>
+    <h2>Final Scores</h2>
+    <div id="pr-final-scores"></div>
+    <br />
+    <button class="btn" onclick="selectGame('photo-roulette')">Play Again</button>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="backToGameSelect()">Pick a Different Game</button>
+  </div>
+
+  <!-- ── Screen 11: Hot Takes — Round ── -->
+  <div id="screen-ht-round" class="screen">
+    <div class="ht-round-label">🔥 Round <span id="ht-round-num">1</span> of <span id="ht-round-total">20</span></div>
+    <div class="ht-question" id="ht-host-question"></div>
+    <div class="timer-bar-wrap"><div class="timer-bar" id="ht-host-timer-bar"></div></div>
+    <div class="ht-vote-count" id="ht-host-vote-count">0 votes in</div>
+    <div class="ht-options">
+      <div class="ht-option-name" id="ht-host-name-a"></div>
+      <div class="ht-option-vs">vs</div>
+      <div class="ht-option-name" id="ht-host-name-b"></div>
+    </div>
+    <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
+  </div>
+
+  <!-- ── Screen 12: Hot Takes — Reveal ── -->
+  <div id="screen-ht-reveal" class="screen">
+    <div class="ht-round-label">🔥 Round <span id="ht-rev-round-num">1</span> of <span id="ht-rev-round-total">20</span></div>
+    <div class="ht-question" id="ht-host-rev-question"></div>
+    <div class="ht-result-wrap" id="ht-host-result-wrap"></div>
+    <div id="ht-host-expose-section" style="display:none;">
+      <div class="ht-expose-label">🔍 votes exposed</div>
+      <div id="ht-host-vote-list"></div>
+    </div>
+    <div class="ht-advance-text" id="ht-host-advance-text">Next round in 8...</div>
+  </div>
+
+  <!-- ── Screen 13: Hot Takes — Game Over ── -->
+  <div id="screen-ht-over" class="screen">
+    <div class="over-emoji">🔥</div>
+    <h1>Hot Takes</h1>
+    <h2>All 20 rounds done!</h2>
+    <br />
+    <button class="btn" onclick="selectGame('hot-takes')">Play Again</button>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="backToGameSelect()">Pick a Different Game</button>
+  </div>
+
+  <script src="/socket.io/socket.io.js"></script>
+  <script>
+    const socket = io();
+    let myPin = null;
+    let players = [];
+
+    // ── Screens ────────────────────────────────────────────────────
+    function showScreen(id) {
+      document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+      document.getElementById(id).classList.add('active');
+    }
+
+    // ── Lobby ──────────────────────────────────────────────────────
+    function createRoom() {
+      const name = document.getElementById('host-name').value.trim();
+      if (!name) { alert('Enter your name first'); return; }
+      socket.emit('create-room', { hostName: name });
+    }
+
+    socket.on('room-created', ({ pin, playerURL, qrDataURL }) => {
+      myPin = pin;
+      document.getElementById('room-pin').textContent = pin;
+      document.getElementById('player-url').textContent = playerURL;
+      const img = document.createElement('img');
+      img.src = qrDataURL; img.width = 180; img.height = 180;
+      document.getElementById('qrcode').appendChild(img);
+      showScreen('screen-lobby');
+    });
+
+    socket.on('player-list-updated', ({ players: updated }) => {
+      players = updated;
+      renderPlayers();
+    });
+
+    function renderPlayers() {
+      const container = document.getElementById('players');
+      const countEl   = document.getElementById('player-count');
+      const startBtn  = document.getElementById('start-btn');
+      const startHint = document.getElementById('start-hint');
+
+      countEl.textContent = players.length;
+      container.innerHTML = '';
+      players.forEach(p => {
+        const div = document.createElement('div');
+        div.className = 'player-item';
+        div.innerHTML = `
+          <span class="player-name">${p.name}</span>
+          <button class="btn btn-ghost" onclick="transferHost('${p.id}')">Make Host</button>
+        `;
+        container.appendChild(div);
+      });
+
+      startBtn.disabled = players.length < 2;
+      startHint.textContent = players.length < 2
+        ? 'Need at least 2 players to start'
+        : `${players.length} players ready — let's go!`;
+    }
+
+    function transferHost(playerId) {
+      if (confirm('Transfer host to this player?')) {
+        socket.emit('transfer-host', { targetPlayerId: playerId });
+      }
+    }
+
+    socket.on('host-transferred', () => {
+      alert('You are no longer the host.');
+      showScreen('screen-setup');
+    });
+
+    document.getElementById('host-name').addEventListener('keydown', e => {
+      if (e.key === 'Enter') createRoom();
+    });
+
+    // ── Game selector ──────────────────────────────────────────────
+    function goToGameSelect() { showScreen('screen-game-select'); }
+    function backToGameSelect() { showScreen('screen-game-select'); }
+
+    function backToLobby() {
+      socket.emit('back-to-lobby');
+    }
+
+    function exitGame() {
+      socket.emit('back-to-lobby');
+    }
+
+    socket.on('returned-to-lobby', () => {
+      showScreen('screen-lobby');
+    });
+
+    function selectGame(game) {
+      socket.emit('start-game', { game });
+    }
+
+    // ── Q&C — Collecting ──────────────────────────────────────────
+    socket.on('qc-collecting', ({ timeLeft, totalTime }) => {
+      setTimerBar('qc-collect-bar', timeLeft, totalTime);
+      document.getElementById('qc-collect-time').textContent = `${timeLeft}s remaining`;
+    });
+
+    socket.on('qc-timer-tick', ({ timeLeft, totalTime }) => {
+      setTimerBar('qc-collect-bar', timeLeft, totalTime);
+      document.getElementById('qc-collect-time').textContent =
+        timeLeft > 0 ? `${timeLeft}s remaining` : 'Time\'s up!';
+    });
+
+    socket.on('qc-submission-count', ({ count }) => {
+      document.getElementById('qc-sub-count').textContent = count;
+    });
+
+    function closeSubmissions() {
+      socket.emit('qc-close-submissions');
+    }
+
+    socket.on('qc-no-submissions', () => {
+      alert('No submissions came in. Going back to game selector.');
+      showScreen('screen-game-select');
+    });
+
+    // ── Q&C — Spin / Reveal ───────────────────────────────────────
+    function setupSpinScreen(playerName) {
+      document.getElementById('qc-current-player').textContent = playerName + '\'s turn!';
+      document.getElementById('wheel-reel').textContent = '?';
+      document.getElementById('wheel-reel').classList.remove('landed');
+      document.getElementById('spin-btn').disabled = false;
+      document.getElementById('qc-pre-spin').style.display  = 'block';
+      document.getElementById('qc-post-spin').style.display = 'none';
+    }
+
+    socket.on('qc-round-start', ({ currentPlayer }) => {
+      setupSpinScreen(currentPlayer.name);
+      showScreen('screen-qc-spin');
+    });
+
+    socket.on('qc-next-turn', ({ currentPlayer }) => {
+      setupSpinScreen(currentPlayer.name);
+      // already on spin screen — no need to switch
+    });
+
+    function hostSpin() {
+      document.getElementById('spin-btn').disabled = true;
+      socket.emit('qc-spin');
+    }
+
+    socket.on('qc-spin-result', ({ picked }) => {
+      spinWheel(picked.type, () => {
+        document.getElementById('reveal-type').textContent =
+          picked.type === 'question' ? '❓  Question' : '⚡  Challenge';
+        document.getElementById('reveal-text').textContent = picked.text;
+        document.getElementById('qc-pre-spin').style.display  = 'none';
+        document.getElementById('qc-post-spin').style.display = 'block';
+      });
+    });
+
+    function nextPlayer() {
+      socket.emit('qc-next-player');
+    }
+
+    socket.on('qc-game-over', () => {
+      showScreen('screen-qc-over');
+    });
+
+    // ── Wheel animation ───────────────────────────────────────────
+    function spinWheel(type, onComplete) {
+      const reel   = document.getElementById('wheel-reel');
+      const labels = ['❓ Question', '⚡ Challenge'];
+      const winner = type === 'question' ? '❓ Question' : '⚡ Challenge';
+      let speed    = 80;
+      const total  = 3000;
+      let elapsed  = 0;
+      let i        = 0;
+
+      function tick() {
+        reel.textContent = labels[i % 2];
+        i++;
+        elapsed += speed;
+        if (elapsed > total * 0.55) speed = 160;
+        if (elapsed > total * 0.72) speed = 320;
+        if (elapsed > total * 0.86) speed = 600;
+
+        if (elapsed >= total) {
+          reel.textContent = winner;
+          reel.classList.add('landed');
+          setTimeout(onComplete, 900);
+        } else {
+          setTimeout(tick, speed);
+        }
+      }
+      tick();
+    }
+
+    // ── Photo Roulette ────────────────────────────────────────────
+    socket.on('pr-photo-count', ({ count }) => {
+      document.getElementById('pr-photo-count').textContent = count;
+    });
+
+    function closePRUploads() { socket.emit('pr-close-uploads'); }
+
+    socket.on('pr-no-photos', () => {
+      alert('No photos uploaded yet!');
+    });
+
+    let prCurrentPhotoData = '';
+
+    socket.on('pr-show-photo', ({ photoData, photoNumber, totalPhotos, nonPhotographerCount }) => {
+      prCurrentPhotoData = photoData;
+      document.getElementById('pr-photo-number').textContent = `Photo ${photoNumber} of ${totalPhotos}`;
+      document.getElementById('pr-photo-img').src = photoData;
+      document.getElementById('pr-guess-count').textContent = `0 / ${nonPhotographerCount} players have guessed`;
+      document.getElementById('pr-timer-bar').style.width = '100%';
+      document.getElementById('pr-timer-text').textContent = '30s remaining';
+      showScreen('screen-pr-guess');
+    });
+
+    socket.on('pr-guess-count', ({ count, total }) => {
+      document.getElementById('pr-guess-count').textContent = `${count} / ${total} players have guessed`;
+    });
+
+    socket.on('pr-timer-tick', ({ timeLeft, totalTime }) => {
+      setTimerBar('pr-timer-bar', timeLeft, totalTime);
+      document.getElementById('pr-timer-text').textContent =
+        timeLeft > 0 ? `${timeLeft}s remaining` : "Time's up!";
+    });
+
+    socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound, hasMorePhotos }) => {
+      document.getElementById('pr-photographer-name').textContent = photographerName + "'s photo!";
+      document.getElementById('pr-reveal-photo').src = prCurrentPhotoData;
+
+      const guessesWrap = document.getElementById('pr-guesses-wrap');
+      guessesWrap.innerHTML = '';
+      if (guesses.length === 0) {
+        guessesWrap.innerHTML = '<div class="pr-guess-row no-guess">Nobody guessed in time</div>';
+      } else {
+        guesses.forEach(({ guesserName, guessedName }) => {
+          const correct = guessedName === photographerName;
+          const div = document.createElement('div');
+          div.className = 'pr-guess-row ' + (correct ? 'correct' : 'wrong');
+          div.innerHTML = `<span>${guesserName}</span><span>guessed <strong>${guessedName}</strong> ${correct ? '✓' : '✗'}</span>`;
+          guessesWrap.appendChild(div);
+        });
+      }
+
+      const pointsWrap = document.getElementById('pr-points-wrap');
+      pointsWrap.innerHTML = '';
+      const earned = Object.entries(pointsThisRound);
+      if (earned.length > 0) {
+        pointsWrap.innerHTML = '<div style="font-size:0.8rem;color:#888;margin-bottom:0.5rem;">Points this round</div>';
+        earned.forEach(([name, pts]) => {
+          const badge = document.createElement('span');
+          badge.className = 'pr-point-badge';
+          badge.textContent = `${name} +${pts}`;
+          pointsWrap.appendChild(badge);
+        });
+      }
+
+      document.getElementById('pr-next-btn').textContent =
+        hasMorePhotos ? 'Next Photo →' : 'See Final Scores';
+      showScreen('screen-pr-reveal');
+    });
+
+    function revealNow() { socket.emit('pr-reveal-now'); }
+
+    function prNextPhoto() { socket.emit('pr-next-photo'); }
+
+    socket.on('pr-advance-tick', ({ timeLeft }) => {
+      const el = document.getElementById('pr-advance-text');
+      if (el) el.textContent = timeLeft > 0 ? `Next photo in ${timeLeft}...` : 'Loading next photo...';
+    });
+
+    socket.on('pr-game-over', ({ scores }) => {
+      const container = document.getElementById('pr-final-scores');
+      container.innerHTML = '';
+      const medals = ['🥇', '🥈', '🥉'];
+      scores.forEach((s, i) => {
+        const div = document.createElement('div');
+        div.className = 'pr-score-row' + (i === 0 ? ' first' : '');
+        div.innerHTML = `<span class="pr-rank">${medals[i] || (i + 1) + '.'}</span><span class="pr-score-name">${s.name}</span><span class="pr-score-pts">${s.score} pts</span>`;
+        container.appendChild(div);
+      });
+      showScreen('screen-pr-over');
+    });
+
+    // ── Hot Takes ─────────────────────────────────────────────────
+    let htHostPlayerColors = {};
+    let htHostRoundNum = 0;
+    let htHostRoundTotal = 20;
+
+    socket.on('game-started', ({ game }) => {
+      if (game === 'questions-challenges') {
+        document.getElementById('qc-sub-count').textContent = '0';
+        showScreen('screen-qc-collect');
+        socket.emit('qc-start-collecting');
+      } else if (game === 'photo-roulette') {
+        document.getElementById('pr-photo-count').textContent = '0';
+        showScreen('screen-pr-upload');
+      } else if (game === 'hot-takes') {
+        showScreen('screen-ht-round');
+      }
+    });
+
+    socket.on('ht-round-start', ({ question, optionA, optionB, roundNumber, totalRounds, playerColors }) => {
+      htHostPlayerColors = playerColors;
+      htHostRoundNum = roundNumber;
+      htHostRoundTotal = totalRounds;
+
+      document.getElementById('ht-round-num').textContent = roundNumber;
+      document.getElementById('ht-round-total').textContent = totalRounds;
+      document.getElementById('ht-host-question').textContent = question;
+      document.getElementById('ht-host-timer-bar').style.width = '100%';
+      document.getElementById('ht-host-vote-count').textContent = '0 votes in';
+
+      const nameA = document.getElementById('ht-host-name-a');
+      const nameB = document.getElementById('ht-host-name-b');
+      nameA.textContent = optionA.name;
+      nameB.textContent = optionB.name;
+      nameA.style.color = playerColors[optionA.name] || '#cfb991';
+      nameB.style.color = playerColors[optionB.name] || '#cfb991';
+
+      showScreen('screen-ht-round');
+    });
+
+    socket.on('ht-vote-count', ({ count, total }) => {
+      const el = document.getElementById('ht-host-vote-count');
+      if (el) el.textContent = `${count} / ${total} voted`;
+    });
+
+    socket.on('ht-timer-tick', ({ timeLeft, totalTime }) => {
+      setTimerBar('ht-host-timer-bar', timeLeft, totalTime);
+    });
+
+    socket.on('ht-reveal', ({ question, optionA, optionB, pctA, pctB, revealVotes, voteDetails, playerColors }) => {
+      htHostPlayerColors = playerColors;
+
+      document.getElementById('ht-rev-round-num').textContent = htHostRoundNum;
+      document.getElementById('ht-rev-round-total').textContent = htHostRoundTotal;
+      document.getElementById('ht-host-rev-question').textContent = question;
+
+      const colorA = playerColors[optionA.name] || '#cfb991';
+      const colorB = playerColors[optionB.name] || '#cfb991';
+
+      const wrap = document.getElementById('ht-host-result-wrap');
+      wrap.innerHTML = `
+        <div class="ht-result-col">
+          <div class="ht-result-name" style="color:${colorA}">${optionA.name}</div>
+          <div class="ht-result-pct" style="color:${colorA}">${pctA}%</div>
+          <div class="ht-result-bar-track">
+            <div class="ht-result-bar" style="width:0%;background:${colorA}" data-target="${pctA}"></div>
+          </div>
+        </div>
+        <div class="ht-result-col">
+          <div class="ht-result-name" style="color:${colorB}">${optionB.name}</div>
+          <div class="ht-result-pct" style="color:${colorB}">${pctB}%</div>
+          <div class="ht-result-bar-track">
+            <div class="ht-result-bar" style="width:0%;background:${colorB}" data-target="${pctB}"></div>
+          </div>
+        </div>
+      `;
+
+      // Animate bars after brief delay
+      setTimeout(() => {
+        wrap.querySelectorAll('.ht-result-bar').forEach(bar => {
+          bar.style.width = bar.dataset.target + '%';
+        });
+      }, 80);
+
+      const exposeSection = document.getElementById('ht-host-expose-section');
+      if (revealVotes && voteDetails.length > 0) {
+        exposeSection.style.display = 'block';
+        const listEl = document.getElementById('ht-host-vote-list');
+        listEl.innerHTML = '';
+        voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
+          const row = document.createElement('div');
+          row.className = 'ht-vote-row';
+          row.innerHTML = `<span style="color:${voterColor};font-weight:700">${voterName}</span> <span style="color:#5a4a7a">→ voted for</span> <span style="color:${votedForColor};font-weight:700">${votedForName}</span>`;
+          listEl.appendChild(row);
+        });
+      } else {
+        exposeSection.style.display = 'none';
+      }
+
+      document.getElementById('ht-host-advance-text').textContent = 'Next round in 10...';
+      showScreen('screen-ht-reveal');
+    });
+
+    socket.on('ht-advance-tick', ({ timeLeft }) => {
+      const el = document.getElementById('ht-host-advance-text');
+      if (el) el.textContent = timeLeft > 0 ? `Next round in ${timeLeft}...` : 'Starting next round...';
+    });
+
+    socket.on('ht-game-over', () => {
+      showScreen('screen-ht-over');
+    });
+
+    // ── Helpers ───────────────────────────────────────────────────
+    function setTimerBar(id, timeLeft, totalTime) {
+      const bar = document.getElementById(id);
+      if (bar) bar.style.width = Math.max(0, (timeLeft / totalTime) * 100) + '%';
+    }
+  </script>
+
+</body>
+</html>

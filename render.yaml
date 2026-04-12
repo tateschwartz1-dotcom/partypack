@@ -1,0 +1,7 @@
+services:
+  - type: web
+    name: johnbox-games
+    runtime: node
+    plan: free
+    buildCommand: npm install
+    startCommand: npm start
