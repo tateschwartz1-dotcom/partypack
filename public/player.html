@@ -735,7 +735,7 @@
   <!-- ── Screen 1: Home ── -->
   <div id="screen-home" class="screen active">
     <h1>Johnbox Games</h1>
-    <h2>Enter your name and room PIN to get started</h2>
+    <h2 style="color: #ede9f8;">Enter your name and room PIN to get started</h2>
     <input id="home-name-input" type="text" placeholder="Your name" maxlength="20" autocomplete="off" />
     <input id="home-pin-input" type="text" placeholder="PIN" maxlength="4" inputmode="numeric" autocomplete="off" />
     <button class="btn" onclick="joinRoomFromHome()">Join Room</button>
@@ -778,14 +778,14 @@
       <div class="game-card" onclick="selectGame('questions-challenges')">
         <div class="game-icon">🎡</div>
         <div>
-          <div class="game-title">Questions &amp; Challenges</div>
-          <div class="game-desc">Submit prompts. The wheel decides your fate.</div>
+          <div class="game-title">The Wheel</div>
+          <div class="game-desc">Submit prompts. The Wheel decides your fate.</div>
         </div>
       </div>
       <div class="game-card" onclick="selectGame('hot-takes')">
         <div class="game-icon">🔥</div>
         <div>
-          <div class="game-title">Hot Takes</div>
+          <div class="game-title">Secret Superlatives</div>
           <div class="game-desc">Two players, one question. Everyone votes.</div>
         </div>
       </div>
@@ -807,7 +807,7 @@
         <div class="game-icon">🕵️</div>
         <div>
           <div class="game-title">Mafia</div>
-          <div class="game-desc">Find the killers, survive the night, and watch the votes.</div>
+          <div class="game-desc">Find the killers, survive the night and watch the votes.</div>
         </div>
       </div>
     </div>
@@ -881,7 +881,7 @@
     </div>
     <div class="mafia-card mafia-rules-panel" id="mafia-rules-panel">
       <div class="mafia-rules-list">
-        <div class="mafia-rule-row"><strong>🔪 Killer:</strong> Blend in by day, choose a victim at night, and win when killers equal or outnumber everyone else.</div>
+        <div class="mafia-rule-row"><strong>🔪 Killer:</strong> Blend in by day, choose a victim at night and win when killers equal or outnumber everyone else.</div>
         <div class="mafia-rule-row"><strong>🩺 Doctor:</strong> Protect one player each night, but you cannot protect the same player two nights in a row.</div>
         <div class="mafia-rule-row"><strong>👤 Villager:</strong> Vote out the killers and survive the nights. You also answer the overnight poll.</div>
         <div class="mafia-rule-row"><strong>🃏 Joker:</strong> Optional chaos role. If the Joker gets voted out, the Joker wins instantly.</div>
@@ -1142,7 +1142,7 @@
   <!-- ── Screen 14: Hot Takes — Game Over ── -->
   <div id="screen-ht-over" class="screen">
     <div class="over-emoji">🔥</div>
-    <h1>Hot Takes</h1>
+    <h1>Secret Superlatives</h1>
     <h2>All 20 rounds done!</h2>
     <div class="host-only">
       <button class="btn" onclick="selectGame('hot-takes')" style="margin-top:1rem;">Play Again</button>

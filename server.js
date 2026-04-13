@@ -984,7 +984,10 @@ io.on('connection', (socket) => {
 
     room.qc.currentPlayerIndex = (room.qc.currentPlayerIndex + 1) % room.qc.playerOrder.length;
     const currentPlayer = room.qc.playerOrder[room.qc.currentPlayerIndex];
-    io.to(pin).emit('qc-next-turn', { currentPlayer });
+    const available = room.qc.submissions
+      .filter(s => !room.qc.usedIds.has(s.id))
+      .map(s => ({ id: s.id, type: s.type }));
+    io.to(pin).emit('qc-next-turn', { currentPlayer, available });
   });
 
   // ── Photo Roulette ─────────────────────────────────────────────
@@ -1303,7 +1306,8 @@ io.on('connection', (socket) => {
     }
 
     const currentPlayer = room.qc.playerOrder[0];
-    io.to(pin).emit('qc-round-start', { currentPlayer });
+    const available = room.qc.submissions.map(s => ({ id: s.id, type: s.type }));
+    io.to(pin).emit('qc-round-start', { currentPlayer, available });
   }
 
   function startPRRound(pin) {
