@@ -1048,8 +1048,7 @@
     <!-- Host: post-spin controls -->
     <div class="host-only" id="qc-post-spin-controls" style="display:none;">
       <button class="btn" id="qc-next-btn" onclick="nextPlayer()" style="margin-top:0.75rem;">Next Player &rarr;</button>
-      <button class="btn" id="qc-finish-btn" onclick="finishGame()" style="margin-top:0.75rem; display:none;">🎉 Finish!</button>
-      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+      <button class="btn" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
 
   </div>
@@ -2281,8 +2280,6 @@
       document.getElementById('watch-text').textContent = '';
       document.getElementById('watch-reveal-box').style.display = 'none';
       document.getElementById('qc-post-spin-controls').style.display = 'none';
-      document.getElementById('qc-next-btn').style.display = '';
-      document.getElementById('qc-finish-btn').style.display = 'none';
       const spinWrap = document.getElementById('spin-btn-wrap');
       if (spinWrap) {
         spinWrap.style.display = isMyTurn ? 'block' : 'none';
@@ -2429,8 +2426,6 @@
       const labelEl  = document.getElementById('spin-overlay-label');
       const isQ      = picked.type === 'question';
       const thisTurn = qcTurnId;
-      // Client-side fallback: if only 1 segment was in the wheel, this is the last item
-      isLast = isLast || (playerWheelSegments.length === 1);
 
       overlay.style.display = 'flex';
       drawPlayerWheel(playerWheelAngle);
@@ -2457,8 +2452,6 @@
             document.getElementById('watch-text').textContent = picked.text;
             document.getElementById('watch-reveal-box').style.display = 'block';
             if (isHost) {
-              document.getElementById('qc-next-btn').style.display   = isLast ? 'none' : '';
-              document.getElementById('qc-finish-btn').style.display = isLast ? ''     : 'none';
               document.getElementById('qc-post-spin-controls').style.display = 'block';
             }
           }, 300);
@@ -2468,10 +2461,6 @@
 
     function nextPlayer() {
       socket.emit('qc-next-player');
-    }
-
-    function finishGame() {
-      socket.emit('qc-finish');
     }
 
     socket.on('qc-game-over', () => {
