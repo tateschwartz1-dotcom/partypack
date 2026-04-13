@@ -1047,7 +1047,8 @@
 
     <!-- Host: post-spin controls -->
     <div class="host-only" id="qc-post-spin-controls" style="display:none;">
-      <button class="btn" onclick="nextPlayer()" style="margin-top:0.75rem;">Next Player &rarr;</button>
+      <button class="btn" id="qc-next-btn" onclick="nextPlayer()" style="margin-top:0.75rem;">Next Player &rarr;</button>
+      <button class="btn" id="qc-finish-btn" onclick="finishGame()" style="margin-top:0.75rem; display:none;">🎉 Finish!</button>
       <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
 
@@ -2264,7 +2265,10 @@
     });
 
     // ── Q&C — Watch/Spin phase ─────────────────────────────────────
+    let qcTurnId = 0;
+
     function setupWatchScreen(currentPlayer) {
+      qcTurnId++;  // invalidate any in-flight spin animation callbacks
       const isMyTurn = currentPlayer.name === myName;
 
       document.getElementById('qc-watch-other').style.display   = isMyTurn ? 'none' : 'block';
@@ -2277,6 +2281,8 @@
       document.getElementById('watch-text').textContent = '';
       document.getElementById('watch-reveal-box').style.display = 'none';
       document.getElementById('qc-post-spin-controls').style.display = 'none';
+      document.getElementById('qc-next-btn').style.display = '';
+      document.getElementById('qc-finish-btn').style.display = 'none';
       const spinWrap = document.getElementById('spin-btn-wrap');
       if (spinWrap) {
         spinWrap.style.display = isMyTurn ? 'block' : 'none';
@@ -2418,31 +2424,39 @@
       socket.emit('qc-spin');
     }
 
-    socket.on('qc-spin-result', ({ picked }) => {
-      const overlay = document.getElementById('spin-overlay');
-      const labelEl = document.getElementById('spin-overlay-label');
-      const isQ     = picked.type === 'question';
+    socket.on('qc-spin-result', ({ picked, isLast }) => {
+      const overlay  = document.getElementById('spin-overlay');
+      const labelEl  = document.getElementById('spin-overlay-label');
+      const isQ      = picked.type === 'question';
+      const thisTurn = qcTurnId;
 
       overlay.style.display = 'flex';
       drawPlayerWheel(playerWheelAngle);
 
       spinPlayerWheel(picked.id, () => {
+        if (qcTurnId !== thisTurn) return;
         labelEl.textContent   = isQ ? '❓ Question' : '⚡ Challenge';
         labelEl.style.opacity = '1';
 
         setTimeout(() => {
+          if (qcTurnId !== thisTurn) return;
           overlay.style.transition = 'opacity 0.3s ease';
           overlay.style.opacity    = '0';
           setTimeout(() => {
+            if (qcTurnId !== thisTurn) return;
             overlay.style.display    = 'none';
             overlay.style.opacity    = '';
             overlay.style.transition = '';
 
+            // Hide spin button and show result all at once
+            document.getElementById('spin-btn-wrap').style.display = 'none';
             const typeLabel = isQ ? '❓ Question' : '⚡ Challenge';
             document.getElementById('watch-type').textContent = typeLabel;
             document.getElementById('watch-text').textContent = picked.text;
             document.getElementById('watch-reveal-box').style.display = 'block';
             if (isHost) {
+              document.getElementById('qc-next-btn').style.display   = isLast ? 'none' : '';
+              document.getElementById('qc-finish-btn').style.display = isLast ? ''     : 'none';
               document.getElementById('qc-post-spin-controls').style.display = 'block';
             }
           }, 300);
@@ -2452,6 +2466,10 @@
 
     function nextPlayer() {
       socket.emit('qc-next-player');
+    }
+
+    function finishGame() {
+      socket.emit('qc-finish');
     }
 
     socket.on('qc-game-over', () => {

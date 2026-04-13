@@ -300,7 +300,8 @@
     <div id="qc-post-spin" style="display:none;">
       <div class="reveal-type" id="reveal-type"></div>
       <div class="reveal-text" id="reveal-text"></div>
-      <button class="btn" onclick="nextPlayer()">Next Player &rarr;</button>
+      <button class="btn" id="qc-next-btn" onclick="nextPlayer()">Next Player &rarr;</button>
+      <button class="btn" id="qc-finish-btn" onclick="finishGame()" style="display:none;">🎉 Finish!</button>
       <br />
       <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
     </div>
@@ -628,11 +629,13 @@
       socket.emit('qc-spin');
     }
 
-    socket.on('qc-spin-result', ({ picked }) => {
+    socket.on('qc-spin-result', ({ picked, isLast }) => {
       spinWheel(picked.id, picked.type, () => {
         document.getElementById('reveal-type').textContent =
           picked.type === 'question' ? '❓  Question' : '⚡  Challenge';
         document.getElementById('reveal-text').textContent = picked.text;
+        document.getElementById('qc-next-btn').style.display   = isLast ? 'none' : '';
+        document.getElementById('qc-finish-btn').style.display = isLast ? ''     : 'none';
         document.getElementById('qc-pre-spin').style.display  = 'none';
         document.getElementById('qc-post-spin').style.display = 'block';
       });
@@ -640,6 +643,10 @@
 
     function nextPlayer() {
       socket.emit('qc-next-player');
+    }
+
+    function finishGame() {
+      socket.emit('qc-finish');
     }
 
     socket.on('qc-game-over', () => {

@@ -970,11 +970,21 @@ io.on('connection', (socket) => {
       return;
     }
 
+    const isLast = available.length === 1;
     const picked = available[Math.floor(Math.random() * available.length)];
     room.qc.usedIds.add(picked.id);
     room.qc.currentSubmission = picked;
 
-    io.to(pin).emit('qc-spin-result', { picked });
+    io.to(pin).emit('qc-spin-result', { picked, isLast });
+  });
+
+  socket.on('qc-finish', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    io.to(pin).emit('qc-game-over');
+    clearRoomTimers(room);
+    room.gameState = 'lobby';
   });
 
   socket.on('qc-next-player', () => {
