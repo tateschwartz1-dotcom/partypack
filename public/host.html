@@ -609,6 +609,7 @@
       document.getElementById('spin-btn').disabled = false;
       document.getElementById('qc-pre-spin').style.display  = 'block';
       document.getElementById('qc-post-spin').style.display = 'none';
+      document.getElementById('qc-next-btn').style.display  = '';
       if (segments) wheelSegments = segments;
       drawWheel(wheelAngle);
     }
@@ -628,11 +629,12 @@
       socket.emit('qc-spin');
     }
 
-    socket.on('qc-spin-result', ({ picked }) => {
+    socket.on('qc-spin-result', ({ picked, isLast }) => {
       spinWheel(picked.id, picked.type, () => {
         document.getElementById('reveal-type').textContent =
           picked.type === 'question' ? '❓  Question' : '⚡  Challenge';
         document.getElementById('reveal-text').textContent = picked.text;
+        document.getElementById('qc-next-btn').style.display = isLast ? 'none' : '';
         document.getElementById('qc-pre-spin').style.display  = 'none';
         document.getElementById('qc-post-spin').style.display = 'block';
       });

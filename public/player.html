@@ -2279,6 +2279,7 @@
       document.getElementById('watch-type').textContent = '';
       document.getElementById('watch-text').textContent = '';
       document.getElementById('watch-reveal-box').style.display = 'none';
+      document.getElementById('qc-next-btn').style.display = '';
       document.getElementById('qc-post-spin-controls').style.display = 'none';
       const spinWrap = document.getElementById('spin-btn-wrap');
       if (spinWrap) {
@@ -2432,8 +2433,6 @@
 
       spinPlayerWheel(picked.id, () => {
         if (qcTurnId !== thisTurn) return;
-        labelEl.textContent   = isQ ? '❓ Question' : '⚡ Challenge';
-        labelEl.style.opacity = '1';
 
         setTimeout(() => {
           if (qcTurnId !== thisTurn) return;
@@ -2452,6 +2451,7 @@
             document.getElementById('watch-text').textContent = picked.text;
             document.getElementById('watch-reveal-box').style.display = 'block';
             if (isHost) {
+              document.getElementById('qc-next-btn').style.display = isLast ? 'none' : '';
               document.getElementById('qc-post-spin-controls').style.display = 'block';
             }
           }, 300);
