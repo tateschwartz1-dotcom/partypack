@@ -2273,6 +2273,8 @@
         document.getElementById('watch-player-name').textContent = currentPlayer.name + "'s turn!";
       }
 
+      document.getElementById('watch-type').textContent = '';
+      document.getElementById('watch-text').textContent = '';
       document.getElementById('watch-reveal-box').style.display = 'none';
       document.getElementById('qc-post-spin-controls').style.display = 'none';
       const spinWrap = document.getElementById('spin-btn-wrap');
@@ -2371,7 +2373,7 @@
 
       const startAngle = playerWheelAngle;
       const endAngle   = startAngle + targetDelta;
-      const duration   = 3000;
+      const duration   = 2000;
       const startTime  = performance.now();
 
       function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
@@ -2444,7 +2446,7 @@
               document.getElementById('qc-post-spin-controls').style.display = 'block';
             }
           }, 300);
-        }, 500);
+        }, 750);
       });
     });
 
