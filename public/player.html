@@ -233,19 +233,26 @@
 
     /* ── Spin overlay ── */
     #spin-overlay {
-      position: fixed; inset: 0; background: rgba(8,4,26,0.93);
+      position: fixed; inset: 0; background: rgba(8,4,26,0.95);
       z-index: 200; display: none;
       align-items: center; justify-content: center; flex-direction: column;
-    }
-    #spin-overlay-emoji {
-      font-size: 9rem; line-height: 1;
-      transition: transform 0.18s ease, opacity 0.18s ease;
+      gap: 1.25rem;
     }
     #spin-overlay-label {
-      font-family: 'Cinzel', serif; font-size: 2rem; font-weight: 700;
-      color: #cfb991; margin-top: 1.25rem; letter-spacing: 0.05em;
+      font-family: 'Cinzel', serif; font-size: 1.8rem; font-weight: 700;
+      color: #cfb991; letter-spacing: 0.05em;
       opacity: 0; transition: opacity 0.3s ease;
       text-shadow: 0 0 30px rgba(207,185,145,0.5);
+    }
+    .p-wheel-wrap { position: relative; display: inline-block; }
+    .p-wheel-pointer {
+      position: absolute; top: -13px; left: 50%; transform: translateX(-50%);
+      width: 0; height: 0;
+      border-left: 12px solid transparent;
+      border-right: 12px solid transparent;
+      border-top: 20px solid #cfb991;
+      filter: drop-shadow(0 0 5px rgba(207,185,145,0.7));
+      z-index: 2;
     }
 
     /* ── Photo Roulette upload ── */
@@ -1048,7 +1055,10 @@
 
   <!-- ── Spin overlay (fixed, sits above all screens) ── -->
   <div id="spin-overlay">
-    <div id="spin-overlay-emoji"></div>
+    <div class="p-wheel-wrap">
+      <div class="p-wheel-pointer"></div>
+      <canvas id="player-wheel-canvas" width="280" height="280"></canvas>
+    </div>
     <div id="spin-overlay-label"></div>
   </div>
 
@@ -2273,86 +2283,168 @@
       }
     }
 
-    socket.on('qc-round-start', ({ currentPlayer }) => {
+    let playerWheelSegments = [];
+    let playerWheelAngle = 0;
+    let playerWheelAnimFrame = null;
+
+    function drawPlayerWheel(angle) {
+      const canvas = document.getElementById('player-wheel-canvas');
+      if (!canvas) return;
+      const ctx = canvas.getContext('2d');
+      const size = canvas.width;
+      const cx = size / 2, cy = size / 2;
+      const r = size / 2 - 8;
+      const N = playerWheelSegments.length;
+
+      ctx.clearRect(0, 0, size, size);
+
+      if (N === 0) {
+        ctx.beginPath();
+        ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+        ctx.fillStyle = '#0f0a20';
+        ctx.fill();
+        ctx.strokeStyle = '#2d1f50';
+        ctx.lineWidth = 3;
+        ctx.stroke();
+        return;
+      }
+
+      const sliceAngle = (2 * Math.PI) / N;
+      for (let i = 0; i < N; i++) {
+        const startA = angle + i * sliceAngle;
+        const endA   = angle + (i + 1) * sliceAngle;
+        const isQ    = playerWheelSegments[i].type === 'question';
+
+        ctx.beginPath();
+        ctx.moveTo(cx, cy);
+        ctx.arc(cx, cy, r, startA, endA);
+        ctx.closePath();
+        ctx.fillStyle = isQ ? '#1e1050' : '#2d1800';
+        ctx.fill();
+        ctx.strokeStyle = '#08041a';
+        ctx.lineWidth = 2;
+        ctx.stroke();
+
+        const midA  = angle + (i + 0.5) * sliceAngle;
+        const textR = r * 0.62;
+        const tx    = cx + textR * Math.cos(midA);
+        const ty    = cy + textR * Math.sin(midA);
+        ctx.save();
+        ctx.translate(tx, ty);
+        ctx.rotate(midA + Math.PI / 2);
+        ctx.font = N <= 10 ? 'bold 16px sans-serif' : 'bold 11px sans-serif';
+        ctx.textAlign = 'center';
+        ctx.textBaseline = 'middle';
+        ctx.fillStyle = isQ ? '#c084fc' : '#cfb991';
+        ctx.fillText(isQ ? '?' : '⚡', 0, 0);
+        ctx.restore();
+      }
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, r, 0, 2 * Math.PI);
+      ctx.strokeStyle = '#cfb991';
+      ctx.lineWidth = 3;
+      ctx.stroke();
+
+      ctx.beginPath();
+      ctx.arc(cx, cy, 12, 0, 2 * Math.PI);
+      ctx.fillStyle = '#cfb991';
+      ctx.fill();
+    }
+
+    function spinPlayerWheel(pickedId, onComplete) {
+      const N = playerWheelSegments.length;
+      if (N === 0) { onComplete(); return; }
+
+      const pickedIndex = playerWheelSegments.findIndex(s => s.id === pickedId);
+      if (pickedIndex === -1) { onComplete(); return; }
+
+      const sliceAngle = (2 * Math.PI) / N;
+      const segCenter  = (pickedIndex + 0.5) * sliceAngle;
+
+      let targetDelta = ((-Math.PI / 2) - playerWheelAngle - segCenter) % (2 * Math.PI);
+      if (targetDelta > 0) targetDelta -= 2 * Math.PI;
+      targetDelta = Math.abs(targetDelta);
+      if (targetDelta < 0.01) targetDelta = 2 * Math.PI;
+      targetDelta += 2 * Math.PI * 6;
+
+      const startAngle = playerWheelAngle;
+      const endAngle   = startAngle + targetDelta;
+      const duration   = 3500;
+      const startTime  = performance.now();
+
+      function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
+
+      function frame(now) {
+        const t = Math.min((now - startTime) / duration, 1);
+        playerWheelAngle = startAngle + targetDelta * easeOut(t);
+        drawPlayerWheel(playerWheelAngle);
+        if (t < 1) {
+          playerWheelAnimFrame = requestAnimationFrame(frame);
+        } else {
+          playerWheelAngle = endAngle;
+          playerWheelAnimFrame = null;
+          onComplete();
+        }
+      }
+
+      if (playerWheelAnimFrame) cancelAnimationFrame(playerWheelAnimFrame);
+      playerWheelAnimFrame = requestAnimationFrame(frame);
+    }
+
+    socket.on('qc-round-start', ({ currentPlayer, available }) => {
+      playerWheelAngle = 0;
+      if (available) playerWheelSegments = available;
       setupWatchScreen(currentPlayer);
       showScreen('screen-qc-watch');
     });
 
-    socket.on('qc-next-turn', ({ currentPlayer }) => {
+    socket.on('qc-next-turn', ({ currentPlayer, available }) => {
+      if (available) playerWheelSegments = available;
       setupWatchScreen(currentPlayer);
     });
 
-    let spinAnimInterval = null;
-
     function doSpin() {
       document.getElementById('spin-btn').disabled = true;
-
-      const overlay   = document.getElementById('spin-overlay');
-      const emojiEl   = document.getElementById('spin-overlay-emoji');
-      const labelEl   = document.getElementById('spin-overlay-label');
-      const emojis    = ['❓', '⚡'];
-      let i = 0;
-
-      emojiEl.textContent    = emojis[0];
-      emojiEl.style.opacity  = '1';
-      emojiEl.style.transform = 'scale(1)';
-      labelEl.style.opacity  = '0';
-      labelEl.textContent    = '';
-      overlay.style.display  = 'flex';
-
-      spinAnimInterval = setInterval(() => {
-        emojiEl.style.opacity   = '0';
-        emojiEl.style.transform = 'scale(0.75)';
-        setTimeout(() => {
-          i++;
-          emojiEl.textContent     = emojis[i % 2];
-          emojiEl.style.opacity   = '1';
-          emojiEl.style.transform = 'scale(1)';
-        }, 90);
-      }, 200);
-
+      const overlay = document.getElementById('spin-overlay');
+      const labelEl = document.getElementById('spin-overlay-label');
+      labelEl.style.opacity = '0';
+      labelEl.textContent = '';
+      drawPlayerWheel(playerWheelAngle);
+      overlay.style.display = 'flex';
       socket.emit('qc-spin');
     }
 
     socket.on('qc-spin-result', ({ picked }) => {
-      if (spinAnimInterval) { clearInterval(spinAnimInterval); spinAnimInterval = null; }
+      const overlay = document.getElementById('spin-overlay');
+      const labelEl = document.getElementById('spin-overlay-label');
+      const isQ     = picked.type === 'question';
 
-      const overlay   = document.getElementById('spin-overlay');
-      const emojiEl   = document.getElementById('spin-overlay-emoji');
-      const labelEl   = document.getElementById('spin-overlay-label');
-      const isQ       = picked.type === 'question';
+      overlay.style.display = 'flex';
+      drawPlayerWheel(playerWheelAngle);
 
-      // Slam to final emoji with a bounce
-      emojiEl.style.transition = 'none';
-      emojiEl.textContent      = isQ ? '❓' : '⚡';
-      emojiEl.style.opacity    = '1';
-      emojiEl.style.transform  = 'scale(1.5)';
-      void emojiEl.offsetWidth;
-      emojiEl.style.transition = 'transform 0.35s cubic-bezier(0.175,0.885,0.32,1.275)';
-      emojiEl.style.transform  = 'scale(1)';
+      spinPlayerWheel(picked.id, () => {
+        labelEl.textContent   = isQ ? '❓ Question' : '⚡ Challenge';
+        labelEl.style.opacity = '1';
 
-      labelEl.textContent   = isQ ? 'Question' : 'Challenge';
-      labelEl.style.opacity = '1';
-
-      // Hold, then fade overlay out and reveal result box
-      setTimeout(() => {
-        overlay.style.transition = 'opacity 0.4s ease';
-        overlay.style.opacity    = '0';
         setTimeout(() => {
-          overlay.style.display    = 'none';
-          overlay.style.opacity    = '';
-          overlay.style.transition = '';
-          emojiEl.style.transition = '';
+          overlay.style.transition = 'opacity 0.4s ease';
+          overlay.style.opacity    = '0';
+          setTimeout(() => {
+            overlay.style.display    = 'none';
+            overlay.style.opacity    = '';
+            overlay.style.transition = '';
 
-          const typeLabel = isQ ? '❓ Question' : '⚡ Challenge';
-          document.getElementById('watch-type').textContent = typeLabel;
-          document.getElementById('watch-text').textContent = picked.text;
-          document.getElementById('watch-reveal-box').style.display = 'block';
-          if (isHost) {
-            document.getElementById('qc-post-spin-controls').style.display = 'block';
-          }
-        }, 400);
-      }, 1400);
+            const typeLabel = isQ ? '❓ Question' : '⚡ Challenge';
+            document.getElementById('watch-type').textContent = typeLabel;
+            document.getElementById('watch-text').textContent = picked.text;
+            document.getElementById('watch-reveal-box').style.display = 'block';
+            if (isHost) {
+              document.getElementById('qc-post-spin-controls').style.display = 'block';
+            }
+          }, 400);
+        }, 1200);
+      });
     });
 
     function nextPlayer() {
