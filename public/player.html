@@ -2429,6 +2429,8 @@
       const labelEl  = document.getElementById('spin-overlay-label');
       const isQ      = picked.type === 'question';
       const thisTurn = qcTurnId;
+      // Client-side fallback: if only 1 segment was in the wheel, this is the last item
+      isLast = isLast || (playerWheelSegments.length === 1);
 
       overlay.style.display = 'flex';
       drawPlayerWheel(playerWheelAngle);
@@ -2473,6 +2475,11 @@
     }
 
     socket.on('qc-game-over', () => {
+      qcTurnId++;  // abort any in-flight spin animations
+      const overlay = document.getElementById('spin-overlay');
+      overlay.style.display    = 'none';
+      overlay.style.opacity    = '';
+      overlay.style.transition = '';
       showScreen('screen-qc-over');
     });
 
