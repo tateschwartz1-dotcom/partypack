@@ -2332,7 +2332,7 @@
         ctx.save();
         ctx.translate(tx, ty);
         ctx.rotate(midA + Math.PI / 2);
-        ctx.font = N <= 10 ? 'bold 16px sans-serif' : 'bold 11px sans-serif';
+        ctx.font = N <= 10 ? 'bold 22px sans-serif' : 'bold 14px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = isQ ? '#c084fc' : '#cfb991';
@@ -2362,15 +2362,16 @@
       const sliceAngle = (2 * Math.PI) / N;
       const segCenter  = (pickedIndex + 0.5) * sliceAngle;
 
-      let targetDelta = ((-Math.PI / 2) - playerWheelAngle - segCenter) % (2 * Math.PI);
-      if (targetDelta > 0) targetDelta -= 2 * Math.PI;
-      targetDelta = Math.abs(targetDelta);
-      if (targetDelta < 0.01) targetDelta = 2 * Math.PI;
-      targetDelta += 2 * Math.PI * 6;
+      const normalizedCurrent = ((playerWheelAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      let finalAngle = ((-Math.PI / 2) - segCenter) % (2 * Math.PI);
+      if (finalAngle < 0) finalAngle += 2 * Math.PI;
+      let targetDelta = finalAngle - normalizedCurrent;
+      if (targetDelta <= 0) targetDelta += 2 * Math.PI;
+      targetDelta += 2 * Math.PI * 5;
 
       const startAngle = playerWheelAngle;
       const endAngle   = startAngle + targetDelta;
-      const duration   = 3500;
+      const duration   = 3000;
       const startTime  = performance.now();
 
       function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
@@ -2428,7 +2429,7 @@
         labelEl.style.opacity = '1';
 
         setTimeout(() => {
-          overlay.style.transition = 'opacity 0.4s ease';
+          overlay.style.transition = 'opacity 0.3s ease';
           overlay.style.opacity    = '0';
           setTimeout(() => {
             overlay.style.display    = 'none';
@@ -2442,8 +2443,8 @@
             if (isHost) {
               document.getElementById('qc-post-spin-controls').style.display = 'block';
             }
-          }, 400);
-        }, 1200);
+          }, 300);
+        }, 500);
       });
     });
 

@@ -582,7 +582,7 @@
         ctx.save();
         ctx.translate(tx, ty);
         ctx.rotate(midA + Math.PI / 2);
-        ctx.font = N <= 10 ? 'bold 20px sans-serif' : 'bold 14px sans-serif';
+        ctx.font = N <= 10 ? 'bold 28px sans-serif' : 'bold 18px sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillStyle = isQ ? '#c084fc' : '#cfb991';
@@ -654,19 +654,20 @@
       const pickedIndex = wheelSegments.findIndex(s => s.id === pickedId);
       if (pickedIndex === -1) { onComplete(); return; }
 
-      const sliceAngle   = (2 * Math.PI) / N;
-      const segCenter    = (pickedIndex + 0.5) * sliceAngle;
+      const sliceAngle = (2 * Math.PI) / N;
+      const segCenter  = (pickedIndex + 0.5) * sliceAngle;
 
-      // Compute how much to rotate so pickedIndex lands at top (-π/2)
-      let targetDelta = ((-Math.PI / 2) - wheelAngle - segCenter) % (2 * Math.PI);
-      if (targetDelta > 0) targetDelta -= 2 * Math.PI; // ensure negative (we go clockwise = positive)
-      targetDelta = Math.abs(targetDelta);
-      if (targetDelta < 0.01) targetDelta = 2 * Math.PI;
-      targetDelta += 2 * Math.PI * 6; // 6 full extra rotations
+      // Normalize current angle to [0, 2π) then compute clockwise delta to land segment at top
+      const normalizedCurrent = ((wheelAngle % (2 * Math.PI)) + 2 * Math.PI) % (2 * Math.PI);
+      let finalAngle = ((-Math.PI / 2) - segCenter) % (2 * Math.PI);
+      if (finalAngle < 0) finalAngle += 2 * Math.PI;
+      let targetDelta = finalAngle - normalizedCurrent;
+      if (targetDelta <= 0) targetDelta += 2 * Math.PI;
+      targetDelta += 2 * Math.PI * 5;
 
       const startAngle = wheelAngle;
       const endAngle   = startAngle + targetDelta;
-      const duration   = 3500;
+      const duration   = 3000;
       const startTime  = performance.now();
 
       function easeOut(t) { return 1 - Math.pow(1 - t, 4); }
