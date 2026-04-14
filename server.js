@@ -1537,9 +1537,11 @@ io.on('connection', (socket) => {
       hasMoreRounds: room.ht.currentRound < room.ht.totalRounds,
     });
 
-    // Auto-advance countdown
-    const ADVANCE_TIME = 8;
+    // Auto-advance countdown (shorter when votes are anonymous — less to read)
+    const ADVANCE_TIME = revealVotes ? 8 : 6;
     let advLeft = ADVANCE_TIME;
+
+    io.to(pin).emit('ht-advance-tick', { timeLeft: advLeft });
 
     const advTimer = setInterval(() => {
       advLeft--;

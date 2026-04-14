@@ -5,7 +5,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0, user-scalable=no" />
   <title>Johnbox Games</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Jost:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -15,7 +15,7 @@
         radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.10) 0%, transparent 55%),
         radial-gradient(ellipse at 80% 70%, rgba(76,29,149,0.08) 0%, transparent 50%);
       color: #ede9f8;
-      font-family: 'Nunito', Arial, sans-serif;
+      font-family: 'Jost', Arial, sans-serif;
       min-height: 100vh;
       display: flex;
       align-items: center;
@@ -88,7 +88,7 @@
       text-align: center;
       margin-bottom: 0.75rem;
       outline: none;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Jost', sans-serif;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus { border-color: #7c3aed; box-shadow: 0 0 12px rgba(124,58,237,0.22); }
@@ -104,7 +104,7 @@
       width: 100%;
       outline: none;
       resize: none;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Jost', sans-serif;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     textarea:focus { border-color: #7c3aed; box-shadow: 0 0 12px rgba(124,58,237,0.22); }
@@ -119,8 +119,8 @@
       cursor: pointer;
       width: 100%;
       margin-top: 0.6rem;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
       transition: background 0.2s, box-shadow 0.2s;
       position: relative;
       overflow: hidden;
@@ -199,7 +199,7 @@
     .game-card:active { transform: scale(0.98); border-color: #cfb991; box-shadow: 0 6px 20px rgba(207,185,145,0.15); }
     .game-card.disabled { opacity: 0.4; cursor: not-allowed; }
     .game-icon { font-size: 2rem; flex-shrink: 0; }
-    .game-title { font-size: 1rem; font-weight: 700; color: #ede9f8; }
+    .game-title { font-size: 1rem; font-weight: 500; color: #ede9f8; }
     .game-desc { font-size: 0.8rem; color: #8b7aa8; margin-top: 0.15rem; line-height: 1.3; }
 
     /* ── Timer bar ── */
@@ -211,13 +211,13 @@
     .type-btn {
       flex: 1; padding: 0.7rem; font-size: 0.95rem; border-radius: 8px;
       border: 2px solid #2d1f50; background: #0f0a20; color: #8b7aa8;
-      cursor: pointer; font-family: 'Nunito', sans-serif; transition: all 0.2s;
+      cursor: pointer; font-family: 'Jost', sans-serif; transition: all 0.2s;
     }
     .type-btn.active { border-color: #7c3aed; color: #e9d5ff; background: #1a1232; }
 
     /* ── Submit count ── */
     .submit-count-wrap { margin-top: 1rem; padding: 0.65rem 1rem; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; font-size: 0.9rem; color: #8b7aa8; }
-    .submit-count-wrap span { color: #cfb991; font-weight: 700; }
+    .submit-count-wrap span { color: #cfb991; font-weight: 500; }
 
     /* ── Q&C watch ── */
     .watch-label { font-size: 0.75rem; color: #5a4a7a; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.4rem; }
@@ -227,7 +227,7 @@
       padding: 1.25rem; margin-top: 0.75rem; display: none;
     }
     .watch-type { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 2px; color: #cfb991; margin-bottom: 0.4rem; }
-    .watch-text { font-size: 1.15rem; font-weight: 700; line-height: 1.4; color: #ede9f8; }
+    .watch-text { font-size: 1.15rem; font-weight: 500; line-height: 1.4; color: #ede9f8; }
 
     /* ── Your turn ── */
     .your-turn-label { font-family: 'Cinzel', serif; font-size: 2.4rem; font-weight: 700; color: #cfb991; margin-bottom: 0.4rem; text-shadow: 0 0 30px rgba(207,185,145,0.35); }
@@ -264,7 +264,7 @@
     .pr-upload-label {
       display: block; padding: 0.9rem; font-size: 1.05rem; border-radius: 8px;
       background: #cfb991; color: #08041a; cursor: pointer; margin-top: 0.6rem;
-      font-family: 'Nunito', sans-serif; font-weight: 700; transition: background 0.2s;
+      font-family: 'Jost', sans-serif; font-weight: 500; transition: background 0.2s;
       text-align: center;
     }
     .pr-upload-label:active { background: #b8995e; }
@@ -282,7 +282,7 @@
       padding: 0.75rem 1rem; font-size: 1rem; border-radius: 8px;
       border: 2px solid #2d1f50; background: #1a1232; color: #ede9f8;
       cursor: pointer; width: 100%; margin-bottom: 0.4rem;
-      font-family: 'Nunito', sans-serif; font-weight: 600;
+      font-family: 'Jost', sans-serif; font-weight: 500;
       transition: all 0.15s; text-align: left;
     }
     .pr-guess-btn:active { border-color: #7c3aed; background: #1e1540; }
@@ -302,7 +302,7 @@
 
     /* ── Game over / scores ── */
     .pr-score-row { display: flex; justify-content: space-between; padding: 0.6rem 0.5rem; border-bottom: 1px solid #2d1f50; font-size: 1rem; }
-    .pr-score-pts { color: #cfb991; font-weight: 700; }
+    .pr-score-pts { color: #cfb991; font-weight: 500; }
     .over-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
 
     .et-topic-list, .et-stats-list { text-align: left; margin-top: 1rem; }
@@ -313,7 +313,7 @@
     .et-topic-row {
       display: flex; justify-content: space-between; align-items: center; gap: 0.75rem;
     }
-    .et-topic-name { font-weight: 700; color: #ede9f8; }
+    .et-topic-name { font-weight: 500; color: #ede9f8; }
     .et-topic-meta { font-size: 0.82rem; color: #8b7aa8; margin-top: 0.15rem; }
     .et-status {
       font-size: 0.72rem; text-transform: uppercase; letter-spacing: 1.5px;
@@ -322,8 +322,8 @@
     .et-answer-btn {
       width: 100%; padding: 0.9rem 1rem; font-size: 1rem; border-radius: 10px;
       border: 2px solid #2d1f50; background: #1a1232; color: #ede9f8;
-      cursor: pointer; margin-bottom: 0.5rem; text-align: left; font-family: 'Nunito', sans-serif;
-      font-weight: 700; transition: all 0.15s;
+      cursor: pointer; margin-bottom: 0.5rem; text-align: left; font-family: 'Jost', sans-serif;
+      font-weight: 500; transition: all 0.15s;
     }
     .et-answer-btn:active { transform: scale(0.98); border-color: #cfb991; }
     .et-answer-btn:disabled { opacity: 0.45; cursor: not-allowed; }
@@ -339,11 +339,11 @@
       display: flex; justify-content: space-between; align-items: center; font-size: 0.95rem;
     }
     .et-score-main { display: flex; flex-direction: column; gap: 0.12rem; text-align: left; }
-    .et-score-name { font-weight: 700; }
+    .et-score-name { font-weight: 500; }
     .et-score-sub { font-size: 0.78rem; color: #8b7aa8; }
-    .et-score-total { color: #cfb991; font-weight: 700; }
+    .et-score-total { color: #cfb991; font-weight: 500; }
     .et-stat-label { color: #8b7aa8; font-size: 0.78rem; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.2rem; }
-    .et-stat-value { font-size: 1rem; color: #ede9f8; font-weight: 700; }
+    .et-stat-value { font-size: 1rem; color: #ede9f8; font-weight: 500; }
     .et-correct-answer-big { font-size: 2.3rem !important; line-height: 1.15; }
 
     .mafia-wrap {
@@ -436,7 +436,7 @@
     }
     .mafia-action-btn, .mafia-host-btn {
       width: 100%; padding: 0.95rem; border-radius: 10px; border: 2px solid var(--mafia-card-border); background: var(--mafia-button-bg); color: #f8fafc;
-      font-size: 1rem; font-weight: 700; cursor: pointer; margin-bottom: 0.5rem; text-align: left;
+      font-size: 1rem; font-weight: 500; cursor: pointer; margin-bottom: 0.5rem; text-align: left;
     }
     .mafia-action-btn.selected-vote {
       border-color: var(--mafia-accent);
@@ -719,21 +719,21 @@
       --mafia-button-selected-bg: linear-gradient(180deg, #13313f, #0d1a24);
     }
     .ht-round-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1rem; }
-    .ht-p-question { font-size: 1.25rem; font-weight: 700; line-height: 1.4; color: #ede9f8; margin-bottom: 1rem; }
+    .ht-p-question { font-size: 1.25rem; font-weight: 500; line-height: 1.4; color: #ede9f8; margin-bottom: 1rem; }
     .ht-vote-btn {
       width: 100%; padding: 1rem; font-size: 1.1rem; border-radius: 10px;
       border: 2px solid #2d1f50; background: #0f0a20; color: #ede9f8;
-      cursor: pointer; margin-bottom: 0.6rem; font-family: 'Nunito', sans-serif;
-      font-weight: 700; transition: all 0.15s; text-align: center;
+      cursor: pointer; margin-bottom: 0.6rem; font-family: 'Jost', sans-serif;
+      font-weight: 500; transition: all 0.15s; text-align: center;
     }
     .ht-vote-btn:active { transform: scale(0.97); }
     .ht-vote-btn:disabled { opacity: 0.4; cursor: not-allowed; }
     .ht-voted-msg { color: #4ade80; font-size: 0.95rem; margin-top: 0.5rem; }
     .ht-p-result-row { display: flex; align-items: center; gap: 0.6rem; margin-bottom: 0.75rem; }
-    .ht-p-result-name { font-weight: 700; font-size: 1rem; min-width: 80px; text-align: right; }
+    .ht-p-result-name { font-weight: 500; font-size: 1rem; min-width: 80px; text-align: right; }
     .ht-p-result-bar-wrap { flex: 1; background: #0f0a20; border-radius: 4px; height: 10px; overflow: hidden; border: 1px solid #2d1f50; }
     .ht-p-result-bar { height: 100%; border-radius: 4px; transition: width 0.9s ease; width: 0%; }
-    .ht-p-result-pct { font-size: 1rem; font-weight: 700; min-width: 36px; }
+    .ht-p-result-pct { font-size: 1rem; font-weight: 500; min-width: 36px; }
     .ht-expose-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: #c084fc; margin: 1.25rem 0 0.6rem; }
     .ht-vote-row { font-size: 0.9rem; margin-bottom: 0.35rem; }
     .ht-advance-text { font-size: 0.8rem; color: #4a3a6a; margin-top: 1.25rem; }
@@ -746,6 +746,48 @@
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none; z-index: 9000;
+    }
+    .confirm-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 4, 26, 0.78);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.25rem;
+      z-index: 9500;
+    }
+    .confirm-modal-backdrop.open { display: flex; }
+    .confirm-modal {
+      width: 100%;
+      max-width: 380px;
+      background: linear-gradient(180deg, rgba(26,18,50,0.98), rgba(15,10,32,0.98));
+      border: 1px solid #4c1d95;
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      padding: 1.35rem;
+      text-align: left;
+    }
+    .confirm-modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.2rem;
+      color: #cfb991;
+      margin-bottom: 0.45rem;
+    }
+    .confirm-modal-text {
+      color: #d6d0e6;
+      font-size: 0.98rem;
+      line-height: 1.5;
+    }
+    .confirm-modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.2rem;
+    }
+    .confirm-modal-actions .btn {
+      margin-top: 0;
+      width: 100%;
     }
   </style>
 </head>
@@ -844,7 +886,7 @@
     </div>
     <div class="et-topic-list" id="et-topic-list"></div>
     <div class="host-only" style="margin-top:0.85rem;">
-      <button class="btn btn-ghost" onclick="exitGame()">Quit Game</button>
+      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
     </div>
   </div>
 
@@ -928,7 +970,7 @@
     <div class="mafia-note" id="mafia-setup-note">Mafia needs at least 4 players.</div>
     <div class="host-only">
       <button class="mafia-host-btn" id="mafia-begin-btn" onclick="beginMafia()">Start Day 1</button>
-      <button class="btn btn-ghost" onclick="exitGame()">Quit Game</button>
+      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
     </div>
     <div class="guest-only waiting"><span class="dot"></span> Waiting for host to start the game...</div>
   </div>
@@ -1031,6 +1073,7 @@
     <!-- Host only -->
     <div class="host-only" style="margin-top:0.75rem;">
       <button class="btn btn-ghost" onclick="closeSubmissions()">Begin Game</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
   </div>
 
@@ -1075,6 +1118,17 @@
   </div>
 
   <!-- ── Screen 7: Q&C — Game Over ── -->
+  <div id="confirm-modal-backdrop" class="confirm-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-text">
+    <div class="confirm-modal">
+      <div class="confirm-modal-title" id="confirm-modal-title">Are you sure?</div>
+      <div class="confirm-modal-text" id="confirm-modal-text"></div>
+      <div class="confirm-modal-actions">
+        <button class="btn btn-ghost" type="button" id="confirm-modal-cancel">Cancel</button>
+        <button class="btn" type="button" id="confirm-modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <div id="screen-qc-over" class="screen">
     <div class="over-emoji">🎉</div>
     <h1>That's a wrap!</h1>
@@ -1102,6 +1156,7 @@
     <!-- Host only -->
     <div class="host-only" style="margin-top:1.25rem;">
       <button class="btn btn-ghost" onclick="closePRUploads()">Begin Game</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.25rem;"><span class="dot"></span> Waiting for host to start...</div>
   </div>
@@ -1147,6 +1202,9 @@
       <button class="ht-vote-btn" id="ht-vote-btn-b" onclick="htVote('B')"></button>
     </div>
     <div class="ht-voted-msg" id="ht-voted-msg" style="display:none;">Locked in! Waiting for results...</div>
+    <div class="host-only" style="margin-top:1rem;">
+      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+    </div>
   </div>
 
   <!-- ── Screen 13: Hot Takes — Reveal ── -->
@@ -1159,6 +1217,9 @@
       <div id="ht-p-vote-list"></div>
     </div>
     <div class="ht-advance-text" id="ht-p-advance-text">Next round in 10...</div>
+    <div class="host-only" style="margin-top:1rem;">
+      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+    </div>
   </div>
 
   <!-- ── Screen 14: Hot Takes — Game Over ── -->
@@ -1202,6 +1263,51 @@
     let prHasGuessed    = false;
     let etHasAnswered   = false;
     let mafiaState      = null;
+    let pendingConfirmAction = null;
+
+    const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select']);
+
+    function getActiveScreenId() {
+      const active = document.querySelector('.screen.active');
+      return active ? active.id : '';
+    }
+
+    function isGameFlowActive() {
+      const screenId = getActiveScreenId();
+      return !!screenId && !SAFE_NAV_SCREENS.has(screenId);
+    }
+
+    function openConfirmModal({ title = 'Are you sure?', message = '', confirmLabel = 'Confirm', onConfirm = null }) {
+      pendingConfirmAction = onConfirm;
+      document.getElementById('confirm-modal-title').textContent = title;
+      document.getElementById('confirm-modal-text').textContent = message;
+      document.getElementById('confirm-modal-confirm').textContent = confirmLabel;
+      document.getElementById('confirm-modal-backdrop').classList.add('open');
+      document.getElementById('confirm-modal-confirm').focus();
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-modal-backdrop').classList.remove('open');
+      pendingConfirmAction = null;
+    }
+
+    function confirmModalProceed() {
+      const action = pendingConfirmAction;
+      closeConfirmModal();
+      if (typeof action === 'function') action();
+    }
+
+    document.getElementById('confirm-modal-cancel').addEventListener('click', closeConfirmModal);
+    document.getElementById('confirm-modal-confirm').addEventListener('click', confirmModalProceed);
+    document.getElementById('confirm-modal-backdrop').addEventListener('click', (event) => {
+      if (event.target.id === 'confirm-modal-backdrop') closeConfirmModal();
+    });
+    document.addEventListener('keydown', (event) => {
+      const isOpen = document.getElementById('confirm-modal-backdrop').classList.contains('open');
+      if (!isOpen) return;
+      if (event.key === 'Escape') closeConfirmModal();
+      if (event.key === 'Enter') confirmModalProceed();
+    });
 
     // ── Screens ────────────────────────────────────────────────────
     function showScreen(id) {
@@ -1357,14 +1463,39 @@
     // ── Game selector ──────────────────────────────────────────────
     hydrateMafiaRulesPanel();
     function goToGameSelect() { showScreen('screen-game-select'); }
-    function backToGameSelect() { showScreen('screen-game-select'); }
+    function backToGameSelect() {
+      if (!isGameFlowActive()) {
+        showScreen('screen-game-select');
+        return;
+      }
+      openConfirmModal({
+        title: 'Leave this game?',
+        message: 'This will end the current game and return you to the game select screen.',
+        confirmLabel: 'Leave Game',
+        onConfirm: () => showScreen('screen-game-select')
+      });
+    }
 
     function backToLobby() {
-      socket.emit('back-to-lobby');
+      if (!isGameFlowActive()) {
+        socket.emit('back-to-lobby');
+        return;
+      }
+      openConfirmModal({
+        title: 'Return to lobby?',
+        message: 'This will end the current game for everyone and send the room back to the lobby.',
+        confirmLabel: 'Return to Lobby',
+        onConfirm: () => socket.emit('back-to-lobby')
+      });
     }
 
     function exitGame() {
-      socket.emit('back-to-lobby');
+      openConfirmModal({
+        title: 'Exit game?',
+        message: 'Are you sure you want to exit the game? This will end it for everyone.',
+        confirmLabel: 'Exit Game',
+        onConfirm: () => socket.emit('back-to-lobby')
+      });
     }
 
     socket.on('returned-to-lobby', () => {
@@ -2722,7 +2853,7 @@
         voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
           const row = document.createElement('div');
           row.className = 'ht-vote-row';
-          row.innerHTML = `<span style="color:${voterColor};font-weight:700">${voterName}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:700">${votedForName}</span>`;
+          row.innerHTML = `<span style="color:${voterColor};font-weight:500">${voterName}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:500">${votedForName}</span>`;
           listEl.appendChild(row);
         });
       } else {

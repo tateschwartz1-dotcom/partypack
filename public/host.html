@@ -6,7 +6,7 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0" />
   <title>Johnbox Games — Host</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
-  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Nunito:wght@400;600;700&display=swap" rel="stylesheet" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Jost:wght@400;600;700&display=swap" rel="stylesheet" />
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -17,11 +17,13 @@
         radial-gradient(ellipse at 85% 15%, rgba(207,185,145,0.07) 0%, transparent 50%),
         radial-gradient(ellipse at 70% 80%, rgba(76,29,149,0.10) 0%, transparent 45%);
       color: #ede9f8;
-      font-family: 'Nunito', Arial, sans-serif;
+      font-family: 'Jost', Arial, sans-serif;
       min-height: 100vh;
       display: flex;
-      align-items: center;
+      align-items: flex-start;
       justify-content: center;
+      overflow-y: auto;
+      padding: 2rem 0;
     }
 
     .screen { display: none; text-align: center; padding: 2rem; width: 100%; }
@@ -46,7 +48,7 @@
       width: 300px;
       text-align: center;
       outline: none;
-      font-family: 'Nunito', sans-serif;
+      font-family: 'Jost', sans-serif;
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus { border-color: #7c3aed; box-shadow: 0 0 14px rgba(124,58,237,0.25); }
@@ -61,8 +63,8 @@
       color: #08041a;
       cursor: pointer;
       margin-top: 1rem;
-      font-family: 'Nunito', sans-serif;
-      font-weight: 700;
+      font-family: 'Jost', sans-serif;
+      font-weight: 500;
       letter-spacing: 0.02em;
       transition: background 0.2s, box-shadow 0.2s;
       position: relative;
@@ -88,7 +90,7 @@
     }
     .join-info { text-align: center; }
     .url-label { font-size: 1rem; color: #8b7aa8; margin-bottom: 0.25rem; }
-    .player-url { font-size: 1.4rem; color: #ede9f8; font-weight: bold; margin-bottom: 1rem; }
+    .player-url { font-size: 1.4rem; color: #ede9f8; font-weight: 500; margin-bottom: 1rem; }
     .pin-label { font-size: 0.9rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.25rem; }
     .pin {
       font-family: 'Cinzel', serif;
@@ -114,7 +116,7 @@
     }
     .game-card:hover { transform: translateY(-6px); border-color: #cfb991; box-shadow: 0 10px 30px rgba(207,185,145,0.15); }
     .game-icon { font-size: 3rem; margin-bottom: 1rem; }
-    .game-title { font-size: 1.1rem; font-weight: 700; margin-bottom: 0.5rem; color: #ede9f8; }
+    .game-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem; color: #ede9f8; }
     .game-desc { font-size: 0.85rem; color: #8b7aa8; line-height: 1.4; }
 
     /* ── Timer bar ── */
@@ -141,7 +143,7 @@
 
     /* ── Reveal ── */
     .reveal-type { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1rem; }
-    .reveal-text { font-size: 2.2rem; font-weight: 700; max-width: 640px; margin: 0 auto 2rem; line-height: 1.3; color: #ede9f8; }
+    .reveal-text { font-size: 2.2rem; font-weight: 500; max-width: 640px; margin: 0 auto 2rem; line-height: 1.3; color: #ede9f8; }
     .player-turn-label { font-size: 1rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 2px; margin-bottom: 0.5rem; }
     .player-turn-name { font-family: 'Cinzel', serif; font-size: 3rem; font-weight: 700; color: #cfb991; margin-bottom: 2rem; text-shadow: 0 0 35px rgba(207,185,145,0.35); }
 
@@ -160,16 +162,16 @@
     .pr-guess-row.wrong { background: #200a1a; border-left: 3px solid #c084fc; }
     .pr-guess-row.no-guess { background: #1a1232; color: #5a4a7a; }
     .pr-points-wrap { margin: 0.75rem 0; }
-    .pr-point-badge { display: inline-block; background: #cfb991; color: #08041a; padding: 0.3rem 0.9rem; border-radius: 20px; margin: 0.25rem; font-size: 0.95rem; font-weight: 700; }
+    .pr-point-badge { display: inline-block; background: #cfb991; color: #08041a; padding: 0.3rem 0.9rem; border-radius: 20px; margin: 0.25rem; font-size: 0.95rem; font-weight: 500; }
     .pr-score-row { display: flex; align-items: center; padding: 0.8rem 1rem; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; margin: 0.4rem auto; max-width: 400px; }
     .pr-score-row.first { background: #140930; border: 1px solid #cfb991; box-shadow: 0 0 20px rgba(207,185,145,0.18); }
     .pr-rank { font-size: 1.5rem; margin-right: 0.75rem; min-width: 2rem; }
     .pr-score-name { font-size: 1.1rem; flex: 1; text-align: left; }
-    .pr-score-pts { font-size: 1.2rem; font-weight: 700; color: #cfb991; }
+    .pr-score-pts { font-size: 1.2rem; font-weight: 500; color: #cfb991; }
 
     /* ── Hot Takes ── */
     .ht-round-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1.5rem; }
-    .ht-question { font-size: 2.2rem; font-weight: 700; max-width: 720px; margin: 0 auto 1.5rem; line-height: 1.3; color: #ede9f8; }
+    .ht-question { font-size: 2.2rem; font-weight: 500; max-width: 720px; margin: 0 auto 1.5rem; line-height: 1.3; color: #ede9f8; }
     .ht-vote-count { font-size: 1rem; color: #8b7aa8; margin-bottom: 0.5rem; }
     .ht-options { display: flex; align-items: center; justify-content: center; gap: 3rem; margin: 2rem 0; flex-wrap: wrap; }
     .ht-option-name { font-family: 'Cinzel', serif; font-size: 2.8rem; font-weight: 700; text-shadow: 0 0 30px currentColor; }
@@ -220,6 +222,48 @@
       position: fixed; top: 0; left: 0;
       width: 100%; height: 100%;
       pointer-events: none; z-index: 9000;
+    }
+    .confirm-modal-backdrop {
+      position: fixed;
+      inset: 0;
+      background: rgba(8, 4, 26, 0.78);
+      backdrop-filter: blur(10px);
+      display: none;
+      align-items: center;
+      justify-content: center;
+      padding: 1.5rem;
+      z-index: 9500;
+    }
+    .confirm-modal-backdrop.open { display: flex; }
+    .confirm-modal {
+      width: 100%;
+      max-width: 420px;
+      background: linear-gradient(180deg, rgba(26,18,50,0.98), rgba(15,10,32,0.98));
+      border: 1px solid #4c1d95;
+      border-radius: 18px;
+      box-shadow: 0 20px 60px rgba(0, 0, 0, 0.45);
+      padding: 1.5rem;
+      text-align: left;
+    }
+    .confirm-modal-title {
+      font-family: 'Cinzel', serif;
+      font-size: 1.35rem;
+      color: #cfb991;
+      margin-bottom: 0.45rem;
+    }
+    .confirm-modal-text {
+      color: #d6d0e6;
+      font-size: 1rem;
+      line-height: 1.5;
+    }
+    .confirm-modal-actions {
+      display: flex;
+      gap: 0.75rem;
+      margin-top: 1.25rem;
+    }
+    .confirm-modal-actions .btn {
+      margin-top: 0;
+      width: 100%;
     }
   </style>
 </head>
@@ -291,6 +335,8 @@
     <div class="timer-bar-wrap"><div class="timer-bar" id="qc-collect-bar"></div></div>
     <div class="timer-text" id="qc-collect-time"></div>
     <button class="btn" onclick="closeSubmissions()">Begin Game</button>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
   </div>
 
   <!-- ── Screen 5: Q&C — Spin / Reveal ── -->
@@ -400,11 +446,11 @@
     <div class="ht-round-label">🔥 Round <span id="ht-rev-round-num">1</span> of <span id="ht-rev-round-total">20</span></div>
     <div class="ht-question" id="ht-host-rev-question"></div>
     <div class="ht-result-wrap" id="ht-host-result-wrap"></div>
+    <div class="ht-advance-text" id="ht-host-advance-text">Next round in 8...</div>
     <div id="ht-host-expose-section" style="display:none;">
       <div class="ht-expose-label">🔍 votes exposed</div>
       <div id="ht-host-vote-list"></div>
     </div>
-    <div class="ht-advance-text" id="ht-host-advance-text">Next round in 8...</div>
   </div>
 
   <!-- ── Screen 13: Hot Takes — Game Over ── -->
@@ -418,11 +464,67 @@
     <button class="btn btn-ghost btn-small" onclick="backToGameSelect()">Pick a Different Game</button>
   </div>
 
+  <div id="confirm-modal-backdrop" class="confirm-modal-backdrop" role="dialog" aria-modal="true" aria-labelledby="confirm-modal-title" aria-describedby="confirm-modal-text">
+    <div class="confirm-modal">
+      <div class="confirm-modal-title" id="confirm-modal-title">Are you sure?</div>
+      <div class="confirm-modal-text" id="confirm-modal-text"></div>
+      <div class="confirm-modal-actions">
+        <button class="btn btn-ghost" type="button" id="confirm-modal-cancel">Cancel</button>
+        <button class="btn" type="button" id="confirm-modal-confirm">Confirm</button>
+      </div>
+    </div>
+  </div>
+
   <script src="/socket.io/socket.io.js"></script>
   <script>
     const socket = io();
     let myPin = null;
     let players = [];
+    let pendingConfirmAction = null;
+
+    const SAFE_NAV_SCREENS = new Set(['screen-setup', 'screen-lobby', 'screen-game-select']);
+
+    function getActiveScreenId() {
+      const active = document.querySelector('.screen.active');
+      return active ? active.id : '';
+    }
+
+    function isGameFlowActive() {
+      const screenId = getActiveScreenId();
+      return !!screenId && !SAFE_NAV_SCREENS.has(screenId);
+    }
+
+    function openConfirmModal({ title = 'Are you sure?', message = '', confirmLabel = 'Confirm', onConfirm = null }) {
+      pendingConfirmAction = onConfirm;
+      document.getElementById('confirm-modal-title').textContent = title;
+      document.getElementById('confirm-modal-text').textContent = message;
+      document.getElementById('confirm-modal-confirm').textContent = confirmLabel;
+      document.getElementById('confirm-modal-backdrop').classList.add('open');
+      document.getElementById('confirm-modal-confirm').focus();
+    }
+
+    function closeConfirmModal() {
+      document.getElementById('confirm-modal-backdrop').classList.remove('open');
+      pendingConfirmAction = null;
+    }
+
+    function confirmModalProceed() {
+      const action = pendingConfirmAction;
+      closeConfirmModal();
+      if (typeof action === 'function') action();
+    }
+
+    document.getElementById('confirm-modal-cancel').addEventListener('click', closeConfirmModal);
+    document.getElementById('confirm-modal-confirm').addEventListener('click', confirmModalProceed);
+    document.getElementById('confirm-modal-backdrop').addEventListener('click', (event) => {
+      if (event.target.id === 'confirm-modal-backdrop') closeConfirmModal();
+    });
+    document.addEventListener('keydown', (event) => {
+      const isOpen = document.getElementById('confirm-modal-backdrop').classList.contains('open');
+      if (!isOpen) return;
+      if (event.key === 'Escape') closeConfirmModal();
+      if (event.key === 'Enter') confirmModalProceed();
+    });
 
     // ── Screens ────────────────────────────────────────────────────
     function showScreen(id) {
@@ -478,9 +580,12 @@
     }
 
     function transferHost(playerId) {
-      if (confirm('Transfer host to this player?')) {
-        socket.emit('transfer-host', { targetPlayerId: playerId });
-      }
+      openConfirmModal({
+        title: 'Transfer host?',
+        message: 'Give host controls to this player?',
+        confirmLabel: 'Transfer Host',
+        onConfirm: () => socket.emit('transfer-host', { targetPlayerId: playerId })
+      });
     }
 
     socket.on('host-transferred', () => {
@@ -494,14 +599,39 @@
 
     // ── Game selector ──────────────────────────────────────────────
     function goToGameSelect() { showScreen('screen-game-select'); }
-    function backToGameSelect() { showScreen('screen-game-select'); }
+    function backToGameSelect() {
+      if (!isGameFlowActive()) {
+        showScreen('screen-game-select');
+        return;
+      }
+      openConfirmModal({
+        title: 'Leave this game?',
+        message: 'This will end the current game and return you to the game select screen.',
+        confirmLabel: 'Leave Game',
+        onConfirm: () => showScreen('screen-game-select')
+      });
+    }
 
     function backToLobby() {
-      socket.emit('back-to-lobby');
+      if (!isGameFlowActive()) {
+        socket.emit('back-to-lobby');
+        return;
+      }
+      openConfirmModal({
+        title: 'Return to lobby?',
+        message: 'This will end the current game for everyone and send the room back to the lobby.',
+        confirmLabel: 'Return to Lobby',
+        onConfirm: () => socket.emit('back-to-lobby')
+      });
     }
 
     function exitGame() {
-      socket.emit('back-to-lobby');
+      openConfirmModal({
+        title: 'Exit game?',
+        message: 'Are you sure you want to exit the game? This will end it for everyone.',
+        confirmLabel: 'Exit Game',
+        onConfirm: () => socket.emit('back-to-lobby')
+      });
     }
 
     socket.on('returned-to-lobby', () => {
@@ -562,7 +692,7 @@
         ctx.lineWidth = 3;
         ctx.stroke();
         ctx.fillStyle = '#8b7aa8';
-        ctx.font = 'bold 32px Nunito, sans-serif';
+        ctx.font = '500 32px Jost, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
         ctx.fillText('?', cx, cy);
@@ -885,7 +1015,7 @@
         voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
           const row = document.createElement('div');
           row.className = 'ht-vote-row';
-          row.innerHTML = `<span style="color:${voterColor};font-weight:700">${voterName}</span> <span style="color:#5a4a7a">→ voted for</span> <span style="color:${votedForColor};font-weight:700">${votedForName}</span>`;
+          row.innerHTML = `<span style="color:${voterColor};font-weight:500">${voterName}</span> <span style="color:#5a4a7a">→ voted for</span> <span style="color:${votedForColor};font-weight:500">${votedForName}</span>`;
           listEl.appendChild(row);
         });
       } else {
