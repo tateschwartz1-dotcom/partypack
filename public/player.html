@@ -437,6 +437,7 @@
     .mafia-action-btn, .mafia-host-btn {
       width: 100%; padding: 0.95rem; border-radius: 10px; border: 2px solid var(--mafia-card-border); background: var(--mafia-button-bg); color: #f8fafc;
       font-size: 1rem; font-weight: 500; cursor: pointer; margin-bottom: 0.5rem; text-align: left;
+      font-family: 'Jost', sans-serif;
     }
     .mafia-action-btn.selected-vote {
       border-color: var(--mafia-accent);
@@ -446,13 +447,19 @@
     .mafia-host-btn { background: linear-gradient(180deg, #f59e0b, #d97706); border-color: #fbbf24; color: #1f1300; text-align: center; }
     #mafia-host-controls { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.85rem; }
     #mafia-host-controls .mafia-host-btn { margin-bottom: 0; }
-    #screen-mafia-setup .mafia-host-btn,
-    #screen-mafia-setup .mafia-rules-btn {
+    #screen-mafia-setup .mafia-host-btn {
       background: linear-gradient(180deg, #dc2626, #991b1b);
       border-color: #f87171;
       color: #fff1f2;
       box-shadow: 0 10px 24px rgba(220,38,38,0.18);
     }
+    #screen-mafia-setup .mafia-rules-btn {
+      background: transparent;
+      border-color: #cfb991;
+      color: #cfb991;
+      box-shadow: none;
+    }
+    #screen-mafia-setup .mafia-rules-btn:hover { background: rgba(207,185,145,0.1); }
     .mafia-banner-dead { color: var(--mafia-accent); font-family: 'Cinzel', serif; font-size: 1.6rem; text-align: center; margin-bottom: 0.6rem; }
     .mafia-note { color: #a78bfa; font-size: 0.88rem; margin-bottom: 0.8rem; text-align: center; }
     .mafia-poll-result { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.9rem; }
@@ -502,7 +509,7 @@
       transition: max-height 0.28s ease, opacity 0.22s ease, margin-bottom 0.22s ease, padding 0.22s ease, border-width 0.22s ease;
     }
     .mafia-rules-panel.open {
-      max-height: 420px;
+      max-height: 700px;
       opacity: 1;
       margin-bottom: 0.8rem;
       padding-top: 0.9rem;
@@ -512,9 +519,13 @@
       border-bottom-width: 1px;
     }
     .mafia-rules-panel .et-topic-name { margin-bottom: 0.5rem; }
-    .mafia-rules-list { display: flex; flex-direction: column; gap: 0.55rem; }
-    .mafia-rule-row { font-size: 0.9rem; color: #ede9f8; line-height: 1.35; }
-    .mafia-rule-row strong { color: #fff7ed; }
+    .mafia-rules-list { display: flex; flex-direction: column; gap: 0.7rem; }
+    .mafia-rule-row { font-size: 0.9rem; color: #ede9f8; line-height: 1.4; }
+    .mafia-rule-label { display: block; text-align: right; font-weight: 700; color: #fff7ed; margin-bottom: 0.1rem; }
+    .mafia-rule-text { display: block; text-align: left; color: #c4b5d8; }
+    .mafia-role-killer { color: #f87171; }
+    .mafia-role-town { color: #4ade80; }
+    .mafia-role-joker { color: #fbbf24; }
     .mafia-killer-mark { color: #fbbf24; margin-right: 0.4rem; }
     .mafia-toggle {
       appearance: none; width: 56px; height: 32px; border-radius: 999px; background: #2c1a34; position: relative; cursor: pointer;
@@ -836,6 +847,13 @@
   <div id="screen-game-select" class="screen">
     <h1>Pick a Game</h1>
     <div class="game-list">
+      <div class="game-card" onclick="selectGame('everything-trivia')">
+        <div class="game-icon">🧠</div>
+        <div>
+          <div class="game-title">Everything Trivia</div>
+          <div class="game-desc">Everyone submits a topic. Fastest correct answers score.</div>
+        </div>
+      </div>
       <div class="game-card" onclick="selectGame('questions-challenges')">
         <div class="game-icon">🎡</div>
         <div>
@@ -843,7 +861,14 @@
           <div class="game-desc">Submit prompts. The Wheel decides your fate.</div>
         </div>
       </div>
-      <div class="game-card" onclick="selectGame('hot-takes')">
+      <div class="game-card" onclick="selectGame('mafia')">
+        <div class="game-icon">🕵️</div>
+        <div>
+          <div class="game-title">Mafia</div>
+          <div class="game-desc">Find the killers, survive the night and watch the votes.</div>
+        </div>
+      </div>
+      <div class="game-card" onclick="showHTRulesScreen()">
         <div class="game-icon">🔥</div>
         <div>
           <div class="game-title">Secret Superlatives</div>
@@ -857,22 +882,25 @@
           <div class="game-desc">Upload photos. Can you guess who took what?</div>
         </div>
       </div>
-      <div class="game-card" onclick="selectGame('everything-trivia')">
-        <div class="game-icon">🧠</div>
-        <div>
-          <div class="game-title">Everything Trivia</div>
-          <div class="game-desc">Everyone submits a topic. Fastest correct answers score.</div>
-        </div>
-      </div>
-      <div class="game-card" onclick="selectGame('mafia')">
-        <div class="game-icon">🕵️</div>
-        <div>
-          <div class="game-title">Mafia</div>
-          <div class="game-desc">Find the killers, survive the night and watch the votes.</div>
-        </div>
-      </div>
     </div>
     <button class="btn btn-ghost" onclick="backToLobby()">Back to Lobby</button>
+  </div>
+
+  <!-- ── Screen: Secret Superlatives — Rules (local, host only) ── -->
+  <div id="screen-ht-rules" class="screen">
+    <h1>Secret Superlatives</h1>
+    <h2>Everyone votes who fits the prompt more.</h2>
+    <div style="background:#1a1232; border:2px solid #2d1f50; border-radius:12px; padding:1.25rem 1.5rem; margin:1.5rem auto; max-width:320px;">
+      <div style="font-size:0.95rem; color:#c4b5e0; margin-bottom:0.5rem;">Chance votes get exposed</div>
+      <div style="font-size:2.5rem; font-weight:700; color:#fff; margin-bottom:0.75rem;" id="ht-exposure-label">10%</div>
+      <input type="range" id="ht-exposure-slider" min="0" max="100" step="10" value="10"
+        style="width:100%; accent-color:#a855f7; cursor:pointer;"
+        oninput="document.getElementById('ht-exposure-label').textContent = this.value + '%'" />
+    </div>
+    <div class="host-only" style="margin-top:1rem;">
+      <button class="btn btn-ghost" onclick="startHTGame()">Begin Game</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+    </div>
   </div>
 
   <div id="screen-et-topic" class="screen">
@@ -988,6 +1016,7 @@
     <div class="mafia-note" id="mafia-role-note"></div>
     <div class="host-only" id="mafia-role-host-controls" style="display:none;">
       <button class="mafia-host-btn" onclick="startMafiaDiscussion()">Start Day 1</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
   </div>
 
@@ -1055,7 +1084,7 @@
 
   <!-- ── Screen 5: Q&C — Submit ── -->
   <div id="screen-qc-submit" class="screen">
-    <h1>Submit</h1>
+    <h1>The Wheel</h1>
     <h2>Add questions or challenges for the group</h2>
 
     <div class="type-toggle">
@@ -1143,8 +1172,8 @@
 
   <!-- ── Screen 8: Photo Roulette — Upload ── -->
   <div id="screen-pr-upload" class="screen">
-    <h1>📸</h1>
-    <h2>Upload your 3 photos!</h2>
+    <h1>Photo Roulette</h1>
+    <h2>Upload 3 photos, then guess whose is whose</h2>
     <div class="pr-upload-count"><span id="pr-my-count">0</span>/3</div>
     <div class="pr-upload-sub">your photos uploaded</div>
     <div class="pr-total-count" id="pr-total-count"></div>
@@ -1173,6 +1202,7 @@
     <!-- Host only -->
     <div class="host-only">
       <button class="btn btn-ghost" onclick="revealNow()" style="margin-top:0.4rem;">Reveal Now &rarr;</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
   </div>
 
@@ -1186,6 +1216,7 @@
     <!-- Host only -->
     <div class="host-only">
       <button class="btn" id="pr-next-btn" onclick="prNextPhoto()" style="margin-top:0.4rem;">Next Photo &rarr;</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
     <!-- Non-host -->
     <div class="guest-only waiting"><span class="dot"></span> Waiting for next photo...</div>
@@ -1265,7 +1296,7 @@
     let mafiaState      = null;
     let pendingConfirmAction = null;
 
-    const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select']);
+    const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select', 'screen-ht-rules']);
 
     function getActiveScreenId() {
       const active = document.querySelector('.screen.active');
@@ -1381,6 +1412,7 @@
 
     socket.on('join-error', ({ message }) => {
       document.getElementById('join-error').textContent = message;
+      document.getElementById('home-error').textContent = message;
     });
 
     // ── Lobby ──────────────────────────────────────────────────────
@@ -1469,12 +1501,14 @@
         return;
       }
       openConfirmModal({
-        title: 'Leave this game?',
-        message: 'This will end the current game and return you to the game select screen.',
-        confirmLabel: 'Leave Game',
-        onConfirm: () => showScreen('screen-game-select')
+        title: 'Pick a different game?',
+        message: 'This will end the current game for everyone.',
+        confirmLabel: 'Pick Different Game',
+        onConfirm: () => socket.emit('back-to-game-select')
       });
     }
+
+    function showHTRulesScreen() { showScreen('screen-ht-rules'); }
 
     function backToLobby() {
       if (!isGameFlowActive()) {
@@ -1494,7 +1528,7 @@
         title: 'Exit game?',
         message: 'Are you sure you want to exit the game? This will end it for everyone.',
         confirmLabel: 'Exit Game',
-        onConfirm: () => socket.emit('back-to-lobby')
+        onConfirm: () => socket.emit('back-to-game-select')
       });
     }
 
@@ -1502,8 +1536,21 @@
       showScreen('screen-lobby');
     });
 
+    socket.on('returned-to-game-select', () => {
+      if (isHost) {
+        showScreen('screen-game-select');
+      } else {
+        showScreen('screen-lobby');
+      }
+    });
+
     function selectGame(game) {
       socket.emit('start-game', { game });
+    }
+
+    function startHTGame() {
+      const pct = parseInt(document.getElementById('ht-exposure-slider').value, 10);
+      socket.emit('start-game', { game: 'hot-takes', exposureChance: pct / 100 });
     }
 
     socket.on('game-started', ({ game }) => {
@@ -1564,11 +1611,11 @@
       const rulesList = document.querySelector('#mafia-rules-panel .mafia-rules-list');
       if (!rulesList) return;
       rulesList.innerHTML = `
-        <div class="mafia-rule-row">🔪 Killer: Choose a victim at night. Win when the killers outnumber everyone else.</div>
-        <div class="mafia-rule-row">🩺 Doctor: Protect one player each night, but you cannot protect the same player two nights in a row.</div>
-        <div class="mafia-rule-row">👤 Villager: Win by voting out the killers.</div>
-        <div class="mafia-rule-row">🃏 Joker: Optional chaos role. If the Joker dies by vote, the Joker wins instantly.</div>
-        <div class="mafia-rule-row">A majority vote is needed to kill someone. When someone dies, it is revealed if they are a killer or not.</div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">🔪 <span class="mafia-role-killer">Killer:</span></span><span class="mafia-rule-text">Choose a victim at night. Win when killers outnumber the town.</span></div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">🩺 <span class="mafia-role-town">Doctor:</span></span><span class="mafia-rule-text">Protect one player each night, but not the same player two nights in a row.</span></div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">👤 <span class="mafia-role-town">Villager:</span></span><span class="mafia-rule-text">Vote out the killers. You also answer the overnight poll.</span></div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">🃏 <span class="mafia-role-joker">Joker:</span></span><span class="mafia-rule-text">Optional chaos role. Get eliminated by vote and you win instantly.</span></div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">🗳️ Voting:</span><span class="mafia-rule-text">Votes are public. A true majority instantly resolves the vote.</span></div>
       `;
     }
 
@@ -2818,7 +2865,7 @@
       }
     });
 
-    socket.on('ht-reveal', ({ question, optionA, optionB, pctA, pctB, revealVotes, voteDetails, playerColors }) => {
+    socket.on('ht-reveal', ({ question, optionA, optionB, pctA, pctB, revealVotes, voteDetails, playerColors, advanceTime }) => {
       htPlayerColors = playerColors;
 
       document.getElementById('ht-p-rev-question').textContent = question;
@@ -2860,7 +2907,7 @@
         exposeSection.style.display = 'none';
       }
 
-      document.getElementById('ht-p-advance-text').textContent = 'Next round in 8...';
+      document.getElementById('ht-p-advance-text').textContent = `Next round in ${advanceTime}...`;
       showScreen('screen-ht-reveal-p');
     });
 

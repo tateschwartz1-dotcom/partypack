@@ -771,7 +771,7 @@ io.on('connection', (socket) => {
 
   // ── Game selector ──────────────────────────────────────────────
 
-  socket.on('start-game', ({ game }) => {
+  socket.on('start-game', ({ game, exposureChance }) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
     if (!room || room.hostSocketId !== socket.id) return;
@@ -804,6 +804,7 @@ io.on('connection', (socket) => {
         optionB: null,
         currentQuestionText: '',
         revealVotes: false,
+        exposureChance: (typeof exposureChance === 'number') ? exposureChance : 0.10,
         playerColors,
       };
     }
@@ -891,6 +892,21 @@ io.on('connection', (socket) => {
     room.et = null;
     room.mafia = null;
     io.to(pin).emit('returned-to-lobby');
+  });
+
+  socket.on('back-to-game-select', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+
+    clearRoomTimers(room);
+    room.gameState = 'lobby';
+    room.qc = null;
+    room.pr = null;
+    room.ht = null;
+    room.et = null;
+    room.mafia = null;
+    io.to(pin).emit('returned-to-game-select');
   });
 
   // ── Questions & Challenges ─────────────────────────────────────
@@ -1445,7 +1461,7 @@ io.on('connection', (socket) => {
     }
 
     room.ht.votes = {};
-    room.ht.revealVotes = Math.random() < 0.10;
+    room.ht.revealVotes = Math.random() < room.ht.exposureChance;
 
     const shuffledPlayers = shuffle([...room.players]);
     const optionA = shuffledPlayers[0];
@@ -1526,6 +1542,9 @@ io.on('connection', (socket) => {
     const pctA = totalVoted > 0 ? Math.round((votesA / totalVoted) * 100) : 50;
     const pctB = totalVoted > 0 ? 100 - pctA : 50;
 
+    // Auto-advance countdown (shorter when votes are anonymous — less to read)
+    const ADVANCE_TIME = revealVotes ? 8 : 6;
+
     io.to(pin).emit('ht-reveal', {
       question: currentQuestionText,
       optionA: { id: optionA.id, name: optionA.name },
@@ -1535,10 +1554,8 @@ io.on('connection', (socket) => {
       voteDetails,
       playerColors,
       hasMoreRounds: room.ht.currentRound < room.ht.totalRounds,
+      advanceTime: ADVANCE_TIME,
     });
-
-    // Auto-advance countdown (shorter when votes are anonymous — less to read)
-    const ADVANCE_TIME = revealVotes ? 8 : 6;
     let advLeft = ADVANCE_TIME;
 
     io.to(pin).emit('ht-advance-tick', { timeLeft: advLeft });
