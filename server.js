@@ -36,23 +36,59 @@ function loadLocalEnv() {
 
 loadLocalEnv();
 
+function normalizeBasePath(value = '') {
+  const trimmed = String(value || '').trim();
+  if (!trimmed || trimmed === '/') return '';
+  const withLeadingSlash = trimmed.startsWith('/') ? trimmed : `/${trimmed}`;
+  return withLeadingSlash.replace(/\/+$/, '');
+}
+
+function escapeRegExp(value = '') {
+  return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+}
+
+function joinBasePath(basePath, route = '/') {
+  const normalizedRoute = route.startsWith('/') ? route : `/${route}`;
+  return `${basePath}${normalizedRoute}` || '/';
+}
+
+function sendHtmlWithBasePath(res, fileName, basePath) {
+  const htmlPath = path.join(__dirname, 'public', fileName);
+  const html = fs
+    .readFileSync(htmlPath, 'utf8')
+    .replace(/__BASE_PATH__/g, basePath);
+  res.type('html').send(html);
+}
+
+const BASE_PATH = normalizeBasePath(process.env.BASE_PATH || '');
+const SOCKET_PATH = joinBasePath(BASE_PATH, '/socket.io');
 const app = express();
 const server = http.createServer(app);
-const io = new Server(server, { maxHttpBufferSize: 5e6 });
+const io = new Server(server, { maxHttpBufferSize: 5e6, path: SOCKET_PATH });
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
 const ANTHROPIC_TRIVIA_MODEL = process.env.ANTHROPIC_TRIVIA_MODEL || 'claude-haiku-4-5-20251001';
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_TRIVIA_MODEL = process.env.OPENAI_TRIVIA_MODEL || 'gpt-5-mini';
 const TRIVIA_API_KEY = process.env.TRIVIA_API_KEY || '';
 
-app.use(express.static('public'));
+app.use(BASE_PATH || '/', express.static('public'));
 
-app.get('/', (req, res) => {
-  res.sendFile(path.join(__dirname, 'public', 'player.html'));
+if (BASE_PATH) {
+  app.get(new RegExp(`^${escapeRegExp(BASE_PATH)}$`), (req, res) => {
+    res.redirect(`${BASE_PATH}/`);
+  });
+
+  app.get(/^\/$/, (req, res) => {
+    res.redirect(`${BASE_PATH}/`);
+  });
+}
+
+app.get(joinBasePath(BASE_PATH, '/'), (req, res) => {
+  sendHtmlWithBasePath(res, 'player.html', BASE_PATH);
 });
 
-app.get('/host', (req, res) => {
-  res.redirect('/');
+app.get(joinBasePath(BASE_PATH, '/host'), (req, res) => {
+  res.redirect(joinBasePath(BASE_PATH, '/'));
 });
 
 function getLocalIP() {
@@ -689,7 +725,7 @@ io.on('connection', (socket) => {
   socket.on('create-room', async ({ hostName }) => {
     const pin = generatePIN();
     const localIP = getLocalIP();
-    const playerURL = process.env.PUBLIC_URL || `http://${localIP}:3000`;
+    const playerURL = process.env.PUBLIC_URL || `http://${localIP}:3000${joinBasePath(BASE_PATH, '/')}`;
     const qrDataURL = await QRCode.toDataURL(playerURL, { width: 200, margin: 2 });
 
     const hostPlayer = { id: socket.id, name: hostName };
@@ -699,6 +735,7 @@ io.on('connection', (socket) => {
       hostSocketId: socket.id,
       hostName,
       players: [hostPlayer],
+      lightMode: true,
       gameState: 'lobby',
       localIP,
       playerURL,
@@ -749,6 +786,7 @@ io.on('connection', (socket) => {
       qrDataURL: room.qrDataURL,
       playerURL: room.playerURL,
       hostId: room.hostSocketId,
+      lightMode: room.lightMode !== false,
     });
     io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
   });
@@ -767,6 +805,15 @@ io.on('connection', (socket) => {
     io.to(targetPlayerId).emit('you-are-now-host');
     socket.emit('host-transferred');
     io.to(pin).emit('host-changed', { newHostId: targetPlayerId });
+  });
+
+  // ── Light mode ────────────────────────────────────────────────
+  socket.on('set-light-mode', ({ lightMode }) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    room.lightMode = lightMode;
+    io.to(pin).emit('light-mode-changed', { lightMode });
   });
 
   // ── Game selector ──────────────────────────────────────────────

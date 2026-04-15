@@ -311,7 +311,7 @@
         <div class="game-title">The Wheel</div>
         <div class="game-desc">Submit prompts. The Wheel decides your fate.</div>
       </div>
-      <div class="game-card" onclick="selectGame('hot-takes')">
+      <div class="game-card" onclick="showHTRulesScreen()">
         <div class="game-icon">🔥</div>
         <div class="game-title">Secret Superlatives</div>
         <div class="game-desc">Two players, one question. Everyone votes.</div>
@@ -324,6 +324,23 @@
     </div>
     <br />
     <button class="btn btn-ghost btn-small" onclick="backToLobby()">Back to Lobby</button>
+  </div>
+
+  <!-- ── Screen: Secret Superlatives — Rules ── -->
+  <div id="screen-ht-rules" class="screen">
+    <h1>Secret Superlatives</h1>
+    <h2>Everyone votes who fits the prompt more.</h2>
+    <div style="margin: 1.5rem 0;">
+      <div style="font-size: 1rem; color: #c4b5e0; margin-bottom: 0.75rem;">Chance votes get exposed</div>
+      <div style="font-size: 2.5rem; font-weight: 700; color: #fff; margin-bottom: 0.75rem;" id="ht-exposure-label">10%</div>
+      <input type="range" id="ht-exposure-slider" min="0" max="100" step="10" value="10"
+        style="width: 260px; accent-color: #a855f7; cursor: pointer;"
+        oninput="document.getElementById('ht-exposure-label').textContent = this.value + '%'" />
+    </div>
+    <br />
+    <button class="btn" onclick="startHTGame()">Start Game</button>
+    <br />
+    <button class="btn btn-ghost" onclick="goToGameSelect()" style="margin-top:0.75rem;">Exit Game</button>
   </div>
 
   <!-- ── Screen 4: Q&C — Collecting Submissions ── -->
@@ -397,6 +414,8 @@
     <div class="timer-text" id="pr-timer-text"></div>
     <div class="pr-guess-count" id="pr-guess-count"></div>
     <button class="btn" style="margin-top:1rem;" onclick="revealNow()">Reveal &rarr;</button>
+    <br />
+    <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
   </div>
 
   <!-- ── Screen 9: Photo Roulette — Reveal ── -->
@@ -451,6 +470,7 @@
       <div class="ht-expose-label">🔍 votes exposed</div>
       <div id="ht-host-vote-list"></div>
     </div>
+    <button class="btn btn-ghost btn-small" onclick="exitGame()" style="margin-top:0.75rem;">Exit Game</button>
   </div>
 
   <!-- ── Screen 13: Hot Takes — Game Over ── -->
@@ -475,14 +495,15 @@
     </div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="__BASE_PATH__/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    const BASE_PATH = '__BASE_PATH__';
+    const socket = io({ path: `${BASE_PATH}/socket.io` });
     let myPin = null;
     let players = [];
     let pendingConfirmAction = null;
 
-    const SAFE_NAV_SCREENS = new Set(['screen-setup', 'screen-lobby', 'screen-game-select']);
+    const SAFE_NAV_SCREENS = new Set(['screen-setup', 'screen-lobby', 'screen-game-select', 'screen-ht-rules']);
 
     function getActiveScreenId() {
       const active = document.querySelector('.screen.active');
@@ -599,6 +620,7 @@
 
     // ── Game selector ──────────────────────────────────────────────
     function goToGameSelect() { showScreen('screen-game-select'); }
+    function showHTRulesScreen() { showScreen('screen-ht-rules'); }
     function backToGameSelect() {
       if (!isGameFlowActive()) {
         showScreen('screen-game-select');
@@ -630,7 +652,7 @@
         title: 'Exit game?',
         message: 'Are you sure you want to exit the game? This will end it for everyone.',
         confirmLabel: 'Exit Game',
-        onConfirm: () => socket.emit('back-to-lobby')
+        onConfirm: () => socket.emit('back-to-game-select')
       });
     }
 
@@ -638,8 +660,17 @@
       showScreen('screen-lobby');
     });
 
+    socket.on('returned-to-game-select', () => {
+      showScreen('screen-game-select');
+    });
+
     function selectGame(game) {
       socket.emit('start-game', { game });
+    }
+
+    function startHTGame() {
+      const pct = parseInt(document.getElementById('ht-exposure-slider').value, 10);
+      socket.emit('start-game', { game: 'hot-takes', exposureChance: pct / 100 });
     }
 
     // ── Q&C — Collecting ──────────────────────────────────────────

@@ -455,11 +455,11 @@
     }
     #screen-mafia-setup .mafia-rules-btn {
       background: transparent;
-      border-color: #cfb991;
-      color: #cfb991;
+      border-color: #a8853a;
+      color: #a8853a;
       box-shadow: none;
     }
-    #screen-mafia-setup .mafia-rules-btn:hover { background: rgba(207,185,145,0.1); }
+    #screen-mafia-setup .mafia-rules-btn:hover { background: rgba(168,133,58,0.1); }
     .mafia-banner-dead { color: var(--mafia-accent); font-family: 'Cinzel', serif; font-size: 1.6rem; text-align: center; margin-bottom: 0.6rem; }
     .mafia-note { color: #a78bfa; font-size: 0.88rem; margin-bottom: 0.8rem; text-align: center; }
     .mafia-poll-result { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.9rem; }
@@ -520,9 +520,17 @@
     }
     .mafia-rules-panel .et-topic-name { margin-bottom: 0.5rem; }
     .mafia-rules-list { display: flex; flex-direction: column; gap: 0.7rem; }
-    .mafia-rule-row { font-size: 0.9rem; color: #ede9f8; line-height: 1.4; }
-    .mafia-rule-label { display: block; text-align: right; font-weight: 700; color: #fff7ed; margin-bottom: 0.1rem; }
-    .mafia-rule-text { display: block; text-align: left; color: #c4b5d8; }
+    .mafia-rule-row {
+      font-size: 0.9rem;
+      color: #d9d0eb;
+      line-height: 1.5;
+      background: rgba(15,10,32,0.44);
+      border: 1px solid rgba(124,58,237,0.18);
+      border-radius: 12px;
+      padding: 0.8rem 0.9rem;
+    }
+    .mafia-rule-label { display: block; text-align: right; font-weight: 700; color: #fff7ed; margin-bottom: 0.18rem; }
+    .mafia-rule-text { display: block; text-align: left; color: #f4effc; font-weight: 600; }
     .mafia-role-killer { color: #f87171; }
     .mafia-role-town { color: #4ade80; }
     .mafia-role-joker { color: #fbbf24; }
@@ -800,6 +808,84 @@
       margin-top: 0;
       width: 100%;
     }
+
+    /* ── Light Mode ── */
+    body.light-mode {
+      background: #f9f7f4;
+      background-image:
+        radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.05) 0%, transparent 55%),
+        radial-gradient(ellipse at 80% 70%, rgba(207,185,145,0.07) 0%, transparent 50%);
+      color: #1a0a2e;
+    }
+    body.light-mode.mafia-phase-discussion,
+    body.light-mode.mafia-phase-voting,
+    body.light-mode.mafia-phase-revote,
+    body.light-mode.mafia-phase-night,
+    body.light-mode.mafia-phase-day-result,
+    body.light-mode.mafia-phase-winner-town,
+    body.light-mode.mafia-phase-winner-killers,
+    body.light-mode.mafia-phase-winner-joker {
+      background-color: #f9f7f4;
+      background-image: none;
+    }
+    body.light-mode h2 { color: #2d1f50 !important; }
+    body.light-mode input,
+    body.light-mode textarea { background: #fff; color: #1a0a2e; border-color: #c8b4e0; }
+    body.light-mode .btn:disabled { background: #e0d4f5; color: #9b8ab0; }
+    body.light-mode .btn-ghost { border-color: #7c3aed; color: #6d28d9; }
+    body.light-mode .btn-ghost:active { background: #ede8ff; }
+    body.light-mode .divider { color: #8b7aa8; }
+    body.light-mode .divider::before,
+    body.light-mode .divider::after { background: #c8b4e0; }
+    body.light-mode .lobby-qr img { border-color: #c8b4e0; }
+    body.light-mode .lobby-url,
+    body.light-mode .start-hint,
+    body.light-mode .waiting { color: #5c4080; }
+    body.light-mode .player-list-label { color: #7a6090; }
+    body.light-mode .player-item { background: #f0ece6; border-color: #c8b4e0; }
+    body.light-mode .game-card { background: #f0ece6; border-color: #c8b4e0; }
+    body.light-mode .game-title { color: #1a0a2e; }
+    body.light-mode .game-desc { color: #5c4080; }
+    body.light-mode .timer-bar-wrap { background: #ede4f8; border-color: #c8b4e0; }
+    body.light-mode .type-btn { background: #fff; border-color: #c8b4e0; color: #5c4080; }
+    body.light-mode .type-btn.active { background: #f0ece6; border-color: #7c3aed; color: #6d28d9; }
+    body.light-mode .submit-count-wrap { background: #f0ece6; border-color: #c8b4e0; color: #5c4080; }
+    body.light-mode .watch-reveal-box { background: #f0ece6; border-color: #c8b4e0; }
+    body.light-mode .watch-text { color: #1a0a2e; }
+    body.light-mode .ht-p-question { color: #1a0a2e; }
+    body.light-mode .ht-vote-btn { background: #fff; border-color: #c8b4e0; color: #1a0a2e; }
+    body.light-mode .ht-p-result-bar-wrap { background: #ede4f8; border-color: #c8b4e0; }
+    body.light-mode .ht-advance-text { color: #8b7aa8; }
+    body.light-mode .pr-guess-btn { background: #fff; border-color: #c8b4e0; color: #1a0a2e; }
+    body.light-mode .pr-reveal-guess-row.correct { background: #e8faf0; }
+    body.light-mode .pr-reveal-guess-row.wrong { background: #fce8f5; }
+    body.light-mode .pr-reveal-guess-row.no-guess { background: #f0ece6; color: #8b7aa8; }
+    body.light-mode .pr-score-row { border-color: #c8b4e0; }
+    body.light-mode .et-topic-row,
+    body.light-mode .et-score-row,
+    body.light-mode .et-stat-row { background: #f0ece6; border-color: #c8b4e0; }
+    body.light-mode .et-topic-name,
+    body.light-mode .et-stat-value { color: #1a0a2e; }
+    body.light-mode .et-answer-btn { background: #fff; border-color: #c8b4e0; color: #1a0a2e; }
+    body.light-mode #spin-overlay { background: rgba(249,247,244,0.96); }
+    body.light-mode .confirm-modal-backdrop { background: rgba(249,247,244,0.82); }
+    body.light-mode .confirm-modal { background: #fff; border-color: #c8b4e0; box-shadow: 0 20px 60px rgba(0,0,0,0.12); }
+    body.light-mode .confirm-modal-text { color: #2d1f50; }
+    body.light-mode .mafia-role-hidden { background: #f0ece6; border-color: #c8b4e0; color: #5c4080; }
+    body.light-mode .mafia-rule-row { background: #fff; border-color: #d7c8ea; color: #3b2a57; }
+    body.light-mode .mafia-rule-label { color: #24153d; }
+    body.light-mode .mafia-rule-text { color: #211233; }
+    body.light-mode h1,
+    body.light-mode .lobby-pin,
+    body.light-mode .watch-name,
+    body.light-mode .your-turn-label,
+    body.light-mode .watch-type,
+    body.light-mode .ht-round-label,
+    body.light-mode .pr-score-pts,
+    body.light-mode .et-status,
+    body.light-mode .et-score-total,
+    body.light-mode .submit-count-wrap span,
+    body.light-mode .confirm-modal-title { color: #8b6914; text-shadow: none; }
   </style>
 </head>
 <body>
@@ -838,6 +924,7 @@
     <div class="host-only">
       <button class="btn" id="start-btn" disabled onclick="goToGameSelect()">Start Game</button>
       <div class="start-hint" id="start-hint">Need at least 2 players to start</div>
+      <button class="btn btn-ghost" id="light-mode-btn" onclick="toggleLightMode()" style="margin-top:0.75rem;">☀️ Light Mode</button>
     </div>
     <!-- Non-host -->
     <div class="guest-only waiting"><span class="dot"></span> Waiting for host to start...</div>
@@ -933,6 +1020,9 @@
     <div class="pr-guess-count-label" id="et-answer-count"></div>
     <div id="et-answer-options"></div>
     <div class="et-lock-msg" id="et-answer-message"></div>
+    <div class="host-only" style="margin-top:1rem;">
+      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+    </div>
   </div>
 
   <div id="screen-et-reveal" class="screen">
@@ -941,6 +1031,9 @@
     <div class="pr-guess-count-label" id="et-reveal-points-summary"></div>
     <div class="et-topic-list" id="et-reveal-list"></div>
     <div class="ht-advance-text" id="et-reveal-advance"></div>
+    <div class="host-only" style="margin-top:1rem;">
+      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+    </div>
   </div>
 
   <div id="screen-et-section" class="screen">
@@ -948,6 +1041,9 @@
     <h2 id="et-section-title"></h2>
     <div id="et-section-scores"></div>
     <div class="ht-advance-text" id="et-section-advance"></div>
+    <div class="host-only" style="margin-top:1rem;">
+      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+    </div>
   </div>
 
   <div id="screen-et-over" class="screen">
@@ -1279,9 +1375,13 @@
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
   </div>
 
-  <script src="/socket.io/socket.io.js"></script>
+  <script src="__BASE_PATH__/socket.io/socket.io.js"></script>
   <script>
-    const socket = io();
+    // Restore light mode immediately before first render
+    if (localStorage.getItem('jb-lightmode') !== '0') document.body.classList.add('light-mode');
+
+    const BASE_PATH = '__BASE_PATH__';
+    const socket = io({ path: `${BASE_PATH}/socket.io` });
     const PLAYER_COLORS = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#38bdf8', '#818cf8', '#e879f9', '#f472b6', '#a3e635', '#34d399'];
     let myName    = '';
     let myPin     = '';
@@ -1389,6 +1489,10 @@
       roomHostId = socket.id;
       setHostMode(true);
       setupLobby(pin, playerURL, qrDataURL, players, socket.id);
+      // Restore host's saved light mode preference and sync to server
+      const savedMode = localStorage.getItem('jb-lightmode') !== '0';
+      applyLightMode(savedMode);
+      socket.emit('set-light-mode', { lightMode: savedMode });
       showScreen('screen-lobby');
     });
 
@@ -1401,12 +1505,13 @@
       socket.emit('join-room', { pin, name: myName });
     }
 
-    socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId }) => {
+    socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId, lightMode }) => {
       myName = name;
       myPin = pin;
       roomHostId = hostId;
       setHostMode(false);
       setupLobby(pin, playerURL, qrDataURL, players, hostId);
+      applyLightMode(!!lightMode);
       showScreen('screen-lobby');
     });
 
@@ -1491,6 +1596,20 @@
       // Just trigger a re-render via the current player list — but we don't store it locally.
       // The server will send player-list-updated after host-changed in disconnect cases.
     });
+
+    // ── Light mode ────────────────────────────────────────────────
+    function applyLightMode(on) {
+      document.body.classList.toggle('light-mode', on);
+      localStorage.setItem('jb-lightmode', on ? '1' : '0');
+      const btn = document.getElementById('light-mode-btn');
+      if (btn) btn.textContent = on ? '🌙 Dark Mode' : '☀️ Light Mode';
+    }
+    function toggleLightMode() {
+      const on = !document.body.classList.contains('light-mode');
+      applyLightMode(on);
+      socket.emit('set-light-mode', { lightMode: on });
+    }
+    socket.on('light-mode-changed', ({ lightMode }) => applyLightMode(lightMode));
 
     // ── Game selector ──────────────────────────────────────────────
     hydrateMafiaRulesPanel();
@@ -2588,6 +2707,18 @@
 
       if (playerWheelAnimFrame) cancelAnimationFrame(playerWheelAnimFrame);
       playerWheelAnimFrame = requestAnimationFrame(frame);
+
+      // If the tab was hidden during the spin, snap to completion when it becomes visible
+      function onVisibility() {
+        if (document.hidden || playerWheelAnimFrame === null) return;
+        cancelAnimationFrame(playerWheelAnimFrame);
+        playerWheelAnimFrame = null;
+        playerWheelAngle = endAngle;
+        drawPlayerWheel(playerWheelAngle);
+        document.removeEventListener('visibilitychange', onVisibility);
+        onComplete();
+      }
+      document.addEventListener('visibilitychange', onVisibility);
     }
 
     socket.on('qc-round-start', ({ currentPlayer, available }) => {
