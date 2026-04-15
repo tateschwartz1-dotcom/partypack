@@ -1,7 +1,10 @@
 services:
   - type: web
-    name: johnbox-games
+    name: johnbox
     runtime: node
     plan: free
     buildCommand: npm install
     startCommand: npm start
+    envVars:
+      - key: PUBLIC_URL
+        value: https://johnbox.onrender.com
