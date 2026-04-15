@@ -52,6 +52,10 @@ function joinBasePath(basePath, route = '/') {
   return `${basePath}${normalizedRoute}` || '/';
 }
 
+function normalizePublicUrl(value = '') {
+  return String(value || '').trim().replace(/\/+$/, '');
+}
+
 function sendHtmlWithBasePath(res, fileName, basePath) {
   const htmlPath = path.join(__dirname, 'public', fileName);
   const html = fs
@@ -60,8 +64,10 @@ function sendHtmlWithBasePath(res, fileName, basePath) {
   res.type('html').send(html);
 }
 
-const BASE_PATH = normalizeBasePath(process.env.BASE_PATH || '');
+const BASE_PATH = '';
+const LEGACY_BASE_PATHS = ['/johnbox'].map(normalizeBasePath).filter(Boolean);
 const SOCKET_PATH = joinBasePath(BASE_PATH, '/socket.io');
+const PUBLIC_URL = normalizePublicUrl(process.env.PUBLIC_URL || '');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { maxHttpBufferSize: 5e6, path: SOCKET_PATH });
@@ -71,17 +77,16 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_TRIVIA_MODEL = process.env.OPENAI_TRIVIA_MODEL || 'gpt-5-mini';
 const TRIVIA_API_KEY = process.env.TRIVIA_API_KEY || '';
 
-app.use(BASE_PATH || '/', express.static('public'));
-
-if (BASE_PATH) {
-  app.get(new RegExp(`^${escapeRegExp(BASE_PATH)}$`), (req, res) => {
-    res.redirect(`${BASE_PATH}/`);
+LEGACY_BASE_PATHS.forEach((legacyBasePath) => {
+  app.get(new RegExp(`^${escapeRegExp(legacyBasePath)}(?:/.*)?$`), (req, res) => {
+    const redirectPath = req.path.slice(legacyBasePath.length) || '/';
+    const queryIndex = req.originalUrl.indexOf('?');
+    const query = queryIndex >= 0 ? req.originalUrl.slice(queryIndex) : '';
+    res.redirect(301, `${redirectPath}${query}`);
   });
+});
 
-  app.get(/^\/$/, (req, res) => {
-    res.redirect(`${BASE_PATH}/`);
-  });
-}
+app.use('/', express.static('public'));
 
 app.get(joinBasePath(BASE_PATH, '/'), (req, res) => {
   sendHtmlWithBasePath(res, 'player.html', BASE_PATH);
@@ -725,7 +730,7 @@ io.on('connection', (socket) => {
   socket.on('create-room', async ({ hostName }) => {
     const pin = generatePIN();
     const localIP = getLocalIP();
-    const playerURL = process.env.PUBLIC_URL || `http://${localIP}:3000${joinBasePath(BASE_PATH, '/')}`;
+    const playerURL = PUBLIC_URL || `http://${localIP}:3000/`;
     const qrDataURL = await QRCode.toDataURL(playerURL, { width: 200, margin: 2 });
 
     const hostPlayer = { id: socket.id, name: hostName };
@@ -735,7 +740,6 @@ io.on('connection', (socket) => {
       hostSocketId: socket.id,
       hostName,
       players: [hostPlayer],
-      lightMode: true,
       gameState: 'lobby',
       localIP,
       playerURL,
@@ -786,7 +790,6 @@ io.on('connection', (socket) => {
       qrDataURL: room.qrDataURL,
       playerURL: room.playerURL,
       hostId: room.hostSocketId,
-      lightMode: room.lightMode !== false,
     });
     io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
   });
@@ -808,13 +811,6 @@ io.on('connection', (socket) => {
   });
 
   // ── Light mode ────────────────────────────────────────────────
-  socket.on('set-light-mode', ({ lightMode }) => {
-    const pin = socket.data.pin;
-    const room = rooms[pin];
-    if (!room || room.hostSocketId !== socket.id) return;
-    room.lightMode = lightMode;
-    io.to(pin).emit('light-mode-changed', { lightMode });
-  });
 
   // ── Game selector ──────────────────────────────────────────────
 

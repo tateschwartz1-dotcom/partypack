@@ -6,6 +6,26 @@
   <title>Johnbox Games</title>
   <link rel="preconnect" href="https://fonts.googleapis.com" />
   <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@400;700;900&family=Jost:wght@400;600;700&display=swap" rel="stylesheet" />
+  <script>
+    (() => {
+      const initialLightMode = localStorage.getItem('jb-lightmode') !== '0';
+      window.__jbInitialLightMode = initialLightMode;
+      if (!initialLightMode) return;
+
+      const preloadStyle = document.createElement('style');
+      preloadStyle.id = 'jb-theme-preload';
+      preloadStyle.textContent = `
+        body {
+          background: #f9f7f4;
+          background-image:
+            radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.05) 0%, transparent 55%),
+            radial-gradient(ellipse at 80% 70%, rgba(207,185,145,0.07) 0%, transparent 50%);
+          color: #1a0a2e;
+        }
+      `;
+      document.head.appendChild(preloadStyle);
+    })();
+  </script>
   <style>
     * { margin: 0; padding: 0; box-sizing: border-box; }
 
@@ -67,6 +87,8 @@
 
     .screen { display: none; text-align: center; width: 100%; max-width: 400px; }
     .screen.active { display: block; }
+    #global-light-mode-btn,
+    #light-mode-btn { display: none !important; }
 
     h1 {
       font-family: 'Cinzel', serif;
@@ -889,6 +911,10 @@
   </style>
 </head>
 <body>
+  <script>
+    if (window.__jbInitialLightMode) document.body.classList.add('light-mode');
+  </script>
+  <button class="btn btn-ghost theme-toggle" id="global-light-mode-btn" type="button" onclick="toggleLightMode()">☀️ Light Mode</button>
 
   <!-- ── Screen 1: Home ── -->
   <div id="screen-home" class="screen active">
@@ -928,6 +954,7 @@
     </div>
     <!-- Non-host -->
     <div class="guest-only waiting"><span class="dot"></span> Waiting for host to start...</div>
+    <button class="btn btn-ghost" id="player-light-mode-btn" type="button" onclick="toggleLightMode()" style="margin-top:0.75rem;">☀️ Light Mode</button>
   </div>
 
   <!-- ── Screen 4: Game Selector (host navigates here locally) ── -->
@@ -1088,8 +1115,8 @@
       <input class="mafia-toggle" type="checkbox" id="mafia-polls-toggle" onchange="updateMafiaSettings()" />
     </div>
     <div class="mafia-card">
-      <div class="et-topic-meta">One doctor every game. For every 4 players, there is one killer.</div>
-      <div class="et-topic-meta" id="mafia-role-scaling-live">There are 0 players and 0 killers.</div>
+      <div class="et-topic-meta">One doctor every game.<br />For every 4 players, there is one killer.</div>
+      <div class="et-topic-meta" id="mafia-role-scaling-live">There are currently 0 players and 0 killers.</div>
     </div>
     <div class="mafia-note" id="mafia-setup-note">Mafia needs at least 4 players.</div>
     <div class="host-only">
@@ -1377,9 +1404,6 @@
 
   <script src="__BASE_PATH__/socket.io/socket.io.js"></script>
   <script>
-    // Restore light mode immediately before first render
-    if (localStorage.getItem('jb-lightmode') !== '0') document.body.classList.add('light-mode');
-
     const BASE_PATH = '__BASE_PATH__';
     const socket = io({ path: `${BASE_PATH}/socket.io` });
     const PLAYER_COLORS = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#38bdf8', '#818cf8', '#e879f9', '#f472b6', '#a3e635', '#34d399'];
@@ -1489,10 +1513,6 @@
       roomHostId = socket.id;
       setHostMode(true);
       setupLobby(pin, playerURL, qrDataURL, players, socket.id);
-      // Restore host's saved light mode preference and sync to server
-      const savedMode = localStorage.getItem('jb-lightmode') !== '0';
-      applyLightMode(savedMode);
-      socket.emit('set-light-mode', { lightMode: savedMode });
       showScreen('screen-lobby');
     });
 
@@ -1505,13 +1525,12 @@
       socket.emit('join-room', { pin, name: myName });
     }
 
-    socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId, lightMode }) => {
+    socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId }) => {
       myName = name;
       myPin = pin;
       roomHostId = hostId;
       setHostMode(false);
       setupLobby(pin, playerURL, qrDataURL, players, hostId);
-      applyLightMode(!!lightMode);
       showScreen('screen-lobby');
     });
 
@@ -1601,15 +1620,18 @@
     function applyLightMode(on) {
       document.body.classList.toggle('light-mode', on);
       localStorage.setItem('jb-lightmode', on ? '1' : '0');
-      const btn = document.getElementById('light-mode-btn');
-      if (btn) btn.textContent = on ? '🌙 Dark Mode' : '☀️ Light Mode';
+      const preloadStyle = document.getElementById('jb-theme-preload');
+      if (preloadStyle) preloadStyle.remove();
+      const buttons = document.querySelectorAll('#light-mode-btn, #player-light-mode-btn');
+      buttons.forEach((button) => {
+        button.textContent = on ? '🌙 Dark Mode' : '☀️ Light Mode';
+      });
     }
     function toggleLightMode() {
       const on = !document.body.classList.contains('light-mode');
       applyLightMode(on);
-      socket.emit('set-light-mode', { lightMode: on });
     }
-    socket.on('light-mode-changed', ({ lightMode }) => applyLightMode(lightMode));
+    applyLightMode(document.body.classList.contains('light-mode'));
 
     // ── Game selector ──────────────────────────────────────────────
     hydrateMafiaRulesPanel();
@@ -2048,7 +2070,7 @@
         document.getElementById('mafia-polls-toggle').disabled = !state.isHost;
         const roleScalingLive = document.getElementById('mafia-role-scaling-live');
         if (roleScalingLive) {
-          roleScalingLive.textContent = `There are ${state.players.length} players and ${state.roleCounts.killers} killer${state.roleCounts.killers === 1 ? '' : 's'}.`;
+          roleScalingLive.textContent = `There are currently ${state.players.length} players and ${state.roleCounts.killers} killer${state.roleCounts.killers === 1 ? '' : 's'}.`;
         }
         if (setupScreen) setupScreen.classList.toggle('mafia-setup-locked', !state.isHost);
         const setupNote = document.getElementById('mafia-setup-note');
