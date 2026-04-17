@@ -26,7 +26,7 @@
       padding: 2rem 0;
     }
 
-    .screen { display: none; text-align: center; padding: 2rem; width: 100%; }
+    .screen { display: none; text-align: center; padding: 2rem; width: 100%; position: relative; z-index: 1; }
     .screen.active { display: block; }
 
     h1 {
@@ -265,9 +265,19 @@
       margin-top: 0;
       width: 100%;
     }
+
+    #bg-lines-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
   </style>
 </head>
 <body>
+
+  <canvas id="bg-lines-canvas"></canvas>
 
   <!-- ── Screen 1: Setup ── -->
   <div id="screen-setup" class="screen active">
@@ -574,6 +584,7 @@
     socket.on('player-list-updated', ({ players: updated }) => {
       players = updated;
       renderPlayers();
+      spawnBgLine();
     });
 
     function renderPlayers() {
@@ -1127,6 +1138,144 @@
       }
       _confettiRaf = requestAnimationFrame(frame);
     }
+
+    // ── Background Lines ──────────────────────────────────────────────
+    console.log('[bglines] script reached');
+    (function () {
+      console.log('[bglines] IIFE started');
+      const BG_LINE_COLOR          = '#d8b4fe';
+      const BG_LINE_WIDTH          = 8;
+      const BG_MAX_TRAIL_POINTS    = 120;
+      const BG_DURATION_MIN        = 1200;
+      const BG_DURATION_MAX        = 2000;
+      const BG_TRAIL_FADE_DURATION = 800;
+      const BG_IDLE_SPAWN_MIN      = 3000;
+      const BG_IDLE_SPAWN_MAX      = 7000;
+      const BG_MAX_CONCURRENT_IDLE = 2;
+      const BG_OFFSCREEN           = 120;
+      const BG_TRAIL_BUCKETS       = 20;
+
+      const canvas = document.getElementById('bg-lines-canvas');
+      const ctx    = canvas.getContext('2d');
+      let activeLines = [];
+      let idleTimer   = null;
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function bezier(p0, p1, p2, p3, t) {
+        const u = 1 - t;
+        return {
+          x: u*u*u*p0.x + 3*u*u*t*p1.x + 3*u*t*t*p2.x + t*t*t*p3.x,
+          y: u*u*u*p0.y + 3*u*u*t*p1.y + 3*u*t*t*p2.y + t*t*t*p3.y,
+        };
+      }
+
+      function makeLine() {
+        const W = canvas.width, H = canvas.height;
+        const edges = ['left','right','top','bottom'];
+        let entryEdge = edges[Math.floor(Math.random() * 4)];
+        let exitEdge;
+        do { exitEdge = edges[Math.floor(Math.random() * 4)]; } while (exitEdge === entryEdge);
+
+        function edgePoint(edge) {
+          if (edge === 'left')   return { x: -BG_OFFSCREEN,   y: H * (0.2 + Math.random() * 0.6) };
+          if (edge === 'right')  return { x: W + BG_OFFSCREEN, y: H * (0.2 + Math.random() * 0.6) };
+          if (edge === 'top')    return { x: W * (0.2 + Math.random() * 0.6), y: -BG_OFFSCREEN };
+          return                        { x: W * (0.2 + Math.random() * 0.6), y: H + BG_OFFSCREEN };
+        }
+
+        const p0 = edgePoint(entryEdge);
+        const p3 = edgePoint(exitEdge);
+        const sign = Math.random() < 0.5 ? 1 : -1;
+        const dispX = sign * W * (0.3 + Math.random() * 0.3);
+        const dispY = sign * H * (0.3 + Math.random() * 0.3);
+
+        const p1 = { x: p0.x * 0.4 + p3.x * 0.3 + dispX, y: p0.y * 0.4 + p3.y * 0.3 + dispY };
+        const p2 = { x: p0.x * 0.3 + p3.x * 0.4 - dispX, y: p0.y * 0.3 + p3.y * 0.4 - dispY };
+
+        return {
+          p0, p1, p2, p3,
+          points: [],
+          startTime: performance.now(),
+          duration: BG_DURATION_MIN + Math.random() * (BG_DURATION_MAX - BG_DURATION_MIN),
+          trailFadeStart: null,
+          done: false,
+        };
+      }
+
+      window.spawnBgLine = function (respectCap = false) {
+        if (respectCap && activeLines.length >= BG_MAX_CONCURRENT_IDLE) return;
+        activeLines.push(makeLine());
+      };
+
+      function scheduleIdle() {
+        const delay = BG_IDLE_SPAWN_MIN + Math.random() * (BG_IDLE_SPAWN_MAX - BG_IDLE_SPAWN_MIN);
+        idleTimer = setTimeout(() => {
+          spawnBgLine(true);
+          scheduleIdle();
+        }, delay);
+      }
+
+      function bgFrame(now) {
+        requestAnimationFrame(bgFrame);
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        for (const line of activeLines) {
+          const t = Math.min((now - line.startTime) / line.duration, 1);
+
+          if (t < 1) {
+            const head = bezier(line.p0, line.p1, line.p2, line.p3, t);
+            line.points.push(head);
+            if (line.points.length > BG_MAX_TRAIL_POINTS) line.points.shift();
+          } else if (!line.trailFadeStart) {
+            line.trailFadeStart = now;
+          }
+
+          const pts = line.points;
+          if (pts.length < 2) continue;
+
+          let globalMult = 1;
+          if (line.trailFadeStart) {
+            globalMult = 1 - (now - line.trailFadeStart) / BG_TRAIL_FADE_DURATION;
+            if (globalMult <= 0) { line.done = true; continue; }
+          }
+
+          const bucketSize = Math.ceil(pts.length / BG_TRAIL_BUCKETS);
+          ctx.lineCap  = 'round';
+          ctx.lineJoin = 'round';
+          ctx.lineWidth = BG_LINE_WIDTH;
+
+          for (let b = 0; b < BG_TRAIL_BUCKETS; b++) {
+            const start = b * bucketSize;
+            const end   = Math.min(start + bucketSize + 1, pts.length);
+            if (start >= pts.length - 1) break;
+            const alpha = ((b + 1) / BG_TRAIL_BUCKETS) * globalMult;
+            ctx.globalAlpha = alpha;
+            ctx.strokeStyle = BG_LINE_COLOR;
+            ctx.beginPath();
+            ctx.moveTo(pts[start].x, pts[start].y);
+            for (let i = start + 1; i < end; i++) ctx.lineTo(pts[i].x, pts[i].y);
+            ctx.stroke();
+          }
+          ctx.globalAlpha = 1;
+        }
+
+        activeLines = activeLines.filter(l => !l.done);
+      }
+
+      const _bgCanvas = document.getElementById('bg-lines-canvas');
+      console.log('[bglines] canvas found:', _bgCanvas, 'size:', _bgCanvas && _bgCanvas.width, _bgCanvas && _bgCanvas.height);
+
+      requestAnimationFrame(bgFrame);
+      spawnBgLine(false); // immediate first line
+      scheduleIdle();
+    })();
 
   </script>
 

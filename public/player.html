@@ -85,7 +85,7 @@
         radial-gradient(ellipse at 80% 70%, rgba(168,85,247,0.12) 0%, transparent 50%);
     }
 
-    .screen { display: none; text-align: center; width: 100%; max-width: 400px; }
+    .screen { display: none; text-align: center; width: 100%; max-width: 400px; position: relative; z-index: 1; }
     .screen.active { display: block; }
     #global-light-mode-btn,
     #light-mode-btn { display: none !important; }
@@ -831,6 +831,14 @@
       width: 100%;
     }
 
+    #bg-lines-canvas {
+      position: fixed;
+      top: 0; left: 0;
+      width: 100%; height: 100%;
+      pointer-events: none;
+      z-index: 0;
+    }
+
     /* ── Light Mode ── */
     body.light-mode {
       background: #f9f7f4;
@@ -911,6 +919,7 @@
   </style>
 </head>
 <body>
+  <canvas id="bg-lines-canvas"></canvas>
   <script>
     if (window.__jbInitialLightMode) document.body.classList.add('light-mode');
   </script>
@@ -925,6 +934,7 @@
     <button class="btn" onclick="joinRoomFromHome()">Join Room</button>
     <button class="btn" style="background:#1a1232;border:2px solid #4c1d95;color:#c084fc;" onclick="goCreate()">Create Room</button>
     <div class="error" id="home-error"></div>
+    <button class="btn btn-ghost" id="home-light-mode-btn" onclick="toggleLightMode()" style="margin-top:0.75rem;">☀️ Light Mode</button>
   </div>
 
   <!-- ── Screen 2: Join PIN ── -->
@@ -1495,6 +1505,7 @@
       document.getElementById('home-error').textContent = '';
       myName = name;
       socket.emit('create-room', { hostName: name });
+      if (typeof spawnBgLine === 'function') spawnBgLine(false);
     }
 
     function joinRoomFromHome() {
@@ -1558,6 +1569,7 @@
     socket.on('player-list-updated', ({ players, hostId }) => {
       if (hostId) roomHostId = hostId;
       renderPlayers(players, roomHostId);
+      if (typeof spawnBgLine === 'function') spawnBgLine(false);
     });
 
     function renderPlayers(players, hostId) {
@@ -1622,7 +1634,7 @@
       localStorage.setItem('jb-lightmode', on ? '1' : '0');
       const preloadStyle = document.getElementById('jb-theme-preload');
       if (preloadStyle) preloadStyle.remove();
-      const buttons = document.querySelectorAll('#light-mode-btn, #player-light-mode-btn');
+      const buttons = document.querySelectorAll('#light-mode-btn, #player-light-mode-btn, #home-light-mode-btn');
       buttons.forEach((button) => {
         button.textContent = on ? '🌙 Dark Mode' : '☀️ Light Mode';
       });
@@ -1675,6 +1687,7 @@
 
     socket.on('returned-to-lobby', () => {
       showScreen('screen-lobby');
+      if (typeof resumeBgLines === 'function') resumeBgLines();
     });
 
     socket.on('returned-to-game-select', () => {
@@ -1683,6 +1696,7 @@
       } else {
         showScreen('screen-lobby');
       }
+      if (typeof resumeBgLines === 'function') resumeBgLines();
     });
 
     function selectGame(game) {
@@ -1695,6 +1709,7 @@
     }
 
     socket.on('game-started', ({ game }) => {
+      if (typeof stopBgLines === 'function') stopBgLines();
       if (game === 'questions-challenges') {
         myQCCount = 0;
         document.getElementById('qc-my-count').textContent = '0';
@@ -3189,6 +3204,136 @@
       }
       _confettiRaf = requestAnimationFrame(frame);
     }
+
+    // ── Background Lines ──────────────────────────────────────────────
+    (function () {
+      const BG_LINE_COLOR          = '#d8b4fe';
+      const BG_LINE_WIDTH          = 8;
+      const BG_MAX_TRAIL_POINTS    = 120;
+      const BG_DURATION_MIN        = 1200;
+      const BG_DURATION_MAX        = 2000;
+      const BG_TRAIL_FADE_DURATION = 2500;
+      const BG_IDLE_SPAWN_MIN      = 3000;
+      const BG_IDLE_SPAWN_MAX      = 5000;
+      const BG_MAX_CONCURRENT_IDLE = 2;
+      const BG_OFFSCREEN           = 120;
+      const BG_TRAIL_BUCKETS       = 20;
+
+      const canvas = document.getElementById('bg-lines-canvas');
+      const ctx    = canvas.getContext('2d');
+      let activeLines = [];
+      let bgPaused = false;
+
+      window.stopBgLines   = () => {
+        for (let i = 0; i < 4; i++) activeLines.push(makeLine());
+        bgPaused = true;
+      };
+      window.resumeBgLines = () => { bgPaused = false; spawnBgLine(false); };
+
+      function resize() {
+        canvas.width  = window.innerWidth;
+        canvas.height = window.innerHeight;
+      }
+      resize();
+      window.addEventListener('resize', resize);
+
+      function bezier(p0, p1, p2, p3, t) {
+        const u = 1 - t;
+        return {
+          x: u*u*u*p0.x + 3*u*u*t*p1.x + 3*u*t*t*p2.x + t*t*t*p3.x,
+          y: u*u*u*p0.y + 3*u*u*t*p1.y + 3*u*t*t*p2.y + t*t*t*p3.y,
+        };
+      }
+
+      function makeLine() {
+        const W = canvas.width, H = canvas.height;
+        const edges = ['left','right','top','bottom'];
+        let entryEdge = edges[Math.floor(Math.random() * 4)];
+        let exitEdge;
+        do { exitEdge = edges[Math.floor(Math.random() * 4)]; } while (exitEdge === entryEdge);
+
+        function edgePoint(edge) {
+          if (edge === 'left')   return { x: -BG_OFFSCREEN,    y: H * (0.2 + Math.random() * 0.6) };
+          if (edge === 'right')  return { x: W + BG_OFFSCREEN, y: H * (0.2 + Math.random() * 0.6) };
+          if (edge === 'top')    return { x: W * (0.2 + Math.random() * 0.6), y: -BG_OFFSCREEN };
+          return                        { x: W * (0.2 + Math.random() * 0.6), y: H + BG_OFFSCREEN };
+        }
+
+        const p0   = edgePoint(entryEdge);
+        const p3   = edgePoint(exitEdge);
+        const sign = Math.random() < 0.5 ? 1 : -1;
+        const dispX = sign * W * (0.3 + Math.random() * 0.3);
+        const dispY = sign * H * (0.3 + Math.random() * 0.3);
+        const p1 = { x: p0.x * 0.4 + p3.x * 0.3 + dispX, y: p0.y * 0.4 + p3.y * 0.3 + dispY };
+        const p2 = { x: p0.x * 0.3 + p3.x * 0.4 - dispX, y: p0.y * 0.3 + p3.y * 0.4 - dispY };
+
+        return { p0, p1, p2, p3, points: [], startTime: performance.now(),
+          duration: BG_DURATION_MIN + Math.random() * (BG_DURATION_MAX - BG_DURATION_MIN),
+          trailFadeStart: null, done: false };
+      }
+
+      window.spawnBgLine = function (respectCap) {
+        if (bgPaused) return;
+        if (respectCap && activeLines.length >= BG_MAX_CONCURRENT_IDLE) return;
+        activeLines.push(makeLine());
+      };
+
+      function scheduleIdle() {
+        const delay = BG_IDLE_SPAWN_MIN + Math.random() * (BG_IDLE_SPAWN_MAX - BG_IDLE_SPAWN_MIN);
+        setTimeout(() => {
+          spawnBgLine(true);
+          if (Math.random() < 0.2) spawnBgLine(false);
+          scheduleIdle();
+        }, delay);
+      }
+
+      function bgFrame(now) {
+        requestAnimationFrame(bgFrame);
+        const W = canvas.width, H = canvas.height;
+        ctx.clearRect(0, 0, W, H);
+
+        for (const line of activeLines) {
+          const t = Math.min((now - line.startTime) / line.duration, 1);
+
+          if (t < 1) {
+            line.points.push(bezier(line.p0, line.p1, line.p2, line.p3, t));
+            if (line.points.length > BG_MAX_TRAIL_POINTS) line.points.shift();
+          } else if (!line.trailFadeStart) {
+            line.trailFadeStart = now;
+          }
+
+          const pts = line.points;
+          if (pts.length < 2) continue;
+
+          let globalMult = 1;
+          if (line.trailFadeStart) {
+            globalMult = 1 - (now - line.trailFadeStart) / BG_TRAIL_FADE_DURATION;
+            if (globalMult <= 0) { line.done = true; continue; }
+          }
+
+          ctx.globalAlpha = 0.8 * globalMult;
+          ctx.strokeStyle = BG_LINE_COLOR;
+          ctx.lineWidth = BG_LINE_WIDTH;
+          ctx.lineCap = 'round';
+          ctx.lineJoin = 'round';
+          ctx.beginPath();
+          ctx.moveTo(pts[0].x, pts[0].y);
+          for (let i = 1; i < pts.length; i++) ctx.lineTo(pts[i].x, pts[i].y);
+          ctx.stroke();
+          ctx.globalAlpha = 1;
+        }
+
+        activeLines = activeLines.filter(l => !l.done);
+      }
+
+      document.addEventListener('visibilitychange', () => {
+        if (!document.hidden) spawnBgLine(false);
+      });
+
+      requestAnimationFrame(bgFrame);
+      spawnBgLine(false);
+      scheduleIdle();
+    })();
 
   </script>
 
