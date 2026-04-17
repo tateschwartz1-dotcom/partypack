@@ -454,7 +454,8 @@
     .mafia-role-reveal { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #fef2f2; }
     .mafia-hold-btn {
       width: 100%; padding: 1rem; border-radius: 12px; border: 2px solid var(--mafia-chip-border); background: var(--mafia-chip-bg); color: var(--mafia-accent-soft);
-      font-size: 1rem; font-weight: 800; cursor: pointer; margin-top: 1rem;
+      font-size: 1rem; font-weight: 500; cursor: pointer; margin-top: 1rem; margin-bottom: 0.75rem;
+      text-transform: uppercase; letter-spacing: 0.1rem;
     }
     .mafia-action-btn, .mafia-host-btn {
       width: 100%; padding: 0.95rem; border-radius: 10px; border: 2px solid var(--mafia-card-border); background: var(--mafia-button-bg); color: #f8fafc;
@@ -466,7 +467,7 @@
       background: var(--mafia-button-selected-bg);
     }
     .mafia-action-btn:disabled, .mafia-host-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    .mafia-host-btn { background: linear-gradient(180deg, #f59e0b, #d97706); border-color: #fbbf24; color: #1f1300; text-align: center; }
+    .mafia-host-btn { background: #cfb991; border: none; color: #08041a; text-align: center; font-weight: 500; }
     #mafia-host-controls { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.85rem; }
     #mafia-host-controls .mafia-host-btn { margin-bottom: 0; }
     #screen-mafia-setup .mafia-host-btn {
@@ -905,6 +906,182 @@
     body.light-mode .mafia-rule-row { background: #fff; border-color: #d7c8ea; color: #3b2a57; }
     body.light-mode .mafia-rule-label { color: #24153d; }
     body.light-mode .mafia-rule-text { color: #211233; }
+    /* Mafia light mode — CSS variable overrides */
+    body.light-mode .mafia-wrap {
+      --mafia-accent: #b91c1c;
+      --mafia-accent-strong: #991b1b;
+      --mafia-accent-soft: #dc2626;
+      --mafia-chip-bg: #fff1f2;
+      --mafia-chip-border: #fca5a5;
+      --mafia-hero-bg: linear-gradient(180deg, #fff1f2, #fef2f2);
+      --mafia-hero-border: #fca5a5;
+      --mafia-card-bg: #ffffff;
+      --mafia-card-border: #e5d0f5;
+      --mafia-news-bg: linear-gradient(180deg, #fff1f2, #fef2f2);
+      --mafia-news-border: #f87171;
+      --mafia-button-bg: #f9f7f4;
+      --mafia-button-selected-bg: linear-gradient(180deg, #fef2f2, #fee2e2);
+    }
+    body.light-mode .mafia-theme-role .mafia-wrap {
+      --mafia-accent: #1d4ed8;
+      --mafia-accent-strong: #1e40af;
+      --mafia-accent-soft: #1d4ed8;
+      --mafia-chip-bg: #eff6ff;
+      --mafia-chip-border: #93c5fd;
+      --mafia-hero-bg: linear-gradient(180deg, #eff6ff, #dbeafe);
+      --mafia-hero-border: #93c5fd;
+      --mafia-card-bg: #ffffff;
+      --mafia-card-border: #bfdbfe;
+      --mafia-news-bg: linear-gradient(180deg, #eff6ff, #dbeafe);
+      --mafia-news-border: #3b82f6;
+      --mafia-button-bg: #f8faff;
+      --mafia-button-selected-bg: linear-gradient(180deg, #dbeafe, #bfdbfe);
+    }
+    body.light-mode .mafia-theme-discussion .mafia-wrap {
+      --mafia-accent: #15803d;
+      --mafia-accent-strong: #166534;
+      --mafia-accent-soft: #15803d;
+      --mafia-chip-bg: #f0fdf4;
+      --mafia-chip-border: #86efac;
+      --mafia-hero-bg: linear-gradient(180deg, #f0fdf4, #dcfce7);
+      --mafia-hero-border: #86efac;
+      --mafia-card-bg: #ffffff;
+      --mafia-card-border: #bbf7d0;
+      --mafia-news-bg: linear-gradient(180deg, #f0fdf4, #dcfce7);
+      --mafia-news-border: #22c55e;
+      --mafia-button-bg: #f8fdf9;
+      --mafia-button-selected-bg: linear-gradient(180deg, #dcfce7, #bbf7d0);
+    }
+    body.light-mode .mafia-theme-voting .mafia-wrap,
+    body.light-mode .mafia-theme-revote .mafia-wrap {
+      --mafia-accent: #d97706;
+      --mafia-accent-strong: #b45309;
+      --mafia-accent-soft: #d97706;
+      --mafia-chip-bg: #fffbeb;
+      --mafia-chip-border: #fcd34d;
+      --mafia-hero-bg: linear-gradient(180deg, #fffbeb, #fef9c3);
+      --mafia-hero-border: #fcd34d;
+      --mafia-card-bg: #ffffff;
+      --mafia-card-border: #fde68a;
+      --mafia-news-bg: linear-gradient(180deg, #fffbeb, #fef9c3);
+      --mafia-news-border: #f59e0b;
+      --mafia-button-bg: #fffdf5;
+      --mafia-button-selected-bg: linear-gradient(180deg, #fef9c3, #fde68a);
+    }
+    body.light-mode .mafia-theme-night .mafia-wrap {
+      --mafia-accent: #7c3aed;
+      --mafia-accent-strong: #6d28d9;
+      --mafia-accent-soft: #7c3aed;
+      --mafia-chip-bg: #f5f3ff;
+      --mafia-chip-border: #c4b5fd;
+      --mafia-hero-bg: linear-gradient(180deg, #f5f3ff, #ede9fe);
+      --mafia-hero-border: #c4b5fd;
+      --mafia-card-bg: #ffffff;
+      --mafia-card-border: #ddd6fe;
+      --mafia-news-bg: linear-gradient(180deg, #f5f3ff, #ede9fe);
+      --mafia-news-border: #7c3aed;
+      --mafia-button-bg: #faf9ff;
+      --mafia-button-selected-bg: linear-gradient(180deg, #ede9fe, #ddd6fe);
+    }
+    body.light-mode .mafia-theme-day-result .mafia-wrap {
+      --mafia-accent: #e11d48;
+      --mafia-accent-strong: #be123c;
+      --mafia-accent-soft: #e11d48;
+      --mafia-chip-bg: #fff1f2;
+      --mafia-chip-border: #fda4af;
+      --mafia-hero-bg: linear-gradient(180deg, #fff1f2, #ffe4e6);
+      --mafia-hero-border: #fda4af;
+      --mafia-card-bg: #ffffff;
+      --mafia-card-border: #fecdd3;
+      --mafia-news-bg: linear-gradient(180deg, #fff1f2, #ffe4e6);
+      --mafia-news-border: #f43f5e;
+      --mafia-button-bg: #fff8f9;
+      --mafia-button-selected-bg: linear-gradient(180deg, #ffe4e6, #fecdd3);
+    }
+    body.light-mode .mafia-theme-night-result .mafia-wrap {
+      --mafia-accent: #0891b2;
+      --mafia-accent-strong: #0e7490;
+      --mafia-accent-soft: #0891b2;
+      --mafia-chip-bg: #ecfeff;
+      --mafia-chip-border: #67e8f9;
+      --mafia-hero-bg: linear-gradient(180deg, #ecfeff, #cffafe);
+      --mafia-hero-border: #67e8f9;
+      --mafia-card-bg: #ffffff;
+      --mafia-card-border: #a5f3fc;
+      --mafia-news-bg: linear-gradient(180deg, #ecfeff, #cffafe);
+      --mafia-news-border: #22d3ee;
+      --mafia-button-bg: #f8feff;
+      --mafia-button-selected-bg: linear-gradient(180deg, #cffafe, #a5f3fc);
+    }
+    /* Mafia light mode — hardcoded color overrides */
+    body.light-mode .mafia-phase-title,
+    body.light-mode .mafia-role-reveal,
+    body.light-mode .mafia-over-title,
+    body.light-mode .mafia-win-title { color: #1a0a2e; text-shadow: none; }
+    body.light-mode .mafia-news-card { color: #1a0a2e; }
+    body.light-mode .mafia-news-card.good {
+      background: linear-gradient(180deg, #f0fdf4, #dcfce7);
+      border-color: #22c55e;
+      color: #14532d;
+      box-shadow: 0 12px 30px rgba(34,197,94,0.12);
+    }
+    body.light-mode .mafia-news-card.bad {
+      background: linear-gradient(180deg, #fff1f2, #ffe4e6);
+      border-color: #f43f5e;
+      color: #881337;
+      box-shadow: 0 12px 30px rgba(244,63,94,0.12);
+    }
+    body.light-mode .mafia-news-card.joker {
+      background: linear-gradient(180deg, #fffbeb, #fef9c3);
+      border-color: #f59e0b;
+      color: #713f12;
+      box-shadow: 0 12px 30px rgba(245,158,11,0.14);
+    }
+    body.light-mode .mafia-player-sub { color: #7c3aed; }
+    body.light-mode .mafia-player-sub.joker-tag { color: #b45309; }
+    body.light-mode .mafia-note { color: #7c3aed; }
+    body.light-mode .mafia-majority-note { color: #b91c1c; }
+    body.light-mode .mafia-banner-dead { color: #b91c1c; }
+    body.light-mode .mafia-role-killer { color: #dc2626; }
+    body.light-mode .mafia-role-town { color: #16a34a; }
+    body.light-mode .mafia-role-joker { color: #d97706; }
+    body.light-mode .mafia-killer-mark { color: #d97706; }
+    body.light-mode .mafia-action-btn { background: #fff; border-color: #e5d0f5; color: #1a0a2e; }
+    body.light-mode .mafia-action-btn.selected-vote { background: var(--mafia-button-selected-bg); }
+    body.light-mode .mafia-hold-btn { background: #fff1f2; border-color: #fca5a5; color: #b91c1c; }
+    body.light-mode .abstain-row .mafia-player-name { color: #92400e !important; }
+    body.light-mode .mafia-toggle { background: #e5d0f5; border-color: #c8b4e0; }
+    body.light-mode .mafia-toggle:checked { background: #b91c1c; }
+    body.light-mode .mafia-team-heading { color: var(--mafia-accent); }
+    body.light-mode .mafia-joker-ult {
+      background: linear-gradient(180deg, #fffbeb, #fef9c3);
+      border-color: #f59e0b;
+      box-shadow: 0 24px 60px rgba(245,158,11,0.16);
+    }
+    body.light-mode .mafia-joker-ult.win-town {
+      background: linear-gradient(180deg, #f0fdf4, #dcfce7);
+      border-color: #22c55e;
+      box-shadow: 0 24px 60px rgba(34,197,94,0.16);
+    }
+    body.light-mode .mafia-joker-ult.win-killers {
+      background: linear-gradient(180deg, #fff1f2, #ffe4e6);
+      border-color: #f43f5e;
+      box-shadow: 0 24px 60px rgba(244,63,94,0.16);
+    }
+    body.light-mode .mafia-joker-badge { background: rgba(245,158,11,0.1); border-color: #f59e0b; color: #92400e; }
+    body.light-mode .mafia-joker-title { color: #1a0a2e; text-shadow: none; }
+    body.light-mode .mafia-joker-name { color: #d97706; }
+    body.light-mode .mafia-joker-sub { color: #3b2a57; }
+    body.light-mode #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row {
+      background: linear-gradient(180deg, rgba(254,226,226,0.7), rgba(254,242,242,0.9));
+      border-color: #fca5a5;
+      box-shadow: inset 0 0 0 1px rgba(252,165,165,0.3);
+    }
+    body.light-mode #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row::after {
+      background: rgba(254,242,242,0.8);
+      border-color: rgba(252,165,165,0.7);
+      color: #b91c1c;
+    }
     body.light-mode h1,
     body.light-mode .lobby-pin,
     body.light-mode .watch-name,
@@ -2266,7 +2443,7 @@
       playerWrap.innerHTML = '';
       const renderVoteRow = ({ id, name, alive, voteCount, subtitle, color, selectable, isSelected, isKnownKiller }) => {
         const row = document.createElement(selectable ? 'button' : 'div');
-        row.className = `mafia-player-row${alive ? '' : ' dead'}${isSelected ? ' selected-vote' : ''}`;
+        row.className = `mafia-player-row${alive ? '' : ' dead'}${isSelected ? ' selected-vote' : ''}${id === '__abstain__' ? ' abstain-row' : ''}`;
         if (selectable) {
           row.type = 'button';
           row.onclick = () => mafiaVote(id);
@@ -2314,7 +2491,7 @@
       playerWrap.innerHTML = '';
       const renderVoteRowFixed = ({ id, name, alive, voteCount, subtitle, color, selectable, isSelected, isKnownKiller }) => {
         const row = document.createElement(selectable ? 'button' : 'div');
-        row.className = `mafia-player-row${alive ? '' : ' dead'}${isSelected ? ' selected-vote' : ''}`;
+        row.className = `mafia-player-row${alive ? '' : ' dead'}${isSelected ? ' selected-vote' : ''}${id === '__abstain__' ? ' abstain-row' : ''}`;
         if (selectable) {
           row.type = 'button';
           row.onclick = () => mafiaVote(id);
