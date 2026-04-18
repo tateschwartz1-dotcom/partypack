@@ -80,6 +80,8 @@
       font-size: 0.85rem;
     }
     .btn-ghost:hover { background: #1a1232; color: #e9d5ff; box-shadow: 0 0 10px rgba(192,132,252,0.2); }
+    .btn-ghost:disabled,
+    .btn-ghost:disabled:hover { opacity: 0.45; background: transparent; border-color: #2d1f50; color: #5a4a7a; cursor: not-allowed; box-shadow: none; }
     .btn-small { padding: 0.6rem 1.5rem; font-size: 0.9rem; margin-top: 0.5rem; }
 
     /* ── Lobby ── */
@@ -215,6 +217,7 @@
     .debate-toggle::after { content: ''; position: absolute; width: 18px; height: 18px; border-radius: 50%; background: #fff; top: 3px; left: 3px; transition: left 0.2s; }
     .debate-toggle:checked::after { left: 23px; }
     .debate-number { width: 72px; padding: 0.45rem 0.5rem; border-radius: 8px; border: 1px solid #4c1d95; background: #140f24; color: #ede9f8; font-family: 'Cinzel', serif; font-size: 1.1rem; text-align: center; }
+    .debate-min-note { color: #a78bfa; font-size: 0.88rem; margin: 1rem auto 0.35rem; text-align: center; }
     .debate-osmium-row { position: relative; overflow: hidden; transition: border-color 0.2s, box-shadow 0.2s, background 0.2s; }
     #screen-debate-rules.osmium-danger .debate-osmium-row { border-color: #ef4444; background: #210813; box-shadow: 0 0 0 2px rgba(239,68,68,0.24), 0 0 32px rgba(239,68,68,0.24); animation: debate-danger-shake 1.8s infinite; }
     #screen-debate-rules.osmium-danger h1 { color: #fecaca; text-shadow: 0 0 28px rgba(239,68,68,0.45); }
@@ -609,7 +612,8 @@
       <div class="debate-how-to-line" id="dt-howto-limited" style="display:none;">🎯 <strong>Limited Exchange of Ideas:</strong> Two banned entries are dealt before play. Saying one = opponent can press CATCH. Audience confirms. Right catch = catcher wins the round. Wrong catch = catcher loses it.</div>
     </div>
     <br />
-    <button class="btn" onclick="startDebateGame()">Start Game</button>
+    <div class="debate-min-note" id="debate-setup-player-note">Debateish needs at least 3 players.</div>
+    <button class="btn" id="debate-begin-btn" onclick="startDebateGame()" disabled>Begin Game</button>
     <br />
     <button class="btn btn-ghost" onclick="goToGameSelect()" style="margin-top:0.75rem;">Exit Game</button>
   </div>
@@ -739,6 +743,7 @@
   <script>
     const BASE_PATH = '__BASE_PATH__';
     const socket = io({ path: `${BASE_PATH}/socket.io` });
+    const DEBATE_MIN_PLAYERS = 3;
     let myPin = null;
     let players = [];
     let pendingConfirmAction = null;
@@ -811,21 +816,43 @@
       socket.emit('create-room', { hostName: name });
     }
 
-    socket.on('room-created', ({ pin, playerURL, qrDataURL }) => {
+    socket.on('room-created', ({ pin, playerURL, qrDataURL, players: initialPlayers = [] }) => {
       myPin = pin;
+      players = initialPlayers;
       document.getElementById('room-pin').textContent = pin;
       document.getElementById('player-url').textContent = playerURL;
       const img = document.createElement('img');
       img.src = qrDataURL; img.width = 180; img.height = 180;
       document.getElementById('qrcode').appendChild(img);
+      renderPlayers();
+      updateDebateStartState();
       showScreen('screen-lobby');
     });
 
     socket.on('player-list-updated', ({ players: updated }) => {
       players = updated;
       renderPlayers();
+      updateDebateStartState();
       spawnBgLine();
     });
+
+    socket.on('game-start-error', ({ message } = {}) => {
+      showSiteNotice(message || 'Could not start that game yet.');
+    });
+
+    function updateDebateStartState() {
+      const joined = players.length;
+      const hasEnoughPlayers = joined >= DEBATE_MIN_PLAYERS;
+      const setupNote = document.getElementById('debate-setup-player-note');
+      const beginBtn = document.getElementById('debate-begin-btn');
+
+      if (setupNote) {
+        setupNote.textContent = hasEnoughPlayers
+          ? `${joined} players ready. Begin when you want.`
+          : `Debateish needs at least ${DEBATE_MIN_PLAYERS} players. ${joined} joined.`;
+      }
+      if (beginBtn) beginBtn.disabled = !hasEnoughPlayers;
+    }
 
     function renderPlayers() {
       const container = document.getElementById('players');
@@ -1596,6 +1623,7 @@
       document.getElementById('dt-limited').checked = false;
       document.getElementById('dt-forbidden-count').value = 2;
       updateDebateSetupVisibility();
+      updateDebateStartState();
       showScreen('screen-debate-rules');
       socket.emit('debate-show-rules', { debateSettings: getDebateSetupSettings() });
     }
@@ -1608,10 +1636,15 @@
       document.getElementById('dt-limited').checked = false;
       document.getElementById('dt-forbidden-count').value = 2;
       updateDebateSetupVisibility();
+      updateDebateStartState();
       showScreen('screen-debate-rules');
     });
 
     function startDebateGame() {
+      if (players.length < DEBATE_MIN_PLAYERS) {
+        showSiteNotice(`Debateish needs at least ${DEBATE_MIN_PLAYERS} players to start.`);
+        return;
+      }
       const tiers = {
         light: document.getElementById('dt-light').checked,
         heavy: document.getElementById('dt-heavy').checked,

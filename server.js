@@ -76,6 +76,7 @@ const ANTHROPIC_TRIVIA_MODEL = process.env.ANTHROPIC_TRIVIA_MODEL || 'claude-hai
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_TRIVIA_MODEL = process.env.OPENAI_TRIVIA_MODEL || 'gpt-5-mini';
 const TRIVIA_API_KEY = process.env.TRIVIA_API_KEY || '';
+const DEBATE_MIN_PLAYERS = 3;
 
 LEGACY_BASE_PATHS.forEach((legacyBasePath) => {
   app.get(new RegExp(`^${escapeRegExp(legacyBasePath)}(?:/.*)?$`), (req, res) => {
@@ -1004,6 +1005,14 @@ io.on('connection', (socket) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
     if (!room || room.hostSocketId !== socket.id) return;
+
+    if (game === 'debate' && room.players.length < DEBATE_MIN_PLAYERS) {
+      socket.emit('game-start-error', {
+        game,
+        message: `Debateish needs at least ${DEBATE_MIN_PLAYERS} players to start.`,
+      });
+      return;
+    }
 
     room.gameState = game;
 

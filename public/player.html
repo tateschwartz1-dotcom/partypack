@@ -159,6 +159,8 @@
       display: inline-block;
     }
     .btn-ghost:active { background: #1a1232; }
+    .btn-ghost:disabled,
+    .btn-ghost:disabled:active { opacity: 0.45; background: transparent; border-color: #2d1f50; color: #5a4a7a; cursor: not-allowed; box-shadow: none; }
 
     .divider {
       text-align: center;
@@ -821,6 +823,7 @@
     .debate-setup-panel { margin-top:1rem; }
     .debate-setup-note { margin-top:0.75rem; color:#8b7aa8; font-size:.82rem; }
     body.host-mode .debate-setup-note { display:none; }
+    .debate-min-note { margin-top:0.2rem; }
     .debate-setup-panel.locked .db-tier-btn,
     .debate-rules-card.locked .debate-toggle-wrap,
     .debate-setup-panel.locked .debate-forbidden-control { opacity:0.52; cursor:not-allowed; }
@@ -1755,7 +1758,8 @@
         <div class="debate-setup-note">Only the host can change these settings.</div>
       </div>
       <div class="host-only">
-        <button class="btn btn-ghost" onclick="startDebateGame()">Begin Game</button>
+        <div class="mafia-note debate-min-note" id="debate-setup-player-note">Debateish needs at least 3 players.</div>
+        <button class="btn btn-ghost" id="debate-begin-btn" onclick="startDebateGame()" disabled>Begin Game</button>
         <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
       </div>
     </div>
@@ -1771,6 +1775,7 @@
   <script>
     const BASE_PATH = '__BASE_PATH__';
     const socket = io({ path: `${BASE_PATH}/socket.io` });
+    const DEBATE_MIN_PLAYERS = 3;
     const PLAYER_COLORS = ['#f87171', '#fb923c', '#facc15', '#4ade80', '#38bdf8', '#818cf8', '#e879f9', '#f472b6', '#a3e635', '#34d399'];
     let myName    = '';
     let myPin     = '';
@@ -1840,6 +1845,7 @@
       isHost = h;
       document.body.classList.toggle('host-mode', h);
       setDebateSetupLocked(!h);
+      updateDebateStartState();
     }
 
     let siteNoticeTimer = null;
@@ -1858,6 +1864,20 @@
       document.querySelectorAll('#db-tier-toggles input, #db-limited-toggle, #db-forbidden-count').forEach((input) => {
         input.disabled = locked;
       });
+    }
+
+    function updateDebateStartState() {
+      const joined = currentPlayers.length;
+      const hasEnoughPlayers = joined >= DEBATE_MIN_PLAYERS;
+      const setupNote = document.getElementById('debate-setup-player-note');
+      const beginBtn = document.getElementById('debate-begin-btn');
+
+      if (setupNote) {
+        setupNote.textContent = hasEnoughPlayers
+          ? `${joined} players ready. Begin when you want.`
+          : `Debateish needs at least ${DEBATE_MIN_PLAYERS} players. ${joined} joined.`;
+      }
+      if (beginBtn) beginBtn.disabled = !hasEnoughPlayers;
     }
 
     function getPlayerColor(name) {
@@ -1938,12 +1958,18 @@
       }
 
       renderPlayers(players, hostId);
+      updateDebateStartState();
     }
 
     socket.on('player-list-updated', ({ players, hostId }) => {
       if (hostId) roomHostId = hostId;
       renderPlayers(players, roomHostId);
+      updateDebateStartState();
       if (typeof spawnBgLine === 'function') spawnBgLine(false);
+    });
+
+    socket.on('game-start-error', ({ message } = {}) => {
+      showSiteNotice(message || 'Could not start that game yet.');
     });
 
     function renderPlayers(players, hostId) {
@@ -2098,6 +2124,7 @@
       resetDebateSetupDefaults();
       showScreen('screen-debate-rules');
       setDebateSetupLocked(!isHost);
+      updateDebateStartState();
       socket.emit('debate-show-rules', { debateSettings: getDebateSetupSettings() });
     }
 
@@ -2105,6 +2132,7 @@
       if (typeof stopBgLines === 'function') stopBgLines({ burst: false });
       if (debateSettings) applyDebateSetupSettings(debateSettings);
       setDebateSetupLocked(!isHost);
+      updateDebateStartState();
       showScreen('screen-debate-rules');
     });
 
@@ -2113,6 +2141,10 @@
     });
 
     function startDebateGame() {
+      if (currentPlayers.length < DEBATE_MIN_PLAYERS) {
+        showSiteNotice(`Debateish needs at least ${DEBATE_MIN_PLAYERS} players to start.`);
+        return;
+      }
       const debateSettings = getDebateSetupSettings();
       if (!debateSettings.tiers.light && !debateSettings.tiers.heavy && !debateSettings.tiers.osmium) {
         showSiteNotice('Pick at least one topic difficulty.');
