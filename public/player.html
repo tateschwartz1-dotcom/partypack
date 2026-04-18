@@ -183,6 +183,8 @@
     /* ── Host-only controls ── */
     .host-only { display: none; }
     body.host-mode .host-only { display: block; }
+    .non-host-only { display: block; }
+    body.host-mode .non-host-only { display: none; }
     .guest-only { display: block; }
     body.host-mode .guest-only { display: none; }
 
@@ -780,6 +782,81 @@
     .ht-vote-row { font-size: 0.9rem; margin-bottom: 0.35rem; }
     .ht-advance-text { font-size: 0.8rem; color: #4a3a6a; margin-top: 1.25rem; }
 
+    /* ── Debate player ── */
+    .db-p-timer { font-family: 'Cinzel', serif; font-size: 5rem; font-weight: 900; color: #a78bfa; text-shadow: 0 0 40px rgba(167,139,250,0.3); line-height: 1; margin: 0.5rem 0; }
+    .db-p-topic { font-size: 1.1rem; font-weight: 500; line-height: 1.4; color: #ede9f8; margin: 0.6rem 0; }
+    .db-topic-text { color: #ede9f8; }
+    .db-title-line { font-family: 'Cinzel', serif; font-size: 1.45rem; font-weight: 700; color: #a78bfa; text-shadow: 0 0 24px rgba(167,139,250,0.24); line-height: 1.18; margin: 0.55rem 0; }
+    .db-waiting-line { color: #8b7aa8; font-size: 0.92rem; line-height: 1.35; margin: 0.65rem 0; }
+    .db-round-context { background:#140f24; border:1.5px solid #2d1f50; border-radius:12px; padding:0.8rem; margin:0 0 1rem; text-align:left; }
+    .db-round-context-title { font-size:0.68rem; text-transform:uppercase; letter-spacing:2px; color:#a78bfa; margin-bottom:0.35rem; }
+    .db-round-context-topic { color:#ede9f8; font-size:1rem; font-weight:700; text-align:center; line-height:1.25; margin:0.35rem 0 0.65rem; }
+    .db-round-context-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.5rem; }
+    .db-round-context-side { background:#1a1232; border:1px solid #2d1f50; border-radius:8px; padding:0.55rem; min-width:0; }
+    .db-round-context-side.mine { border-color:#a78bfa; box-shadow:0 0 0 2px rgba(167,139,250,0.55), 0 0 24px rgba(167,139,250,0.18); }
+    .db-round-context-name { font-size:1.2rem; font-weight:700; line-height:1.15; overflow-wrap:anywhere; }
+    .db-round-context-meta { color:#8b7aa8; font-size:0.92rem; line-height:1.25; margin-top:0.2rem; overflow-wrap:anywhere; }
+    .db-p-banned-row { display: flex; gap: 0.4rem; justify-content: center; flex-wrap: wrap; margin: 0.35rem 0; }
+    .db-p-banned-chip { background: #1a1232; border: 1px solid #c084fc; border-radius: 999px; padding: 0.18rem 0.65rem; font-size: 0.85rem; color: #c084fc; }
+    .db-catch-btn { width: 100%; padding: 1.2rem; font-size: 1.2rem; border-radius: 12px; border: 2px solid #c084fc; background: #1a0f2e; color: #c084fc; cursor: pointer; font-family: 'Jost', sans-serif; font-weight: 600; letter-spacing: 0.04em; transition: all 0.15s; margin-top: 0.75rem; }
+    .db-catch-btn:active { background: #2d1a50; transform: scale(0.97); }
+    .db-catch-btn.inactive { opacity: 0.5; border-color: #2d1f50; color: #8b7aa8; background: #0f0a20; pointer-events: none; }
+    .db-pick-btn { width: 100%; padding: 1rem; font-size: 1rem; border-radius: 10px; border: 2px solid #2d1f50; background: #1a1232; color: #ede9f8; cursor: pointer; margin-bottom: 0.45rem; font-family: 'Jost', sans-serif; font-weight: 500; transition: all 0.15s; }
+    .db-pick-btn:active { border-color: #60a5fa; background: #21183a; transform: scale(0.98); }
+    .db-vote-btn { width: 100%; padding: 1.15rem; font-size: 1.05rem; border-radius: 10px; border: 2px solid #2d1f50; background: #1a1232; color: #ede9f8; cursor: pointer; margin-bottom: 0.55rem; font-family: 'Cinzel', sans-serif; font-weight: 600; transition: all 0.15s; }
+    .db-vote-btn:active { transform: scale(0.97); }
+    .db-vote-btn:disabled { opacity: 0.35; cursor: not-allowed; }
+    .db-catch-vote-btn { width: 100%; padding: 1rem; font-size: 1.05rem; border-radius: 10px; border: 2px solid; cursor: pointer; margin-bottom: 0.45rem; font-family: 'Jost', sans-serif; font-weight: 600; transition: all 0.15s; }
+    .db-score-row { display: flex; justify-content: space-between; align-items: center; padding: 0.5rem 0.75rem; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; margin-bottom: 0.35rem; font-size: 0.95rem; }
+    .db-score-row.leader { border-color: #a78bfa; background: #1a1232; }
+    .db-score-row.just-scored { border-color: #a78bfa; box-shadow: 0 0 0 2px rgba(167,139,250,0.35); }
+    .db-score-pts { color: #a78bfa; font-family: 'Cinzel', serif; font-weight: 700; }
+    .db-phase-chip { display: inline-block; font-size: 0.68rem; text-transform: uppercase; letter-spacing: 2px; color: #a78bfa; background: rgba(167,139,250,0.12); border: 1px solid rgba(167,139,250,0.35); border-radius: 999px; padding: 0.18rem 0.7rem; margin-bottom: 0.65rem; }
+    .db-scorebar { margin-bottom: 1rem; }
+    .debate-rules-card { background:#1a1232; border:2px solid #2d1f50; border-radius:12px; padding:1.25rem 1.5rem; margin:1.5rem auto; max-width:320px; text-align:left; font-size:.9rem; color:#c4b5e0; line-height:1.8; }
+    .debate-rules-list { margin:0; padding-left:1.2rem; list-style-position:outside; }
+    .debate-rules-list li { padding-left:0.2rem; }
+    .debate-rules-heading { margin-top:.9rem; color:#a855f7; font-weight:600; display:flex; align-items:center; justify-content:space-between; gap:0.75rem; line-height:1.35; }
+    .debate-rules-heading-text { flex:1; }
+    .debate-setup-panel { margin-top:1rem; }
+    .debate-setup-note { margin-top:0.75rem; color:#8b7aa8; font-size:.82rem; }
+    body.host-mode .debate-setup-note { display:none; }
+    .debate-setup-panel.locked .db-tier-btn,
+    .debate-rules-card.locked .debate-toggle-wrap,
+    .debate-setup-panel.locked .debate-forbidden-control { opacity:0.52; cursor:not-allowed; }
+    .debate-toggle-wrap { position: relative; display: inline-block; width: 44px; height: 24px; cursor: pointer; }
+    .debate-toggle-wrap input { opacity: 0; width: 0; height: 0; }
+    .debate-toggle-knob { position: absolute; inset: 0; background: #2d1f50; border-radius: 999px; transition: background 0.2s; }
+    .debate-toggle-knob::before { content: ''; position: absolute; width: 18px; height: 18px; left: 3px; top: 3px; background: #fff; border-radius: 50%; transition: transform 0.2s; }
+    .debate-toggle-wrap input:checked + .debate-toggle-knob { background: #7c3aed; }
+    .debate-toggle-wrap input:checked + .debate-toggle-knob::before { transform: translateX(20px); }
+    .db-tier-toggles { display:grid; grid-template-columns:repeat(3, minmax(0, 1fr)); gap:8px; }
+    .db-tier-btn { display: inline-flex; align-items: center; justify-content:flex-start; gap: 0.45rem; min-height:38px; padding: 0.35rem 0.65rem; border-radius: 8px; border: 1.5px solid #2d1f50; background: #1a1232; color: #c4b5e0; font-family: 'Jost', sans-serif; font-size: .85rem; cursor: pointer; transition: all .15s; }
+    .db-tier-btn input { accent-color: #a855f7; width: 14px; height: 14px; flex:0 0 14px; margin:0; }
+    .db-tier-btn span { line-height:1; }
+    .db-tier-btn.osmium-tier { position: relative; overflow: hidden; }
+    #screen-debate-rules.osmium-danger .db-tier-btn.osmium-tier { border-color:#ef4444; background:#210813; color:#fecaca; box-shadow:0 0 0 2px rgba(239,68,68,0.24), 0 0 28px rgba(239,68,68,0.22); animation: debate-danger-shake 1.8s infinite; }
+    #screen-debate-rules.osmium-danger h1 { color:#fecaca; text-shadow:0 0 28px rgba(239,68,68,0.45); }
+    .debate-forbidden-control { display:flex; align-items:center; justify-content:space-between; gap:0.75rem; margin-top:0.75rem; padding:0.65rem 0.75rem; border:1.5px solid #2d1f50; border-radius:8px; background:#1a1232; color:#c4b5e0; text-align:left; }
+    .debate-forbidden-label { font-size:.85rem; line-height:1.2; }
+    .debate-forbidden-sub { color:#8b7aa8; font-size:.74rem; margin-top:0.14rem; }
+    .debate-count-input { width:64px; flex:0 0 64px; border:1px solid #4c1d95; border-radius:8px; background:#140f24; color:#ede9f8; font-family:'Cinzel',serif; font-size:1.05rem; padding:0.4rem; text-align:center; }
+    @keyframes debate-danger-shake {
+      0%, 100% { transform: translateX(0); }
+      8% { transform: translateX(-1px) rotate(-0.2deg); }
+      16% { transform: translateX(1px) rotate(0.2deg); }
+      24% { transform: translateX(0); }
+    }
+    .site-notice { position:fixed; left:50%; bottom:1rem; transform:translate(-50%, 1rem); z-index:300; width:min(360px, calc(100% - 2rem)); padding:0.85rem 1rem; border-radius:10px; border:1px solid #7c3aed; background:#1a1232; color:#ede9f8; box-shadow:0 18px 45px rgba(0,0,0,0.35); opacity:0; pointer-events:none; transition:opacity 0.18s ease, transform 0.18s ease; font-size:0.92rem; text-align:left; }
+    .site-notice.show { opacity:1; transform:translate(-50%, 0); }
+    .db-p-timer-wrap { margin: 0.6rem 0; }
+    .db-p-bar-bg { height: 6px; background: #2d1f50; border-radius: 999px; overflow: hidden; margin-bottom: 0.4rem; }
+    .db-p-bar { height: 100%; background: #a78bfa; border-radius: 999px; transition: width 1s linear; width: 100%; }
+    .db-vote-row { display: flex; gap: 12px; justify-content: center; margin: 1rem 0; }
+    .db-vote-col { flex: 1; background: #1a1232; border: 1.5px solid #2d1f50; border-radius: 10px; padding: 0.75rem; text-align: center; font-size: .95rem; }
+    .db-vote-tally { font-family: 'Cinzel', serif; font-size: 1.5rem; color: #a78bfa; margin-top: 0.4rem; }
+    .db-chip { background: #1a1232; border: 1px solid #c084fc; border-radius: 999px; padding: 0.18rem 0.65rem; font-size: 0.85rem; color: #c084fc; }
+
     @keyframes ripple-expand {
       from { transform: scale(0); opacity: 0.35; }
       to   { transform: scale(1); opacity: 0; }
@@ -887,6 +964,48 @@
     body.light-mode .ht-vote-btn { background: #fff; border-color: #c8b4e0; color: #1a0a2e; }
     body.light-mode .ht-p-result-bar-wrap { background: #ede4f8; border-color: #c8b4e0; }
     body.light-mode .ht-advance-text { color: #8b7aa8; }
+    body.light-mode .db-p-topic,
+    body.light-mode .db-score-name,
+    body.light-mode .db-vote-col,
+    body.light-mode .debate-rules-card,
+    body.light-mode .debate-rules-list { color: #1a0a2e; }
+    body.light-mode .db-topic-text,
+    body.light-mode .db-p-topic,
+    body.light-mode .db-round-context-topic,
+    body.light-mode .db-round-context-meta small { color:#24153d !important; text-shadow:none; }
+    body.light-mode .db-round-context,
+    body.light-mode .db-round-context-side { background:#fff; border-color:#c8b4e0; box-shadow:0 18px 45px rgba(0,0,0,0.12); }
+    body.light-mode .db-round-context-side.mine { border-color:#7c3aed; box-shadow:0 0 0 2px rgba(124,58,237,0.45), 0 14px 32px rgba(124,58,237,0.12); }
+    body.light-mode .db-phase-chip {
+      color: #5b21b6;
+      background: rgba(124,58,237,0.12);
+      border-color: rgba(124,58,237,0.35);
+    }
+    body.light-mode .db-score-row.just-scored { border-color: #7c3aed; box-shadow: 0 0 0 2px rgba(124,58,237,0.3); }
+    body.light-mode .db-pick-btn,
+    body.light-mode .db-vote-btn,
+    body.light-mode .db-score-row,
+    body.light-mode .db-vote-col,
+    body.light-mode .debate-rules-card,
+    body.light-mode .db-tier-btn,
+    body.light-mode .debate-forbidden-control {
+      background: #fff;
+      border-color: #c8b4e0;
+      color: #1a0a2e;
+    }
+    body.light-mode .debate-count-input { background:#fff; border-color:#c8b4e0; color:#1a0a2e; }
+    body.light-mode .db-p-bar-bg { background: #e4d8f4; }
+    body.light-mode .db-chip,
+    body.light-mode .db-p-banned-chip {
+      background: #f5f0ff;
+      color: #5b21b6;
+      border-color: #7c3aed;
+    }
+    body.light-mode .debate-rules-heading,
+    body.light-mode .db-title-line,
+    body.light-mode .db-p-timer,
+    body.light-mode .db-score-pts,
+    body.light-mode .db-vote-tally { color: #6d28d9; text-shadow: none; }
     body.light-mode .pr-guess-btn { background: #fff; border-color: #c8b4e0; color: #1a0a2e; }
     body.light-mode .pr-reveal-guess-row.correct { background: #e8faf0; }
     body.light-mode .pr-reveal-guess-row.wrong { background: #fce8f5; }
@@ -1097,6 +1216,7 @@
 </head>
 <body>
   <canvas id="bg-lines-canvas"></canvas>
+  <div class="site-notice" id="site-notice" role="status" aria-live="polite"></div>
   <script>
     if (window.__jbInitialLightMode) document.body.classList.add('light-mode');
   </script>
@@ -1181,6 +1301,13 @@
         <div>
           <div class="game-title">Photo Roulette</div>
           <div class="game-desc">Upload photos. Can you guess who took what?</div>
+        </div>
+      </div>
+      <div class="game-card" onclick="showDebateRulesScreen()">
+        <div class="game-icon">🗣️</div>
+        <div>
+          <div class="game-title">Debateish</div>
+          <div class="game-desc">Two players argue opposite sides. Everyone votes.</div>
         </div>
       </div>
     </div>
@@ -1589,6 +1716,57 @@
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
   </div>
 
+  <!-- ── Screen: Debate Rules ── -->
+  <div id="screen-debate-rules" class="screen">
+    <h1>Debateish</h1>
+    <div class="debate-rules-card" id="debate-rules-card">
+      <ul class="debate-rules-list">
+        <li>Debaters select their side or the order</li>
+        <li>Both debaters take turns speaking for 30 seconds, then for 15 seconds</li>
+        <li>The audience votes for a winner — first to 5 wins</li>
+      </ul>
+      <div class="debate-rules-heading">
+        <span class="debate-rules-heading-text">Optional: Limited Exchange of Ideas Mode</span>
+        <label class="debate-toggle-wrap" aria-label="Limited Exchange of Ideas Mode">
+          <input type="checkbox" id="db-limited-toggle" />
+          <span class="debate-toggle-knob"></span>
+        </label>
+      </div>
+      <ul class="debate-rules-list">
+        <li>There are forbidden entries</li>
+        <li>If a debater catches the other saying one, they win immediately</li>
+      </ul>
+    </div>
+    <div class="debate-setup-panel" id="debate-rules-host-controls">
+      <div style="margin-bottom:1rem;">
+        <div style="color:#c4b5e0; font-size:.85rem; margin-bottom:.5rem;">Topic Difficulty</div>
+        <div class="db-tier-toggles" id="db-tier-toggles">
+          <label class="db-tier-btn"><input type="checkbox" value="light" checked /><span>Light</span></label>
+          <label class="db-tier-btn"><input type="checkbox" value="heavy" /><span>Heavy</span></label>
+          <label class="db-tier-btn osmium-tier"><input type="checkbox" value="osmium" /><span>Osmium</span></label>
+        </div>
+        <div class="debate-forbidden-control" id="db-forbidden-count-row" style="display:none;">
+          <div>
+            <div class="debate-forbidden-label">Forbidden Entries</div>
+            <div class="debate-forbidden-sub">Banned groups per round</div>
+          </div>
+          <input class="debate-count-input" id="db-forbidden-count" type="number" min="1" max="5" value="2" />
+        </div>
+        <div class="debate-setup-note">Only the host can change these settings.</div>
+      </div>
+      <div class="host-only">
+        <button class="btn btn-ghost" onclick="startDebateGame()">Begin Game</button>
+        <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+      </div>
+    </div>
+    <div class="non-host-only" style="margin-top:1rem; opacity:.6; font-size:.9rem;">Waiting for host to start...</div>
+  </div>
+
+  <!-- ── Screen: Debate ── -->
+  <div id="screen-debate" class="screen">
+    <div id="debate-content"></div>
+  </div>
+
   <script src="__BASE_PATH__/socket.io/socket.io.js"></script>
   <script>
     const BASE_PATH = '__BASE_PATH__';
@@ -1607,7 +1785,7 @@
     let mafiaState      = null;
     let pendingConfirmAction = null;
 
-    const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select', 'screen-ht-rules']);
+    const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select', 'screen-ht-rules', 'screen-debate-rules']);
 
     function getActiveScreenId() {
       const active = document.querySelector('.screen.active');
@@ -1661,6 +1839,25 @@
     function setHostMode(h) {
       isHost = h;
       document.body.classList.toggle('host-mode', h);
+      setDebateSetupLocked(!h);
+    }
+
+    let siteNoticeTimer = null;
+    function showSiteNotice(message) {
+      const notice = document.getElementById('site-notice');
+      if (!notice) return;
+      notice.textContent = message;
+      notice.classList.add('show');
+      clearTimeout(siteNoticeTimer);
+      siteNoticeTimer = setTimeout(() => notice.classList.remove('show'), 3200);
+    }
+
+    function setDebateSetupLocked(locked) {
+      document.getElementById('debate-rules-host-controls')?.classList.toggle('locked', locked);
+      document.getElementById('debate-rules-card')?.classList.toggle('locked', locked);
+      document.querySelectorAll('#db-tier-toggles input, #db-limited-toggle, #db-forbidden-count').forEach((input) => {
+        input.disabled = locked;
+      });
     }
 
     function getPlayerColor(name) {
@@ -1824,7 +2021,10 @@
 
     // ── Game selector ──────────────────────────────────────────────
     hydrateMafiaRulesPanel();
-    function goToGameSelect() { showScreen('screen-game-select'); }
+    function goToGameSelect() {
+      showScreen('screen-game-select');
+      if (typeof resumeBgLines === 'function') resumeBgLines();
+    }
     function backToGameSelect() {
       if (!isGameFlowActive()) {
         showScreen('screen-game-select');
@@ -1838,7 +2038,92 @@
       });
     }
 
-    function showHTRulesScreen() { showScreen('screen-ht-rules'); }
+    function showHTRulesScreen() {
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
+      showScreen('screen-ht-rules');
+    }
+
+    function getDebateSetupSettings() {
+      const selectedTiers = [...document.querySelectorAll('#db-tier-toggles input:checked')].map(el => el.value);
+      const forbiddenCountInput = document.getElementById('db-forbidden-count');
+      const forbiddenGroupCount = Math.max(1, Math.min(5, Number.parseInt(forbiddenCountInput?.value, 10) || 2));
+      if (forbiddenCountInput) forbiddenCountInput.value = forbiddenGroupCount;
+      return {
+        limitedMode: document.getElementById('db-limited-toggle')?.checked || false,
+        forbiddenGroupCount,
+        tiers: {
+          light: selectedTiers.includes('light'),
+          heavy: selectedTiers.includes('heavy'),
+          osmium: selectedTiers.includes('osmium'),
+        },
+      };
+    }
+
+    function applyDebateSetupSettings(settings = {}) {
+      const tiers = settings.tiers || {};
+      document.getElementById('db-limited-toggle').checked = !!settings.limitedMode;
+      document.querySelector('#db-tier-toggles input[value="light"]').checked = !!tiers.light;
+      document.querySelector('#db-tier-toggles input[value="heavy"]').checked = !!tiers.heavy;
+      document.querySelector('#db-tier-toggles input[value="osmium"]').checked = !!tiers.osmium;
+      document.getElementById('db-forbidden-count').value = settings.forbiddenGroupCount || 2;
+      updateDebateSetupVisibility();
+      setDebateSetupLocked(!isHost);
+    }
+
+    function resetDebateSetupDefaults() {
+      document.getElementById('db-limited-toggle').checked = false;
+      document.querySelector('#db-tier-toggles input[value="light"]').checked = true;
+      document.querySelector('#db-tier-toggles input[value="heavy"]').checked = false;
+      document.querySelector('#db-tier-toggles input[value="osmium"]').checked = false;
+      document.getElementById('db-forbidden-count').value = 2;
+      updateDebateSetupVisibility();
+    }
+
+    function updateDebateSetupVisibility() {
+      const osmiumOn = document.querySelector('#db-tier-toggles input[value="osmium"]')?.checked;
+      document.getElementById('screen-debate-rules')?.classList.toggle('osmium-danger', !!osmiumOn);
+      const limitedOn = document.getElementById('db-limited-toggle')?.checked;
+      const forbiddenRow = document.getElementById('db-forbidden-count-row');
+      if (forbiddenRow) forbiddenRow.style.display = limitedOn ? '' : 'none';
+    }
+
+    function emitDebateSetupSettings() {
+      if (!isHost) return;
+      updateDebateSetupVisibility();
+      socket.emit('debate-settings-preview', { debateSettings: getDebateSetupSettings() });
+    }
+
+    function showDebateRulesScreen() {
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
+      resetDebateSetupDefaults();
+      showScreen('screen-debate-rules');
+      setDebateSetupLocked(!isHost);
+      socket.emit('debate-show-rules', { debateSettings: getDebateSetupSettings() });
+    }
+
+    socket.on('debate-show-rules', ({ debateSettings } = {}) => {
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: false });
+      if (debateSettings) applyDebateSetupSettings(debateSettings);
+      setDebateSetupLocked(!isHost);
+      showScreen('screen-debate-rules');
+    });
+
+    socket.on('debate-settings-updated', ({ debateSettings } = {}) => {
+      if (debateSettings) applyDebateSetupSettings(debateSettings);
+    });
+
+    function startDebateGame() {
+      const debateSettings = getDebateSetupSettings();
+      if (!debateSettings.tiers.light && !debateSettings.tiers.heavy && !debateSettings.tiers.osmium) {
+        showSiteNotice('Pick at least one topic difficulty.');
+        return;
+      }
+      socket.emit('start-game', { game: 'debate', debateSettings });
+    }
+
+    document.querySelectorAll('#db-tier-toggles input, #db-limited-toggle, #db-forbidden-count').forEach((input) => {
+      input.addEventListener(input.type === 'number' ? 'input' : 'change', emitDebateSetupSettings);
+    });
 
     function backToLobby() {
       if (!isGameFlowActive()) {
@@ -1877,6 +2162,7 @@
     });
 
     function selectGame(game) {
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
       socket.emit('start-game', { game });
     }
 
@@ -1885,8 +2171,14 @@
       socket.emit('start-game', { game: 'hot-takes', exposureChance: pct / 100 });
     }
 
-    socket.on('game-started', ({ game }) => {
-      if (typeof stopBgLines === 'function') stopBgLines();
+    socket.on('game-started', ({ game, debateSettings }) => {
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: game !== 'debate' });
+      if (game === 'debate-setup') {
+        if (debateSettings) applyDebateSetupSettings(debateSettings);
+        setDebateSetupLocked(!isHost);
+        showScreen('screen-debate-rules');
+        return;
+      }
       if (game === 'questions-challenges') {
         myQCCount = 0;
         document.getElementById('qc-my-count').textContent = '0';
@@ -3390,8 +3682,8 @@
       const BG_DURATION_MIN        = 1200;
       const BG_DURATION_MAX        = 2000;
       const BG_TRAIL_FADE_DURATION = 2500;
-      const BG_IDLE_SPAWN_MIN      = 3000;
-      const BG_IDLE_SPAWN_MAX      = 5000;
+      const BG_IDLE_SPAWN_MIN      = 5000;
+      const BG_IDLE_SPAWN_MAX      = 8500;
       const BG_MAX_CONCURRENT_IDLE = 2;
       const BG_OFFSCREEN           = 120;
       const BG_TRAIL_BUCKETS       = 20;
@@ -3401,8 +3693,10 @@
       let activeLines = [];
       let bgPaused = false;
 
-      window.stopBgLines   = () => {
-        for (let i = 0; i < 4; i++) activeLines.push(makeLine());
+      window.stopBgLines   = ({ burst = true } = {}) => {
+        if (burst && !bgPaused) {
+          for (let i = 0; i < 4; i++) activeLines.push(makeLine());
+        }
         bgPaused = true;
       };
       window.resumeBgLines = () => { bgPaused = false; spawnBgLine(false); };
@@ -3511,6 +3805,440 @@
       spawnBgLine(false);
       scheduleIdle();
     })();
+
+    // ─── DEBATE ───────────────────────────────────────────────────────────────
+    let dbMyState = null;
+
+    function safeDebateColor(color, fallback = '#ede9f8') {
+      return String(color || '').toLowerCase() === '#cfb991' ? '#60a5fa' : (color || fallback);
+    }
+
+    function renderDebateScoresP(scores, playerColors, scorers = []) {
+      if (!scores || !Object.keys(scores).length) return '';
+      const sorted = Object.entries(scores).sort((a, b) => b[1] - a[1]);
+      const max = sorted[0][1];
+      return sorted.map(([name, pts]) => {
+        const isLeader = pts === max && pts > 0;
+        const disp = Number.isInteger(pts) ? pts : pts.toFixed(1);
+        const classes = ['db-score-row'];
+        if (isLeader) classes.push('leader');
+        if (scorers.includes(name)) classes.push('just-scored');
+        return `<div class="${classes.join(' ')}">
+          <span class="db-score-name">${name}</span>
+          <span class="db-score-pts">${disp}</span>
+        </div>`;
+      }).join('');
+    }
+
+    function renderDebateBannedP(bannedWords) {
+      if (!bannedWords?.length) return '';
+      return bannedWords.map(w => `<span class="db-chip">${w}</span>`).join('');
+    }
+
+    function debateSideFor(r, player) {
+      if (!r || !player) return '?';
+      const side = r.sideMap?.[player.id];
+      if (side === 'left') return r.topicLeft;
+      if (side === 'right') return r.topicRight;
+      if (r.firstPickType === 'side') {
+        const otherId = player.id === r.debaterA?.id ? r.debaterB?.id : r.debaterA?.id;
+        const otherSide = r.sideMap?.[otherId];
+        if (otherSide === 'left') return r.topicRight;
+        if (otherSide === 'right') return r.topicLeft;
+      }
+      return '';
+    }
+
+    function debateOrderFor(r, player) {
+      if (!r || !player || !Array.isArray(r.turnOrder) || r.turnOrder.length < 2) return 'Order not picked yet';
+      const idx = r.turnOrder.indexOf(player.id);
+      if (idx === 0) return 'First';
+      if (idx === 1) return 'Second';
+      if (r.turnOrder[0] === null) return 'First';
+      if (r.turnOrder[1] === null) return 'Second';
+      return 'Order not picked yet';
+    }
+
+    function renderDebateRoundContextP(r, colors = {}, myId = '') {
+      if (!r?.debaterA || !r?.debaterB) return '';
+      const aSide = debateSideFor(r, r.debaterA);
+      const bSide = debateSideFor(r, r.debaterB);
+      const orderPicked = Array.isArray(r.turnOrder) && r.turnOrder.length >= 2 && (r.turnOrder[0] !== null || r.turnOrder[1] !== null);
+      let firstPlayer = r.debaterA, secondPlayer = r.debaterB;
+      if (orderPicked) {
+        const firstId = r.turnOrder[0] !== null ? r.turnOrder[0] : (r.debaterA.id === r.turnOrder[1] ? r.debaterB.id : r.debaterA.id);
+        firstPlayer = firstId === r.debaterA.id ? r.debaterA : r.debaterB;
+        secondPlayer = firstPlayer === r.debaterA ? r.debaterB : r.debaterA;
+      }
+      const firstSide = orderPicked ? debateSideFor(r, firstPlayer) : aSide;
+      const secondSide = orderPicked ? debateSideFor(r, secondPlayer) : bSide;
+      const neutralColor = '#8b7aa8';
+      return `
+        <div class="db-round-context">
+          <div class="db-round-context-title">Round Matchup</div>
+          ${Object.keys(r.sideMap || {}).length === 0 ? `<div class="db-round-context-topic db-topic-text">${r.topicLeft || ''} <span style="opacity:.55">vs</span> ${r.topicRight || ''}</div>` : ''}
+          <div class="db-round-context-grid">
+            <div class="db-round-context-side${firstPlayer.id === myId ? ' mine' : ''}">
+              <div class="db-round-context-name" style="color:${orderPicked ? '#60a5fa' : neutralColor}">${firstPlayer.name}</div>
+              <div class="db-round-context-meta"><div style="display:flex;gap:0.3em;"><span style="flex-shrink:0;white-space:nowrap;">Side:</span><strong style="font-family:'Cinzel',serif;font-weight:700;" class="db-topic-text">${firstSide || 'Not picked yet'}</strong></div></div>
+            </div>
+            <div class="db-round-context-side${secondPlayer.id === myId ? ' mine' : ''}">
+              <div class="db-round-context-name" style="color:${orderPicked ? '#f87171' : neutralColor}">${secondPlayer.name}</div>
+              <div class="db-round-context-meta"><div style="display:flex;gap:0.3em;"><span style="flex-shrink:0;white-space:nowrap;">Side:</span><strong style="font-family:'Cinzel',serif;font-weight:700;" class="db-topic-text">${secondSide || 'Not picked yet'}</strong></div></div>
+            </div>
+          </div>
+        </div>`;
+    }
+
+    let debateCountdownRaf = null;
+    let debateCountdownKey = '';
+    function startDebateSmoothCountdown({ barId, textId, seconds, total, key }) {
+      const bar = document.getElementById(barId);
+      const text = document.getElementById(textId);
+      if (!bar || !text || !seconds || !total) return;
+      if (debateCountdownKey === key) return;
+      debateCountdownKey = key;
+      if (debateCountdownRaf) cancelAnimationFrame(debateCountdownRaf);
+      const start = performance.now();
+      const duration = seconds * 1000;
+      bar.style.transition = 'none';
+      bar.style.width = `${Math.max(0, Math.min(100, (seconds / total) * 100))}%`;
+      requestAnimationFrame(() => {
+        bar.style.transition = `width ${seconds}s linear`;
+        bar.style.width = '0%';
+      });
+      function frame(now) {
+        const remaining = Math.max(0, seconds - ((now - start) / 1000));
+        text.textContent = Math.ceil(remaining);
+        if (remaining > 0) debateCountdownRaf = requestAnimationFrame(frame);
+      }
+      debateCountdownRaf = requestAnimationFrame(frame);
+    }
+
+    function syncDebateSmoothTimer(state, r) {
+      if (!r) return;
+      if (state.phase === 'speaking' && state.subPhase === 'active') {
+        const total = (r.speakIdx || 0) >= 2 ? 15 : 30;
+        startDebateSmoothCountdown({
+          barId: 'dbp-bar',
+          textId: 'dbp-timer',
+          seconds: state.timerLeft || total,
+          total,
+          key: `speaking-${r.speakIdx}-${state.timerLeft}`,
+        });
+      } else if (state.phase === 'voting') {
+        startDebateSmoothCountdown({
+          barId: 'dbp-bar',
+          textId: 'dbp-timer',
+          seconds: state.timerLeft || 20,
+          total: 20,
+          key: `voting-${state.timerLeft}`,
+        });
+      } else {
+        debateCountdownKey = '';
+      }
+    }
+
+    function renderDebateScreen(state) {
+      const myId = socket.id;
+      const r = state.currentRound || (state.debaterA || state.debaterB ? {
+        debaterA: state.debaterA,
+        debaterB: state.debaterB,
+        firstPickId: state.firstPickId,
+        firstPickType: state.firstPickType,
+        pendingPick: state.pendingPick,
+        sideMap: state.sideMap || {},
+        turnOrder: state.turnOrder || [],
+        topic: state.topic,
+        topicLeft: state.topicLeft,
+        topicRight: state.topicRight,
+        bannedWords: state.bannedWords,
+        catchAttempts: state.catchAttempts || {},
+        activeCatch: state.activeCatch,
+        votes: state.votes || {},
+        speakIdx: state.speakIdx || 0,
+        timerLeft: state.timerLeft || 0,
+        rerolled: state.rerolled,
+        revealWinnerId: state.revealWinnerId,
+        revealReason: state.revealReason,
+        catchResult: state.catchResult,
+      } : null);
+      const isDebaterA = r && r.debaterA?.id === myId;
+      const isDebaterB = r && r.debaterB?.id === myId;
+      const isDebater = isDebaterA || isDebaterB;
+      const isFirstPick = r && r.firstPickId === myId;
+      const phase = state.phase;
+      const colors = state.playerColors || {};
+      const roundContext = ['picking', 'topic-reveal', 'speaking', 'catch-vote', 'voting'].includes(phase)
+        ? renderDebateRoundContextP(r, colors, myId)
+        : '';
+
+      let html = '';
+
+      const scoreBar = (phase === 'round-end') ? `
+        <div class="db-scorebar">${renderDebateScoresP(state.scores, colors, state.lastRoundScorers || [])}</div>` : '';
+      const pickSummary = r ? (() => {
+        if (r.awaitingSideRepick) {
+          const pickerName = r.pendingPick === r.debaterA?.id ? r.debaterA?.name : r.debaterB?.name;
+          return `<p style="opacity:.7;font-size:.85rem;margin-top:8px">${pickerName || 'The side picker'} is repicking their side for the new topic.</p>`;
+        }
+        if (!r.firstPickType) return '';
+        if (r.firstPickType === 'side') {
+          const firstSide = r.sideMap?.[r.firstPickId] === 'left' ? r.topicLeft : r.topicRight;
+          const firstName = r.firstPickId === r.debaterA?.id ? r.debaterA?.name : r.debaterB?.name;
+          return `<p style="opacity:.7;font-size:.85rem;margin-top:8px">${firstName} chose to argue <strong>${firstSide || '?'}</strong>.</p>`;
+        }
+        const firstOrder = r.turnOrder?.[0] === r.firstPickId ? 'first' : 'second';
+        const firstName = r.firstPickId === r.debaterA?.id ? r.debaterA?.name : r.debaterB?.name;
+        return `<p style="opacity:.7;font-size:.85rem;margin-top:8px">${firstName} chose to go <strong>${firstOrder}</strong>.</p>`;
+      })() : '';
+      const opponent = isDebaterA ? r?.debaterB : isDebaterB ? r?.debaterA : null;
+
+      if (phase === 'picking') {
+        if (!r) { html = scoreBar + `<p class="db-phase-chip">Waiting...</p>`; }
+        else if (r.awaitingSideRepick && r.pendingPick === myId) {
+          html = scoreBar + `
+            <p class="db-phase-chip">Topic Rerolled</p>
+            <p style="margin:8px 0 16px;opacity:.7">Repick your side:</p>
+            <button class="db-pick-btn" onclick="debatePickChoice('left')">Argue for ${r.topicLeft || 'Side A'}</button>
+            <button class="db-pick-btn" onclick="debatePickChoice('right')">Argue for ${r.topicRight || 'Side B'}</button>`;
+        } else if (isFirstPick && r.pendingPick === myId) {
+          html = scoreBar + `
+            <p class="db-phase-chip">You pick first!</p>
+            <p style="margin:8px 0 16px;opacity:.7">Choose your advantage:</p>
+            <button class="db-pick-btn" onclick="debatePickChoice('left')">Argue for ${r.topicLeft || 'Side A'}</button>
+            <button class="db-pick-btn" onclick="debatePickChoice('right')">Argue for ${r.topicRight || 'Side B'}</button>
+            <button class="db-pick-btn" onclick="debatePickChoice('first')">Go FIRST</button>
+            <button class="db-pick-btn" onclick="debatePickChoice('second')">Go SECOND</button>`;
+        } else if (r.pendingPick === myId) {
+          if (r.firstPickType === 'side') {
+            html = scoreBar + `
+              <p class="db-phase-chip">Your turn to pick!</p>
+              <p style="margin:8px 0 16px;opacity:.7">Choose turn order:</p>
+              <button class="db-pick-btn" onclick="debatePickChoice('first')">Go FIRST</button>
+              <button class="db-pick-btn" onclick="debatePickChoice('second')">Go SECOND</button>`;
+          } else {
+            html = scoreBar + `
+              <p class="db-phase-chip">Your turn to pick!</p>
+              <p style="margin:8px 0 16px;opacity:.7">Choose your side:</p>
+              <button class="db-pick-btn" onclick="debatePickChoice('left')">Argue for ${r.topicLeft || 'Side A'}</button>
+              <button class="db-pick-btn" onclick="debatePickChoice('right')">Argue for ${r.topicRight || 'Side B'}</button>`;
+          }
+        } else if (isFirstPick && r.firstPickType === 'side') {
+          html = scoreBar + `
+            <p class="db-phase-chip">Waiting for opponent...</p>
+            <p class="db-waiting-line">Your opponent is choosing turn order...</p>`;
+        } else if (isFirstPick && r.firstPickType === 'order') {
+          html = scoreBar + `
+            <p class="db-phase-chip">Waiting for opponent...</p>
+            <p class="db-waiting-line">Your opponent is choosing their side...</p>`;
+        } else if (isDebater) {
+          html = scoreBar + `<p class="db-phase-chip">${opponent?.name || 'Opponent'} is picking...</p>`;
+        } else {
+          const pickingName = r.pendingPick === r.debaterA?.id ? r.debaterA?.name : r.debaterB?.name;
+          html = scoreBar + `
+            <p style="opacity:.6;font-size:.85rem">${pickingName || 'Someone'} is picking...</p>`;
+        }
+
+      } else if (phase === 'topic-reveal') {
+        const banned = state.settings?.limitedMode ? `
+          <div style="margin-top:12px">
+            <p style="opacity:.6;font-size:.8rem;margin-bottom:4px">${isDebater ? 'Forbidden entries to catch:' : 'Forbidden entries for debaters to catch:'}</p>
+            <div class="db-p-banned-row">${renderDebateBannedP(r?.bannedWords)}</div>
+          </div>` : '';
+        html = scoreBar + `
+          <p class="db-phase-chip">Topic Revealed</p>
+          ${banned}
+          ${isHost ? `
+            <button class="db-pick-btn" style="margin-top:18px" onclick="debateConfirmTopic()">Approve</button>
+            <button class="db-pick-btn${state.rerolled ? ' inactive' : ''}" ${state.rerolled ? 'disabled' : 'onclick="debateRerollTopic()"'}>Reroll Topic</button>
+          ` : '<p style="opacity:.6;font-size:.85rem">Waiting for host to approve the topic...</p>'}`;
+
+      } else if (phase === 'speaking') {
+        const speakIdx = r?.speakIdx ?? 0;
+        const activeSpeaker = r?.turnOrder?.[speakIdx % 2];
+        const activeSpeakerPlayer = activeSpeaker === r?.debaterA?.id ? r?.debaterA : r?.debaterB;
+        const isMyTurn = activeSpeaker === myId;
+        const isListening = isDebater && !isMyTurn;
+        const segLabel = speakIdx < 2 ? 'Opening Argument' : 'Rebuttal';
+        const segNum = speakIdx < 2 ? (speakIdx + 1) : (speakIdx - 1);
+        const turnSeconds = speakIdx < 2 ? 30 : 15;
+        let catchBtn = '';
+        if (isListening && state.settings?.limitedMode) {
+          const myAttempts = r?.catchAttempts?.[myId] || 0;
+          const canCatch = myAttempts === 0 && state.subPhase === 'active';
+          catchBtn = `<button class="db-catch-btn${canCatch ? '' : ' inactive'}" ${canCatch ? 'onclick="debateCatch()"' : 'disabled'}>
+            ${canCatch ? 'CATCH' : 'GET READY TO CATCH'}
+          </button>`;
+        }
+
+        const waitingToStart = state.subPhase === 'pre';
+        const speakerColor = activeSpeakerPlayer?.color || '#60a5fa';
+        html = scoreBar + `
+          <p class="db-phase-chip">${segLabel} ${segNum}</p>
+          ${isMyTurn ? `<p style="color:#4ade80;font-weight:700;margin:8px 0">${waitingToStart ? 'Ready?' : 'YOUR TURN — SPEAK!'}</p>` :
+            (waitingToStart && activeSpeakerPlayer) ? `<p class="db-waiting-line">Waiting for ${activeSpeakerPlayer.name} to start</p>` : ''}
+          ${!waitingToStart ? `
+          <div class="db-p-timer-wrap">
+            <div class="db-p-bar-bg"><div class="db-p-bar" id="dbp-bar" style="background:${speakerColor}"></div></div>
+            <span class="db-p-timer" id="dbp-timer" style="color:${speakerColor}">—</span>
+          </div>` : ''}
+          ${state.settings?.limitedMode ? `
+            <div style="margin-top:8px">
+              <p style="opacity:.6;font-size:.8rem;margin-bottom:4px">${isDebater ? 'Forbidden entries to catch:' : 'Forbidden entries for debaters to catch:'}</p>
+              <div class="db-p-banned-row">${renderDebateBannedP(r?.bannedWords)}</div>
+            </div>` : ''}
+          ${waitingToStart && isMyTurn ? `<button class="db-pick-btn" onclick="debateStartSpeaking()">Begin Turn (${turnSeconds})</button>` : ''}
+          ${catchBtn}`;
+
+      } else if (phase === 'catch-vote') {
+        const catcher = r?.activeCatch?.catcherId;
+        const catcherName = catcher === r?.debaterA?.id ? r?.debaterA?.name : catcher === r?.debaterB?.id ? r?.debaterB?.name : '?';
+        const speaker = r?.turnOrder?.[(r?.speakIdx ?? 0) % 2];
+        const speakerName = speaker === r?.debaterA?.id ? r?.debaterA?.name : speaker === r?.debaterB?.id ? r?.debaterB?.name : '?';
+        const isCatchVoter = !isDebater && myId !== catcher;
+        const alreadyVoted = r?.activeCatch?.votes?.[myId] !== undefined;
+        const catchVotes = r?.activeCatch?.votes || {};
+        const yesVotes = Object.values(catchVotes).filter(v => v === 'yes').length;
+        const noVotes = Object.values(catchVotes).filter(v => v === 'no').length;
+        const catchTally = `
+          <div class="db-vote-row">
+            <div class="db-vote-col">
+              <div style="font-size:.75rem;opacity:.65;text-transform:uppercase;letter-spacing:1px">Yes</div>
+              <div class="db-vote-tally">${yesVotes}</div>
+            </div>
+            <div class="db-vote-col">
+              <div style="font-size:.75rem;opacity:.65;text-transform:uppercase;letter-spacing:1px">No</div>
+              <div class="db-vote-tally">${noVotes}</div>
+            </div>
+          </div>`;
+        html = scoreBar + `
+          <p class="db-phase-chip">CATCH called!</p>
+          <p style="margin:8px 0"><strong>${catcherName}</strong> says a forbidden word was used!</p>
+          ${isCatchVoter && !alreadyVoted ? `
+            <p style="opacity:.7;margin-bottom:12px">Did <strong>${speakerName}</strong> say a forbidden word?</p>
+            <button class="db-catch-vote-btn" onclick="debateCatchVote(true)">YES — Forbidden word!</button>
+            <button class="db-catch-vote-btn" onclick="debateCatchVote(false)">NO — They're clean</button>` :
+            alreadyVoted ? `<p style="opacity:.6">Vote submitted. Waiting...</p>` :
+            `<p style="opacity:.6">You cannot vote on your own catch.</p>`}
+          ${catchTally}`;
+
+      } else if (phase === 'voting') {
+        const debaterA = r?.debaterA;
+        const debaterB = r?.debaterB;
+        const alreadyVoted = r?.votes?.[myId] !== undefined;
+        html = scoreBar + `
+          <p class="db-phase-chip">Cast Your Vote</p>
+          <p style="opacity:.7;margin-bottom:16px">Who argued better?</p>
+          ${!isDebater && !alreadyVoted ? `
+            <button class="db-vote-btn" style="color:${debaterA?.color || '#2563eb'}" onclick="debateVote('${debaterA?.id}')">
+              ${debaterA?.name || '?'}<br><small class="db-topic-text">${r?.sideMap?.[debaterA?.id] === 'left' ? r?.topicLeft : r?.topicRight}</small>
+            </button>
+            <button class="db-vote-btn" style="color:${debaterB?.color || '#dc2626'}" onclick="debateVote('${debaterB?.id}')">
+              ${debaterB?.name || '?'}<br><small class="db-topic-text">${r?.sideMap?.[debaterB?.id] === 'left' ? r?.topicLeft : r?.topicRight}</small>
+            </button>` :
+            alreadyVoted || isDebater ? `<p style="opacity:.6">Waiting for votes...</p>` : ''}
+          <div class="db-p-timer-wrap">
+            <div class="db-p-bar-bg"><div class="db-p-bar" id="dbp-bar"></div></div>
+            <span class="db-p-timer" id="dbp-timer">—</span>
+          </div>`;
+
+      } else if (phase === 'reveal') {
+        const votesObj = r?.votes || {};
+        const aId = r?.debaterA?.id;
+        const bId = r?.debaterB?.id;
+        const aVotes = Object.values(votesObj).filter(v => v === aId).length;
+        const bVotes = Object.values(votesObj).filter(v => v === bId).length;
+        const sA = r?.sideMap?.[aId] === 'left' ? r?.topicLeft : r?.topicRight;
+        const sB = r?.sideMap?.[bId] === 'left' ? r?.topicLeft : r?.topicRight;
+        if (r?.revealReason === 'catch') {
+          const catchResult = r?.catchResult || {};
+          const yesVotes = catchResult.yes || 0;
+          const noVotes = catchResult.no || 0;
+          const catchConfirmed = !!catchResult.catchConfirmed;
+          const catcher = catchResult.catcherId === aId ? r?.debaterA : r?.debaterB;
+          const speaker = catchResult.speakerId === aId ? r?.debaterA : r?.debaterB;
+          html = scoreBar + `
+            <p class="db-phase-chip">Catch Result</p>
+            <p style="margin:8px 0"><strong>${catcher?.name || 'The catcher'}</strong> challenged <strong>${speaker?.name || 'the speaker'}</strong>.</p>
+            <div class="db-vote-row">
+              <div class="db-vote-col">
+                <div style="font-size:.75rem;opacity:.65;text-transform:uppercase;letter-spacing:1px">Yes</div>
+                <div class="db-vote-tally">${yesVotes}</div>
+              </div>
+              <div class="db-vote-col">
+                <div style="font-size:.75rem;opacity:.65;text-transform:uppercase;letter-spacing:1px">No</div>
+                <div class="db-vote-tally">${noVotes}</div>
+              </div>
+            </div>
+            <p class="db-title-line">${catchConfirmed ? 'Catch approved' : 'Catch rejected'}</p>`;
+        } else {
+          html = scoreBar + `
+            <p class="db-phase-chip">Results</p>
+            <div class="db-vote-row">
+              <div class="db-vote-col">
+                <div style="color:${r?.debaterA?.color || '#2563eb'}">${r?.debaterA?.name || '?'}</div>
+                <div class="db-topic-text" style="font-size:.8rem;opacity:.7">${sA}</div>
+                <div class="db-vote-tally">${aVotes} vote${aVotes !== 1 ? 's' : ''}</div>
+              </div>
+              <div class="db-vote-col">
+                <div style="color:${r?.debaterB?.color || '#dc2626'}">${r?.debaterB?.name || '?'}</div>
+                <div class="db-topic-text" style="font-size:.8rem;opacity:.7">${sB}</div>
+                <div class="db-vote-tally">${bVotes} vote${bVotes !== 1 ? 's' : ''}</div>
+              </div>
+            </div>`;
+        }
+
+      } else if (phase === 'round-end') {
+        const winnerId = r?.revealWinnerId;
+        const winnerName = winnerId === r?.debaterA?.id ? r?.debaterA?.name : winnerId === r?.debaterB?.id ? r?.debaterB?.name : null;
+        html = scoreBar + `
+          <p class="db-phase-chip">${winnerName ? `${winnerName} wins the round!` : 'Tie!'}</p>
+          <p class="db-waiting-line">Next round starting automatically...</p>
+          ${isHost ? `
+            <button class="db-pick-btn" style="margin-top:20px" onclick="debateNextRound()">Next Round</button>
+            <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+          ` : '<p style="opacity:.6;font-size:.85rem">Waiting for host...</p>'}`;
+
+      } else if (phase === 'game-over') {
+        const winnerName = state.pendingWinner || '?';
+        const winnerColor = colors[winnerName] || '#60a5fa';
+        html = `
+          <p class="db-phase-chip">Game Over!</p>
+          <p style="font-size:1.4rem;color:${winnerColor};font-weight:700;margin:12px 0">${winnerName} wins!</p>
+          <div class="db-scorebar">${renderDebateScoresP(state.scores, colors)}</div>`;
+        triggerConfetti && triggerConfetti();
+      }
+
+      document.getElementById('debate-content').innerHTML = roundContext + html;
+      showScreen('screen-debate');
+      syncDebateSmoothTimer(state, r);
+    }
+
+    socket.on('debate-state', (state) => {
+      dbMyState = state;
+      renderDebateScreen(state);
+    });
+
+    socket.on('debate-tick', ({ timerLeft, timerMax }) => {
+      const el = document.getElementById('dbp-timer');
+      if (el) el.textContent = timerLeft;
+    });
+
+    socket.on('debate-stopped', ({ reason }) => {
+      showSiteNotice(reason || 'Debate ended.');
+      showScreen('screen-game-select');
+    });
+
+    function debatePickChoice(choice) { socket.emit('debate-pick-choice', { choice }); }
+    function debateRerollTopic() { socket.emit('debate-reroll-topic'); }
+    function debateConfirmTopic() { socket.emit('debate-confirm-topic'); }
+    function debateStartSpeaking() { socket.emit('debate-start-speaking'); }
+    function debateCatch() { socket.emit('debate-catch'); }
+    function debateCatchVote(valid) { socket.emit('debate-catch-vote', { valid }); }
+    function debateVote(forId) { socket.emit('debate-vote', { forId }); }
+    function debateNextRound() { socket.emit('debate-next-round'); }
+    // ─── END DEBATE ───────────────────────────────────────────────────────────
 
   </script>
 

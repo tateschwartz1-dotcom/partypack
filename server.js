@@ -109,7 +109,7 @@ function getLocalIP() {
 }
 
 const PLAYER_COLORS = [
-  '#f87171', '#fb923c', '#facc15', '#4ade80',
+  '#f87171', '#fb923c', '#d97706', '#4ade80',
   '#38bdf8', '#818cf8', '#e879f9', '#f472b6',
   '#a3e635', '#34d399',
 ];
@@ -179,6 +179,155 @@ const HT_QUESTIONS = [
   { text: "🤐 Who knows {player}'s deepest secret?", needsPlayer: true },
 ];
 
+// ── Debate Topics ────────────────────────────────────────────────
+
+const DEBATE_TOPICS_LIGHT = [
+  "Pool vs Beach",
+  "Soda vs Juice",
+  "Rain vs Snow",
+  "Cats vs Dogs",
+  "Pancakes vs Waffles",
+  "Pizza vs Tacos",
+  "Movies vs TV Shows",
+  "Paper Books vs Audiobooks",
+  "Morning People vs Night Owls",
+  "Texting vs Calling",
+  "Board Games vs Video Games",
+  "Mountains vs Ocean",
+  "City Life vs Country Life",
+  "Stairs vs Elevator",
+  "Group Projects vs Solo Projects",
+  "Plan the Trip vs Wing the Trip",
+  "Breakfast vs Dinner",
+  "Road Trips vs Flights",
+  "Concerts vs Sporting Events",
+  "Theme Parks vs Water Parks",
+  "Camping vs Hotels",
+  "Cooking at Home vs Eating Out",
+  "Jeans vs Sweatpants",
+  "Early Arrival vs Fashionably Late",
+  "Big Parties vs Small Hangouts",
+  "Dressing Up vs Dressing Comfortable",
+  "Shopping Online vs Shopping In Person",
+  "Desk Job vs Outdoor Job",
+  "Halloween vs Valentine's Day",
+];
+
+const DEBATE_TOPICS_HEAVY = [
+  "Nature vs Nurture",
+  "Forgiveness vs Accountability",
+  "Public Funding for the Arts vs Public Funding for Sports",
+  "Voting Should Be Mandatory vs Voting Should Be Optional",
+  "Social Media Does More Good vs More Harm",
+  "Prioritizing Mental Health vs Prioritizing Productivity",
+  "Intentions Matter More vs Outcomes Matter More",
+  "Short-Term Sacrifice vs Long-Term Happiness",
+  "Competition Makes People Better vs Cooperation Makes People Better",
+  "Raise Kids Strict vs Raise Kids Free",
+  "Standardized Testing Helps vs Standardized Testing Hurts",
+  "Technology Connects Us vs Technology Isolates Us",
+];
+
+const DEBATE_TOPICS_OSMIUM = [
+  "It Is Better to Have Loved and Lost vs Better to Have Never Loved",
+  "Save One Person You Love vs Save Five Strangers",
+  "Bringing a Child Into This World Is Ethical vs Unethical",
+  "Justice Requires Punishment vs Justice Requires Rehabilitation",
+  "Humans Are Fundamentally Good vs Humans Are Fundamentally Self-Interested",
+  "Erase a Painful Memory vs Keep Every Memory You Have",
+  "Know the Exact Day You Die vs Never Know",
+  "Love Is a Choice vs Love Is a Feeling",
+  "Free Will Exists vs Free Will Is an Illusion",
+  "Humanity Is Improving vs Humanity Is Repeating Itself",
+  "Love Requires Sacrifice vs Love Should Not Require Sacrifice",
+  "Parents Owe Children Everything vs Children Owe Parents Everything",
+  "Choose Your Family vs Honor the Family You Got",
+  "Better to Be Feared vs Better to Be Loved",
+];
+
+const DEBATE_BANNED_WORD_GROUPS = [
+  ['the'],
+  ['it'],
+  ['and'],
+  ['but'],
+  ['um'],
+  ['because', 'why', 'reason'],
+  ['like'],
+  ['you', 'your'],
+  ['so'],
+  ['really'],
+  ['is', 'are'],
+  ['be'],
+  ['that', 'this'],
+  ['just'],
+  ['I', 'me'],
+  ['my', 'mine'],
+  ['okay', 'yeah', 'yes'],
+  ['no', 'not'],
+  ['well'],
+  ['what'],
+  ['who'],
+  ['when'],
+  ['how'],
+  ['if'],
+  ['then', 'now'],
+  ['here', 'there'],
+  ['thing', 'stuff'],
+  ['good', 'best', 'better'],
+  ['bad', 'worst', 'worse'],
+  ['big', 'more', 'most'],
+  ['small', 'less', 'least'],
+  ['always', 'never'],
+  ['everyone', 'someone', 'people'],
+  ['anything', 'all', 'any'],
+  ['right', 'true', 'real'],
+  ['wrong', 'false'],
+  ['point', 'argument', 'opinion'],
+  ['question', 'answer'],
+  ['either', 'neither'],
+  ['both', 'each'],
+  ['should', 'could', 'would'],
+  ['might', 'must', 'can'],
+  ['will', 'cannot'],
+  ['issue', 'problem'],
+  ['get', 'got'],
+  ['make', 'made'],
+  ['take', 'took'],
+  ['go', 'went'],
+  ['know', 'knew'],
+  ['think', 'thought'],
+  ['feel', 'felt', 'seem'],
+  ['say', 'said'],
+  ['use', 'used'],
+  ['want', 'need'],
+  ['try', 'tried'],
+  ['keep'],
+  ['find', 'found'],
+  ['put', 'let'],
+  ['happen', 'become'],
+  ['we', 'us', 'our'],
+  ['their', 'they', 'them'],
+  ['one'],
+  ['bro', 'dude'],
+  ['crazy', 'sus'],
+  ['a'],
+  ['to', 'too', 'two'],
+  ['of'],
+  ['in'],
+  ['for'],
+  ['with'],
+  ['on'],
+  ['at'],
+  ['by'],
+  ['from'],
+  ['as'],
+  ['or'],
+  ['have'],
+  ['do'],
+  ['Words that start with the letter T'],
+  ['Words that start with the letter S'],
+];
+
 const MAFIA_NIGHT_POLLS = [
   { question: 'Best late-night snack?', options: ['Pizza', 'Fries', 'Cereal', 'Tacos'] },
   { question: 'Pick a vacation vibe', options: ['Beach', 'Cabin', 'Big city', 'Mountains'] },
@@ -227,6 +376,35 @@ function getMafiaRoleCounts(playerCount, jokerEnabled) {
 function pickRandom(arr) {
   if (!arr.length) return null;
   return arr[Math.floor(Math.random() * arr.length)];
+}
+
+function pickDebateBannedEntries(count = 2) {
+  const pool = [...DEBATE_BANNED_WORD_GROUPS];
+  const selected = [];
+  while (selected.length < count && pool.length) {
+    const index = Math.floor(Math.random() * pool.length);
+    const [group] = pool.splice(index, 1);
+    selected.push(group.join(' / '));
+  }
+  return selected;
+}
+
+function normalizeDebateSettings(debateSettings = {}) {
+  const tiers = debateSettings.tiers || {};
+  const normalizedTiers = {
+    light: !!tiers.light,
+    heavy: !!tiers.heavy,
+    osmium: !!tiers.osmium,
+  };
+  if (!normalizedTiers.light && !normalizedTiers.heavy && !normalizedTiers.osmium) {
+    normalizedTiers.light = true;
+  }
+  const parsedCount = Number.parseInt(debateSettings.forbiddenGroupCount, 10);
+  return {
+    tiers: normalizedTiers,
+    limitedMode: !!debateSettings.limitedMode,
+    forbiddenGroupCount: Math.max(1, Math.min(5, Number.isFinite(parsedCount) ? parsedCount : 2)),
+  };
 }
 
 function getMafiaPollGap(counts) {
@@ -707,6 +885,11 @@ async function fetchETFallbackQuestions(topic) {
 }
 
 const rooms = {};
+const DEBATE_OPENING_SECONDS = 30;
+const DEBATE_REBUTTAL_SECONDS = 15;
+const DEBATE_VOTE_SECONDS = 20;
+const DEBATE_CATCH_SECONDS = 10;
+const DEBATE_ROUND_END_MS = 3000;
 
 function generatePIN() {
   let pin;
@@ -762,7 +945,7 @@ io.on('connection', (socket) => {
       socket.emit('join-error', { message: 'Room not found. Check the PIN.' });
       return;
     }
-    if (room.gameState !== 'lobby') {
+    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup') {
       socket.emit('join-error', { message: 'Game already in progress.' });
       return;
     }
@@ -792,6 +975,10 @@ io.on('connection', (socket) => {
       hostId: room.hostSocketId,
     });
     io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
+    if (room.gameState === 'debate-setup') {
+      socket.emit('game-started', { game: 'debate-setup', debateSettings: room.pendingDebateSettings });
+      socket.emit('debate-show-rules', { debateSettings: room.pendingDebateSettings });
+    }
   });
 
   socket.on('transfer-host', ({ targetPlayerId }) => {
@@ -814,7 +1001,7 @@ io.on('connection', (socket) => {
 
   // ── Game selector ──────────────────────────────────────────────
 
-  socket.on('start-game', ({ game, exposureChance }) => {
+  socket.on('start-game', ({ game, exposureChance, debateSettings }) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
     if (!room || room.hostSocketId !== socket.id) return;
@@ -907,6 +1094,27 @@ io.on('connection', (socket) => {
       };
     }
 
+    if (game === 'debate') {
+      const scores = {};
+      const playerColors = {};
+      room.players.forEach((p, i) => {
+        scores[p.name] = 0;
+        playerColors[p.name] = PLAYER_COLORS[i % PLAYER_COLORS.length];
+      });
+      const settings = normalizeDebateSettings(debateSettings);
+      room.pendingDebateSettings = settings;
+      room.debate = {
+        settings,
+        scores,
+        playerColors,
+        debatedThisCycle: new Set(),
+        topicPool: [],
+        usedTopics: new Set(),
+        pendingWinner: null,
+        currentRound: null,
+      };
+    }
+
     io.to(pin).emit('game-started', { game });
 
     if (game === 'hot-takes') {
@@ -919,6 +1127,11 @@ io.on('connection', (socket) => {
 
     if (game === 'mafia') {
       emitMafiaState(pin);
+    }
+
+    if (game === 'debate') {
+      buildDebateTopicPool(pin);
+      startDebateRound(pin);
     }
   });
 
@@ -934,6 +1147,8 @@ io.on('connection', (socket) => {
     room.ht = null;
     room.et = null;
     room.mafia = null;
+    room.debate = null;
+    room.pendingDebateSettings = null;
     io.to(pin).emit('returned-to-lobby');
   });
 
@@ -949,6 +1164,8 @@ io.on('connection', (socket) => {
     room.ht = null;
     room.et = null;
     room.mafia = null;
+    room.debate = null;
+    room.pendingDebateSettings = null;
     io.to(pin).emit('returned-to-game-select');
   });
 
@@ -2303,6 +2520,472 @@ io.on('connection', (socket) => {
     emitMafiaState(pin);
   }
 
+  // ── Debate helpers ─────────────────────────────────────────────
+
+  function buildDebateTopicPool(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const { tiers } = room.debate.settings;
+    let pool = [];
+    if (tiers.light) pool = pool.concat(DEBATE_TOPICS_LIGHT);
+    if (tiers.heavy) pool = pool.concat(DEBATE_TOPICS_HEAVY);
+    if (tiers.osmium) pool = pool.concat(DEBATE_TOPICS_OSMIUM);
+    if (!pool.length) pool = [...DEBATE_TOPICS_LIGHT];
+    room.debate.topicPool = shuffle(pool);
+  }
+
+  function rollDebateTopic(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return null;
+    const { debate } = room;
+    let available = debate.topicPool.filter(t => !debate.usedTopics.has(t));
+    if (!available.length) {
+      debate.usedTopics = new Set();
+      buildDebateTopicPool(pin);
+      available = [...debate.topicPool];
+    }
+    const topic = available[Math.floor(Math.random() * available.length)];
+    debate.usedTopics.add(topic);
+    const parts = topic.split(' vs ');
+    return { topic, topicLeft: parts[0] || topic, topicRight: parts[1] || topic };
+  }
+
+  function pickDebaterPair(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return null;
+    const { debate, players } = room;
+    let eligible = players.filter(p => !debate.debatedThisCycle.has(p.name));
+    if (eligible.length < 2) {
+      debate.debatedThisCycle = new Set();
+      eligible = [...players];
+    }
+    const minScore = Math.min(...eligible.map(p => debate.scores[p.name] || 0));
+    const lowestPlayers = eligible.filter(p => (debate.scores[p.name] || 0) === minScore);
+    const firstPick = pickRandom(lowestPlayers);
+    const others = eligible.filter(p => p.id !== firstPick.id);
+    const opponent = pickRandom(others);
+    debate.debatedThisCycle.add(firstPick.name);
+    debate.debatedThisCycle.add(opponent.name);
+    return { firstPick, opponent };
+  }
+
+  function emitDebateState(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const { debate } = room;
+    const r = debate.currentRound;
+    const voterCount = r && r.debaterA && r.debaterB
+      ? room.players.filter(p => p.id !== r.debaterA.id && p.id !== r.debaterB.id).length
+      : 0;
+    const currentSpeakerId = r && r.turnOrder && r.turnOrder.length === 2
+      ? r.turnOrder[r.speakIdx % 2]
+      : null;
+    io.to(pin).emit('debate-state', {
+      phase: r ? r.phase : 'waiting',
+      subPhase: r ? r.subPhase : null,
+      speakIdx: r ? r.speakIdx : 0,
+      topic: r ? r.topic : null,
+      topicLeft: r ? r.topicLeft : null,
+      topicRight: r ? r.topicRight : null,
+      debaterA: r ? r.debaterA : null,
+      debaterB: r ? r.debaterB : null,
+      firstPickId: r ? r.firstPickId : null,
+      firstPickType: r ? r.firstPickType : null,
+      pendingPick: r ? r.pendingPick : null,
+      sideMap: r ? r.sideMap : {},
+      turnOrder: r ? r.turnOrder : [],
+      currentSpeakerId,
+      timerLeft: r ? r.timerLeft : 0,
+      bannedWords: r ? r.bannedWords : null,
+      catchAttempts: r ? r.catchAttempts : {},
+      activeCatch: r ? r.activeCatch : null,
+      catchResult: r ? r.catchResult : null,
+      votes: r ? r.votes : {},
+      voteCount: r ? Object.keys(r.votes).length : 0,
+      totalVoterCount: voterCount,
+      scores: debate.scores,
+      lastRoundScorers: debate.lastRoundScorers || [],
+      playerColors: debate.playerColors,
+      pendingWinner: debate.pendingWinner,
+      settings: debate.settings,
+      rerolled: r ? r.rerolled : false,
+      revealWinnerId: r ? r.revealWinnerId : null,
+      revealReason: r ? r.revealReason : null,
+      awaitingSideRepick: r ? !!r.awaitingSideRepick : false,
+    });
+  }
+
+  function startDebateRound(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const { debate } = room;
+    if (debate.pendingWinner) {
+      debate.currentRound = { phase: 'game-over', speakIdx: 0, sideMap: {}, turnOrder: [], catchAttempts: {}, votes: {}, timerLeft: 0, subPhase: null, bannedWords: null, activeCatch: null, catchResult: null, rerolled: false, revealWinnerId: null, revealReason: null };
+      emitDebateState(pin);
+      return;
+    }
+    const pair = pickDebaterPair(pin);
+    if (!pair) return;
+    const { firstPick, opponent } = pair;
+    const topicData = rollDebateTopic(pin);
+    if (!topicData) return;
+    const bannedWords = debate.settings.limitedMode
+      ? pickDebateBannedEntries(debate.settings.forbiddenGroupCount || 2)
+      : null;
+    debate.currentRound = {
+      phase: 'picking',
+      subPhase: null,
+      speakIdx: 0,
+      debaterA: { id: firstPick.id, name: firstPick.name, color: '#2563eb' },
+      debaterB: { id: opponent.id, name: opponent.name, color: '#dc2626' },
+      firstPickId: firstPick.id,
+      firstPickType: null,
+      pendingPick: firstPick.id,
+      sideMap: {},
+      turnOrder: [],
+      topic: topicData.topic,
+      topicLeft: topicData.topicLeft,
+      topicRight: topicData.topicRight,
+      bannedWords,
+      timerLeft: 0,
+      catchAttempts: {},
+      activeCatch: null,
+      catchResult: null,
+      votes: {},
+      rerolled: false,
+      awaitingSideRepick: false,
+      revealWinnerId: null,
+      revealReason: null,
+    };
+    emitDebateState(pin);
+  }
+
+  function startDebateTimer(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r) return;
+    clearRoomTimers(room);
+    const isRebuttal = r.speakIdx >= 2;
+    const timerMax = isRebuttal ? DEBATE_REBUTTAL_SECONDS : DEBATE_OPENING_SECONDS;
+    r.timerLeft = timerMax;
+    r.subPhase = 'active';
+    emitDebateState(pin);
+    const timer = setInterval(() => {
+      r.timerLeft--;
+      io.to(pin).emit('debate-tick', { timerLeft: r.timerLeft, timerMax });
+      if (r.timerLeft <= 0) {
+        clearInterval(timer);
+        room.timers = room.timers.filter(t => t !== timer);
+        advanceDebateSpeakIdx(pin);
+      }
+    }, 1000);
+    room.timers.push(timer);
+  }
+
+  function advanceDebateSpeakIdx(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r) return;
+    r.speakIdx++;
+    if (r.speakIdx >= 4) {
+      r.phase = 'voting';
+      r.subPhase = null;
+      r.votes = {};
+      r.timerLeft = DEBATE_VOTE_SECONDS;
+      emitDebateState(pin);
+      const timer = setInterval(() => {
+        r.timerLeft--;
+        io.to(pin).emit('debate-tick', { timerLeft: r.timerLeft, timerMax: DEBATE_VOTE_SECONDS });
+        if (r.timerLeft <= 0) {
+          clearInterval(timer);
+          room.timers = room.timers.filter(t => t !== timer);
+          resolveDebateVote(pin);
+        }
+      }, 1000);
+      room.timers.push(timer);
+    } else {
+      r.phase = 'speaking';
+      r.subPhase = 'pre';
+      r.timerLeft = 0;
+      emitDebateState(pin);
+    }
+  }
+
+  function resolveDebateVote(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    clearRoomTimers(room);
+    const r = room.debate.currentRound;
+    if (!r) return;
+    let votesA = 0, votesB = 0;
+    Object.values(r.votes).forEach(id => {
+      if (id === r.debaterA.id) votesA++;
+      else if (id === r.debaterB.id) votesB++;
+    });
+    let winnerId = null;
+    if (votesA > votesB) winnerId = r.debaterA.id;
+    else if (votesB > votesA) winnerId = r.debaterB.id;
+    endDebateRound(pin, winnerId, 'vote');
+  }
+
+  function startDebateCatchVote(pin, catcherId) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    clearRoomTimers(room);
+    const r = room.debate.currentRound;
+    if (!r) return;
+    const catcher = room.players.find(p => p.id === catcherId);
+    r.catchAttempts[catcherId] = true;
+    r.activeCatch = { catcherId, catcherName: catcher?.name || '', votes: {}, timerLeft: DEBATE_CATCH_SECONDS };
+    r.phase = 'catch-vote';
+    emitDebateState(pin);
+    const timer = setInterval(() => {
+      r.activeCatch.timerLeft--;
+      io.to(pin).emit('debate-tick', { timerLeft: r.activeCatch.timerLeft, timerMax: DEBATE_CATCH_SECONDS });
+      if (r.activeCatch.timerLeft <= 0) {
+        clearInterval(timer);
+        room.timers = room.timers.filter(t => t !== timer);
+        resolveDebateCatchVote(pin);
+      }
+    }, 1000);
+    room.timers.push(timer);
+  }
+
+  function resolveDebateCatchVote(pin) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    clearRoomTimers(room);
+    const r = room.debate.currentRound;
+    if (!r || !r.activeCatch) return;
+    const { catcherId, votes } = r.activeCatch;
+    let yes = 0, no = 0;
+    Object.values(votes).forEach(v => { if (v === 'yes') yes++; else no++; });
+    const catchConfirmed = yes >= no;
+    const currentSpeakerId = r.turnOrder[r.speakIdx % 2];
+    const winnerId = catchConfirmed ? catcherId : currentSpeakerId;
+    r.catchResult = { yes, no, catchConfirmed, catcherId, speakerId: currentSpeakerId };
+    r.activeCatch = null;
+    endDebateRound(pin, winnerId, 'catch');
+  }
+
+  function endDebateRound(pin, winnerId, reason) {
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    clearRoomTimers(room);
+    const { debate } = room;
+    const r = debate.currentRound;
+    if (!r) return;
+    if (winnerId === null) {
+      debate.scores[r.debaterA.name] = (debate.scores[r.debaterA.name] || 0) + 0.5;
+      debate.scores[r.debaterB.name] = (debate.scores[r.debaterB.name] || 0) + 0.5;
+      debate.lastRoundScorers = [r.debaterA.name, r.debaterB.name];
+    } else {
+      const winnerName = room.players.find(p => p.id === winnerId)?.name
+        || (winnerId === r.debaterA.id ? r.debaterA.name : r.debaterB.name);
+      debate.scores[winnerName] = (debate.scores[winnerName] || 0) + 1;
+      debate.lastRoundScorers = [winnerName];
+    }
+    if (!debate.pendingWinner) {
+      const maxScore = Math.max(...Object.values(debate.scores));
+      if (maxScore >= 5) {
+        const leaders = Object.entries(debate.scores).filter(([, s]) => s >= 5);
+        const topScore = Math.max(...leaders.map(([, s]) => s));
+        const top = leaders.filter(([, s]) => s === topScore);
+        debate.pendingWinner = top[Math.floor(Math.random() * top.length)][0];
+      }
+    }
+    r.phase = 'reveal';
+    r.revealWinnerId = winnerId;
+    r.revealReason = reason;
+    emitDebateState(pin);
+    const revealDurationMs = (reason === 'catch' || reason === 'vote') ? 5000 : 8000;
+    const timer = setTimeout(() => {
+      room.timers = room.timers.filter(t => t !== timer);
+      if (!room.debate || !room.debate.currentRound) return;
+      room.debate.currentRound.phase = 'round-end';
+      emitDebateState(pin);
+      const autoNextTimer = setTimeout(() => {
+        room.timers = room.timers.filter(t => t !== autoNextTimer);
+        if (!room.debate || room.debate.currentRound?.phase !== 'round-end') return;
+        startDebateRound(pin);
+      }, DEBATE_ROUND_END_MS);
+      room.timers.push(autoNextTimer);
+    }, revealDurationMs);
+    room.timers.push(timer);
+  }
+
+  // ── Debate socket events ───────────────────────────────────────
+
+  socket.on('debate-pick-choice', ({ choice }) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'picking' || r.pendingPick !== socket.id) return;
+
+    const isFirstPick = socket.id === r.firstPickId;
+    if (r.awaitingSideRepick) {
+      if (choice !== 'left' && choice !== 'right') return;
+      const otherId = socket.id === r.debaterA.id ? r.debaterB.id : r.debaterA.id;
+      r.sideMap = {};
+      r.sideMap[socket.id] = choice;
+      r.sideMap[otherId] = choice === 'left' ? 'right' : 'left';
+      r.pendingPick = null;
+      r.awaitingSideRepick = false;
+      r.phase = 'topic-reveal';
+      emitDebateState(pin);
+      return;
+    }
+
+    if (isFirstPick) {
+      if (choice === 'left' || choice === 'right') {
+        r.firstPickType = 'side';
+        r.sideMap[socket.id] = choice;
+      } else if (choice === 'first' || choice === 'second') {
+        r.firstPickType = 'order';
+        r.turnOrder = choice === 'first' ? [socket.id, null] : [null, socket.id];
+      } else return;
+      const otherId = socket.id === r.debaterA.id ? r.debaterB.id : r.debaterA.id;
+      r.pendingPick = otherId;
+    } else {
+      if (r.firstPickType === 'side') {
+        const firstPickerId = r.firstPickId;
+        if (choice === 'first') r.turnOrder = [socket.id, firstPickerId];
+        else r.turnOrder = [firstPickerId, socket.id];
+        const usedSide = r.sideMap[firstPickerId];
+        r.sideMap[socket.id] = usedSide === 'left' ? 'right' : 'left';
+      } else if (r.firstPickType === 'order') {
+        r.sideMap[socket.id] = choice === 'left' ? 'left' : 'right';
+        r.sideMap[r.firstPickId] = choice === 'left' ? 'right' : 'left';
+        const nullIdx = r.turnOrder.indexOf(null);
+        if (nullIdx !== -1) r.turnOrder[nullIdx] = socket.id;
+      } else return;
+      r.pendingPick = null;
+      r.phase = 'topic-reveal';
+    }
+    emitDebateState(pin);
+  });
+
+  socket.on('debate-reroll-topic', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'topic-reveal' || r.rerolled) return;
+    const topicData = rollDebateTopic(pin);
+    if (!topicData) return;
+    r.topic = topicData.topic;
+    r.topicLeft = topicData.topicLeft;
+    r.topicRight = topicData.topicRight;
+    r.rerolled = true;
+    const sidePickerId = r.firstPickType === 'side'
+      ? r.firstPickId
+      : (r.firstPickId === r.debaterA.id ? r.debaterB.id : r.debaterA.id);
+    r.sideMap = {};
+    r.pendingPick = sidePickerId;
+    r.awaitingSideRepick = true;
+    r.phase = 'picking';
+    emitDebateState(pin);
+  });
+
+  socket.on('debate-confirm-topic', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'topic-reveal') return;
+    r.phase = 'speaking';
+    r.subPhase = 'pre';
+    r.speakIdx = 0;
+    emitDebateState(pin);
+  });
+
+  socket.on('debate-start-speaking', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'speaking' || r.subPhase !== 'pre') return;
+    const currentSpeakerId = r.turnOrder[r.speakIdx % 2];
+    if (socket.id !== currentSpeakerId) return;
+    startDebateTimer(pin);
+  });
+
+  socket.on('debate-catch', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.debate || !room.debate.settings.limitedMode) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'speaking' || r.subPhase !== 'active') return;
+    const isDebater = socket.id === r.debaterA.id || socket.id === r.debaterB.id;
+    if (!isDebater) return;
+    const currentSpeakerId = r.turnOrder[r.speakIdx % 2];
+    if (socket.id === currentSpeakerId) return;
+    if (r.catchAttempts[socket.id]) return;
+    startDebateCatchVote(pin, socket.id);
+  });
+
+  socket.on('debate-catch-vote', ({ valid }) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'catch-vote' || !r.activeCatch) return;
+    const isDebater = socket.id === r.debaterA.id || socket.id === r.debaterB.id;
+    if (isDebater) return;
+    if (r.activeCatch.votes[socket.id]) return;
+    r.activeCatch.votes[socket.id] = valid ? 'yes' : 'no';
+    emitDebateState(pin);
+    const voterCount = room.players.filter(p => p.id !== r.debaterA.id && p.id !== r.debaterB.id).length;
+    if (Object.keys(r.activeCatch.votes).length >= voterCount) resolveDebateCatchVote(pin);
+  });
+
+  socket.on('debate-vote', ({ forId }) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'voting') return;
+    const isDebater = socket.id === r.debaterA.id || socket.id === r.debaterB.id;
+    if (isDebater || r.votes[socket.id]) return;
+    r.votes[socket.id] = forId;
+    emitDebateState(pin);
+    const voterCount = room.players.filter(p => p.id !== r.debaterA.id && p.id !== r.debaterB.id).length;
+    if (Object.keys(r.votes).length >= voterCount) resolveDebateVote(pin);
+  });
+
+  socket.on('debate-next-round', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !room.debate) return;
+    const r = room.debate.currentRound;
+    if (!r || r.phase !== 'round-end') return;
+    startDebateRound(pin);
+  });
+
+  socket.on('debate-show-rules', ({ debateSettings } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    const fallbackSettings = { tiers: { light: true, heavy: false, osmium: false }, limitedMode: false, forbiddenGroupCount: 2 };
+    room.pendingDebateSettings = normalizeDebateSettings(debateSettings || room.pendingDebateSettings || fallbackSettings);
+    room.gameState = 'debate-setup';
+    io.to(pin).emit('game-started', { game: 'debate-setup', debateSettings: room.pendingDebateSettings });
+    io.to(pin).emit('debate-show-rules', { debateSettings: room.pendingDebateSettings });
+  });
+
+  socket.on('debate-settings-preview', ({ debateSettings } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !debateSettings) return;
+    room.pendingDebateSettings = normalizeDebateSettings(debateSettings);
+    io.to(pin).emit('debate-settings-updated', { debateSettings: room.pendingDebateSettings });
+  });
+
+  // ── Disconnect ─────────────────────────────────────────────────
+
   socket.on('disconnect', () => {
     const pin = socket.data.pin;
     if (!pin || !rooms[pin]) return;
@@ -2323,6 +3006,27 @@ io.on('connection', (socket) => {
       } else {
         clearRoomTimers(room);
         delete rooms[pin];
+        return;
+      }
+    }
+
+    // Debate disconnect handling
+    if (room.gameState === 'debate' && room.debate) {
+      const r = room.debate.currentRound;
+      if (r && r.debaterA && r.debaterB) {
+        const isDebaterA = socket.id === r.debaterA.id;
+        const isDebaterB = socket.id === r.debaterB.id;
+        const isMidRound = ['speaking', 'catch-vote', 'voting'].includes(r.phase);
+        if ((isDebaterA || isDebaterB) && isMidRound) {
+          const winnerId = isDebaterA ? r.debaterB.id : r.debaterA.id;
+          endDebateRound(pin, winnerId, 'disconnect');
+        }
+      }
+      if (room.players.length < 3) {
+        clearRoomTimers(room);
+        room.gameState = 'lobby';
+        room.debate = null;
+        io.to(pin).emit('debate-stopped', { reason: 'A player left and there are not enough players to continue (need at least 3).' });
         return;
       }
     }
