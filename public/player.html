@@ -4194,7 +4194,7 @@
         const winnerName = winnerId === r?.debaterA?.id ? r?.debaterA?.name : winnerId === r?.debaterB?.id ? r?.debaterB?.name : null;
         html = scoreBar + `
           <p class="db-phase-chip">${winnerName ? `${winnerName} wins the round!` : 'Tie!'}</p>
-          <p class="db-waiting-line">Next round starting automatically...</p>
+          <p class="db-waiting-line">${isHost ? 'Start the next round when ready.' : 'Waiting for host to start the next round...'}</p>
           ${isHost ? `
             <button class="db-pick-btn" style="margin-top:20px" onclick="debateNextRound()">Next Round</button>
             <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>

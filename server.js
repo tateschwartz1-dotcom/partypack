@@ -889,7 +889,6 @@ const DEBATE_OPENING_SECONDS = 30;
 const DEBATE_REBUTTAL_SECONDS = 15;
 const DEBATE_VOTE_SECONDS = 20;
 const DEBATE_CATCH_SECONDS = 10;
-const DEBATE_ROUND_END_MS = 3000;
 
 function generatePIN() {
   let pin;
@@ -2806,12 +2805,6 @@ io.on('connection', (socket) => {
       if (!room.debate || !room.debate.currentRound) return;
       room.debate.currentRound.phase = 'round-end';
       emitDebateState(pin);
-      const autoNextTimer = setTimeout(() => {
-        room.timers = room.timers.filter(t => t !== autoNextTimer);
-        if (!room.debate || room.debate.currentRound?.phase !== 'round-end') return;
-        startDebateRound(pin);
-      }, DEBATE_ROUND_END_MS);
-      room.timers.push(autoNextTimer);
     }, revealDurationMs);
     room.timers.push(timer);
   }
