@@ -1,0 +1,984 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Johnbox Display</title>
+  <link rel="preconnect" href="https://fonts.googleapis.com" />
+  <link href="https://fonts.googleapis.com/css2?family=Cinzel:wght@700&family=Jost:wght@400;500;600&display=swap" rel="stylesheet" />
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      background: #08041a;
+      color: #ede9f8;
+      font-family: 'Jost', Arial, sans-serif;
+      min-height: 100vh;
+      overflow: hidden;
+    }
+
+    .screen { display: none; width: 100vw; height: 100vh; }
+    .screen.active { display: flex; flex-direction: column; align-items: center; justify-content: center; }
+
+    /* ── JOIN ── */
+    #screen-join { gap: 1.5rem; }
+    .join-logo { font-family: 'Cinzel', serif; font-size: 3rem; color: #cfb991; letter-spacing: 0.05em; }
+    .join-sub { color: #8b7aa8; font-size: 1.1rem; }
+    .join-form { display: flex; flex-direction: column; align-items: center; gap: 1rem; margin-top: 1rem; }
+    .join-input {
+      background: #1a1232; border: 2px solid #2d1f50; color: #ede9f8;
+      font-family: 'Cinzel', serif; font-size: 2rem; letter-spacing: 0.4rem;
+      padding: 0.75rem 1.5rem; border-radius: 10px; text-align: center; width: 240px;
+      outline: none;
+    }
+    .join-input:focus { border-color: #7c3aed; }
+    .join-btn {
+      background: #cfb991; color: #08041a; border: none; border-radius: 10px;
+      font-family: 'Jost', sans-serif; font-size: 1.1rem; font-weight: 600;
+      padding: 0.75rem 2.5rem; cursor: pointer; transition: background 0.2s;
+    }
+    .join-btn:hover { background: #b8995e; }
+    .join-error { color: #f87171; font-size: 0.95rem; min-height: 1.2em; }
+
+    /* ── LOBBY ── */
+    #screen-lobby { flex-direction: row; align-items: stretch; padding: 0; }
+    .lobby-left {
+      flex: 0 0 340px; background: #0f0a20; border-right: 1px solid #2d1f50;
+      display: flex; flex-direction: column; align-items: center; justify-content: center;
+      gap: 1.2rem; padding: 2rem;
+    }
+    .lobby-pin-label { font-size: 0.9rem; color: #8b7aa8; letter-spacing: 0.15em; text-transform: uppercase; }
+    .lobby-pin { font-family: 'Cinzel', serif; font-size: 4.5rem; color: #cfb991; letter-spacing: 0.2em; line-height: 1; }
+    .lobby-qr img { border-radius: 8px; }
+    .lobby-url { font-size: 0.85rem; color: #8b7aa8; text-align: center; word-break: break-all; }
+    .lobby-right {
+      flex: 1; display: flex; flex-direction: column; padding: 2.5rem 3rem; gap: 1.5rem;
+      overflow: hidden;
+    }
+    .lobby-title { font-family: 'Cinzel', serif; font-size: 2rem; color: #cfb991; }
+    .lobby-player-grid {
+      display: grid; grid-template-columns: repeat(auto-fill, minmax(180px, 1fr));
+      gap: 0.75rem; overflow-y: auto; flex: 1;
+    }
+    .lobby-player-chip {
+      background: #1a1232; border: 1px solid #2d1f50; border-radius: 10px;
+      padding: 0.75rem 1rem; font-size: 1.1rem; font-weight: 500;
+      display: flex; align-items: center; gap: 0.5rem;
+    }
+    .player-dot { width: 10px; height: 10px; border-radius: 50%; flex-shrink: 0; }
+    .lobby-waiting { color: #8b7aa8; font-size: 1.1rem; }
+
+    /* ── GAME SELECT ── */
+    #screen-game-select { gap: 1rem; }
+    .gs-title { font-family: 'Cinzel', serif; font-size: 2.5rem; color: #cfb991; }
+    .gs-sub { color: #8b7aa8; font-size: 1.3rem; }
+
+    /* ── GENERIC HEADER ── */
+    .dsp-header {
+      width: 100%; background: #0f0a20; border-bottom: 1px solid #2d1f50;
+      padding: 0.6rem 2rem; display: flex; align-items: center; gap: 1rem;
+      flex-shrink: 0;
+    }
+    .dsp-game-tag { font-family: 'Cinzel', serif; font-size: 1rem; color: #cfb991; }
+    .dsp-phase-tag { font-size: 0.9rem; color: #8b7aa8; margin-left: auto; }
+
+    /* ── TIMER BAR ── */
+    .timer-wrap { width: 100%; background: #0f0a20; height: 6px; border-radius: 3px; overflow: hidden; }
+    .timer-bar { height: 100%; background: linear-gradient(90deg, #4c1d95, #7c3aed, #cfb991); border-radius: 3px; transition: width 1s linear; width: 100%; }
+
+    /* ── HOT TAKES ── */
+    #screen-ht { gap: 0; }
+    .ht-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 2rem; padding: 2rem 4rem; width: 100%; }
+    .ht-round-num { font-size: 0.9rem; color: #8b7aa8; letter-spacing: 0.12em; text-transform: uppercase; }
+    .ht-question { font-family: 'Cinzel', serif; font-size: 2.8rem; text-align: center; color: #ede9f8; line-height: 1.3; max-width: 900px; }
+    .ht-options { display: flex; gap: 2rem; width: 100%; max-width: 900px; }
+    .ht-option {
+      flex: 1; background: #1a1232; border: 2px solid #2d1f50; border-radius: 16px;
+      padding: 1.5rem; display: flex; flex-direction: column; gap: 0.75rem;
+    }
+    .ht-option-name { font-size: 1.5rem; font-weight: 600; }
+    .ht-option-bar-wrap { background: #0f0a20; border-radius: 4px; height: 10px; overflow: hidden; }
+    .ht-option-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; width: 0%; }
+    .ht-option-pct { font-size: 1.2rem; font-weight: 600; }
+    .ht-vote-count { color: #8b7aa8; font-size: 1rem; }
+    .ht-expose-list { display: flex; flex-wrap: wrap; gap: 0.5rem 1.5rem; max-width: 700px; justify-content: center; }
+    .ht-expose-row { font-size: 1rem; }
+
+    /* ── PHOTO ROULETTE ── */
+    #screen-pr { gap: 0; }
+    .pr-body { flex: 1; display: flex; gap: 2rem; align-items: center; justify-content: center; padding: 1.5rem 2rem; width: 100%; }
+    .pr-photo-wrap { flex: 0 0 auto; max-width: 55vw; max-height: 70vh; }
+    .pr-photo-wrap img { max-width: 100%; max-height: 70vh; border-radius: 12px; object-fit: contain; }
+    .pr-info { flex: 1; display: flex; flex-direction: column; gap: 1rem; }
+    .pr-photo-num { font-family: 'Cinzel', serif; font-size: 1.4rem; color: #cfb991; }
+    .pr-guess-count { font-size: 1.2rem; color: #8b7aa8; }
+    .pr-reveal-list { display: flex; flex-direction: column; gap: 0.6rem; }
+    .pr-reveal-row { display: flex; gap: 0.75rem; align-items: center; font-size: 1.1rem; }
+    .pr-reveal-arrow { color: #5a4a7a; }
+    .pr-photographer-tag {
+      font-family: 'Cinzel', serif; font-size: 1.1rem; color: #cfb991;
+      background: rgba(207,185,145,0.1); border: 1px solid rgba(207,185,145,0.3);
+      border-radius: 8px; padding: 0.5rem 1rem; display: inline-block;
+    }
+    .pr-upload-body { display: flex; flex-direction: column; align-items: center; gap: 1rem; }
+    .pr-upload-count { font-family: 'Cinzel', serif; font-size: 4rem; color: #cfb991; }
+    .pr-upload-label { font-size: 1.2rem; color: #8b7aa8; }
+    .pr-scores { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; max-width: 500px; }
+    .pr-score-row { display: flex; justify-content: space-between; align-items: center; background: #1a1232; border-radius: 8px; padding: 0.6rem 1rem; font-size: 1.1rem; }
+    .pr-score-pts { font-family: 'Cinzel', serif; color: #cfb991; font-size: 1.2rem; }
+
+    /* ── EVERYTHING TRIVIA ── */
+    #screen-et { gap: 0; }
+    .et-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 2rem 4rem; width: 100%; }
+    .et-section-tag { font-size: 0.9rem; color: #8b7aa8; letter-spacing: 0.12em; text-transform: uppercase; }
+    .et-question-text { font-family: 'Cinzel', serif; font-size: 2.4rem; text-align: center; color: #ede9f8; line-height: 1.3; max-width: 900px; }
+    .et-answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.75rem; width: 100%; max-width: 800px; }
+    .et-answer-chip {
+      background: #1a1232; border: 2px solid #2d1f50; border-radius: 10px;
+      padding: 0.85rem 1.25rem; font-size: 1.1rem; text-align: center;
+      transition: background 0.3s, border-color 0.3s;
+    }
+    .et-answer-chip.correct { background: rgba(74,222,128,0.15); border-color: #4ade80; color: #4ade80; }
+    .et-answer-chip.wrong { opacity: 0.45; }
+    .et-answer-count-tag { color: #8b7aa8; font-size: 1rem; }
+    .et-reveal-list { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; max-width: 600px; }
+    .et-reveal-row {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; padding: 0.6rem 1rem;
+    }
+    .et-reveal-row.correct { border-color: #4ade80; }
+    .et-reveal-row.wrong { opacity: 0.5; }
+    .et-reveal-name { font-size: 1rem; font-weight: 500; }
+    .et-reveal-answer { font-size: 0.9rem; color: #8b7aa8; }
+    .et-reveal-pts { font-family: 'Cinzel', serif; color: #cfb991; }
+    .et-topic-list { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; max-width: 600px; }
+    .et-topic-row {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; padding: 0.6rem 1rem;
+    }
+    .et-topic-name { font-size: 1rem; font-weight: 500; }
+    .et-topic-meta { font-size: 0.85rem; color: #8b7aa8; }
+    .et-status-chip { font-size: 0.85rem; padding: 0.2rem 0.6rem; border-radius: 6px; }
+    .et-status-ready { background: rgba(74,222,128,0.15); color: #4ade80; }
+    .et-status-validating { background: rgba(207,185,145,0.12); color: #cfb991; }
+    .et-status-waiting { background: rgba(124,58,237,0.15); color: #8b7aa8; }
+    .et-status-redo { background: rgba(248,113,113,0.15); color: #f87171; }
+    .et-intro-topic { font-family: 'Cinzel', serif; font-size: 3rem; color: #cfb991; text-align: center; }
+    .et-intro-by { color: #8b7aa8; font-size: 1.2rem; }
+    .et-scoreboard { display: flex; flex-direction: column; gap: 0.5rem; width: 100%; max-width: 500px; }
+    .et-score-row {
+      display: flex; justify-content: space-between; align-items: center;
+      background: #1a1232; border-radius: 8px; padding: 0.65rem 1rem; font-size: 1.1rem;
+    }
+    .et-score-pts { font-family: 'Cinzel', serif; color: #cfb991; }
+
+    /* ── MAFIA ── */
+    #screen-mafia { gap: 0; }
+    .mafia-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 1.5rem 2rem; width: 100%; overflow: hidden; }
+    .mafia-phase-label { font-family: 'Cinzel', serif; font-size: 2rem; color: #cfb991; }
+    .mafia-event-msg { color: #8b7aa8; font-size: 1.1rem; text-align: center; max-width: 700px; }
+    .mafia-player-grid { display: flex; flex-wrap: wrap; gap: 0.75rem; justify-content: center; max-width: 900px; }
+    .mafia-player-chip {
+      background: #1a1232; border: 2px solid #2d1f50; border-radius: 12px;
+      padding: 0.65rem 1.1rem; font-size: 1.1rem; font-weight: 500; min-width: 100px; text-align: center;
+      transition: opacity 0.4s;
+    }
+    .mafia-player-chip.dead { opacity: 0.35; text-decoration: line-through; }
+    .mafia-player-chip.voted { border-color: #7c3aed; }
+    .mafia-vote-count { font-size: 0.8rem; color: #7c3aed; font-weight: 600; margin-top: 2px; }
+    .mafia-gameover-grid { display: flex; gap: 2rem; width: 100%; max-width: 800px; }
+    .mafia-gameover-col { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+    .mafia-gameover-col-title { font-size: 0.85rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.25rem; }
+    .mafia-role-row { background: #1a1232; border-radius: 8px; padding: 0.6rem 1rem; font-size: 1rem; }
+    .mafia-win-banner { font-family: 'Cinzel', serif; font-size: 3rem; text-align: center; }
+
+    /* ── DEBATE ── */
+    #screen-debate { gap: 0; }
+    .debate-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 2rem 3rem; width: 100%; }
+    .debate-vs { display: flex; align-items: center; gap: 2rem; width: 100%; max-width: 900px; }
+    .debate-debater {
+      flex: 1; background: #1a1232; border: 2px solid #2d1f50; border-radius: 16px;
+      padding: 1.25rem 1.5rem; text-align: center;
+    }
+    .debate-debater-name { font-family: 'Cinzel', serif; font-size: 1.8rem; }
+    .debate-debater-side { font-size: 0.9rem; color: #8b7aa8; margin-top: 0.25rem; }
+    .debate-vs-chip { font-family: 'Cinzel', serif; font-size: 1.5rem; color: #5a4a7a; flex-shrink: 0; }
+    .debate-topic { font-family: 'Cinzel', serif; font-size: 2rem; text-align: center; color: #ede9f8; max-width: 800px; line-height: 1.3; }
+    .debate-timer { font-family: 'Cinzel', serif; font-size: 3rem; color: #cfb991; }
+    .debate-phase-label { font-size: 1rem; color: #8b7aa8; letter-spacing: 0.1em; text-transform: uppercase; }
+    .debate-vote-bars { display: flex; gap: 2rem; width: 100%; max-width: 700px; }
+    .debate-vote-col { flex: 1; display: flex; flex-direction: column; gap: 0.5rem; }
+    .debate-vote-name { font-size: 1.1rem; font-weight: 500; text-align: center; }
+    .debate-vote-bar-wrap { background: #0f0a20; border-radius: 4px; height: 10px; }
+    .debate-vote-bar { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .debate-vote-count { text-align: center; font-size: 0.95rem; color: #8b7aa8; }
+    .debate-scorebar { display: flex; gap: 1rem; justify-content: center; flex-wrap: wrap; }
+    .debate-score-chip { background: #1a1232; border-radius: 8px; padding: 0.4rem 0.9rem; font-size: 1rem; }
+    .debate-score-val { font-family: 'Cinzel', serif; color: #cfb991; margin-left: 0.4rem; }
+    .debate-waiting { color: #8b7aa8; font-size: 1.2rem; }
+
+    /* ── Q&C ── */
+    #screen-qc { gap: 0; }
+    .qc-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; padding: 2rem; width: 100%; }
+    .qc-current-player { font-family: 'Cinzel', serif; font-size: 3rem; }
+    .qc-phase-tag { font-size: 0.9rem; color: #8b7aa8; letter-spacing: 0.1em; text-transform: uppercase; }
+    .qc-collecting-label { font-size: 1.2rem; color: #8b7aa8; }
+
+    /* ── SHARED ── */
+    .big-title { font-family: 'Cinzel', serif; font-size: 3rem; color: #cfb991; text-align: center; }
+    .sub-label { color: #8b7aa8; font-size: 1.2rem; text-align: center; }
+    .pill {
+      background: #1a1232; border: 1px solid #2d1f50; border-radius: 50px;
+      padding: 0.4rem 1.1rem; font-size: 0.9rem; color: #8b7aa8;
+    }
+  </style>
+</head>
+<body>
+
+<!-- JOIN -->
+<div id="screen-join" class="screen active">
+  <div class="join-logo">Johnbox</div>
+  <div class="join-sub">Host Display Screen</div>
+  <div class="join-form">
+    <input id="join-pin" class="join-input" type="text" maxlength="4" placeholder="PIN" autocomplete="off" />
+    <button class="join-btn" onclick="joinDisplay()">Connect</button>
+    <div id="join-error" class="join-error"></div>
+  </div>
+</div>
+
+<!-- LOBBY -->
+<div id="screen-lobby" class="screen">
+  <div class="lobby-left">
+    <div class="lobby-pin-label">Join at</div>
+    <div id="lobby-pin" class="lobby-pin">----</div>
+    <div class="lobby-qr"><img id="lobby-qr-img" src="" width="180" height="180" alt="QR" /></div>
+    <div id="lobby-url" class="lobby-url"></div>
+  </div>
+  <div class="lobby-right">
+    <div class="lobby-title">Players</div>
+    <div id="lobby-player-grid" class="lobby-player-grid"></div>
+    <div id="lobby-waiting" class="lobby-waiting">Waiting for players...</div>
+  </div>
+</div>
+
+<!-- GAME SELECT -->
+<div id="screen-game-select" class="screen">
+  <div class="gs-title">Johnbox</div>
+  <div class="gs-sub">Host is selecting a game...</div>
+</div>
+
+<!-- HOT TAKES -->
+<div id="screen-ht" class="screen">
+  <div class="dsp-header">
+    <span class="dsp-game-tag">Hot Takes</span>
+    <span id="ht-round-tag" class="pill">Round 1</span>
+    <span id="ht-vote-tag" class="dsp-phase-tag"></span>
+  </div>
+  <div class="timer-wrap"><div id="ht-timer-bar" class="timer-bar"></div></div>
+  <div class="ht-body">
+    <div id="ht-question" class="ht-question"></div>
+    <div id="ht-options" class="ht-options">
+      <div class="ht-option" id="ht-opt-a">
+        <div class="ht-option-name" id="ht-opt-a-name"></div>
+        <div class="ht-option-bar-wrap"><div class="ht-option-bar" id="ht-bar-a"></div></div>
+        <div class="ht-option-pct" id="ht-pct-a">0%</div>
+      </div>
+      <div class="ht-option" id="ht-opt-b">
+        <div class="ht-option-name" id="ht-opt-b-name"></div>
+        <div class="ht-option-bar-wrap"><div class="ht-option-bar" id="ht-bar-b"></div></div>
+        <div class="ht-option-pct" id="ht-pct-b">0%</div>
+      </div>
+    </div>
+    <div id="ht-vote-count-label" class="ht-vote-count"></div>
+    <div id="ht-expose-list" class="ht-expose-list" style="display:none"></div>
+  </div>
+</div>
+
+<!-- PHOTO ROULETTE -->
+<div id="screen-pr" class="screen">
+  <div class="dsp-header">
+    <span class="dsp-game-tag">Photo Roulette</span>
+    <span id="pr-phase-tag" class="dsp-phase-tag"></span>
+  </div>
+  <div class="timer-wrap"><div id="pr-timer-bar" class="timer-bar"></div></div>
+  <div class="pr-body">
+    <div id="pr-photo-wrap" class="pr-photo-wrap" style="display:none">
+      <img id="pr-photo-img" src="" alt="Photo" />
+    </div>
+    <div id="pr-info" class="pr-info">
+      <div id="pr-photo-num" class="pr-photo-num"></div>
+      <div id="pr-guess-count" class="pr-guess-count"></div>
+      <div id="pr-reveal-section" style="display:none">
+        <div id="pr-photographer" class="pr-photographer-tag" style="margin-bottom:0.75rem"></div>
+        <div id="pr-reveal-list" class="pr-reveal-list"></div>
+      </div>
+      <div id="pr-upload-section" class="pr-upload-body">
+        <div class="pr-upload-count" id="pr-upload-count">0</div>
+        <div class="pr-upload-label">photos uploaded</div>
+      </div>
+      <div id="pr-scores-section" style="display:none">
+        <div class="lobby-title" style="margin-bottom:0.75rem">Scores</div>
+        <div id="pr-scores-list" class="pr-scores"></div>
+      </div>
+    </div>
+  </div>
+</div>
+
+<!-- EVERYTHING TRIVIA -->
+<div id="screen-et" class="screen">
+  <div class="dsp-header">
+    <span class="dsp-game-tag">Everything Trivia</span>
+    <span id="et-section-tag" class="pill"></span>
+    <span id="et-phase-tag" class="dsp-phase-tag"></span>
+  </div>
+  <div class="timer-wrap"><div id="et-timer-bar" class="timer-bar"></div></div>
+  <div class="et-body">
+    <div id="et-topic-collecting" style="display:none; flex-direction:column; align-items:center; gap:1rem; width:100%; max-width:600px">
+      <div class="sub-label">Players are submitting topics</div>
+      <div id="et-topic-list" class="et-topic-list"></div>
+    </div>
+    <div id="et-intro-section" style="display:none; flex-direction:column; align-items:center; gap:0.75rem">
+      <div class="sub-label">Next topic</div>
+      <div id="et-intro-topic" class="et-intro-topic"></div>
+      <div id="et-intro-by" class="et-intro-by"></div>
+    </div>
+    <div id="et-question-section" style="display:none; flex-direction:column; align-items:center; gap:1.25rem; width:100%">
+      <div id="et-section-tag2" class="et-section-tag"></div>
+      <div id="et-question-text" class="et-question-text"></div>
+      <div id="et-answers-grid" class="et-answers-grid"></div>
+      <div id="et-answer-count-label" class="et-answer-count-tag"></div>
+    </div>
+    <div id="et-reveal-section" style="display:none; flex-direction:column; align-items:center; gap:1rem; width:100%">
+      <div class="sub-label">Correct answer</div>
+      <div id="et-correct-answer" class="big-title" style="font-size:2rem"></div>
+      <div id="et-reveal-list" class="et-reveal-list"></div>
+    </div>
+    <div id="et-scoreboard-section" style="display:none; flex-direction:column; align-items:center; gap:1rem; width:100%">
+      <div id="et-scoreboard-title" class="sub-label"></div>
+      <div id="et-scoreboard-list" class="et-scoreboard"></div>
+    </div>
+    <div id="et-gameover-section" style="display:none; flex-direction:column; align-items:center; gap:1rem; width:100%">
+      <div class="big-title">Final Standings</div>
+      <div id="et-gameover-list" class="et-scoreboard"></div>
+    </div>
+  </div>
+</div>
+
+<!-- MAFIA -->
+<div id="screen-mafia" class="screen">
+  <div class="dsp-header">
+    <span class="dsp-game-tag">Mafia</span>
+    <span id="mafia-phase-header" class="dsp-phase-tag"></span>
+  </div>
+  <div class="mafia-body">
+    <div id="mafia-phase-label" class="mafia-phase-label"></div>
+    <div id="mafia-event-msg" class="mafia-event-msg"></div>
+    <div id="mafia-player-grid" class="mafia-player-grid"></div>
+    <div id="mafia-gameover-section" style="display:none; flex-direction:column; align-items:center; gap:1.5rem; width:100%">
+      <div id="mafia-win-banner" class="mafia-win-banner"></div>
+      <div id="mafia-gameover-grid" class="mafia-gameover-grid"></div>
+    </div>
+  </div>
+</div>
+
+<!-- DEBATE -->
+<div id="screen-debate" class="screen">
+  <div class="dsp-header">
+    <span class="dsp-game-tag">Debateish</span>
+    <span id="debate-phase-tag" class="dsp-phase-tag"></span>
+  </div>
+  <div class="debate-body">
+    <div id="debate-scorebar" class="debate-scorebar"></div>
+    <div id="debate-vs" class="debate-vs" style="display:none">
+      <div class="debate-debater" id="debate-debater-a">
+        <div class="debate-debater-name" id="debate-name-a"></div>
+        <div class="debate-debater-side" id="debate-side-a"></div>
+      </div>
+      <div class="debate-vs-chip">VS</div>
+      <div class="debate-debater" id="debate-debater-b">
+        <div class="debate-debater-name" id="debate-name-b"></div>
+        <div class="debate-debater-side" id="debate-side-b"></div>
+      </div>
+    </div>
+    <div id="debate-topic" class="debate-topic"></div>
+    <div id="debate-timer" class="debate-timer" style="display:none"></div>
+    <div id="debate-vote-bars" class="debate-vote-bars" style="display:none">
+      <div class="debate-vote-col">
+        <div class="debate-vote-name" id="debate-vote-name-a"></div>
+        <div class="debate-vote-bar-wrap"><div class="debate-vote-bar" id="debate-vote-bar-a"></div></div>
+        <div class="debate-vote-count" id="debate-vote-count-a"></div>
+      </div>
+      <div class="debate-vote-col">
+        <div class="debate-vote-name" id="debate-vote-name-b"></div>
+        <div class="debate-vote-bar-wrap"><div class="debate-vote-bar" id="debate-vote-bar-b"></div></div>
+        <div class="debate-vote-count" id="debate-vote-count-b"></div>
+      </div>
+    </div>
+    <div id="debate-waiting" class="debate-waiting" style="display:none"></div>
+  </div>
+</div>
+
+<!-- Q&C -->
+<div id="screen-qc" class="screen">
+  <div class="dsp-header">
+    <span class="dsp-game-tag">Questions &amp; Challenges</span>
+    <span id="qc-phase-tag" class="dsp-phase-tag"></span>
+  </div>
+  <div class="qc-body">
+    <div id="qc-collecting-section" style="display:none; flex-direction:column; align-items:center; gap:1rem">
+      <div class="qc-phase-tag">Collecting submissions</div>
+      <div class="timer-wrap" style="width:300px"><div id="qc-timer-bar" class="timer-bar"></div></div>
+    </div>
+    <div id="qc-spin-section" style="display:none; flex-direction:column; align-items:center; gap:0.75rem">
+      <div class="qc-phase-tag">It's their turn</div>
+      <div id="qc-current-player" class="qc-current-player"></div>
+    </div>
+    <div id="qc-gameover-section" style="display:none">
+      <div class="big-title">Game Over</div>
+    </div>
+  </div>
+</div>
+
+<script src="/socket.io/socket.io.js"></script>
+<script>
+  const BASE_PATH = '__BASE_PATH__';
+  const SOCKET_PATH = BASE_PATH + '/socket.io';
+  const socket = io({ path: SOCKET_PATH });
+
+  const PLAYER_COLORS = ['#f87171','#fb923c','#facc15','#4ade80','#38bdf8','#818cf8','#e879f9','#f472b6','#a3e635','#34d399'];
+  let currentPlayers = [];
+
+  function getPlayerColor(name) {
+    const index = currentPlayers.findIndex(p => p.name === name);
+    if (index >= 0) return PLAYER_COLORS[index % PLAYER_COLORS.length];
+    let hash = 0;
+    for (let i = 0; i < name.length; i++) { hash = ((hash << 5) - hash) + name.charCodeAt(i); hash |= 0; }
+    return PLAYER_COLORS[Math.abs(hash) % PLAYER_COLORS.length];
+  }
+
+  function showScreen(id) {
+    document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
+    document.getElementById(id).classList.add('active');
+  }
+
+  function setBar(id, timeLeft, totalTime) {
+    const bar = document.getElementById(id);
+    if (bar) bar.style.width = Math.max(0, (timeLeft / totalTime) * 100) + '%';
+  }
+
+  function resetBar(id) {
+    const bar = document.getElementById(id);
+    if (!bar) return;
+    bar.style.transition = 'none';
+    bar.style.width = '100%';
+    void bar.offsetWidth;
+    bar.style.transition = '';
+  }
+
+  // ── JOIN ──────────────────────────────────────────────────────────
+  function joinDisplay() {
+    const pin = document.getElementById('join-pin').value.trim();
+    if (!pin) return;
+    document.getElementById('join-error').textContent = '';
+    socket.emit('join-as-display', { pin });
+  }
+
+  document.getElementById('join-pin').addEventListener('keydown', e => {
+    if (e.key === 'Enter') joinDisplay();
+  });
+
+  socket.on('display-error', ({ message }) => {
+    document.getElementById('join-error').textContent = message;
+  });
+
+  socket.on('display-joined', ({ pin, players, qrDataURL, playerURL, gameState }) => {
+    currentPlayers = players;
+    document.getElementById('lobby-pin').textContent = pin;
+    document.getElementById('lobby-qr-img').src = qrDataURL;
+    document.getElementById('lobby-url').textContent = playerURL;
+    renderLobbyPlayers(players);
+
+    if (gameState === 'lobby') {
+      showScreen('screen-lobby');
+    } else {
+      // Joined mid-game — show lobby as fallback until game events arrive
+      showScreen('screen-lobby');
+    }
+  });
+
+  // ── LOBBY ─────────────────────────────────────────────────────────
+  function renderLobbyPlayers(players) {
+    currentPlayers = players;
+    const grid = document.getElementById('lobby-player-grid');
+    const waiting = document.getElementById('lobby-waiting');
+    grid.innerHTML = '';
+    waiting.style.display = players.length === 0 ? 'block' : 'none';
+    players.forEach((p, i) => {
+      const chip = document.createElement('div');
+      chip.className = 'lobby-player-chip';
+      const dot = document.createElement('div');
+      dot.className = 'player-dot';
+      dot.style.background = PLAYER_COLORS[i % PLAYER_COLORS.length];
+      chip.appendChild(dot);
+      chip.appendChild(document.createTextNode(p.name));
+      grid.appendChild(chip);
+    });
+  }
+
+  socket.on('player-list-updated', ({ players }) => {
+    currentPlayers = players;
+    renderLobbyPlayers(players);
+  });
+
+  socket.on('returned-to-lobby', () => showScreen('screen-lobby'));
+  socket.on('returned-to-game-select', () => showScreen('screen-game-select'));
+
+  socket.on('game-started', ({ game }) => {
+    if (game === 'debate-setup') { showScreen('screen-debate'); return; }
+    if (game === 'hot-takes') { showScreen('screen-ht'); return; }
+    if (game === 'photo-roulette') {
+      document.getElementById('pr-upload-section').style.display = 'flex';
+      document.getElementById('pr-scores-section').style.display = 'none';
+      document.getElementById('pr-reveal-section').style.display = 'none';
+      document.getElementById('pr-photo-wrap').style.display = 'none';
+      document.getElementById('pr-upload-count').textContent = '0';
+      showScreen('screen-pr');
+      return;
+    }
+    if (game === 'everything-trivia') {
+      showSection('et', 'topic-collecting');
+      showScreen('screen-et');
+      return;
+    }
+    if (game === 'mafia') { showScreen('screen-mafia'); return; }
+    if (game === 'questions-challenges') { showScreen('screen-qc'); return; }
+    showScreen('screen-game-select');
+  });
+
+  // ── HOT TAKES ─────────────────────────────────────────────────────
+  socket.on('ht-round-start', ({ question, optionA, optionB, roundNumber, playerColors }) => {
+    document.getElementById('ht-round-tag').textContent = `Round ${roundNumber}`;
+    document.getElementById('ht-question').textContent = question;
+    document.getElementById('ht-vote-tag').textContent = '';
+    document.getElementById('ht-vote-count-label').textContent = '';
+
+    const colorA = playerColors[optionA.name] || '#cfb991';
+    const colorB = playerColors[optionB.name] || '#cfb991';
+
+    document.getElementById('ht-opt-a-name').textContent = optionA.name;
+    document.getElementById('ht-opt-a-name').style.color = colorA;
+    document.getElementById('ht-opt-a').style.borderColor = colorA;
+    document.getElementById('ht-bar-a').style.background = colorA;
+    document.getElementById('ht-bar-a').style.width = '0%';
+    document.getElementById('ht-pct-a').textContent = '';
+    document.getElementById('ht-pct-a').style.color = colorA;
+
+    document.getElementById('ht-opt-b-name').textContent = optionB.name;
+    document.getElementById('ht-opt-b-name').style.color = colorB;
+    document.getElementById('ht-opt-b').style.borderColor = colorB;
+    document.getElementById('ht-bar-b').style.background = colorB;
+    document.getElementById('ht-bar-b').style.width = '0%';
+    document.getElementById('ht-pct-b').textContent = '';
+    document.getElementById('ht-pct-b').style.color = colorB;
+
+    document.getElementById('ht-expose-list').style.display = 'none';
+    resetBar('ht-timer-bar');
+    showScreen('screen-ht');
+  });
+
+  socket.on('ht-vote-count', ({ count, total }) => {
+    document.getElementById('ht-vote-count-label').textContent = `${count} / ${total} voted`;
+  });
+
+  socket.on('ht-timer-tick', ({ timeLeft, totalTime }) => {
+    setBar('ht-timer-bar', timeLeft, totalTime);
+  });
+
+  socket.on('ht-reveal', ({ question, optionA, optionB, pctA, pctB, revealVotes, voteDetails, playerColors }) => {
+    const colorA = playerColors[optionA.name] || '#cfb991';
+    const colorB = playerColors[optionB.name] || '#cfb991';
+    document.getElementById('ht-question').textContent = question;
+    setTimeout(() => {
+      document.getElementById('ht-bar-a').style.width = pctA + '%';
+      document.getElementById('ht-bar-b').style.width = pctB + '%';
+    }, 80);
+    document.getElementById('ht-pct-a').textContent = pctA + '%';
+    document.getElementById('ht-pct-b').textContent = pctB + '%';
+    document.getElementById('ht-vote-count-label').textContent = '';
+
+    const exposeEl = document.getElementById('ht-expose-list');
+    if (revealVotes && voteDetails.length > 0) {
+      exposeEl.style.display = 'flex';
+      exposeEl.innerHTML = '';
+      voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
+        const row = document.createElement('div');
+        row.className = 'ht-expose-row';
+        row.innerHTML = `<span style="color:${voterColor};font-weight:500">${voterName}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:500">${votedForName}</span>`;
+        exposeEl.appendChild(row);
+      });
+    } else {
+      exposeEl.style.display = 'none';
+    }
+  });
+
+  socket.on('ht-game-over', () => showScreen('screen-lobby'));
+
+  // ── PHOTO ROULETTE ────────────────────────────────────────────────
+  socket.on('pr-photo-count', ({ count }) => {
+    document.getElementById('pr-upload-count').textContent = count;
+    document.getElementById('pr-phase-tag').textContent = `${count} uploaded`;
+  });
+
+  socket.on('pr-display-photo', ({ photoData, photoNumber, totalPhotos }) => {
+    document.getElementById('pr-upload-section').style.display = 'none';
+    document.getElementById('pr-reveal-section').style.display = 'none';
+    document.getElementById('pr-scores-section').style.display = 'none';
+    document.getElementById('pr-photo-wrap').style.display = 'block';
+    document.getElementById('pr-photo-img').src = photoData;
+    document.getElementById('pr-photo-num').textContent = `Photo ${photoNumber} of ${totalPhotos}`;
+    document.getElementById('pr-guess-count').textContent = 'Guessing...';
+    document.getElementById('pr-phase-tag').textContent = `Photo ${photoNumber} / ${totalPhotos}`;
+    resetBar('pr-timer-bar');
+    showScreen('screen-pr');
+  });
+
+  socket.on('pr-guess-count', ({ count, total }) => {
+    document.getElementById('pr-guess-count').textContent = `${count} / ${total} guessed`;
+  });
+
+  socket.on('pr-timer-tick', ({ timeLeft, totalTime }) => {
+    setBar('pr-timer-bar', timeLeft, totalTime);
+  });
+
+  socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound }) => {
+    document.getElementById('pr-reveal-section').style.display = 'block';
+    document.getElementById('pr-guess-count').textContent = '';
+    document.getElementById('pr-photographer').textContent = `📷 ${photographerName}`;
+    const list = document.getElementById('pr-reveal-list');
+    list.innerHTML = '';
+    guesses.forEach(({ guesserName, guessedName }) => {
+      const correct = guessedName === photographerName;
+      const row = document.createElement('div');
+      row.className = 'pr-reveal-row';
+      const pts = pointsThisRound[guesserName] || 0;
+      row.innerHTML = `<span style="color:${getPlayerColor(guesserName)};font-weight:500">${guesserName}</span> <span class="pr-reveal-arrow">→</span> <span style="color:${getPlayerColor(guessedName)}">${guessedName}</span>${pts > 0 ? ` <span style="color:#cfb991;margin-left:auto">+${pts}</span>` : ''}`;
+      list.appendChild(row);
+    });
+  });
+
+  socket.on('pr-game-over', ({ scores }) => {
+    document.getElementById('pr-photo-wrap').style.display = 'none';
+    document.getElementById('pr-upload-section').style.display = 'none';
+    document.getElementById('pr-reveal-section').style.display = 'none';
+    document.getElementById('pr-scores-section').style.display = 'block';
+    const list = document.getElementById('pr-scores-list');
+    list.innerHTML = '';
+    Object.entries(scores)
+      .sort(([,a],[,b]) => b - a)
+      .forEach(([name, pts], i) => {
+        const row = document.createElement('div');
+        row.className = 'pr-score-row';
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i + 1}. ${name}</span><span class="pr-score-pts">${pts}</span>`;
+        list.appendChild(row);
+      });
+    document.getElementById('pr-phase-tag').textContent = 'Game Over';
+  });
+
+  // ── EVERYTHING TRIVIA ─────────────────────────────────────────────
+  function showSection(game, section) {
+    const sections = { et: ['topic-collecting','intro','question','reveal','scoreboard','gameover'] };
+    (sections[game] || []).forEach(s => {
+      const el = document.getElementById(`${game}-${s}-section`) || document.getElementById(`${game}-${s}`);
+      if (el) el.style.display = 'none';
+    });
+    const target = document.getElementById(`${game}-${section}-section`) || document.getElementById(`${game}-${section}`);
+    if (target) target.style.display = 'flex';
+  }
+
+  socket.on('et-topic-status', ({ readyCount, total, topics }) => {
+    showSection('et', 'topic-collecting');
+    document.getElementById('et-phase-tag').textContent = `${readyCount} / ${total} ready`;
+    const list = document.getElementById('et-topic-list');
+    list.innerHTML = '';
+    topics.forEach(({ playerName, topic, status }) => {
+      const row = document.createElement('div');
+      row.className = 'et-topic-row';
+      const chipClass = status === 'ready' ? 'et-status-ready' : status === 'validating' ? 'et-status-validating' : status === 'needs-resubmit' ? 'et-status-redo' : 'et-status-waiting';
+      const label = status === 'ready' ? 'Ready' : status === 'validating' ? 'Checking' : status === 'needs-resubmit' ? 'Redo' : 'Waiting';
+      row.innerHTML = `<div><div class="et-topic-name" style="color:${getPlayerColor(playerName)}">${playerName}</div><div class="et-topic-meta">${topic || '…'}</div></div><span class="et-status-chip ${chipClass}">${label}</span>`;
+      list.appendChild(row);
+    });
+    showScreen('screen-et');
+  });
+
+  socket.on('et-section-intro', ({ topic, submittedBy }) => {
+    document.getElementById('et-intro-topic').textContent = topic;
+    document.getElementById('et-intro-by').textContent = `Submitted by ${submittedBy}`;
+    showSection('et', 'intro');
+    document.getElementById('et-phase-tag').textContent = 'Intro';
+    showScreen('screen-et');
+  });
+
+  let etCurrentAnswers = [];
+  socket.on('et-question-start', ({ topic, sectionNumber, totalSections, questionNumber, totalQuestionsInSection, question, answers }) => {
+    etCurrentAnswers = answers;
+    document.getElementById('et-section-tag2').textContent = `${topic} — Q${questionNumber} of ${totalQuestionsInSection}`;
+    document.getElementById('et-section-tag').textContent = `Section ${sectionNumber}/${totalSections}`;
+    document.getElementById('et-question-text').textContent = question;
+    document.getElementById('et-answer-count-label').textContent = '';
+    const grid = document.getElementById('et-answers-grid');
+    grid.innerHTML = '';
+    answers.forEach(a => {
+      const chip = document.createElement('div');
+      chip.className = 'et-answer-chip';
+      chip.textContent = a;
+      grid.appendChild(chip);
+    });
+    resetBar('et-timer-bar');
+    showSection('et', 'question');
+    document.getElementById('et-phase-tag').textContent = 'Question';
+    showScreen('screen-et');
+  });
+
+  socket.on('et-answer-count', ({ count, total }) => {
+    document.getElementById('et-answer-count-label').textContent = `${count} / ${total} answered`;
+  });
+
+  socket.on('et-timer-tick', ({ timeLeft, totalTime }) => {
+    setBar('et-timer-bar', timeLeft, totalTime);
+  });
+
+  socket.on('et-reveal', ({ correctAnswer, answersByPlayer, pointsAwarded }) => {
+    document.getElementById('et-correct-answer').textContent = correctAnswer;
+    const chips = document.getElementById('et-answers-grid').querySelectorAll('.et-answer-chip');
+    chips.forEach(chip => {
+      if (chip.textContent === correctAnswer) chip.classList.add('correct');
+      else chip.classList.add('wrong');
+    });
+    const list = document.getElementById('et-reveal-list');
+    list.innerHTML = '';
+    answersByPlayer.forEach(({ playerName, answer, isCorrect }) => {
+      const row = document.createElement('div');
+      row.className = 'et-reveal-row ' + (answer ? (isCorrect ? 'correct' : 'wrong') : '');
+      const pts = pointsAwarded[playerName] || 0;
+      row.innerHTML = `<div><div class="et-reveal-name" style="color:${getPlayerColor(playerName)}">${playerName}</div><div class="et-reveal-answer">${answer || 'No answer'}</div></div><div class="et-reveal-pts">${pts > 0 ? '+' + pts : '0'}</div>`;
+      list.appendChild(row);
+    });
+    showSection('et', 'reveal');
+    document.getElementById('et-phase-tag').textContent = 'Reveal';
+  });
+
+  socket.on('et-section-scoreboard', ({ topic, leaderboard }) => {
+    document.getElementById('et-scoreboard-title').textContent = `After: ${topic}`;
+    const list = document.getElementById('et-scoreboard-list');
+    list.innerHTML = '';
+    [...leaderboard].sort((a,b) => (b.sectionScore - a.sectionScore) || (b.score - a.score))
+      .forEach(({ name, score, sectionScore }, i) => {
+        const row = document.createElement('div');
+        row.className = 'et-score-row';
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="et-score-pts">+${sectionScore} (${score} total)</span>`;
+        list.appendChild(row);
+      });
+    showSection('et', 'scoreboard');
+    document.getElementById('et-phase-tag').textContent = 'Scoreboard';
+  });
+
+  socket.on('et-game-over', ({ rankings }) => {
+    const list = document.getElementById('et-gameover-list');
+    list.innerHTML = '';
+    rankings.forEach(({ name, score }, i) => {
+      const row = document.createElement('div');
+      row.className = 'et-score-row';
+      row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="et-score-pts">${score}</span>`;
+      list.appendChild(row);
+    });
+    showSection('et', 'gameover');
+    document.getElementById('et-phase-tag').textContent = 'Game Over';
+  });
+
+  // ── MAFIA ─────────────────────────────────────────────────────────
+  socket.on('mafia-display-state', (state) => {
+    if (state.phase === 'game-over') {
+      renderMafiaGameOver(state);
+      return;
+    }
+    document.getElementById('mafia-gameover-section').style.display = 'none';
+    document.getElementById('mafia-player-grid').style.display = 'flex';
+
+    const phaseLabel = state.phase === 'discussion' ? `Day ${state.dayNumber} — Discussion`
+      : state.phase === 'voting' ? `Day ${state.dayNumber} — Voting`
+      : state.phase === 'revote' ? `Day ${state.dayNumber} — Revote`
+      : state.phase === 'night' ? `Night ${state.nightNumber}`
+      : state.phase === 'day-result' ? `Day ${state.dayNumber} — Result`
+      : state.phase === 'night-result' ? `Night ${state.nightNumber} — Result`
+      : state.phase === 'setup' ? 'Setting up...'
+      : state.phase;
+
+    document.getElementById('mafia-phase-label').textContent = phaseLabel;
+    document.getElementById('mafia-phase-header').textContent = phaseLabel;
+    document.getElementById('mafia-event-msg').textContent = state.eventMessage || '';
+
+    const grid = document.getElementById('mafia-player-grid');
+    grid.innerHTML = '';
+    (state.players || []).forEach(p => {
+      const chip = document.createElement('div');
+      chip.className = 'mafia-player-chip' + (p.alive ? '' : ' dead') + (p.voteCount > 0 ? ' voted' : '');
+      const nameEl = document.createElement('div');
+      nameEl.style.color = getPlayerColor(p.name);
+      nameEl.textContent = p.name;
+      chip.appendChild(nameEl);
+      if (p.voteCount > 0) {
+        const vc = document.createElement('div');
+        vc.className = 'mafia-vote-count';
+        vc.textContent = `${p.voteCount} vote${p.voteCount !== 1 ? 's' : ''}`;
+        chip.appendChild(vc);
+      }
+      grid.appendChild(chip);
+    });
+
+    showScreen('screen-mafia');
+  });
+
+  function renderMafiaGameOver(state) {
+    document.getElementById('mafia-player-grid').style.display = 'none';
+    document.getElementById('mafia-gameover-section').style.display = 'flex';
+    const winTeam = state.winner?.team;
+    document.getElementById('mafia-win-banner').textContent =
+      winTeam === 'town' ? 'Town Wins' : winTeam === 'killers' ? 'Killers Win' : winTeam === 'joker' ? 'Joker Wins' : 'Game Over';
+    document.getElementById('mafia-win-banner').style.color =
+      winTeam === 'town' ? '#4ade80' : winTeam === 'killers' ? '#f87171' : '#e879f9';
+
+    const killers = (state.revealedRoles || []).filter(r => ['killer','joker'].includes(r.role));
+    const town = (state.revealedRoles || []).filter(r => !['killer','joker'].includes(r.role));
+    const grid = document.getElementById('mafia-gameover-grid');
+    grid.innerHTML = '';
+    [{ label: 'Killers', list: killers }, { label: 'Town', list: town }].forEach(({ label, list }) => {
+      if (!list.length) return;
+      const col = document.createElement('div');
+      col.className = 'mafia-gameover-col';
+      col.innerHTML = `<div class="mafia-gameover-col-title">${label}</div>`;
+      list.forEach(({ name, role }) => {
+        const row = document.createElement('div');
+        row.className = 'mafia-role-row';
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span> <span style="color:#8b7aa8;font-size:0.85rem">${role}</span>`;
+        col.appendChild(row);
+      });
+      grid.appendChild(col);
+    });
+    showScreen('screen-mafia');
+  }
+
+  // ── DEBATE ────────────────────────────────────────────────────────
+  socket.on('debate-state', (state) => {
+    const r = state.currentRound || {};
+    const phase = state.phase;
+    const colors = state.playerColors || {};
+
+    document.getElementById('debate-phase-tag').textContent = phase || '';
+    document.getElementById('debate-timer').style.display = 'none';
+    document.getElementById('debate-vote-bars').style.display = 'none';
+    document.getElementById('debate-waiting').style.display = 'none';
+
+    // Scorebar
+    const sb = document.getElementById('debate-scorebar');
+    sb.innerHTML = '';
+    Object.entries(state.scores || {}).sort(([,a],[,b]) => b - a).forEach(([name, pts]) => {
+      const chip = document.createElement('div');
+      chip.className = 'debate-score-chip';
+      chip.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span><span class="debate-score-val">${pts}</span>`;
+      sb.appendChild(chip);
+    });
+
+    if (r.debaterA && r.debaterB) {
+      document.getElementById('debate-vs').style.display = 'flex';
+      const colorA = colors[r.debaterA.name] || '#cfb991';
+      const colorB = colors[r.debaterB.name] || '#cfb991';
+      document.getElementById('debate-name-a').textContent = r.debaterA.name;
+      document.getElementById('debate-name-a').style.color = colorA;
+      document.getElementById('debate-debater-a').style.borderColor = colorA;
+      document.getElementById('debate-name-b').textContent = r.debaterB.name;
+      document.getElementById('debate-name-b').style.color = colorB;
+      document.getElementById('debate-debater-b').style.borderColor = colorB;
+
+      const sideA = r.sideMap?.[r.debaterA.id];
+      const sideB = r.sideMap?.[r.debaterB.id];
+      document.getElementById('debate-side-a').textContent = sideA === 'left' ? (r.topicLeft || '') : sideA === 'right' ? (r.topicRight || '') : '';
+      document.getElementById('debate-side-b').textContent = sideB === 'left' ? (r.topicLeft || '') : sideB === 'right' ? (r.topicRight || '') : '';
+    } else {
+      document.getElementById('debate-vs').style.display = 'none';
+    }
+
+    document.getElementById('debate-topic').textContent = r.topic || '';
+
+    if (phase === 'voting') {
+      const votes = r.votes || {};
+      const aId = r.debaterA?.id, bId = r.debaterB?.id;
+      const countA = Object.values(votes).filter(v => v === aId).length;
+      const countB = Object.values(votes).filter(v => v === bId).length;
+      const total = countA + countB || 1;
+      document.getElementById('debate-vote-bars').style.display = 'flex';
+      document.getElementById('debate-vote-name-a').textContent = r.debaterA?.name || '';
+      document.getElementById('debate-vote-name-a').style.color = colors[r.debaterA?.name] || '#cfb991';
+      document.getElementById('debate-vote-bar-a').style.width = (countA / total * 100) + '%';
+      document.getElementById('debate-vote-bar-a').style.background = colors[r.debaterA?.name] || '#cfb991';
+      document.getElementById('debate-vote-count-a').textContent = countA + ' vote' + (countA !== 1 ? 's' : '');
+      document.getElementById('debate-vote-name-b').textContent = r.debaterB?.name || '';
+      document.getElementById('debate-vote-name-b').style.color = colors[r.debaterB?.name] || '#cfb991';
+      document.getElementById('debate-vote-bar-b').style.width = (countB / total * 100) + '%';
+      document.getElementById('debate-vote-bar-b').style.background = colors[r.debaterB?.name] || '#cfb991';
+      document.getElementById('debate-vote-count-b').textContent = countB + ' vote' + (countB !== 1 ? 's' : '');
+    }
+
+    if (phase === 'picking') {
+      const pickingName = r.pendingPick === r.debaterA?.id ? r.debaterA?.name : r.debaterB?.name;
+      document.getElementById('debate-waiting').textContent = `${pickingName || 'Someone'} is picking...`;
+      document.getElementById('debate-waiting').style.display = 'block';
+    }
+
+    showScreen('screen-debate');
+  });
+
+  socket.on('debate-tick', ({ timerLeft, timerMax }) => {
+    const el = document.getElementById('debate-timer');
+    el.style.display = 'block';
+    el.textContent = timerLeft;
+  });
+
+  socket.on('debate-settings-updated', () => showScreen('screen-debate'));
+  socket.on('debate-stopped', () => showScreen('screen-lobby'));
+
+  // ── Q&C ───────────────────────────────────────────────────────────
+  socket.on('qc-collecting', ({ timeLeft, totalTime }) => {
+    document.getElementById('qc-collecting-section').style.display = 'flex';
+    document.getElementById('qc-spin-section').style.display = 'none';
+    document.getElementById('qc-gameover-section').style.display = 'none';
+    resetBar('qc-timer-bar');
+    showScreen('screen-qc');
+  });
+
+  socket.on('qc-timer-tick', ({ timeLeft, totalTime }) => {
+    setBar('qc-timer-bar', timeLeft, totalTime);
+  });
+
+  socket.on('qc-round-start', ({ currentPlayer }) => {
+    document.getElementById('qc-collecting-section').style.display = 'none';
+    document.getElementById('qc-spin-section').style.display = 'flex';
+    document.getElementById('qc-current-player').textContent = currentPlayer;
+    document.getElementById('qc-current-player').style.color = getPlayerColor(currentPlayer);
+    document.getElementById('qc-phase-tag').textContent = "It's their turn";
+    showScreen('screen-qc');
+  });
+
+  socket.on('qc-next-turn', ({ currentPlayer }) => {
+    document.getElementById('qc-current-player').textContent = currentPlayer;
+    document.getElementById('qc-current-player').style.color = getPlayerColor(currentPlayer);
+  });
+
+  socket.on('qc-game-over', () => {
+    document.getElementById('qc-collecting-section').style.display = 'none';
+    document.getElementById('qc-spin-section').style.display = 'none';
+    document.getElementById('qc-gameover-section').style.display = 'block';
+  });
+</script>
+</body>
+</html>
