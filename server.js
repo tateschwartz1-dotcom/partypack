@@ -97,6 +97,10 @@ app.get(joinBasePath(BASE_PATH, '/host'), (req, res) => {
   res.redirect(joinBasePath(BASE_PATH, '/'));
 });
 
+app.get(joinBasePath(BASE_PATH, '/display'), (req, res) => {
+  sendHtmlWithBasePath(res, 'display.html', BASE_PATH);
+});
+
 function getLocalIP() {
   const interfaces = os.networkInterfaces();
   for (const name of Object.keys(interfaces)) {
@@ -906,7 +910,174 @@ function clearRoomTimers(room) {
   }
 }
 
+function remapPlayerId(room, oldId, newId) {
+  if (oldId === newId) return;
+  if (room.hostSocketId === oldId) room.hostSocketId = newId;
+
+  const remapKey = (obj) => {
+    if (obj && oldId in obj) { obj[newId] = obj[oldId]; delete obj[oldId]; }
+  };
+  const remapVal = (obj) => {
+    if (!obj) return;
+    for (const k of Object.keys(obj)) { if (obj[k] === oldId) obj[k] = newId; }
+  };
+
+  if (room.mafia) {
+    const m = room.mafia;
+    remapKey(m.roles); remapKey(m.alive); remapKey(m.votes); remapVal(m.votes);
+    if (m.pendingNight) {
+      remapKey(m.pendingNight.killerVotes); remapVal(m.pendingNight.killerVotes);
+      if (m.pendingNight.doctorTarget === oldId) m.pendingNight.doctorTarget = newId;
+      remapKey(m.pendingNight.pollVotes);
+    }
+    if (m.revoteCandidates) m.revoteCandidates = m.revoteCandidates.map(id => id === oldId ? newId : id);
+  }
+
+  if (room.debate && room.debate.currentRound) {
+    const r = room.debate.currentRound;
+    if (r.debaterA?.id === oldId) r.debaterA.id = newId;
+    if (r.debaterB?.id === oldId) r.debaterB.id = newId;
+    if (r.firstPickId === oldId) r.firstPickId = newId;
+    if (r.pendingPick === oldId) r.pendingPick = newId;
+    if (r.sideMap) remapKey(r.sideMap);
+    if (r.votes) { remapKey(r.votes); remapVal(r.votes); }
+    if (r.turnOrder) r.turnOrder = r.turnOrder.map(id => id === oldId ? newId : id);
+    if (r.catchAttempts) remapKey(r.catchAttempts);
+    if (r.activeCatch?.catcherId === oldId) r.activeCatch.catcherId = newId;
+    if (r.revealWinnerId === oldId) r.revealWinnerId = newId;
+  }
+
+  if (room.pr) {
+    remapKey(room.pr.guesses);
+    if (room.pr.currentPhoto?.playerId === oldId) room.pr.currentPhoto.playerId = newId;
+    room.pr.photos?.forEach(p => { if (p.playerId === oldId) p.playerId = newId; });
+  }
+
+  if (room.ht) remapKey(room.ht.votes);
+
+  if (room.et) {
+    remapKey(room.et.topicsByPlayerId);
+    remapKey(room.et.currentAnswers);
+  }
+
+  if (room.qc) {
+    room.qc.submissions?.forEach(s => { if (s.playerId === oldId) s.playerId = newId; });
+    room.qc.playerOrder?.forEach(p => { if (p.id === oldId) p.id = newId; });
+  }
+}
+
+function reemitStateToPlayer(pin, socket) {
+  const room = rooms[pin];
+  if (!room) return;
+
+  socket.emit('joined-room', {
+    name: socket.data.name,
+    players: room.players,
+    pin,
+    qrDataURL: room.qrDataURL,
+    playerURL: room.playerURL,
+    hostId: room.hostSocketId,
+  });
+
+  const gs = room.gameState;
+  if (gs === 'lobby') return;
+
+  if (gs === 'mafia' && room.mafia) {
+    socket.emit('game-started', { game: 'mafia' });
+    socket.emit('mafia-state', buildMafiaStateForPlayer(room, socket.id));
+    return;
+  }
+
+  if (gs === 'debate' && room.debate) {
+    socket.emit('game-started', { game: 'debate-setup', debateSettings: room.debate.settings });
+    emitDebateState(pin);
+    return;
+  }
+
+  if (gs === 'hot-takes' && room.ht) {
+    socket.emit('game-started', { game: 'hot-takes' });
+    if (room.ht.optionA && room.ht.optionB) {
+      socket.emit('ht-round-start', {
+        question: room.ht.currentQuestionText,
+        optionA: { id: room.ht.optionA.id, name: room.ht.optionA.name },
+        optionB: { id: room.ht.optionB.id, name: room.ht.optionB.name },
+        roundNumber: room.ht.currentRound,
+        totalRounds: room.ht.totalRounds,
+        playerColors: room.ht.playerColors,
+      });
+    }
+    return;
+  }
+
+  if (gs === 'photo-roulette' && room.pr) {
+    socket.emit('game-started', { game: 'photo-roulette' });
+    socket.emit('pr-photo-count', { count: room.pr.photos.length });
+    if (room.pr.currentPhoto) {
+      const photo = room.pr.currentPhoto;
+      let guessOptions = room.players.map(p => p.name);
+      if (guessOptions.length > 6) {
+        const others = guessOptions.filter(n => n !== photo.playerName);
+        guessOptions = shuffle([photo.playerName, ...shuffle(others).slice(0, 5)]);
+      }
+      socket.emit('pr-guess-prompt', {
+        guessOptions,
+        photoNumber: room.pr.usedIds.size,
+        totalPhotos: room.pr.photos.length,
+        photoData: photo.dataURL,
+        isYourPhoto: socket.id === photo.playerId,
+      });
+    }
+    return;
+  }
+
+  if (gs === 'everything-trivia' && room.et) {
+    socket.emit('game-started', { game: 'everything-trivia' });
+    if (room.et.currentQuestion) {
+      const section = room.et.randomizedTopics[room.et.currentSectionIndex];
+      socket.emit('et-question-start', {
+        topic: section.topic,
+        submittedBy: section.playerName,
+        sectionNumber: room.et.currentSectionIndex + 1,
+        totalSections: room.et.randomizedTopics.length,
+        questionNumber: room.et.currentQuestionIndex + 1,
+        totalQuestionsInSection: section.questions.length,
+        question: room.et.currentQuestion.question,
+        answers: room.et.currentQuestion.answers,
+      });
+      socket.emit('et-answer-count', {
+        count: Object.keys(room.et.currentAnswers).length,
+        total: room.players.length,
+      });
+    } else {
+      const topics = room.players.map(p => {
+        const d = room.et.topicsByPlayerId[p.id] || {};
+        return { playerName: p.name, topic: d.topic || null, status: d.status || 'waiting' };
+      });
+      socket.emit('et-topic-status', {
+        readyCount: topics.filter(t => t.status === 'ready').length,
+        total: room.players.length,
+        topics,
+      });
+    }
+    return;
+  }
+
+  if (gs === 'questions-challenges' && room.qc) {
+    socket.emit('game-started', { game: 'questions-challenges' });
+    const cp = room.qc.playerOrder[room.qc.currentPlayerIndex];
+    if (cp) {
+      const available = room.qc.submissions.filter(s => !room.qc.usedIds.has(s.id));
+      socket.emit('qc-round-start', { currentPlayer: cp.name, available: available.length });
+    }
+    return;
+  }
+}
+
 io.on('connection', (socket) => {
+  socket.use(([event], next) => {
+    if (socket.data.isDisplay && event !== 'join-as-display') return;
+    next();
+  });
 
   // ── Lobby ──────────────────────────────────────────────────────
 
@@ -928,6 +1099,8 @@ io.on('connection', (socket) => {
       playerURL,
       qrDataURL,
       timers: [],
+      displaySockets: new Set(),
+      recentlyLeft: {},
     };
 
     socket.join(pin);
@@ -945,7 +1118,10 @@ io.on('connection', (socket) => {
       socket.emit('join-error', { message: 'Room not found. Check the PIN.' });
       return;
     }
-    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup') {
+
+    const rejoinEntry = room.recentlyLeft && room.recentlyLeft[name];
+
+    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup' && !rejoinEntry) {
       socket.emit('join-error', { message: 'Game already in progress.' });
       return;
     }
@@ -966,6 +1142,14 @@ io.on('connection', (socket) => {
     socket.data.name = name;
     socket.data.isHost = false;
 
+    if (rejoinEntry) {
+      remapPlayerId(room, rejoinEntry.oldSocketId, socket.id);
+      delete room.recentlyLeft[name];
+      io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
+      reemitStateToPlayer(pin, socket);
+      return;
+    }
+
     socket.emit('joined-room', {
       name,
       players: room.players,
@@ -979,6 +1163,48 @@ io.on('connection', (socket) => {
       socket.emit('game-started', { game: 'debate-setup', debateSettings: room.pendingDebateSettings });
       socket.emit('debate-show-rules', { debateSettings: room.pendingDebateSettings });
     }
+  });
+
+  socket.on('join-as-display', ({ pin }) => {
+    const room = rooms[pin];
+    if (!room) {
+      socket.emit('display-error', { message: 'Room not found. Check the PIN.' });
+      return;
+    }
+
+    socket.join(pin);
+    socket.data.pin = pin;
+    socket.data.isDisplay = true;
+
+    if (!room.displaySockets) room.displaySockets = new Set();
+    room.displaySockets.add(socket.id);
+
+    socket.emit('display-joined', {
+      pin,
+      players: room.players,
+      qrDataURL: room.qrDataURL,
+      playerURL: room.playerURL,
+      gameState: room.gameState,
+      hostId: room.hostSocketId,
+    });
+  });
+
+  socket.on('join-as-spectator', ({ pin }) => {
+    const room = rooms[pin];
+    if (!room) {
+      socket.emit('spectator-error', { message: 'Room not found. Check the PIN.' });
+      return;
+    }
+    socket.join(pin);
+    socket.data.pin = pin;
+    socket.data.isSpectator = true;
+    socket.emit('spectator-joined', {
+      pin,
+      players: room.players,
+      qrDataURL: room.qrDataURL,
+      playerURL: room.playerURL,
+      hostId: room.hostSocketId,
+    });
   });
 
   socket.on('transfer-host', ({ targetPlayerId }) => {
@@ -1644,6 +1870,18 @@ io.on('connection', (socket) => {
         isYourPhoto: player.id === photo.playerId,
       });
     }
+    if (room.displaySockets && room.displaySockets.size > 0) {
+      room.displaySockets.forEach((socketId) => {
+        io.to(socketId).emit('pr-guess-prompt', {
+          guessOptions,
+          photoNumber,
+          totalPhotos,
+          photoData: photo.dataURL,
+          isYourPhoto: false,
+        });
+        io.to(socketId).emit('pr-display-photo', { photoData: photo.dataURL, photoNumber, totalPhotos });
+      });
+    }
 
     io.to(pin).emit('pr-guess-count', { count: 0, total: room.players.length });
 
@@ -2237,12 +2475,57 @@ io.on('connection', (socket) => {
     };
   }
 
+  function buildMafiaDisplayState(room) {
+    const mafia = room.mafia;
+    const publicVoteCounts = getMafiaVoteCounts(room);
+    return {
+      started: mafia.started,
+      phase: mafia.phase,
+      dayNumber: mafia.dayNumber,
+      nightNumber: mafia.nightNumber,
+      jokerEnabled: mafia.jokerEnabled,
+      players: room.players.map((player) => ({
+        id: player.id,
+        name: player.name,
+        alive: !!mafia.alive[player.id],
+        voteCount: publicVoteCounts[player.id] || 0,
+      })),
+      eventMessage: mafia.eventMessage,
+      eventTone: mafia.eventTone || 'neutral',
+      revoteCandidates: mafia.revoteCandidates,
+      timer: {
+        discussion: mafia.discussionTimeLeft,
+        voting: mafia.voteTimeLeft,
+        night: mafia.nightTimeLeft || 0,
+      },
+      winner: mafia.winner,
+      revealedRoles: mafia.phase === 'game-over'
+        ? room.players.map((player) => ({ name: player.name, role: mafia.roles[player.id] }))
+        : [],
+    };
+  }
+
+  function buildMafiaPlayerViewForDisplay(room, socketId) {
+    const state = buildMafiaStateForPlayer(room, socketId);
+    if (state.started && !['game-over', 'winner-splash'].includes(state.phase)) {
+      state.isAlive = true;
+    }
+    return state;
+  }
+
   function emitMafiaState(pin) {
     const room = rooms[pin];
     if (!room || !room.mafia) return;
     room.players.forEach((player) => {
       io.to(player.id).emit('mafia-state', buildMafiaStateForPlayer(room, player.id));
     });
+    if (room.displaySockets && room.displaySockets.size > 0) {
+      const displayState = buildMafiaDisplayState(room);
+      room.displaySockets.forEach((socketId) => {
+        io.to(socketId).emit('mafia-state', buildMafiaPlayerViewForDisplay(room, socketId));
+        io.to(socketId).emit('mafia-display-state', displayState);
+      });
+    }
   }
 
   function startMafiaDiscussion(pin, options = {}) {
@@ -2993,6 +3276,21 @@ io.on('connection', (socket) => {
     if (!pin || !rooms[pin]) return;
 
     const room = rooms[pin];
+
+    if (socket.data.isDisplay) {
+      if (room.displaySockets) room.displaySockets.delete(socket.id);
+      return;
+    }
+
+    if (socket.data.isSpectator) return;
+
+    // Save for potential mid-game rejoin (90s window)
+    if (socket.data.name) {
+      room.recentlyLeft[socket.data.name] = { oldSocketId: socket.id, leftAt: Date.now() };
+      setTimeout(() => {
+        if (rooms[pin]) delete rooms[pin].recentlyLeft[socket.data.name];
+      }, 90000);
+    }
 
     // Host is now a player too — remove from players list
     room.players = room.players.filter((p) => p.id !== socket.id);

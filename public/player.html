@@ -1215,6 +1215,83 @@
     body.light-mode .et-score-total,
     body.light-mode .submit-count-wrap span,
     body.light-mode .confirm-modal-title { color: #8b6914; text-shadow: none; }
+
+    /* ── Display mode ── */
+    .dsp-screen { flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; }
+    .dsp-lobby-wrap { display: flex; width: 100%; height: 100%; }
+    .dsp-lobby-left { flex: 0 0 300px; background: #0f0a20; border-right: 1px solid #2d1f50; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1rem; padding: 2rem; }
+    body.light-mode .dsp-lobby-left { background: #f0ebe3; border-right-color: #d4c9b0; }
+    .dsp-lobby-pin { font-family: 'Cinzel', serif; font-size: 4rem; color: #cfb991; letter-spacing: 0.2em; }
+    .dsp-lobby-url { font-size: 0.8rem; color: #8b7aa8; text-align: center; word-break: break-all; }
+    .dsp-lobby-right { flex: 1; display: flex; flex-direction: column; padding: 2rem 2.5rem; gap: 1rem; overflow: hidden; }
+    .dsp-player-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; overflow-y: auto; flex: 1; align-content: flex-start; }
+    .dsp-player-chip { background: #1a1232; border: 1px solid #2d1f50; border-radius: 10px; padding: 0.6rem 1rem; font-size: 1.1rem; font-weight: 500; display: flex; align-items: center; gap: 0.5rem; }
+    body.light-mode .dsp-player-chip { background: #f0ebe3; border-color: #d4c9b0; color: #1a0a2e; }
+    .dsp-header-bar { width: 100%; background: #0f0a20; border-bottom: 1px solid #2d1f50; padding: 0.5rem 1.5rem; display: flex; align-items: center; gap: 0.75rem; flex-shrink: 0; }
+    body.light-mode .dsp-header-bar { background: #f0ebe3; border-bottom-color: #d4c9b0; }
+    .dsp-game-tag { font-family: 'Cinzel', serif; font-size: 0.95rem; color: #cfb991; }
+    .dsp-pill { background: #1a1232; border: 1px solid #2d1f50; border-radius: 50px; padding: 0.3rem 0.8rem; font-size: 0.85rem; color: #8b7aa8; }
+    body.light-mode .dsp-pill { background: #f0ebe3; border-color: #d4c9b0; }
+    .dsp-phase-tag { font-size: 0.85rem; color: #8b7aa8; margin-left: auto; }
+    .dsp-body { flex: 1; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 1.25rem; padding: 1.5rem 3rem; width: 100%; overflow: hidden; }
+    .dsp-big-question { font-family: 'Cinzel', serif; font-size: 2.4rem; text-align: center; line-height: 1.3; max-width: 860px; }
+    .dsp-options-row { display: flex; gap: 1.5rem; width: 100%; max-width: 860px; }
+    .dsp-option-card { flex: 1; background: #1a1232; border: 2px solid #2d1f50; border-radius: 14px; padding: 1.25rem; display: flex; flex-direction: column; gap: 0.6rem; }
+    body.light-mode .dsp-option-card { background: #f0ebe3; border-color: #d4c9b0; }
+    .dsp-option-name { font-size: 1.4rem; font-weight: 600; }
+    .dsp-bar-wrap { background: #0f0a20; border-radius: 4px; height: 8px; overflow: hidden; }
+    body.light-mode .dsp-bar-wrap { background: #ddd5c5; }
+    .dsp-bar { height: 100%; border-radius: 4px; transition: width 0.6s ease; width: 0%; }
+    .dsp-pct { font-size: 1.1rem; font-weight: 600; }
+    .dsp-expose-list { display: flex; flex-wrap: wrap; gap: 0.4rem 1.2rem; justify-content: center; max-width: 700px; font-size: 0.95rem; }
+    .dsp-answers-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 0.6rem; width: 100%; max-width: 760px; }
+    .dsp-answer-chip { background: #1a1232; border: 2px solid #2d1f50; border-radius: 10px; padding: 0.75rem 1rem; font-size: 1rem; text-align: center; transition: background 0.3s, border-color 0.3s; }
+    body.light-mode .dsp-answer-chip { background: #f0ebe3; border-color: #d4c9b0; }
+    .dsp-answer-chip.correct { background: rgba(74,222,128,0.15); border-color: #4ade80 !important; color: #4ade80; }
+    .dsp-answer-chip.wrong { opacity: 0.4; }
+    .dsp-reveal-list { display: flex; flex-direction: column; gap: 0.4rem; width: 100%; max-width: 560px; }
+    .dsp-reveal-row { display: flex; justify-content: space-between; align-items: center; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; padding: 0.5rem 0.9rem; }
+    body.light-mode .dsp-reveal-row { background: #f0ebe3; border-color: #d4c9b0; }
+    .dsp-reveal-row.correct { border-color: #4ade80; }
+    .dsp-reveal-row.wrong { opacity: 0.45; }
+    .dsp-score-list { display: flex; flex-direction: column; gap: 0.4rem; width: 100%; max-width: 480px; }
+    .dsp-score-row { display: flex; justify-content: space-between; align-items: center; background: #1a1232; border-radius: 8px; padding: 0.55rem 0.9rem; font-size: 1rem; }
+    body.light-mode .dsp-score-row { background: #f0ebe3; }
+    .dsp-score-pts { font-family: 'Cinzel', serif; color: #cfb991; }
+    .dsp-mafia-grid { display: flex; flex-wrap: wrap; gap: 0.6rem; justify-content: center; max-width: 860px; }
+    .dsp-mafia-chip { background: #1a1232; border: 2px solid #2d1f50; border-radius: 12px; padding: 0.55rem 1rem; font-size: 1rem; font-weight: 500; min-width: 90px; text-align: center; }
+    body.light-mode .dsp-mafia-chip { background: #f0ebe3; border-color: #d4c9b0; }
+    .dsp-mafia-chip.dead { opacity: 0.3; text-decoration: line-through; }
+    .dsp-mafia-chip.voted { border-color: #7c3aed; }
+    .dsp-vote-count-sub { font-size: 0.75rem; color: #7c3aed; }
+    .dsp-vs-row { display: flex; align-items: center; gap: 1.5rem; width: 100%; max-width: 800px; }
+    .dsp-debater-card { flex: 1; background: #1a1232; border: 2px solid #2d1f50; border-radius: 14px; padding: 1.1rem; text-align: center; }
+    body.light-mode .dsp-debater-card { background: #f0ebe3; border-color: #d4c9b0; }
+    .dsp-debater-name { font-family: 'Cinzel', serif; font-size: 1.6rem; }
+    .dsp-debater-side { font-size: 0.85rem; color: #8b7aa8; margin-top: 0.2rem; }
+    .dsp-debate-topic { font-family: 'Cinzel', serif; font-size: 1.9rem; text-align: center; max-width: 760px; line-height: 1.3; }
+    .dsp-debate-timer { font-family: 'Cinzel', serif; font-size: 2.8rem; color: #cfb991; }
+    .dsp-vote-bars { display: flex; gap: 1.5rem; width: 100%; max-width: 640px; }
+    .dsp-vote-col { flex: 1; display: flex; flex-direction: column; gap: 0.4rem; text-align: center; }
+    .dsp-vote-bar-wrap { background: #0f0a20; border-radius: 4px; height: 8px; }
+    body.light-mode .dsp-vote-bar-wrap { background: #ddd5c5; }
+    .dsp-vote-bar { height: 100%; border-radius: 4px; transition: width 0.5s ease; }
+    .dsp-scorebar { display: flex; flex-wrap: wrap; gap: 0.5rem; justify-content: center; }
+    .dsp-score-chip { background: #1a1232; border-radius: 8px; padding: 0.35rem 0.8rem; font-size: 0.95rem; }
+    body.light-mode .dsp-score-chip { background: #f0ebe3; }
+    .dsp-gameover-cols { display: flex; gap: 2rem; }
+    .dsp-gameover-col { flex: 1; display: flex; flex-direction: column; gap: 0.4rem; }
+    .dsp-gameover-col-title { font-size: 0.8rem; color: #8b7aa8; text-transform: uppercase; letter-spacing: 0.1em; margin-bottom: 0.2rem; }
+    .dsp-role-row { background: #1a1232; border-radius: 8px; padding: 0.5rem 0.9rem; font-size: 0.95rem; }
+    body.light-mode .dsp-role-row { background: #f0ebe3; }
+    .dsp-topic-list { display: flex; flex-direction: column; gap: 0.4rem; width: 100%; max-width: 540px; }
+    .dsp-topic-row { display: flex; justify-content: space-between; align-items: center; background: #1a1232; border: 1px solid #2d1f50; border-radius: 8px; padding: 0.5rem 0.9rem; }
+    body.light-mode .dsp-topic-row { background: #f0ebe3; border-color: #d4c9b0; }
+    .dsp-status-chip { font-size: 0.8rem; padding: 0.15rem 0.55rem; border-radius: 6px; }
+    .dsp-status-ready { background: rgba(74,222,128,0.15); color: #4ade80; }
+    .dsp-status-validating { background: rgba(207,185,145,0.12); color: #cfb991; }
+    .dsp-status-waiting { color: #5a4a7a; }
+    .dsp-status-redo { background: rgba(248,113,113,0.15); color: #f87171; }
   </style>
 </head>
 <body>
@@ -1229,12 +1306,27 @@
   <div id="screen-home" class="screen active">
     <h1>Johnbox Games</h1>
     <h2 style="color: #ede9f8;">Enter your name and room PIN to get started</h2>
+    <div id="rejoin-banner" style="display:none;flex-direction:column;align-items:center;gap:0.4rem;margin-bottom:0.5rem;width:100%">
+      <button class="btn" id="rejoin-btn" onclick="doRejoin()" style="background:#1a1232;border:2px solid #cfb991;color:#cfb991;width:100%;max-width:320px"></button>
+      <div id="rejoin-room-label" style="font-size:0.8rem;color:#8b7aa8"></div>
+    </div>
     <input id="home-name-input" type="text" placeholder="Your name" maxlength="20" autocomplete="off" />
     <input id="home-pin-input" type="text" placeholder="PIN" maxlength="4" inputmode="numeric" autocomplete="off" />
     <button class="btn" onclick="joinRoomFromHome()">Join Room</button>
     <button class="btn" style="background:#1a1232;border:2px solid #4c1d95;color:#c084fc;" onclick="goCreate()">Create Room</button>
     <div class="error" id="home-error"></div>
-    <button class="btn btn-ghost" id="home-light-mode-btn" onclick="toggleLightMode()" style="margin-top:0.75rem;">☀️ Light Mode</button>
+    <button class="btn" style="background:#1a1232;border:2px solid #4c1d95;color:#c084fc;" onclick="showScreen('screen-spectator')">Display Screen</button>
+    <button class="btn btn-ghost" id="home-light-mode-btn" onclick="toggleLightMode()" style="margin-top:0.25rem;">☀️ Light Mode</button>
+  </div>
+
+  <!-- ── Screen: Spectator PIN ── -->
+  <div id="screen-spectator" class="screen">
+    <h1>Display Screen</h1>
+    <h2>Enter the room PIN to watch</h2>
+    <input id="spectator-pin-input" type="text" placeholder="PIN" maxlength="4" inputmode="numeric" autocomplete="off" />
+    <button class="btn" onclick="joinAsDisplay()">Watch</button>
+    <button class="btn btn-ghost" style="margin-top:0.5rem;" onclick="showScreen('screen-home')">Back</button>
+    <div class="error" id="spectator-error"></div>
   </div>
 
   <!-- ── Screen 2: Join PIN ── -->
@@ -1918,6 +2010,7 @@
       roomHostId = socket.id;
       setHostMode(true);
       setupLobby(pin, playerURL, qrDataURL, players, socket.id);
+      saveSession(pin, myName);
       showScreen('screen-lobby');
     });
 
@@ -1931,17 +2024,26 @@
     }
 
     socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId }) => {
+      if (isDisplayMode) return;
       myName = name;
       myPin = pin;
       roomHostId = hostId;
       setHostMode(false);
       setupLobby(pin, playerURL, qrDataURL, players, hostId);
+      saveSession(pin, name);
       showScreen('screen-lobby');
     });
 
     socket.on('join-error', ({ message }) => {
       document.getElementById('join-error').textContent = message;
       document.getElementById('home-error').textContent = message;
+      if (_rejoinAttempt) {
+        myPin = null;
+        clearSession();
+        showRejoinBanner();
+        showScreen('screen-home');
+      }
+      _rejoinAttempt = false;
     });
 
     // ── Lobby ──────────────────────────────────────────────────────
@@ -3634,6 +3736,47 @@
       });
     }
 
+    // ── Rejoin ────────────────────────────────────────────────────
+    let _rejoinAttempt = false;
+
+    function saveSession(pin, name) {
+      try { localStorage.setItem('jb-session', JSON.stringify({ pin, name })); } catch (_) {}
+    }
+    function clearSession() {
+      try { localStorage.removeItem('jb-session'); } catch (_) {}
+    }
+    function loadSession() {
+      try { return JSON.parse(localStorage.getItem('jb-session') || 'null'); } catch (_) { return null; }
+    }
+
+    function doRejoin() {
+      const s = loadSession();
+      if (!s) return;
+      myName = s.name;
+      _rejoinAttempt = true;
+      document.getElementById('home-error').textContent = '';
+      socket.emit('join-room', { pin: s.pin, name: s.name });
+    }
+
+    function showRejoinBanner() {
+      const s = loadSession();
+      const banner = document.getElementById('rejoin-banner');
+      if (!s) { banner.style.display = 'none'; return; }
+      document.getElementById('rejoin-btn').textContent = `↩ Rejoin as ${s.name}`;
+      document.getElementById('rejoin-room-label').textContent = `Room ${s.pin}`;
+      banner.style.display = 'flex';
+    }
+
+    showRejoinBanner();
+
+    socket.on('connect', () => {
+      // Auto-rejoin if socket reconnected mid-game (tab switch / brief disconnect)
+      if (myPin && myName) {
+        _rejoinAttempt = true;
+        socket.emit('join-room', { pin: myPin, name: myName });
+      }
+    });
+
     // ── Keyboard nav ───────────────────────────────────────────────
     document.getElementById('home-name-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') joinRoomFromHome();
@@ -3643,6 +3786,9 @@
     });
     document.getElementById('pin-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') joinRoom();
+    });
+    document.getElementById('spectator-pin-input').addEventListener('keydown', e => {
+      if (e.key === 'Enter') joinAsDisplay();
     });
     document.getElementById('et-topic-input').addEventListener('keydown', e => {
       if (e.key === 'Enter') submitETTopic();
@@ -4272,8 +4418,609 @@
     function debateNextRound() { socket.emit('debate-next-round'); }
     // ─── END DEBATE ───────────────────────────────────────────────────────────
 
+    // ── Display mode ─────────────────────────────────────────────────────────
+    let isDisplayMode = false;
+    const useCustomDisplayScreens = false;
+
+    function setDisplayMode(on) {
+      isDisplayMode = on;
+      document.body.classList.toggle('display-mode', on);
+    }
+
+    function blockDisplayModeButtonEvent(event) {
+      if (!isDisplayMode) return;
+      const target = event.target;
+      if (!target || typeof target.closest !== 'function') return;
+      const pressable = target.closest('button, [role="button"], .game-card');
+      if (!pressable) return;
+      event.preventDefault();
+      event.stopImmediatePropagation();
+    }
+
+    document.addEventListener('pointerdown', blockDisplayModeButtonEvent, true);
+    document.addEventListener('click', blockDisplayModeButtonEvent, true);
+    document.addEventListener('keydown', (event) => {
+      if (event.key !== 'Enter' && event.key !== ' ') return;
+      blockDisplayModeButtonEvent(event);
+    }, true);
+
+    function joinAsDisplay() {
+      const pin = document.getElementById('spectator-pin-input').value.trim();
+      if (!pin) { document.getElementById('spectator-error').textContent = 'Enter the PIN first'; return; }
+      if (pin.length < 4) { document.getElementById('spectator-error').textContent = 'PIN is 4 digits'; return; }
+      document.getElementById('spectator-error').textContent = '';
+      socket.emit('join-as-display', { pin });
+    }
+
+    socket.on('spectator-error', ({ message }) => {
+      document.getElementById('spectator-error').textContent = message;
+    });
+
+    socket.on('spectator-joined', ({ pin, players, qrDataURL, playerURL, hostId }) => {
+      setupLobby(pin, playerURL, qrDataURL, players, hostId);
+      showScreen('screen-lobby');
+    });
+
+    socket.on('display-error', ({ message }) => {
+      setDisplayMode(false);
+      document.getElementById('spectator-error').textContent = message;
+    });
+
+    socket.on('display-joined', ({ pin, players, qrDataURL, playerURL, gameState }) => {
+      setDisplayMode(true);
+      myName = '';
+      myPin = pin;
+      roomHostId = null;
+      setHostMode(false);
+      setupLobby(pin, playerURL, qrDataURL, players, null);
+      showScreen('screen-lobby');
+    });
+
+    function dspRenderPlayers(players) {
+      currentPlayers = players;
+      const grid = document.getElementById('dsp-player-grid');
+      grid.innerHTML = '';
+      players.forEach((p, i) => {
+        const chip = document.createElement('div');
+        chip.className = 'dsp-player-chip';
+        const dot = document.createElement('div');
+        dot.style.cssText = `width:9px;height:9px;border-radius:50%;flex-shrink:0;background:${PLAYER_COLORS[i % PLAYER_COLORS.length]}`;
+        chip.appendChild(dot);
+        chip.appendChild(document.createTextNode(p.name));
+        grid.appendChild(chip);
+      });
+    }
+
+    // Override player-list-updated for display mode
+    const _origPlayerListUpdated = socket.listeners('player-list-updated')[0];
+    socket.off('player-list-updated');
+    socket.on('player-list-updated', (data) => {
+      if (_origPlayerListUpdated) _origPlayerListUpdated(data);
+    });
+
+    function dspSetBar(id, timeLeft, totalTime) {
+      const bar = document.getElementById(id);
+      if (bar) bar.style.width = Math.max(0, (timeLeft / totalTime) * 100) + '%';
+    }
+    function dspResetBar(id) {
+      const bar = document.getElementById(id);
+      if (!bar) return;
+      bar.style.transition = 'none'; bar.style.width = '100%'; void bar.offsetWidth; bar.style.transition = '';
+    }
+    function dspShowSection(screenId, sectionIds, showId) {
+      sectionIds.forEach(id => { const el = document.getElementById(id); if (el) el.style.display = 'none'; });
+      const show = document.getElementById(showId);
+      if (show) show.style.display = 'flex';
+    }
+
+    // game-started in display mode
+    const _origGameStarted = socket.listeners('game-started')[0];
+    socket.off('game-started');
+    socket.on('game-started', (data) => {
+      if (!isDisplayMode) { if (_origGameStarted) _origGameStarted(data); return; }
+      if (_origGameStarted) _origGameStarted(data);
+      return;
+      const { game } = data;
+      if (game === 'hot-takes') { showScreen('screen-dsp-ht'); return; }
+      if (game === 'photo-roulette') {
+        document.getElementById('dsp-pr-upload-section').style.display = 'block';
+        document.getElementById('dsp-pr-guess-section').style.display = 'none';
+        document.getElementById('dsp-pr-reveal-section').style.display = 'none';
+        document.getElementById('dsp-pr-scores-section').style.display = 'none';
+        document.getElementById('dsp-pr-photo-wrap').style.display = 'none';
+        document.getElementById('dsp-pr-upload-count').textContent = '0';
+        showScreen('screen-dsp-pr'); return;
+      }
+      if (game === 'everything-trivia') {
+        dspShowSection('screen-dsp-et', ['dsp-et-topics-section','dsp-et-intro-section','dsp-et-question-section','dsp-et-reveal-section','dsp-et-scores-section'], 'dsp-et-topics-section');
+        showScreen('screen-dsp-et'); return;
+      }
+      if (game === 'mafia') { showScreen('screen-dsp-mafia'); return; }
+      if (game === 'debate' || game === 'debate-setup') { showScreen('screen-dsp-debate'); return; }
+      if (game === 'questions-challenges') { showScreen('screen-dsp-qc'); return; }
+      showScreen('screen-dsp-game-select');
+    });
+
+    if (isDisplayMode && useCustomDisplayScreens) {
+      socket.on('returned-to-lobby', () => showScreen('screen-dsp-lobby'));
+      socket.on('returned-to-game-select', () => showScreen('screen-dsp-game-select'));
+    } else {
+      // patch returned-to-lobby to check mode
+      const _origReturnedToLobby = socket.listeners('returned-to-lobby')[0];
+      socket.off('returned-to-lobby');
+      socket.on('returned-to-lobby', (data) => {
+        if (_origReturnedToLobby) _origReturnedToLobby(data);
+      });
+    }
+
+    // ── Hot Takes display ─────────────────────────────────────────
+    socket.on('ht-round-start', (data) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      const { question, optionA, optionB, roundNumber, playerColors } = data;
+      document.getElementById('dsp-ht-round-pill').textContent = `Round ${roundNumber}`;
+      document.getElementById('dsp-ht-question').textContent = question;
+      document.getElementById('dsp-ht-count').textContent = '';
+      document.getElementById('dsp-ht-expose').style.display = 'none';
+      const cA = playerColors[optionA.name] || '#cfb991';
+      const cB = playerColors[optionB.name] || '#cfb991';
+      document.getElementById('dsp-ht-name-a').textContent = optionA.name;
+      document.getElementById('dsp-ht-name-a').style.color = cA;
+      document.getElementById('dsp-ht-card-a').style.borderColor = cA;
+      document.getElementById('dsp-ht-bar-a').style.background = cA;
+      document.getElementById('dsp-ht-bar-a').style.width = '0%';
+      document.getElementById('dsp-ht-pct-a').textContent = '';
+      document.getElementById('dsp-ht-name-b').textContent = optionB.name;
+      document.getElementById('dsp-ht-name-b').style.color = cB;
+      document.getElementById('dsp-ht-card-b').style.borderColor = cB;
+      document.getElementById('dsp-ht-bar-b').style.background = cB;
+      document.getElementById('dsp-ht-bar-b').style.width = '0%';
+      document.getElementById('dsp-ht-pct-b').textContent = '';
+      dspResetBar('dsp-ht-timer');
+      showScreen('screen-dsp-ht');
+    });
+    socket.on('ht-vote-count', ({ count, total }) => { if (isDisplayMode && useCustomDisplayScreens) document.getElementById('dsp-ht-count').textContent = `${count} / ${total} voted`; });
+    socket.on('ht-timer-tick', ({ timeLeft, totalTime }) => { if (isDisplayMode && useCustomDisplayScreens) dspSetBar('dsp-ht-timer', timeLeft, totalTime); });
+    socket.on('ht-reveal', (data) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      const { question, optionA, optionB, pctA, pctB, revealVotes, voteDetails, playerColors } = data;
+      document.getElementById('dsp-ht-question').textContent = question;
+      setTimeout(() => { document.getElementById('dsp-ht-bar-a').style.width = pctA + '%'; document.getElementById('dsp-ht-bar-b').style.width = pctB + '%'; }, 80);
+      document.getElementById('dsp-ht-pct-a').textContent = pctA + '%';
+      document.getElementById('dsp-ht-pct-b').textContent = pctB + '%';
+      document.getElementById('dsp-ht-count').textContent = '';
+      const exposeEl = document.getElementById('dsp-ht-expose');
+      if (revealVotes && voteDetails.length > 0) {
+        exposeEl.style.display = 'flex'; exposeEl.innerHTML = '';
+        voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
+          const row = document.createElement('div');
+          row.innerHTML = `<span style="color:${voterColor};font-weight:500">${voterName}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:500">${votedForName}</span>`;
+          exposeEl.appendChild(row);
+        });
+      } else { exposeEl.style.display = 'none'; }
+    });
+    socket.on('ht-game-over', () => { if (isDisplayMode && useCustomDisplayScreens) showScreen('screen-dsp-lobby'); });
+
+    // ── Photo Roulette display ────────────────────────────────────
+    socket.on('pr-photo-count', ({ count }) => { if (isDisplayMode && useCustomDisplayScreens) { document.getElementById('dsp-pr-upload-count').textContent = count; document.getElementById('dsp-pr-phase-tag').textContent = `${count} uploaded`; } });
+    socket.on('pr-display-photo', ({ photoData, photoNumber, totalPhotos }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-pr-upload-section').style.display = 'none';
+      document.getElementById('dsp-pr-reveal-section').style.display = 'none';
+      document.getElementById('dsp-pr-scores-section').style.display = 'none';
+      document.getElementById('dsp-pr-photo-wrap').style.display = 'block';
+      document.getElementById('dsp-pr-photo').src = photoData;
+      document.getElementById('dsp-pr-guess-section').style.display = 'block';
+      document.getElementById('dsp-pr-photo-num').textContent = `Photo ${photoNumber} of ${totalPhotos}`;
+      document.getElementById('dsp-pr-guess-count').textContent = 'Guessing…';
+      dspResetBar('dsp-pr-timer');
+      showScreen('screen-dsp-pr');
+    });
+    socket.on('pr-guess-count', ({ count, total }) => { if (isDisplayMode && useCustomDisplayScreens) document.getElementById('dsp-pr-guess-count').textContent = `${count} / ${total} guessed`; });
+    socket.on('pr-timer-tick', ({ timeLeft, totalTime }) => { if (isDisplayMode && useCustomDisplayScreens) dspSetBar('dsp-pr-timer', timeLeft, totalTime); });
+    socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-pr-guess-section').style.display = 'none';
+      document.getElementById('dsp-pr-reveal-section').style.display = 'flex';
+      document.getElementById('dsp-pr-photographer').textContent = `📷 ${photographerName}`;
+      const list = document.getElementById('dsp-pr-reveal-list');
+      list.innerHTML = '';
+      guesses.forEach(({ guesserName, guessedName }) => {
+        const pts = pointsThisRound[guesserName] || 0;
+        const row = document.createElement('div');
+        row.className = 'dsp-reveal-row';
+        row.innerHTML = `<span style="color:${getPlayerColor(guesserName)};font-weight:500">${guesserName}</span><span style="color:#5a4a7a;margin:0 0.4rem">→</span><span style="color:${getPlayerColor(guessedName)}">${guessedName}</span>${pts > 0 ? `<span style="color:#cfb991;margin-left:auto">+${pts}</span>` : ''}`;
+        list.appendChild(row);
+      });
+    });
+    socket.on('pr-game-over', ({ scores }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-pr-photo-wrap').style.display = 'none';
+      document.getElementById('dsp-pr-upload-section').style.display = 'none';
+      document.getElementById('dsp-pr-guess-section').style.display = 'none';
+      document.getElementById('dsp-pr-reveal-section').style.display = 'none';
+      document.getElementById('dsp-pr-scores-section').style.display = 'flex';
+      const list = document.getElementById('dsp-pr-scores-list');
+      list.innerHTML = '';
+      Object.entries(scores).sort(([,a],[,b]) => b - a).forEach(([name, pts], i) => {
+        const row = document.createElement('div');
+        row.className = 'dsp-score-row';
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="dsp-score-pts">${pts}</span>`;
+        list.appendChild(row);
+      });
+    });
+
+    // ── Everything Trivia display ─────────────────────────────────
+    const dspEtSections = ['dsp-et-topics-section','dsp-et-intro-section','dsp-et-question-section','dsp-et-reveal-section','dsp-et-scores-section'];
+    socket.on('et-topic-status', ({ readyCount, total, topics }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-et-phase-tag').textContent = `${readyCount} / ${total} ready`;
+      const list = document.getElementById('dsp-et-topic-list');
+      list.innerHTML = '';
+      topics.forEach(({ playerName, topic, status }) => {
+        const row = document.createElement('div');
+        row.className = 'dsp-topic-row';
+        const chipClass = status === 'ready' ? 'dsp-status-ready' : status === 'validating' ? 'dsp-status-validating' : status === 'needs-resubmit' ? 'dsp-status-redo' : 'dsp-status-waiting';
+        const label = status === 'ready' ? 'Ready' : status === 'validating' ? 'Checking' : status === 'needs-resubmit' ? 'Redo' : 'Waiting';
+        row.innerHTML = `<div><div style="font-weight:500;color:${getPlayerColor(playerName)}">${playerName}</div><div style="font-size:0.85rem;color:#8b7aa8">${topic || '…'}</div></div><span class="dsp-status-chip ${chipClass}">${label}</span>`;
+        list.appendChild(row);
+      });
+      dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-topics-section');
+      showScreen('screen-dsp-et');
+    });
+    socket.on('et-section-intro', ({ topic, submittedBy }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-et-intro-topic').textContent = topic;
+      document.getElementById('dsp-et-intro-by').textContent = `Submitted by ${submittedBy}`;
+      dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-intro-section');
+      showScreen('screen-dsp-et');
+    });
+    socket.on('et-question-start', ({ topic, sectionNumber, totalSections, questionNumber, totalQuestionsInSection, question, answers }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-et-q-tag').textContent = `${topic} — Q${questionNumber} of ${totalQuestionsInSection}`;
+      document.getElementById('dsp-et-section-pill').textContent = `Section ${sectionNumber}/${totalSections}`;
+      document.getElementById('dsp-et-question').textContent = question;
+      document.getElementById('dsp-et-answer-count').textContent = '';
+      const grid = document.getElementById('dsp-et-answers');
+      grid.innerHTML = '';
+      answers.forEach(a => { const chip = document.createElement('div'); chip.className = 'dsp-answer-chip'; chip.textContent = a; grid.appendChild(chip); });
+      dspResetBar('dsp-et-timer');
+      dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-question-section');
+      showScreen('screen-dsp-et');
+    });
+    socket.on('et-answer-count', ({ count, total }) => { if (isDisplayMode && useCustomDisplayScreens) document.getElementById('dsp-et-answer-count').textContent = `${count} / ${total} answered`; });
+    socket.on('et-timer-tick', ({ timeLeft, totalTime }) => { if (isDisplayMode && useCustomDisplayScreens) dspSetBar('dsp-et-timer', timeLeft, totalTime); });
+    socket.on('et-reveal', ({ correctAnswer, answersByPlayer, pointsAwarded }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-et-correct').textContent = correctAnswer;
+      document.getElementById('dsp-et-answers').querySelectorAll('.dsp-answer-chip').forEach(c => { if (c.textContent === correctAnswer) c.classList.add('correct'); else c.classList.add('wrong'); });
+      const list = document.getElementById('dsp-et-reveal-list');
+      list.innerHTML = '';
+      answersByPlayer.forEach(({ playerName, answer, isCorrect }) => {
+        const pts = pointsAwarded[playerName] || 0;
+        const row = document.createElement('div');
+        row.className = 'dsp-reveal-row ' + (answer ? (isCorrect ? 'correct' : 'wrong') : '');
+        row.innerHTML = `<div><div style="font-weight:500;color:${getPlayerColor(playerName)}">${playerName}</div><div style="font-size:0.85rem;color:#8b7aa8">${answer || 'No answer'}</div></div><div class="dsp-score-pts">${pts > 0 ? '+'+pts : '0'}</div>`;
+        list.appendChild(row);
+      });
+      dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-reveal-section');
+    });
+    socket.on('et-section-scoreboard', ({ topic, leaderboard }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-et-scores-title').textContent = `After: ${topic}`;
+      const list = document.getElementById('dsp-et-scores-list');
+      list.innerHTML = '';
+      [...leaderboard].sort((a,b) => (b.sectionScore-a.sectionScore)||(b.score-a.score)).forEach(({ name, score, sectionScore }, i) => {
+        const row = document.createElement('div'); row.className = 'dsp-score-row';
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="dsp-score-pts">+${sectionScore} (${score})</span>`;
+        list.appendChild(row);
+      });
+      dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-scores-section');
+    });
+    socket.on('et-game-over', ({ rankings }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-et-scores-title').textContent = 'Final Standings';
+      const list = document.getElementById('dsp-et-scores-list');
+      list.innerHTML = '';
+      rankings.forEach(({ name, score }, i) => {
+        const row = document.createElement('div'); row.className = 'dsp-score-row';
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="dsp-score-pts">${score}</span>`;
+        list.appendChild(row);
+      });
+      dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-scores-section');
+    });
+
+    // ── Mafia display ─────────────────────────────────────────────
+    socket.on('mafia-display-state', (state) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      if (state.phase === 'game-over') {
+        document.getElementById('dsp-mafia-grid').style.display = 'none';
+        document.getElementById('dsp-mafia-gameover').style.display = 'flex';
+        const winTeam = state.winner?.team;
+        const banner = document.getElementById('dsp-mafia-win-banner');
+        banner.textContent = winTeam === 'town' ? 'Town Wins' : winTeam === 'killers' ? 'Killers Win' : 'Joker Wins';
+        banner.style.color = winTeam === 'town' ? '#4ade80' : winTeam === 'killers' ? '#f87171' : '#e879f9';
+        const cols = document.getElementById('dsp-mafia-gameover-cols');
+        cols.innerHTML = '';
+        [{ label:'Killers', list:(state.revealedRoles||[]).filter(r=>['killer','joker'].includes(r.role)) }, { label:'Town', list:(state.revealedRoles||[]).filter(r=>!['killer','joker'].includes(r.role)) }].forEach(({ label, list }) => {
+          if (!list.length) return;
+          const col = document.createElement('div'); col.className = 'dsp-gameover-col';
+          col.innerHTML = `<div class="dsp-gameover-col-title">${label}</div>`;
+          list.forEach(({ name, role }) => { const row = document.createElement('div'); row.className = 'dsp-role-row'; row.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span> <span style="color:#8b7aa8;font-size:0.8rem">${role}</span>`; col.appendChild(row); });
+          cols.appendChild(col);
+        });
+        showScreen('screen-dsp-mafia'); return;
+      }
+      document.getElementById('dsp-mafia-grid').style.display = 'flex';
+      document.getElementById('dsp-mafia-gameover').style.display = 'none';
+      const phaseLabel = state.phase === 'discussion' ? `Day ${state.dayNumber} — Discussion` : state.phase === 'voting' ? `Day ${state.dayNumber} — Voting` : state.phase === 'revote' ? `Day ${state.dayNumber} — Revote` : state.phase === 'night' ? `Night ${state.nightNumber}` : state.phase === 'day-result' ? `Day ${state.dayNumber} — Result` : state.phase === 'night-result' ? `Night ${state.nightNumber} — Result` : state.phase === 'setup' ? 'Setting up…' : state.phase;
+      document.getElementById('dsp-mafia-phase-label').textContent = phaseLabel;
+      document.getElementById('dsp-mafia-phase-tag').textContent = phaseLabel;
+      document.getElementById('dsp-mafia-event').textContent = state.eventMessage || '';
+      const grid = document.getElementById('dsp-mafia-grid');
+      grid.innerHTML = '';
+      (state.players || []).forEach(p => {
+        const chip = document.createElement('div');
+        chip.className = 'dsp-mafia-chip' + (p.alive ? '' : ' dead') + (p.voteCount > 0 ? ' voted' : '');
+        chip.innerHTML = `<div style="color:${getPlayerColor(p.name)}">${p.name}</div>${p.voteCount > 0 ? `<div class="dsp-vote-count-sub">${p.voteCount} vote${p.voteCount!==1?'s':''}</div>` : ''}`;
+        grid.appendChild(chip);
+      });
+      showScreen('screen-dsp-mafia');
+    });
+
+    // ── Debate display ────────────────────────────────────────────
+    socket.on('debate-state', (state) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      const r = state.currentRound || {};
+      const colors = state.playerColors || {};
+      document.getElementById('dsp-debate-phase-tag').textContent = state.phase || '';
+      document.getElementById('dsp-debate-timer').style.display = 'none';
+      document.getElementById('dsp-debate-vote-bars').style.display = 'none';
+      document.getElementById('dsp-debate-waiting').style.display = 'none';
+      const sb = document.getElementById('dsp-debate-scorebar');
+      sb.innerHTML = '';
+      Object.entries(state.scores || {}).sort(([,a],[,b]) => b-a).forEach(([name, pts]) => {
+        const chip = document.createElement('div'); chip.className = 'dsp-score-chip';
+        chip.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span><span class="dsp-score-pts" style="margin-left:0.4rem">${pts}</span>`;
+        sb.appendChild(chip);
+      });
+      if (r.debaterA && r.debaterB) {
+        document.getElementById('dsp-debate-vs').style.display = 'flex';
+        const cA = colors[r.debaterA.name] || '#cfb991', cB = colors[r.debaterB.name] || '#cfb991';
+        document.getElementById('dsp-debate-name-a').textContent = r.debaterA.name; document.getElementById('dsp-debate-name-a').style.color = cA; document.getElementById('dsp-debate-card-a').style.borderColor = cA;
+        document.getElementById('dsp-debate-name-b').textContent = r.debaterB.name; document.getElementById('dsp-debate-name-b').style.color = cB; document.getElementById('dsp-debate-card-b').style.borderColor = cB;
+        const sideA = r.sideMap?.[r.debaterA.id], sideB = r.sideMap?.[r.debaterB.id];
+        document.getElementById('dsp-debate-side-a').textContent = sideA === 'left' ? (r.topicLeft||'') : sideA === 'right' ? (r.topicRight||'') : '';
+        document.getElementById('dsp-debate-side-b').textContent = sideB === 'left' ? (r.topicLeft||'') : sideB === 'right' ? (r.topicRight||'') : '';
+      } else { document.getElementById('dsp-debate-vs').style.display = 'none'; }
+      document.getElementById('dsp-debate-topic').textContent = r.topic || '';
+      if (state.phase === 'voting') {
+        const votes = r.votes || {}, aId = r.debaterA?.id, bId = r.debaterB?.id;
+        const cA = Object.values(votes).filter(v=>v===aId).length, cB = Object.values(votes).filter(v=>v===bId).length, total = cA+cB||1;
+        document.getElementById('dsp-debate-vote-bars').style.display = 'flex';
+        ['a','b'].forEach((x, i) => {
+          const name = i===0?r.debaterA?.name:r.debaterB?.name, cnt = i===0?cA:cB, col = colors[name]||'#cfb991';
+          document.getElementById(`dsp-vote-name-${x}`).textContent = name||''; document.getElementById(`dsp-vote-name-${x}`).style.color = col;
+          document.getElementById(`dsp-vote-bar-${x}`).style.width = (cnt/total*100)+'%'; document.getElementById(`dsp-vote-bar-${x}`).style.background = col;
+          document.getElementById(`dsp-vote-count-${x}`).textContent = `${cnt} vote${cnt!==1?'s':''}`;
+        });
+      }
+      if (state.phase === 'picking') {
+        const pickingName = r.pendingPick===r.debaterA?.id?r.debaterA?.name:r.debaterB?.name;
+        document.getElementById('dsp-debate-waiting').textContent = `${pickingName||'Someone'} is picking…`;
+        document.getElementById('dsp-debate-waiting').style.display = 'block';
+      }
+      showScreen('screen-dsp-debate');
+    });
+    socket.on('debate-tick', ({ timerLeft }) => { if (isDisplayMode && useCustomDisplayScreens) { const el = document.getElementById('dsp-debate-timer'); el.style.display = 'block'; el.textContent = timerLeft; } });
+    socket.on('debate-stopped', () => { if (isDisplayMode && useCustomDisplayScreens) showScreen('screen-dsp-lobby'); });
+
+    // ── Q&C display ───────────────────────────────────────────────
+    socket.on('qc-collecting', () => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-qc-collecting').style.display = 'flex';
+      document.getElementById('dsp-qc-turn').style.display = 'none';
+      dspResetBar('dsp-qc-timer');
+      showScreen('screen-dsp-qc');
+    });
+    socket.on('qc-timer-tick', ({ timeLeft, totalTime }) => { if (isDisplayMode && useCustomDisplayScreens) dspSetBar('dsp-qc-timer', timeLeft, totalTime); });
+    socket.on('qc-round-start', ({ currentPlayer }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-qc-collecting').style.display = 'none';
+      document.getElementById('dsp-qc-turn').style.display = 'flex';
+      document.getElementById('dsp-qc-player').textContent = currentPlayer;
+      document.getElementById('dsp-qc-player').style.color = getPlayerColor(currentPlayer);
+      showScreen('screen-dsp-qc');
+    });
+    socket.on('qc-next-turn', ({ currentPlayer }) => {
+      if (!isDisplayMode || !useCustomDisplayScreens) return;
+      document.getElementById('dsp-qc-player').textContent = currentPlayer;
+      document.getElementById('dsp-qc-player').style.color = getPlayerColor(currentPlayer);
+    });
+    // ─── END DISPLAY MODE ─────────────────────────────────────────────────────
+
   </script>
 
   <canvas id="confetti-canvas"></canvas>
+
+  <!-- ── Display mode screens ── -->
+  <div id="screen-dsp-lobby" class="screen dsp-screen" style="padding:0;align-items:stretch;flex-direction:row">
+    <div class="dsp-lobby-left">
+      <div style="font-size:0.8rem;color:#8b7aa8;letter-spacing:0.15em;text-transform:uppercase">Join at</div>
+      <div id="dsp-pin" class="dsp-lobby-pin"></div>
+      <div id="dsp-qr"></div>
+      <div id="dsp-url" class="dsp-lobby-url"></div>
+    </div>
+    <div class="dsp-lobby-right">
+      <div style="font-family:'Cinzel',serif;font-size:1.6rem;color:#cfb991">Players</div>
+      <div id="dsp-player-grid" class="dsp-player-grid"></div>
+    </div>
+  </div>
+
+  <div id="screen-dsp-game-select" class="screen dsp-screen">
+    <div style="font-family:'Cinzel',serif;font-size:2rem;color:#cfb991">Johnbox Games</div>
+    <div style="color:#8b7aa8;font-size:1.1rem">Host is selecting a game…</div>
+  </div>
+
+  <div id="screen-dsp-ht" class="screen dsp-screen" style="gap:0;padding:0">
+    <div class="dsp-header-bar">
+      <span class="dsp-game-tag">Hot Takes</span>
+      <span id="dsp-ht-round-pill" class="dsp-pill"></span>
+      <span id="dsp-ht-vote-tag" class="dsp-phase-tag"></span>
+    </div>
+    <div class="timer-wrap" style="height:5px"><div id="dsp-ht-timer" class="timer-bar"></div></div>
+    <div class="dsp-body">
+      <div id="dsp-ht-question" class="dsp-big-question"></div>
+      <div id="dsp-ht-options" class="dsp-options-row">
+        <div class="dsp-option-card" id="dsp-ht-card-a">
+          <div class="dsp-option-name" id="dsp-ht-name-a"></div>
+          <div class="dsp-bar-wrap"><div class="dsp-bar" id="dsp-ht-bar-a"></div></div>
+          <div class="dsp-pct" id="dsp-ht-pct-a"></div>
+        </div>
+        <div class="dsp-option-card" id="dsp-ht-card-b">
+          <div class="dsp-option-name" id="dsp-ht-name-b"></div>
+          <div class="dsp-bar-wrap"><div class="dsp-bar" id="dsp-ht-bar-b"></div></div>
+          <div class="dsp-pct" id="dsp-ht-pct-b"></div>
+        </div>
+      </div>
+      <div id="dsp-ht-count" style="color:#8b7aa8;font-size:0.95rem"></div>
+      <div id="dsp-ht-expose" class="dsp-expose-list" style="display:none"></div>
+    </div>
+  </div>
+
+  <div id="screen-dsp-pr" class="screen dsp-screen" style="gap:0;padding:0">
+    <div class="dsp-header-bar">
+      <span class="dsp-game-tag">Photo Roulette</span>
+      <span id="dsp-pr-phase-tag" class="dsp-phase-tag"></span>
+    </div>
+    <div class="timer-wrap" style="height:5px"><div id="dsp-pr-timer" class="timer-bar"></div></div>
+    <div class="dsp-body" style="flex-direction:row;align-items:center">
+      <div id="dsp-pr-photo-wrap" style="display:none;flex:0 0 auto;max-width:50vw;max-height:65vh">
+        <img id="dsp-pr-photo" src="" style="max-width:100%;max-height:65vh;border-radius:10px;object-fit:contain" />
+      </div>
+      <div style="flex:1;display:flex;flex-direction:column;gap:0.75rem">
+        <div id="dsp-pr-upload-section">
+          <div style="font-family:'Cinzel',serif;font-size:3.5rem;color:#cfb991" id="dsp-pr-upload-count">0</div>
+          <div style="color:#8b7aa8">photos uploaded</div>
+        </div>
+        <div id="dsp-pr-guess-section" style="display:none">
+          <div id="dsp-pr-photo-num" style="font-family:'Cinzel',serif;font-size:1.2rem;color:#cfb991"></div>
+          <div id="dsp-pr-guess-count" style="color:#8b7aa8;font-size:1rem;margin-top:0.25rem"></div>
+        </div>
+        <div id="dsp-pr-reveal-section" style="display:none;flex-direction:column;gap:0.5rem">
+          <div id="dsp-pr-photographer" style="font-family:'Cinzel',serif;font-size:1rem;color:#cfb991;margin-bottom:0.25rem"></div>
+          <div id="dsp-pr-reveal-list" class="dsp-reveal-list"></div>
+        </div>
+        <div id="dsp-pr-scores-section" style="display:none;flex-direction:column;gap:0.5rem">
+          <div style="font-family:'Cinzel',serif;font-size:1.2rem;color:#cfb991;margin-bottom:0.25rem">Final Scores</div>
+          <div id="dsp-pr-scores-list" class="dsp-score-list"></div>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-dsp-et" class="screen dsp-screen" style="gap:0;padding:0">
+    <div class="dsp-header-bar">
+      <span class="dsp-game-tag">Everything Trivia</span>
+      <span id="dsp-et-section-pill" class="dsp-pill"></span>
+      <span id="dsp-et-phase-tag" class="dsp-phase-tag"></span>
+    </div>
+    <div class="timer-wrap" style="height:5px"><div id="dsp-et-timer" class="timer-bar"></div></div>
+    <div class="dsp-body">
+      <div id="dsp-et-topics-section" style="display:none;flex-direction:column;align-items:center;gap:0.75rem;width:100%">
+        <div style="color:#8b7aa8">Players are submitting topics</div>
+        <div id="dsp-et-topic-list" class="dsp-topic-list"></div>
+      </div>
+      <div id="dsp-et-intro-section" style="display:none;flex-direction:column;align-items:center;gap:0.5rem">
+        <div style="color:#8b7aa8;font-size:1rem">Next topic</div>
+        <div id="dsp-et-intro-topic" style="font-family:'Cinzel',serif;font-size:2.5rem;color:#cfb991;text-align:center"></div>
+        <div id="dsp-et-intro-by" style="color:#8b7aa8"></div>
+      </div>
+      <div id="dsp-et-question-section" style="display:none;flex-direction:column;align-items:center;gap:1rem;width:100%">
+        <div id="dsp-et-q-tag" style="font-size:0.85rem;color:#8b7aa8;text-transform:uppercase;letter-spacing:0.1em"></div>
+        <div id="dsp-et-question" class="dsp-big-question" style="font-size:2.1rem"></div>
+        <div id="dsp-et-answers" class="dsp-answers-grid"></div>
+        <div id="dsp-et-answer-count" style="color:#8b7aa8;font-size:0.9rem"></div>
+      </div>
+      <div id="dsp-et-reveal-section" style="display:none;flex-direction:column;align-items:center;gap:0.75rem;width:100%">
+        <div style="color:#8b7aa8;font-size:0.9rem">Correct answer</div>
+        <div id="dsp-et-correct" style="font-family:'Cinzel',serif;font-size:1.8rem;color:#cfb991"></div>
+        <div id="dsp-et-reveal-list" class="dsp-reveal-list"></div>
+      </div>
+      <div id="dsp-et-scores-section" style="display:none;flex-direction:column;align-items:center;gap:0.75rem;width:100%">
+        <div id="dsp-et-scores-title" style="color:#8b7aa8;font-size:0.95rem"></div>
+        <div id="dsp-et-scores-list" class="dsp-score-list"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-dsp-mafia" class="screen dsp-screen" style="gap:0;padding:0">
+    <div class="dsp-header-bar">
+      <span class="dsp-game-tag">Mafia</span>
+      <span id="dsp-mafia-phase-tag" class="dsp-phase-tag"></span>
+    </div>
+    <div class="dsp-body">
+      <div id="dsp-mafia-phase-label" style="font-family:'Cinzel',serif;font-size:1.8rem;color:#cfb991"></div>
+      <div id="dsp-mafia-event" style="color:#8b7aa8;font-size:1rem;text-align:center;max-width:600px"></div>
+      <div id="dsp-mafia-grid" class="dsp-mafia-grid"></div>
+      <div id="dsp-mafia-gameover" style="display:none;flex-direction:column;align-items:center;gap:1.25rem">
+        <div id="dsp-mafia-win-banner" style="font-family:'Cinzel',serif;font-size:2.5rem"></div>
+        <div id="dsp-mafia-gameover-cols" class="dsp-gameover-cols"></div>
+      </div>
+    </div>
+  </div>
+
+  <div id="screen-dsp-debate" class="screen dsp-screen" style="gap:0;padding:0">
+    <div class="dsp-header-bar">
+      <span class="dsp-game-tag">Debateish</span>
+      <span id="dsp-debate-phase-tag" class="dsp-phase-tag"></span>
+    </div>
+    <div class="dsp-body">
+      <div id="dsp-debate-scorebar" class="dsp-scorebar"></div>
+      <div id="dsp-debate-vs" class="dsp-vs-row" style="display:none">
+        <div class="dsp-debater-card" id="dsp-debate-card-a">
+          <div class="dsp-debater-name" id="dsp-debate-name-a"></div>
+          <div class="dsp-debater-side" id="dsp-debate-side-a"></div>
+        </div>
+        <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:#5a4a7a;flex-shrink:0">VS</div>
+        <div class="dsp-debater-card" id="dsp-debate-card-b">
+          <div class="dsp-debater-name" id="dsp-debate-name-b"></div>
+          <div class="dsp-debater-side" id="dsp-debate-side-b"></div>
+        </div>
+      </div>
+      <div id="dsp-debate-topic" class="dsp-debate-topic"></div>
+      <div id="dsp-debate-timer" class="dsp-debate-timer" style="display:none"></div>
+      <div id="dsp-debate-vote-bars" class="dsp-vote-bars" style="display:none">
+        <div class="dsp-vote-col">
+          <div id="dsp-vote-name-a" style="font-size:1rem;font-weight:500"></div>
+          <div class="dsp-vote-bar-wrap"><div class="dsp-vote-bar" id="dsp-vote-bar-a"></div></div>
+          <div id="dsp-vote-count-a" style="font-size:0.9rem;color:#8b7aa8"></div>
+        </div>
+        <div class="dsp-vote-col">
+          <div id="dsp-vote-name-b" style="font-size:1rem;font-weight:500"></div>
+          <div class="dsp-vote-bar-wrap"><div class="dsp-vote-bar" id="dsp-vote-bar-b"></div></div>
+          <div id="dsp-vote-count-b" style="font-size:0.9rem;color:#8b7aa8"></div>
+        </div>
+      </div>
+      <div id="dsp-debate-waiting" style="display:none;color:#8b7aa8;font-size:1.1rem"></div>
+    </div>
+  </div>
+
+  <div id="screen-dsp-qc" class="screen dsp-screen" style="gap:0;padding:0">
+    <div class="dsp-header-bar">
+      <span class="dsp-game-tag">Questions &amp; Challenges</span>
+      <span id="dsp-qc-phase-tag" class="dsp-phase-tag"></span>
+    </div>
+    <div class="dsp-body">
+      <div id="dsp-qc-collecting" style="display:none;flex-direction:column;align-items:center;gap:0.75rem">
+        <div style="color:#8b7aa8">Collecting submissions</div>
+        <div class="timer-wrap" style="width:280px"><div id="dsp-qc-timer" class="timer-bar"></div></div>
+      </div>
+      <div id="dsp-qc-turn" style="display:none;flex-direction:column;align-items:center;gap:0.5rem">
+        <div style="color:#8b7aa8;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.1em">It's their turn</div>
+        <div id="dsp-qc-player" style="font-family:'Cinzel',serif;font-size:3rem"></div>
+      </div>
+    </div>
+  </div>
 </body>
 </html>
+
