@@ -1410,8 +1410,6 @@ io.on('connection', (socket) => {
     const room = rooms[pin];
     if (!room || room.hostSocketId !== socket.id) return;
 
-    const COLLECT_TIME = 60;
-
     room.qc = {
       submissions: [],
       playerOrder: [...room.players],
@@ -1420,21 +1418,7 @@ io.on('connection', (socket) => {
       usedIds: new Set(),
     };
 
-    let timeLeft = COLLECT_TIME;
-    io.to(pin).emit('qc-collecting', { timeLeft, totalTime: COLLECT_TIME });
-
-    const timer = setInterval(() => {
-      timeLeft--;
-      io.to(pin).emit('qc-timer-tick', { timeLeft, totalTime: COLLECT_TIME });
-
-      if (timeLeft <= 0) {
-        clearInterval(timer);
-        room.timers = room.timers.filter((t) => t !== timer);
-        startQCRound(pin);
-      }
-    }, 1000);
-
-    room.timers.push(timer);
+    io.to(pin).emit('qc-collecting');
   });
 
   socket.on('qc-submit', ({ text, type }) => {

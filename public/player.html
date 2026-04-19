@@ -536,7 +536,7 @@
       transition: max-height 0.28s ease, opacity 0.22s ease, margin-bottom 0.22s ease, padding 0.22s ease, border-width 0.22s ease;
     }
     .mafia-rules-panel.open {
-      max-height: 700px;
+      max-height: 1000px;
       opacity: 1;
       margin-bottom: 0.8rem;
       padding-top: 0.9rem;
@@ -1506,6 +1506,8 @@
         <div class="mafia-rule-row"><strong>🩺 Doctor:</strong> Protect one player each night, but you cannot protect the same player two nights in a row.</div>
         <div class="mafia-rule-row"><strong>👤 Villager:</strong> Vote out the killers and survive the nights. You also answer the overnight poll.</div>
         <div class="mafia-rule-row"><strong>🃏 Joker:</strong> Optional chaos role. If the Joker gets voted out, the Joker wins instantly.</div>
+        <div class="mafia-rule-row"><strong>Night:</strong> No talking during the night.</div>
+        <div class="mafia-rule-row"><strong>Polls:</strong> Answer the overnight poll silently. You cannot discuss the poll.</div>
         <div class="mafia-rule-row"><strong>Voting:</strong> Votes are public, including abstain. A true majority instantly resolves the vote.</div>
       </div>
     </div>
@@ -2374,6 +2376,8 @@
         <div class="mafia-rule-row"><span class="mafia-rule-label">🩺 <span class="mafia-role-town">Doctor:</span></span><span class="mafia-rule-text">Protect one player each night, but not the same player two nights in a row.</span></div>
         <div class="mafia-rule-row"><span class="mafia-rule-label">👤 <span class="mafia-role-town">Villager:</span></span><span class="mafia-rule-text">Vote out the killers. You also answer the overnight poll.</span></div>
         <div class="mafia-rule-row"><span class="mafia-rule-label">🃏 <span class="mafia-role-joker">Joker:</span></span><span class="mafia-rule-text">Optional chaos role. Get eliminated by vote and you win instantly.</span></div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">Night:</span><span class="mafia-rule-text">No talking during the night.</span></div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">Polls:</span><span class="mafia-rule-text">Answer the overnight poll silently. You cannot discuss the poll.</span></div>
         <div class="mafia-rule-row"><span class="mafia-rule-label">🗳️ Voting:</span><span class="mafia-rule-text">Votes are public. A true majority instantly resolves the vote.</span></div>
       `;
     }
@@ -3179,12 +3183,6 @@
       });
 
       showScreen('screen-et-over');
-    });
-
-    socket.on('qc-timer-tick', ({ timeLeft, totalTime }) => {
-      if (timeLeft <= 0) {
-        document.getElementById('qc-submit-btn').disabled = true;
-      }
     });
 
     function setType(type) {
@@ -4819,10 +4817,8 @@
       if (!isDisplayMode || !useCustomDisplayScreens) return;
       document.getElementById('dsp-qc-collecting').style.display = 'flex';
       document.getElementById('dsp-qc-turn').style.display = 'none';
-      dspResetBar('dsp-qc-timer');
       showScreen('screen-dsp-qc');
     });
-    socket.on('qc-timer-tick', ({ timeLeft, totalTime }) => { if (isDisplayMode && useCustomDisplayScreens) dspSetBar('dsp-qc-timer', timeLeft, totalTime); });
     socket.on('qc-round-start', ({ currentPlayer }) => {
       if (!isDisplayMode || !useCustomDisplayScreens) return;
       document.getElementById('dsp-qc-collecting').style.display = 'none';
@@ -5013,7 +5009,6 @@
     <div class="dsp-body">
       <div id="dsp-qc-collecting" style="display:none;flex-direction:column;align-items:center;gap:0.75rem">
         <div style="color:#8b7aa8">Collecting submissions</div>
-        <div class="timer-wrap" style="width:280px"><div id="dsp-qc-timer" class="timer-bar"></div></div>
       </div>
       <div id="dsp-qc-turn" style="display:none;flex-direction:column;align-items:center;gap:0.5rem">
         <div style="color:#8b7aa8;font-size:0.9rem;text-transform:uppercase;letter-spacing:0.1em">It's their turn</div>

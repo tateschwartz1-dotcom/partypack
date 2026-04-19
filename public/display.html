@@ -427,7 +427,6 @@
   <div class="qc-body">
     <div id="qc-collecting-section" style="display:none; flex-direction:column; align-items:center; gap:1rem">
       <div class="qc-phase-tag">Collecting submissions</div>
-      <div class="timer-wrap" style="width:300px"><div id="qc-timer-bar" class="timer-bar"></div></div>
     </div>
     <div id="qc-spin-section" style="display:none; flex-direction:column; align-items:center; gap:0.75rem">
       <div class="qc-phase-tag">It's their turn</div>
@@ -948,16 +947,11 @@
   socket.on('debate-stopped', () => showScreen('screen-lobby'));
 
   // ── Q&C ───────────────────────────────────────────────────────────
-  socket.on('qc-collecting', ({ timeLeft, totalTime }) => {
+  socket.on('qc-collecting', () => {
     document.getElementById('qc-collecting-section').style.display = 'flex';
     document.getElementById('qc-spin-section').style.display = 'none';
     document.getElementById('qc-gameover-section').style.display = 'none';
-    resetBar('qc-timer-bar');
     showScreen('screen-qc');
-  });
-
-  socket.on('qc-timer-tick', ({ timeLeft, totalTime }) => {
-    setBar('qc-timer-bar', timeLeft, totalTime);
   });
 
   socket.on('qc-round-start', ({ currentPlayer }) => {
