@@ -394,6 +394,590 @@ function pickDebateBannedEntries(count = 2) {
   return selected;
 }
 
+function randInt(min, max) {
+  return Math.floor(min + Math.random() * (max - min + 1));
+}
+
+function clamp(value, min, max) {
+  return Math.max(min, Math.min(max, value));
+}
+
+function formatMoney(value) {
+  return `$${Math.max(0, value || 0)}`;
+}
+
+function getAuctionPlayer(room, playerId) {
+  return room.players.find((player) => player.id === playerId) || null;
+}
+
+function getAuctionPlayerName(room, playerId) {
+  return getAuctionPlayer(room, playerId)?.name || 'Someone';
+}
+
+function getAuctionScoreboard(room) {
+  const auction = room.auction;
+  return room.players.map((player) => ({
+    id: player.id,
+    name: player.name,
+    money: auction.money[player.id] || 0,
+    score: auction.scores[player.id] || 0,
+    modifiers: auction.modifiers[player.id] || [],
+  }));
+}
+
+function getAuctionVoteSummary(votes = {}) {
+  const values = Object.values(votes);
+  return {
+    yes: values.filter((vote) => vote === 'yes').length,
+    no: values.filter((vote) => vote === 'no').length,
+    real: values.filter((vote) => vote === 'real').length,
+    madeup: values.filter((vote) => vote === 'madeup').length,
+    total: values.length,
+  };
+}
+
+function getAuctionItemIcon(item) {
+  if (!item) return '❔';
+  if (item.kind === 'points') return '⭐';
+  if (item.kind === 'power') return '⚡';
+  if (item.kind === 'minigame') return '🎲';
+  if (item.kind === 'mystery') return '❔';
+  return '🔨';
+}
+
+function makeAuctionPointItem() {
+  const tiers = [
+    { key: 'small', min: 2, max: 4 },
+    { key: 'medium', min: 4, max: 6 },
+    { key: 'large', min: 6, max: 9 },
+    { key: 'premium', min: 9, max: 11 },
+  ];
+  const tier = pickRandom(tiers);
+  const points = randInt(tier.min, tier.max);
+  return {
+    kind: 'points',
+    name: 'Points',
+    points,
+    summary: `Gain ${points} point${points === 1 ? '' : 's'}.`,
+  };
+}
+
+function normalizeAuctionSettings(auctionSettings = {}, playerCount = 0) {
+  const fallback = Math.max(1, playerCount * AUCTION_LISTINGS_PER_PLAYER);
+  const rawTotal = Number.parseInt(auctionSettings.totalListings, 10);
+  return {
+    totalListings: Math.max(1, Math.min(40, Number.isFinite(rawTotal) ? rawTotal : fallback)),
+  };
+}
+
+function makeAuctionPowerItem(players, lotsAfterCurrent = 0) {
+  let powers = [
+    { type: 'steal', name: 'Power', targetCount: 1, amount: randInt(2, 5) },
+    { type: 'lose', name: 'Power', targetCount: 1, amount: randInt(2, 5) },
+    { type: 'swap', name: 'Power', targetCount: 1 },
+    { type: 'drink', name: 'Power', targetCount: 1 },
+    { type: 'advantage', name: 'Power', targetCount: 0, count: 1 },
+    { type: 'disadvantage', name: 'Power', targetCount: 1, count: 1 },
+    { type: 'advantage2', name: 'Power', targetCount: 0, count: 2 },
+    { type: 'disadvantage2', name: 'Power', targetCount: Math.min(2, Math.max(1, players.length - 1)), count: 1 },
+  ];
+  powers = powers.filter((power) => {
+    if (['advantage', 'disadvantage'].includes(power.type)) return lotsAfterCurrent >= 1;
+    if (['advantage2', 'disadvantage2'].includes(power.type)) return lotsAfterCurrent >= 2;
+    return true;
+  });
+  const power = pickRandom(powers);
+  let summary = '';
+  if (power.type === 'steal') summary = `Steal ${power.amount} point${power.amount === 1 ? '' : 's'} from a player.`;
+  if (power.type === 'lose') summary = `Make a player lose ${power.amount} point${power.amount === 1 ? '' : 's'}.`;
+  if (power.type === 'swap') summary = 'Swap point totals with a player.';
+  if (power.type === 'drink') summary = 'Make a player get you a drink.';
+  if (power.type === 'advantage') summary = 'Get an advantage in your next minigame.';
+  if (power.type === 'disadvantage') summary = 'Give a player a disadvantage in their next minigame.';
+  if (power.type === 'advantage2') summary = 'Get advantages in your next two minigames.';
+  if (power.type === 'disadvantage2') summary = 'Give two players a disadvantage in their next minigames.';
+  let targetPrompt = '';
+  if (power.type === 'steal') targetPrompt = `Choose who to steal ${power.amount} point${power.amount === 1 ? '' : 's'} from.`;
+  if (power.type === 'lose') targetPrompt = `Choose who to lose ${power.amount} point${power.amount === 1 ? '' : 's'}.`;
+  if (power.type === 'swap') targetPrompt = 'Choose who to swap point totals with.';
+  if (power.type === 'drink') targetPrompt = 'Choose who gets you a drink.';
+  if (power.type === 'disadvantage') targetPrompt = 'Choose who gets a disadvantage.';
+  if (power.type === 'disadvantage2') targetPrompt = 'Choose two players to get disadvantages.';
+  return { kind: 'power', ...power, summary, targetPrompt };
+}
+
+function makeAuctionMinigameItem(modifier = null, forcedType = null) {
+  const gameType = forcedType || pickRandom(['toss', 'stack', 'find', 'flip', 'question', 'lie']);
+  const item = { kind: 'minigame', gameType, modifier, points: randInt(6, 12), name: '', summary: '', prompt: '', timerSeconds: 0 };
+  const isAdv = modifier === 'advantage';
+  const isDis = modifier === 'disadvantage';
+
+  if (gameType === 'toss') {
+    const strides = isAdv ? 1 : isDis ? 3 : randInt(1, 3);
+    item.points = strides === 1 ? randInt(5, 7) : strides === 2 ? randInt(7, 10) : randInt(10, 14);
+    item.name = 'Toss';
+    item.summary = 'Get ready to test your accuracy.';
+    item.prompt = `Place a phone-sized target on the floor. Take ${strides} large stride${strides === 1 ? '' : 's'} away. Toss a small object once. If it lands and rests touching the target, you win.`;
+  } else if (gameType === 'stack') {
+    const objectCount = isAdv ? 3 : isDis ? 5 : randInt(3, 5);
+    const seconds = isAdv ? 17 : isDis ? 9 : pickRandom([10, 11, 12, 13, 14, 15]);
+    const letters = [pickRandom(AUCTION_COMMON_LETTERS)];
+    const randomCount = isDis ? 2 : (Math.random() < 0.35 ? 2 : 1);
+    while (letters.length < randomCount + 1) {
+      const letter = pickRandom(AUCTION_RANDOM_LETTERS);
+      if (!letters.includes(letter)) letters.push(letter);
+    }
+    item.points = clamp(objectCount + Math.round((16 - seconds) / 2) + letters.length + 3, 6, 15);
+    item.name = 'Stack';
+    item.summary = `Stack ${objectCount} objects. The objects must all start with a letter on the letter list. The list will be revealed when the timer starts.`;
+    item.prompt = `You have ${seconds} seconds to stack ${objectCount} objects. The stack must stand by itself for 3 seconds. Every object must start with one of these letters: ${letters.join(', ')}.`;
+    item.letters = letters;
+    item.timerSeconds = seconds;
+  } else if (gameType === 'find') {
+    const objectCount = isAdv ? 3 : isDis ? 5 : randInt(3, 5);
+    const seconds = isAdv ? 17 : isDis ? 9 : pickRandom([10, 11, 12, 13, 14, 15]);
+    let category = pickRandom(AUCTION_FIND_CATEGORIES);
+    if (category.includes('{letter}')) category = category.replace('{letter}', pickRandom(AUCTION_RANDOM_LETTERS));
+    item.points = clamp(objectCount + Math.round((16 - seconds) / 2) + 4, 6, 15);
+    item.name = 'Find';
+    item.summary = `Touch ${objectCount} objects and say what they are out loud. The objects must fit in the category revealed when the timer starts.`;
+    item.prompt = `You have ${seconds} seconds to touch ${objectCount} objects that fit this category: ${category}. Say each object out loud when you touch it.`;
+    item.timerSeconds = seconds;
+  } else if (gameType === 'flip') {
+    const attempts = isAdv ? 3 : isDis ? 1 : randInt(1, 3);
+    item.points = attempts === 1 ? randInt(8, 12) : attempts === 2 ? randInt(6, 10) : randInt(5, 8);
+    item.name = 'Flip';
+    item.summary = 'Get ready to test your flippage.';
+    item.prompt = `You get ${attempts} chance${attempts === 1 ? '' : 's'} to do a bottle flip. If you do not have a bottle, the group may choose a different object for you to flip.`;
+  } else if (gameType === 'question') {
+    const question = pickRandom(isAdv ? AUCTION_ADVANTAGE_QUESTIONS : isDis ? AUCTION_DISADVANTAGE_QUESTIONS : AUCTION_NORMAL_QUESTIONS);
+    item.points = isDis ? randInt(10, 15) : isAdv ? randInt(5, 8) : randInt(7, 12);
+    item.name = 'Question';
+    item.summary = 'Answer a question. The group votes if you answered it well.';
+    item.prompt = question;
+  } else if (gameType === 'lie') {
+    const words = shuffle(AUCTION_LIE_WORDS).slice(0, 3);
+    const task = Math.random() < 0.5 ? 'real' : 'madeup';
+    item.points = isDis ? randInt(10, 15) : randInt(8, 13);
+    item.name = 'Lie?';
+    item.summary = isDis
+      ? 'You will be told to either say two words on the list or say two words you made up. The group tries to guess which prompt you had.'
+      : 'You will be told to either say a word on the list or say a word you made up. The group tries to guess which prompt you had.';
+    item.prompt = 'Follow the prompt. Voters guess whether the spoken word or words are real or made up.';
+    item.lie = { words, task, requiredWords: isDis ? 2 : 1, disadvantage: isDis };
+  }
+
+  if (modifier === 'advantage') item.summary = `Advantage: ${item.summary}`;
+  if (modifier === 'disadvantage') item.summary = `Disadvantage: ${item.summary}`;
+  return item;
+}
+
+function makeAuctionBaseItem(room, allowMinigame = true, forcedKind = null, lotsAfterCurrent = 0) {
+  const roll = Math.random();
+  const kind = forcedKind || (roll < 0.4 ? 'points' : roll < 0.7 ? 'minigame' : roll < 0.9 ? 'power' : pickRandom(['points', 'power', 'minigame']));
+  if (kind === 'minigame' && allowMinigame) return makeAuctionMinigameItem();
+  if (kind === 'power') return makeAuctionPowerItem(room.players, lotsAfterCurrent);
+  return makeAuctionPointItem();
+}
+
+function makeAuctionListing(room) {
+  const lotsAfterCurrent = Math.max(0, (room.auction?.totalListings || 0) - (room.auction?.listingNumber || 0));
+  const specialHeavy = Math.random() < 0.1;
+  const isDouble = Math.random() < (specialHeavy ? 0.5 : 0.18);
+  const isMystery = Math.random() < (specialHeavy ? 0.45 : 0.2);
+  const items = [];
+  items.push(makeAuctionBaseItem(room, true, null, lotsAfterCurrent));
+  if (isDouble) {
+    const allowMinigame = !items.some((item) => item.kind === 'minigame');
+    items.push(makeAuctionBaseItem(room, allowMinigame, null, lotsAfterCurrent));
+  }
+
+  const mysteryMask = items.map(() => false);
+  if (isMystery) {
+    if (isDouble) {
+      const mode = pickRandom(['one', 'all']);
+      if (mode === 'all') mysteryMask.fill(true);
+      else mysteryMask[randInt(0, items.length - 1)] = true;
+    } else {
+      mysteryMask[0] = true;
+    }
+  }
+
+  const visibleNames = items.map((item, index) => mysteryMask[index] ? 'Mystery Item' : item.name);
+  return {
+    id: `${Date.now()}-${Math.random().toString(16).slice(2)}`,
+    isDouble,
+    isMystery: mysteryMask.some(Boolean),
+    mysteryMask,
+    items,
+    name: isDouble ? `Double Lot: ${visibleNames.join(' + ')}` : visibleNames[0],
+  };
+}
+
+function publicAuctionListing(listing, reveal = false) {
+  if (!listing) return null;
+  const pointLabel = (item) => `${item.points} point${item.points === 1 ? '' : 's'}`;
+  const publicName = (item) => item.kind === 'minigame' ? `${item.name} Minigame` : item.kind === 'points' ? pointLabel(item) : item.kind === 'power' ? 'Power' : item.name;
+  const publicSummary = (item) => item.kind === 'minigame' ? `Worth ${pointLabel(item)}.` : item.kind === 'points' ? '' : item.summary;
+  const visibleName = (item, index) => listing.mysteryMask[index] ? 'Mystery Item' : publicName(item);
+  const listingName = reveal
+    ? (listing.isDouble ? `Double Lot: ${listing.items.map((item) => publicName(item)).join(' + ')}` : publicName(listing.items[0]))
+    : (listing.isDouble ? `Double Lot: ${listing.items.map(visibleName).join(' + ')}` : visibleName(listing.items[0], 0));
+  return {
+    id: listing.id,
+    name: listingName,
+    isDouble: listing.isDouble,
+    isMystery: listing.isMystery,
+    items: listing.items.map((item, index) => {
+      const hidden = !reveal && listing.mysteryMask[index];
+      return hidden
+        ? { kind: 'mystery', icon: '❔', name: 'Mystery Item', summary: 'Revealed after purchase.' }
+        : {
+            kind: item.kind,
+            gameType: item.gameType,
+            icon: getAuctionItemIcon(item),
+            name: publicName(item),
+            points: item.points,
+            summary: publicSummary(item),
+            rulesSummary: item.summary,
+            prompt: reveal ? item.prompt : null,
+            timerSeconds: reveal ? item.timerSeconds : 0,
+            powerType: item.type,
+            targetCount: item.targetCount || 0,
+            targetPrompt: item.targetPrompt || '',
+            letters: reveal ? item.letters || [] : [],
+          };
+    }),
+  };
+}
+
+function emitAuctionState(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  const auction = room.auction;
+  const revealListing = ['sold', 'targeting', 'challenge-ready', 'challenge-active', 'voting', 'result'].includes(auction.phase);
+  const base = {
+    phase: auction.phase,
+    listingNumber: auction.listingNumber,
+    totalListings: auction.totalListings,
+    listing: publicAuctionListing(auction.currentListing, revealListing),
+    currentItemIndex: auction.currentItemIndex || 0,
+    currentItem: auction.currentItem ? publicAuctionListing({ ...auction.currentListing, items: [auction.currentItem], mysteryMask: [false], isDouble: false, isMystery: false }, true)?.items[0] : null,
+    highBidderId: auction.highBidderId,
+    highBidderName: getAuctionPlayerName(room, auction.highBidderId),
+    currentBid: auction.currentBid,
+    timerLeft: auction.timerLeft,
+    message: auction.message || '',
+    buyerId: auction.buyerId,
+    buyerName: getAuctionPlayerName(room, auction.buyerId),
+    soldPrice: auction.soldPrice || 0,
+    scoreboard: getAuctionScoreboard(room),
+    votes: getAuctionVoteSummary(auction.votes),
+    voteCount: Object.keys(auction.votes || {}).length,
+    targetCount: auction.targetCount || 0,
+    selectedTargets: auction.selectedTargets || [],
+    winners: auction.winners || [],
+    noSale: auction.noSale || false,
+    tutorial: auction.phase === 'tutorial' ? {
+      title: "Bidder's Auction",
+      steps: [
+        `Everyone starts with ${formatMoney(AUCTION_STARTING_MONEY)}.`,
+        'Bid on each listing with +$1, +$3 or +$5.',
+        'Bidding ends when nobody bids for 6 seconds.',
+        'Listings can give points, powers or minigames.',
+        'After all listings, the most points wins.',
+      ],
+    } : null,
+  };
+  room.players.forEach((player) => {
+    const secret = auction.currentItem?.kind === 'minigame' && auction.currentItem?.gameType === 'lie' && auction.buyerId === player.id && auction.phase !== 'challenge-ready'
+      ? auction.currentItem.lie
+      : null;
+    io.to(player.id).emit('auction-state', { ...base, myId: player.id, myVote: auction.votes[player.id] || null, myLieSecret: secret });
+  });
+  if (room.displaySockets) {
+    room.displaySockets.forEach((socketId) => {
+      io.to(socketId).emit('auction-state', { ...base, myId: socketId, isDisplay: true });
+    });
+  }
+}
+
+function startAuctionTutorial(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  auction.phase = 'tutorial';
+  auction.timerLeft = 0;
+  auction.message = 'Rules first. Then bids.';
+  emitAuctionState(pin);
+}
+
+function startAuctionListing(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  if (auction.listingNumber >= auction.totalListings) {
+    endAuctionGame(pin);
+    return;
+  }
+  auction.listingNumber += 1;
+  auction.phase = 'preview';
+  auction.currentListing = makeAuctionListing(room);
+  auction.currentItemIndex = 0;
+  auction.currentItem = null;
+  auction.currentBid = 0;
+  auction.highBidderId = null;
+  auction.buyerId = null;
+  auction.soldPrice = 0;
+  auction.noSale = false;
+  auction.votes = {};
+  auction.selectedTargets = [];
+  auction.targetCount = 0;
+  auction.timerLeft = 0;
+  auction.message = 'Lot revealed.';
+  emitAuctionState(pin);
+}
+
+function startAuctionBidding(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  auction.phase = 'bidding';
+  auction.timerLeft = AUCTION_BID_SECONDS;
+  auction.message = 'Bid.';
+  emitAuctionState(pin);
+  const timer = setInterval(() => {
+    auction.timerLeft -= 1;
+    auction.message = auction.timerLeft === 2 ? 'Going once...' : auction.timerLeft === 1 ? 'Going twice...' : 'Bid.';
+    if (auction.timerLeft <= 0) {
+      clearInterval(timer);
+      room.timers = room.timers.filter((entry) => entry !== timer);
+      closeAuctionBidding(pin);
+      return;
+    }
+    emitAuctionState(pin);
+  }, 1000);
+  room.timers.push(timer);
+}
+
+function closeAuctionBidding(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  auction.phase = 'sold';
+  auction.timerLeft = AUCTION_SOLD_SECONDS;
+  if (!auction.highBidderId) {
+    auction.noSale = true;
+    auction.message = "It wasn't sold.";
+  } else {
+    auction.noSale = false;
+    auction.buyerId = auction.highBidderId;
+    auction.soldPrice = auction.currentBid;
+    auction.money[auction.buyerId] = Math.max(0, (auction.money[auction.buyerId] || 0) - auction.currentBid);
+    auction.message = `Sold to ${getAuctionPlayerName(room, auction.buyerId)} for ${formatMoney(auction.currentBid)}.`;
+  }
+  emitAuctionState(pin);
+  const timer = setTimeout(() => {
+    room.timers = room.timers.filter((entry) => entry !== timer);
+    if (!auction.highBidderId) startAuctionListing(pin);
+    else resolveNextAuctionItem(pin);
+  }, AUCTION_SOLD_SECONDS * 1000);
+  room.timers.push(timer);
+}
+
+function popAuctionModifier(auction, playerId) {
+  const queue = auction.modifiers[playerId] || [];
+  const modifier = queue.shift() || null;
+  auction.modifiers[playerId] = queue;
+  return modifier;
+}
+
+function resolveNextAuctionItem(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  const item = auction.currentListing.items[auction.currentItemIndex];
+  if (!item) {
+    queueAuctionNext(pin);
+    return;
+  }
+  auction.currentItem = item;
+  auction.votes = {};
+  auction.selectedTargets = [];
+  auction.targetCount = 0;
+
+  if (item.kind === 'points') {
+    auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + item.points;
+    auction.phase = 'result';
+    auction.message = `${getAuctionPlayerName(room, auction.buyerId)} gains ${item.points} point${item.points === 1 ? '' : 's'}.`;
+    finishAuctionItem(pin);
+    return;
+  }
+
+  if (item.kind === 'power') {
+    if (!item.targetCount) {
+      applyAuctionPower(pin, item, []);
+      return;
+    }
+    auction.phase = 'targeting';
+    auction.targetCount = item.targetCount;
+    auction.message = `${getAuctionPlayerName(room, auction.buyerId)}, choose your target.`;
+    emitAuctionState(pin);
+    return;
+  }
+
+  if (item.kind === 'minigame') {
+    item.modifier = popAuctionModifier(auction, auction.buyerId);
+    const adjusted = makeAuctionMinigameItem(item.modifier, item.gameType);
+    Object.assign(item, adjusted);
+    auction.phase = 'challenge-ready';
+    auction.timerLeft = 0;
+    auction.message = item.modifier === 'advantage'
+      ? `${getAuctionPlayerName(room, auction.buyerId)} has an advantage.`
+      : item.modifier === 'disadvantage'
+        ? `${getAuctionPlayerName(room, auction.buyerId)} has a disadvantage.`
+        : `${getAuctionPlayerName(room, auction.buyerId)} is up.`;
+    emitAuctionState(pin);
+  }
+}
+
+function startAuctionChallenge(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction || !room.auction.currentItem) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  const item = auction.currentItem;
+  auction.phase = item.timerSeconds > 0 ? 'challenge-active' : 'voting';
+  auction.timerLeft = item.timerSeconds || 0;
+  auction.message = item.gameType === 'lie' ? 'Lie?' : item.name;
+  auction.votes = {};
+  emitAuctionState(pin);
+  if (item.timerSeconds > 0) {
+    const timer = setInterval(() => {
+      auction.timerLeft -= 1;
+      if (auction.timerLeft <= 0) {
+        clearInterval(timer);
+        room.timers = room.timers.filter((entry) => entry !== timer);
+        auction.phase = 'voting';
+        auction.message = 'Vote pass or fail.';
+      }
+      emitAuctionState(pin);
+    }, 1000);
+    room.timers.push(timer);
+  }
+}
+
+function applyAuctionPower(pin, item, targetIds) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  const auction = room.auction;
+  const buyerId = auction.buyerId;
+  const buyerName = getAuctionPlayerName(room, buyerId);
+  const targets = targetIds.filter((id) => id && id !== buyerId && room.players.some((player) => player.id === id));
+  const targetName = getAuctionPlayerName(room, targets[0]);
+  if (item.type === 'steal') {
+    const stolen = Math.min(item.amount, auction.scores[targets[0]] || 0);
+    auction.scores[targets[0]] = Math.max(0, (auction.scores[targets[0]] || 0) - stolen);
+    auction.scores[buyerId] = (auction.scores[buyerId] || 0) + stolen;
+    auction.message = `${buyerName} steals ${stolen} point${stolen === 1 ? '' : 's'} from ${targetName}.`;
+  } else if (item.type === 'lose') {
+    const lost = Math.min(item.amount, auction.scores[targets[0]] || 0);
+    auction.scores[targets[0]] = Math.max(0, (auction.scores[targets[0]] || 0) - lost);
+    auction.message = `${targetName} loses ${lost} point${lost === 1 ? '' : 's'}.`;
+  } else if (item.type === 'swap') {
+    const buyerScore = auction.scores[buyerId] || 0;
+    auction.scores[buyerId] = auction.scores[targets[0]] || 0;
+    auction.scores[targets[0]] = buyerScore;
+    auction.message = `${buyerName} swaps scores with ${targetName}.`;
+  } else if (item.type === 'drink') {
+    auction.message = `${targetName} owes ${buyerName} a drink.`;
+  } else if (item.type === 'advantage' || item.type === 'advantage2') {
+    const count = item.type === 'advantage2' ? 2 : 1;
+    for (let i = 0; i < count; i++) auction.modifiers[buyerId].push('advantage');
+    auction.message = `${buyerName} banks ${count === 1 ? 'an advantage' : 'two advantages'}.`;
+  } else if (item.type === 'disadvantage' || item.type === 'disadvantage2') {
+    targets.slice(0, item.targetCount).forEach((id) => auction.modifiers[id].push('disadvantage'));
+    auction.message = `${buyerName} gives disadvantage to ${targets.slice(0, item.targetCount).map((id) => getAuctionPlayerName(room, id)).join(' and ')}.`;
+  }
+  auction.phase = 'result';
+  finishAuctionItem(pin);
+}
+
+function finishAuctionItem(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  emitAuctionState(pin);
+  const timer = setTimeout(() => {
+    room.timers = room.timers.filter((entry) => entry !== timer);
+    room.auction.currentItemIndex += 1;
+    resolveNextAuctionItem(pin);
+  }, AUCTION_RESULT_SECONDS * 1000);
+  room.timers.push(timer);
+}
+
+function getAuctionLieMultiplier(voterCount) {
+  if (voterCount <= 3) return 4;
+  if (voterCount <= 5) return 3;
+  return 2;
+}
+
+function resolveAuctionVote(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction || !room.auction.currentItem) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  const item = auction.currentItem;
+  const votes = auction.votes || {};
+  const voterCount = room.players.filter((player) => player.id !== auction.buyerId).length;
+  if (item.gameType === 'lie') {
+    const fooled = Object.values(votes).filter((vote) => vote !== item.lie.task).length;
+    const majorityFooled = fooled > voterCount / 2;
+    const raw = fooled * getAuctionLieMultiplier(voterCount);
+    const points = item.lie.disadvantage && !majorityFooled ? 0 : Math.min(item.points, raw);
+    auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + points;
+    auction.phase = 'result';
+    auction.message = `${getAuctionPlayerName(room, auction.buyerId)} fooled ${fooled} player${fooled === 1 ? '' : 's'} and earns ${points} point${points === 1 ? '' : 's'}.`;
+    finishAuctionItem(pin);
+    return;
+  }
+  const yes = Object.values(votes).filter((vote) => vote === 'yes').length;
+  const passed = yes > voterCount / 2;
+  const points = passed ? item.points : 0;
+  auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + points;
+  auction.phase = 'result';
+  auction.message = passed
+    ? `${getAuctionPlayerName(room, auction.buyerId)} passes and earns ${points} point${points === 1 ? '' : 's'}.`
+    : `${getAuctionPlayerName(room, auction.buyerId)} does not pass.\nNo points.`;
+  finishAuctionItem(pin);
+}
+
+function queueAuctionNext(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  const timer = setTimeout(() => {
+    room.timers = room.timers.filter((entry) => entry !== timer);
+    startAuctionListing(pin);
+  }, AUCTION_RESULT_SECONDS * 1000);
+  room.timers.push(timer);
+}
+
+function endAuctionGame(pin) {
+  const room = rooms[pin];
+  if (!room || !room.auction) return;
+  clearRoomTimers(room);
+  const auction = room.auction;
+  const maxScore = Math.max(...Object.values(auction.scores));
+  auction.winners = room.players.filter((player) => (auction.scores[player.id] || 0) === maxScore).map((player) => player.name);
+  auction.phase = 'game-over';
+  auction.message = auction.winners.length === 1 ? `Congratulations, ${auction.winners[0]}!\nI won't eat your soul.` : `${auction.winners.join(' and ')} tie for the win.`;
+  emitAuctionState(pin);
+}
+
 function normalizeDebateSettings(debateSettings = {}) {
   const tiers = debateSettings.tiers || {};
   const normalizedTiers = {
@@ -894,6 +1478,78 @@ const DEBATE_OPENING_SECONDS = 30;
 const DEBATE_REBUTTAL_SECONDS = 15;
 const DEBATE_VOTE_SECONDS = 20;
 const DEBATE_CATCH_SECONDS = 10;
+const AUCTION_MIN_PLAYERS = 3;
+const AUCTION_STARTING_MONEY = 100;
+const AUCTION_LISTINGS_PER_PLAYER = 2;
+const AUCTION_PREVIEW_SECONDS = 4;
+const AUCTION_BID_SECONDS = 6;
+const AUCTION_SOLD_SECONDS = 3;
+const AUCTION_RESULT_SECONDS = 4;
+const AUCTION_BID_INCREMENTS = [1, 3, 5];
+
+const AUCTION_FIND_CATEGORIES = [
+  'red', 'blue', 'green', 'black', 'white', 'yellow',
+  'metal', 'plastic', 'paper', 'fabric', 'glass', 'wood',
+  'round', 'flat', 'soft', 'shiny',
+  'contains the letter {letter} in its name',
+  'something that opens',
+  'something that you can drink out of',
+  'something that rolls',
+];
+
+const AUCTION_COMMON_LETTERS = ['S', 'T', 'B', 'C', 'M', 'P', 'R'];
+const AUCTION_RANDOM_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
+const AUCTION_NORMAL_QUESTIONS = [
+  'What is a version of yourself you miss?',
+  'What is something small that changed how you see someone?',
+  'What do you think people misunderstand about you?',
+  'What is a compliment you still remember?',
+  'What is a fear you have outgrown?',
+  'What is something you pretend not to care about?',
+  'What is something you wish people noticed about you?',
+  'What is a memory that feels warmer than it should?',
+  'What is something you used to want badly, but don’t anymore?',
+  'What is something you wish you were braver about?',
+  'What is a lesson you learned later than you wish you had?',
+  'What is something you wish you could tell your younger self?',
+  'What is something you changed your mind about recently?',
+  'What is something you care about more than people realize?',
+  'What is a feeling you have gotten better at handling?',
+  'What is something you wish lasted longer?',
+];
+const AUCTION_ADVANTAGE_QUESTIONS = [
+  'What is a small thing that instantly improves your day?',
+  'What is a place you always like going back to?',
+  'What is a food that feels comforting?',
+  'What is a song, movie, or show you associate with a good memory?',
+  'What is something you are weirdly good at?',
+  'What is a tiny win you had recently?',
+  'What is something that makes a room feel better?',
+  'What is a harmless thing you are picky about?',
+  'What is a tradition you like?',
+];
+const AUCTION_DISADVANTAGE_QUESTIONS = [
+  'What is something you are trying to forgive yourself for?',
+  'What is something you wish you handled differently?',
+  'What is a truth about yourself you resisted for a while?',
+  'What is something you miss but know you cannot go back to?',
+  'What is a pattern you are trying to break?',
+  'What is an apology you still think about?',
+  'What is something you wish you had said when you had the chance?',
+];
+const AUCTION_LIE_WORDS = [
+  'apple', 'blanket', 'candle', 'marble', 'button', 'carpet', 'ladder', 'window', 'pickle', 'ribbon',
+  'pocket', 'pillow', 'mirror', 'basket', 'noodle', 'rocket', 'bubble', 'velvet', 'pebble', 'kettle',
+  'lantern', 'locket', 'wobble', 'thimble', 'bramble', 'glimmer', 'crinkle', 'spigot', 'goblet', 'hinge',
+  'fiddle', 'trinket', 'orbit', 'snarl', 'burlap', 'quiver', 'dimple', 'sprig', 'yonder', 'knuckle',
+  'clover', 'muffle', 'nugget', 'pollen', 'rivet', 'twine', 'zipper', 'curfew', 'dawdle', 'ember',
+  'freckle', 'holler', 'jostle', 'kindle', 'ladle', 'meadow', 'nimble', 'oodles', 'quibble', 'rubble',
+  'simmer', 'tumble', 'umpire', 'vessel', 'wicker', 'yelp', 'pancake', 'shoebox', 'thunder', 'mailbox',
+  'oatmeal', 'popcorn', 'toothbrush', 'suitcase', 'snowball', 'doorknob', 'cupcake', 'flashlight',
+  'bookmark', 'sidewalk', 'jellyfish', 'moonlight', 'sandwich', 'raincoat', 'teaspoon', 'backpack',
+  'shoelace', 'campfire', 'haystack', 'corkscrew', 'seashell', 'windmill', 'drumstick', 'bathrobe',
+  'birdhouse', 'notebook',
+];
 
 function generatePIN() {
   let pin;
@@ -963,6 +1619,14 @@ function remapPlayerId(room, oldId, newId) {
   if (room.qc) {
     room.qc.submissions?.forEach(s => { if (s.playerId === oldId) s.playerId = newId; });
     room.qc.playerOrder?.forEach(p => { if (p.id === oldId) p.id = newId; });
+  }
+
+  if (room.auction) {
+    const a = room.auction;
+    remapKey(a.money); remapKey(a.scores); remapKey(a.modifiers); remapKey(a.votes);
+    if (a.highBidderId === oldId) a.highBidderId = newId;
+    if (a.buyerId === oldId) a.buyerId = newId;
+    if (a.selectedTargets) a.selectedTargets = a.selectedTargets.map(id => id === oldId ? newId : id);
   }
 }
 
@@ -1071,6 +1735,18 @@ function reemitStateToPlayer(pin, socket) {
     }
     return;
   }
+
+  if (gs === 'auction-setup') {
+    socket.emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings });
+    socket.emit('auction-show-rules', { auctionSettings: room.pendingAuctionSettings });
+    return;
+  }
+
+  if (gs === 'auction' && room.auction) {
+    socket.emit('game-started', { game: 'auction' });
+    emitAuctionState(pin);
+    return;
+  }
 }
 
 io.on('connection', (socket) => {
@@ -1121,7 +1797,7 @@ io.on('connection', (socket) => {
 
     const rejoinEntry = room.recentlyLeft && room.recentlyLeft[name];
 
-    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup' && !rejoinEntry) {
+    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup' && room.gameState !== 'auction-setup' && !rejoinEntry) {
       socket.emit('join-error', { message: 'Game already in progress.' });
       return;
     }
@@ -1163,6 +1839,10 @@ io.on('connection', (socket) => {
       socket.emit('game-started', { game: 'debate-setup', debateSettings: room.pendingDebateSettings });
       socket.emit('debate-show-rules', { debateSettings: room.pendingDebateSettings });
     }
+    if (room.gameState === 'auction-setup') {
+      socket.emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings });
+      socket.emit('auction-show-rules', { auctionSettings: room.pendingAuctionSettings });
+    }
   });
 
   socket.on('join-as-display', ({ pin }) => {
@@ -1187,6 +1867,10 @@ io.on('connection', (socket) => {
       gameState: room.gameState,
       hostId: room.hostSocketId,
     });
+    if (room.gameState === 'auction' && room.auction) {
+      socket.emit('game-started', { game: 'auction' });
+      emitAuctionState(pin);
+    }
   });
 
   socket.on('join-as-spectator', ({ pin }) => {
@@ -1227,7 +1911,7 @@ io.on('connection', (socket) => {
 
   // ── Game selector ──────────────────────────────────────────────
 
-  socket.on('start-game', ({ game, exposureChance, debateSettings }) => {
+  socket.on('start-game', ({ game, exposureChance, debateSettings, auctionSettings }) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
     if (!room || room.hostSocketId !== socket.id) return;
@@ -1236,6 +1920,14 @@ io.on('connection', (socket) => {
       socket.emit('game-start-error', {
         game,
         message: `Debateish needs at least ${DEBATE_MIN_PLAYERS} players to start.`,
+      });
+      return;
+    }
+
+    if (game === 'auction' && room.players.length < AUCTION_MIN_PLAYERS) {
+      socket.emit('game-start-error', {
+        game,
+        message: `Bidder's Auction needs at least ${AUCTION_MIN_PLAYERS} players to start.`,
       });
       return;
     }
@@ -1349,6 +2041,41 @@ io.on('connection', (socket) => {
       };
     }
 
+    if (game === 'auction') {
+      const settings = normalizeAuctionSettings(auctionSettings || room.pendingAuctionSettings, room.players.length);
+      room.pendingAuctionSettings = settings;
+      const money = {};
+      const scores = {};
+      const modifiers = {};
+      room.players.forEach((player) => {
+        money[player.id] = AUCTION_STARTING_MONEY;
+        scores[player.id] = 0;
+        modifiers[player.id] = [];
+      });
+      room.auction = {
+        listingNumber: 0,
+        totalListings: settings.totalListings,
+        phase: 'preview',
+        currentListing: null,
+        currentItemIndex: 0,
+        currentItem: null,
+        currentBid: 0,
+        highBidderId: null,
+        buyerId: null,
+        soldPrice: 0,
+        noSale: false,
+        timerLeft: 0,
+        message: '',
+        money,
+        scores,
+        modifiers,
+        votes: {},
+        selectedTargets: [],
+        targetCount: 0,
+        winners: [],
+      };
+    }
+
     io.to(pin).emit('game-started', { game });
 
     if (game === 'hot-takes') {
@@ -1367,6 +2094,10 @@ io.on('connection', (socket) => {
       buildDebateTopicPool(pin);
       startDebateRound(pin);
     }
+
+    if (game === 'auction') {
+      startAuctionListing(pin);
+    }
   });
 
   socket.on('back-to-lobby', () => {
@@ -1382,7 +2113,9 @@ io.on('connection', (socket) => {
     room.et = null;
     room.mafia = null;
     room.debate = null;
+    room.auction = null;
     room.pendingDebateSettings = null;
+    room.pendingAuctionSettings = null;
     io.to(pin).emit('returned-to-lobby');
   });
 
@@ -1399,7 +2132,9 @@ io.on('connection', (socket) => {
     room.et = null;
     room.mafia = null;
     room.debate = null;
+    room.auction = null;
     room.pendingDebateSettings = null;
+    room.pendingAuctionSettings = null;
     io.to(pin).emit('returned-to-game-select');
   });
 
@@ -3253,6 +3988,117 @@ io.on('connection', (socket) => {
     io.to(pin).emit('debate-settings-updated', { debateSettings: room.pendingDebateSettings });
   });
 
+  socket.on('auction-show-rules', ({ auctionSettings } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    room.pendingAuctionSettings = normalizeAuctionSettings(auctionSettings || room.pendingAuctionSettings, room.players.length);
+    room.gameState = 'auction-setup';
+    io.to(pin).emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings });
+    io.to(pin).emit('auction-show-rules', { auctionSettings: room.pendingAuctionSettings });
+  });
+
+  socket.on('auction-settings-preview', ({ auctionSettings } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !auctionSettings) return;
+    room.pendingAuctionSettings = normalizeAuctionSettings(auctionSettings, room.players.length);
+    io.to(pin).emit('auction-settings-updated', { auctionSettings: room.pendingAuctionSettings });
+  });
+
+  socket.on('auction-bid', ({ increment }) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.auction.phase !== 'bidding') return;
+    const amount = AUCTION_BID_INCREMENTS.includes(Number(increment)) ? Number(increment) : 1;
+    const auction = room.auction;
+    if (auction.highBidderId === socket.id) return;
+    const nextBid = auction.currentBid + amount;
+    if ((auction.money[socket.id] || 0) < nextBid) return;
+    auction.currentBid = nextBid;
+    auction.highBidderId = socket.id;
+    auction.timerLeft = AUCTION_BID_SECONDS;
+    auction.message = `${getAuctionPlayerName(room, socket.id)} bids ${formatMoney(nextBid)}.`;
+    emitAuctionState(pin);
+  });
+
+  socket.on('auction-select-targets', ({ targetIds } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.auction.phase !== 'targeting') return;
+    const auction = room.auction;
+    if (socket.id !== auction.buyerId) return;
+    const item = auction.currentItem;
+    if (!item || item.kind !== 'power') return;
+    const ids = Array.isArray(targetIds) ? targetIds : [];
+    const unique = [...new Set(ids)].filter((id) => id !== auction.buyerId && room.players.some((player) => player.id === id));
+    if (unique.length < (item.targetCount || 1)) return;
+    applyAuctionPower(pin, item, unique.slice(0, item.targetCount || 1));
+  });
+
+  socket.on('auction-vote', ({ vote } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.auction.phase !== 'voting') return;
+    const auction = room.auction;
+    if (socket.id === auction.buyerId) return;
+    const item = auction.currentItem;
+    if (!item || item.kind !== 'minigame') return;
+    const allowed = item.gameType === 'lie' ? ['real', 'madeup'] : ['yes', 'no'];
+    if (!allowed.includes(vote)) return;
+    auction.votes[socket.id] = vote;
+    emitAuctionState(pin);
+    const voterCount = room.players.filter((player) => player.id !== auction.buyerId).length;
+    if (Object.keys(auction.votes).length >= voterCount) resolveAuctionVote(pin);
+  });
+
+  socket.on('auction-start', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.hostSocketId !== socket.id || room.auction.phase !== 'tutorial') return;
+    startAuctionListing(pin);
+  });
+
+  socket.on('auction-ready', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.auction.phase !== 'challenge-ready') return;
+    if (socket.id !== room.auction.buyerId && socket.id !== room.hostSocketId) return;
+    startAuctionChallenge(pin);
+  });
+
+  socket.on('auction-start-bidding', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.hostSocketId !== socket.id || room.auction.phase !== 'preview') return;
+    startAuctionBidding(pin);
+  });
+
+  socket.on('auction-skip', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.hostSocketId !== socket.id) return;
+    const phase = room.auction.phase;
+    if (phase === 'tutorial') startAuctionListing(pin);
+    else if (phase === 'preview') startAuctionBidding(pin);
+    else if (phase === 'bidding') closeAuctionBidding(pin);
+    else if (phase === 'sold') {
+      if (!room.auction.highBidderId) startAuctionListing(pin);
+      else resolveNextAuctionItem(pin);
+    } else if (phase === 'challenge-ready') startAuctionChallenge(pin);
+    else if (phase === 'challenge-active') {
+      clearRoomTimers(room);
+      room.auction.phase = 'voting';
+      room.auction.message = 'Vote pass or fail.';
+      emitAuctionState(pin);
+    } else if (phase === 'voting') resolveAuctionVote(pin);
+    else if (phase === 'result') {
+      clearRoomTimers(room);
+      room.auction.currentItemIndex += 1;
+      resolveNextAuctionItem(pin);
+    }
+  });
+
   // ── Disconnect ─────────────────────────────────────────────────
 
   socket.on('disconnect', () => {
@@ -3311,6 +4157,22 @@ io.on('connection', (socket) => {
         room.gameState = 'lobby';
         room.debate = null;
         io.to(pin).emit('debate-stopped', { reason: 'A player left and there are not enough players to continue (need at least 3).' });
+        return;
+      }
+    }
+
+    if (room.gameState === 'auction' && room.auction) {
+      if (room.auction.highBidderId === socket.id && room.auction.phase === 'bidding') {
+        room.auction.highBidderId = null;
+        room.auction.currentBid = 0;
+        room.auction.message = 'High bidder left. Bidding resets.';
+        emitAuctionState(pin);
+      }
+      if (room.players.length < AUCTION_MIN_PLAYERS) {
+        clearRoomTimers(room);
+        room.gameState = 'lobby';
+        room.auction = null;
+        io.to(pin).emit('auction-stopped', { reason: `Bidder's Auction ended because there are fewer than ${AUCTION_MIN_PLAYERS} players.` });
         return;
       }
     }
