@@ -236,6 +236,118 @@
     }
     .game-card:active { transform: scale(0.98); border-color: #cfb991; box-shadow: 0 6px 20px rgba(207,185,145,0.15); }
     .game-card.disabled { opacity: 0.4; cursor: not-allowed; }
+    .game-card.wheel-game-card {
+      background:
+        radial-gradient(circle at 8% 50%, rgba(249,115,22,0.20), transparent 40%),
+        repeating-linear-gradient(90deg, rgba(194,65,12,0.26) 0 28px, rgba(20,8,14,0.3) 28px 56px),
+        #1b0b12;
+      border-color: #8f4a24;
+      box-shadow: inset 0 0 0 1px rgba(249,115,22,0.12);
+    }
+    .game-card.wheel-game-card:active {
+      border-color: #fb923c;
+      box-shadow: 0 8px 24px rgba(154,52,18,0.30), 0 0 22px rgba(249,115,22,0.18);
+    }
+    .game-card.wheel-game-card .game-title { color: #fb923c; }
+    .game-card.wheel-game-card .game-desc { color: #f0a36d; }
+    .game-card.et-game-card {
+      background:
+        radial-gradient(circle at 12% 48%, rgba(236,72,153,0.18), transparent 38%),
+        radial-gradient(circle at 74% 30%, rgba(244,114,182,0.22) 0 2px, transparent 3px),
+        radial-gradient(circle at 86% 68%, rgba(236,72,153,0.12) 0 2px, transparent 3px),
+        linear-gradient(136deg, transparent 0 24%, rgba(236,72,153,0.20) 24.3%, transparent 24.8% 66%, rgba(244,114,182,0.14) 66.3%, transparent 66.8%),
+        linear-gradient(90deg, rgba(236,72,153,0.14) 0 1px, transparent 1px 28px),
+        linear-gradient(0deg, rgba(236,72,153,0.10) 0 1px, transparent 1px 28px),
+        #1a0812;
+      border-color: #9d174d;
+      box-shadow: inset 0 0 0 1px rgba(244,114,182,0.12);
+    }
+    .game-card.et-game-card:active {
+      border-color: #ec4899;
+      box-shadow: 0 8px 24px rgba(157,23,77,0.28), 0 0 20px rgba(236,72,153,0.18);
+    }
+    .game-card.et-game-card .game-title { color: #f472b6; }
+    .game-card.et-game-card .game-desc { color: #f0a5c4; }
+    .game-card.et-game-card .game-icon {
+      filter: drop-shadow(0 0 10px rgba(236,72,153,0.32));
+    }
+    .game-card.mafia-game-card {
+      background:
+        linear-gradient(112deg, rgba(210,230,248,0.06) 0 10%, transparent 10% 20%, rgba(210,230,248,0.04) 20% 30%, transparent 30%),
+        radial-gradient(circle at 82% 26%, rgba(96,165,250,0.14), transparent 35%),
+        repeating-linear-gradient(0deg, rgba(210,230,248,0.025) 0 1px, transparent 1px 13px),
+        linear-gradient(180deg, #101927, #080d14);
+      border-color: #385878;
+      box-shadow: inset 0 0 0 1px rgba(147,181,213,0.10);
+    }
+    .game-card.mafia-game-card:active {
+      border-color: #7fb0dd;
+      box-shadow: 0 8px 24px rgba(7,18,31,0.34), 0 0 20px rgba(96,165,250,0.14);
+    }
+    .game-card.mafia-game-card .game-title { color: #b8d7f0; }
+    .game-card.mafia-game-card .game-desc { color: #93a8bb; }
+    .game-card.ss-game-card {
+      background: #10241f;
+      border-color: #38a169;
+      box-shadow:
+        inset 0 0 0 1px rgba(245,158,11,0.08),
+        inset 0 0 26px rgba(245,240,223,0.025);
+    }
+    .game-card.ss-game-card:active {
+      border-color: #4ade80;
+      box-shadow: 0 8px 24px rgba(16,64,52,0.28), 0 0 20px rgba(245,200,75,0.14);
+    }
+    .game-card.ss-game-card .game-title { color: #f5c84b; }
+    .game-card.ss-game-card .game-desc { color: #b9d8ca; }
+    .game-card.pr-game-card {
+      background:
+        linear-gradient(135deg, rgba(244, 234, 216, 0.08) 0 10%, transparent 10% 90%, rgba(183, 28, 28, 0.22) 90%),
+        repeating-linear-gradient(90deg, rgba(244, 234, 216, 0.045) 0 1px, transparent 1px 26px),
+        linear-gradient(90deg, #12090b 0 50%, #4b0c12 50% 100%);
+      border-color: #6f151b;
+      box-shadow: inset 0 0 0 1px rgba(244, 234, 216, 0.08);
+    }
+    .game-card.pr-game-card:active {
+      border-color: #d4ad62;
+      box-shadow: 0 8px 24px rgba(15, 6, 8, 0.34), 0 0 22px rgba(183, 28, 28, 0.18);
+    }
+    .game-card.pr-game-card .game-title { color: #f0ddbb; }
+    .game-card.pr-game-card .game-desc { color: #d3aaa4; }
+    .game-card.debate-game-card {
+      background:
+        radial-gradient(ellipse 76% 42% at 50% -28%, rgba(232,224,207,0.13) 0 24%, transparent 25%),
+        radial-gradient(ellipse 44% 98% at 50% 14%, transparent 0 56%, rgba(185,155,98,0.12) 57%, transparent 59%),
+        conic-gradient(from 0deg at 25% -4%, transparent 0 128deg, rgba(232,224,207,0.09) 128deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.09) 230deg 232deg, transparent 232deg 360deg),
+        conic-gradient(from 0deg at 75% -4%, transparent 0 128deg, rgba(232,224,207,0.09) 128deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.09) 230deg 232deg, transparent 232deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(0,0,0,0.22) 9.38% 9.82%, rgba(232,224,207,0.05) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(0,0,0,0.17) 24.1% 24.45%, rgba(232,224,207,0.044) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(0,0,0,0.15) 39.5% 39.8%, rgba(232,224,207,0.04) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(232,224,207,0.04) 59.65% 59.9%, rgba(0,0,0,0.15) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(232,224,207,0.044) 74.95% 75.2%, rgba(0,0,0,0.17) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(232,224,207,0.05) 89.55% 89.8%, rgba(0,0,0,0.22) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.38) 0 7%, transparent 18% 82%, rgba(0,0,0,0.38) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(232,224,207,0.028) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(232,224,207,0.024) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(232,224,207,0.024) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(232,224,207,0.028) 87.3% 87.55%, transparent 87.55% 100%),
+        linear-gradient(180deg, #15161b, #090b10);
+      border-color: #343943;
+      box-shadow: inset 0 0 0 1px rgba(185,155,98,0.10);
+    }
+    .game-card.debate-game-card:active {
+      border-color: #b99b62;
+      box-shadow: 0 8px 24px rgba(6,8,12,0.34), 0 0 20px rgba(185,155,98,0.14);
+    }
+    .game-card.debate-game-card .game-title { color: #e8e0cf; }
+    .game-card.debate-game-card .game-desc { color: #b8bcc5; }
+    .game-card.auction-game-card {
+      background:
+        radial-gradient(circle at 16% 18%, rgba(255,214,128,0.12) 0 8%, transparent 9%),
+        radial-gradient(circle at 84% 18%, rgba(255,214,128,0.10) 0 7%, transparent 8%),
+        linear-gradient(90deg, transparent 0 14%, rgba(176,131,61,0.12) 14% 14.7%, transparent 14.7% 31%, rgba(75,35,126,0.24) 31% 69%, transparent 69% 85.3%, rgba(176,131,61,0.12) 85.3% 86%, transparent 86% 100%),
+        repeating-linear-gradient(90deg, rgba(255,255,255,0.035) 0 1px, transparent 1px 30px),
+        linear-gradient(180deg, #1c1330, #0b0709);
+      border-color: #6d35b0;
+      box-shadow: inset 0 0 0 1px rgba(218,165,80,0.12);
+    }
+    .game-card.auction-game-card:active {
+      border-color: #d4a658;
+      box-shadow: 0 8px 24px rgba(34, 16, 54, 0.34), 0 0 20px rgba(109,53,176,0.22);
+    }
+    .game-card.auction-game-card .game-title { color: #ffd88a; }
+    .game-card.auction-game-card .game-desc { color: #cbb8e8; }
     .game-icon { font-size: 2rem; flex-shrink: 0; }
     .game-title { font-size: 1rem; font-weight: 500; color: #ede9f8; }
     .game-desc { font-size: 0.8rem; color: #8b7aa8; margin-top: 0.15rem; line-height: 1.3; }
@@ -343,6 +455,378 @@
     .pr-score-pts { color: #cfb991; font-weight: 500; }
     .over-emoji { font-size: 3rem; margin-bottom: 0.5rem; }
 
+    body.pr-theme {
+      background: #090607;
+      background-image:
+        linear-gradient(135deg, rgba(244, 234, 216, 0.035) 0 10%, transparent 10% 90%, rgba(183, 28, 28, 0.12) 90%),
+        repeating-linear-gradient(90deg, rgba(244, 234, 216, 0.028) 0 1px, transparent 1px 36px),
+        radial-gradient(ellipse at 18% 14%, rgba(183, 28, 28, 0.15), transparent 34%),
+        radial-gradient(ellipse at 82% 78%, rgba(212, 173, 98, 0.08), transparent 36%),
+        linear-gradient(90deg, #090607 0 56%, #2b080c 56% 100%);
+    }
+    body.pr-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent 0 55.55%, rgba(244,234,216,0.065) 55.55% 56%, transparent 56%),
+        linear-gradient(135deg, transparent 0 64%, rgba(212,173,98,0.075) 64% 64.5%, transparent 64.5%),
+        radial-gradient(circle at 50% 112%, rgba(0,0,0,0.46), transparent 42%);
+      opacity: 0.58;
+      z-index: 0;
+    }
+    body.pr-theme h1,
+    body.pr-theme .watch-name,
+    body.pr-theme .pr-upload-count,
+    body.pr-theme .pr-score-pts,
+    body.pr-theme #dsp-pr-upload-count,
+    body.pr-theme #dsp-pr-photo-num,
+    body.pr-theme #dsp-pr-photographer,
+    body.pr-theme #dsp-pr-scores-section > div:first-child {
+      color: #f0ddbb !important;
+      text-shadow: 0 0 18px rgba(183, 28, 28, 0.36), 0 0 26px rgba(212, 173, 98, 0.16);
+    }
+    body.pr-theme h2,
+    body.pr-theme .waiting,
+    body.pr-theme .pr-upload-sub,
+    body.pr-theme .pr-total-count,
+    body.pr-theme .pr-photo-number,
+    body.pr-theme .pr-guess-count-label,
+    body.pr-theme .ht-advance-text,
+    body.pr-theme #dsp-pr-phase-tag,
+    body.pr-theme #dsp-pr-upload-section > div:last-child,
+    body.pr-theme #dsp-pr-guess-count {
+      color: #c9aaa4 !important;
+    }
+    body.pr-theme .btn,
+    body.pr-theme .pr-upload-label {
+      background: #b71c1c;
+      color: #fff7e8;
+      box-shadow: 0 0 0 2px rgba(10, 7, 8, 0.72), 0 12px 24px rgba(0,0,0,0.3);
+    }
+    body.pr-theme .btn:active,
+    body.pr-theme .pr-upload-label:active { background: #d33131; }
+    body.pr-theme .btn-ghost {
+      background: rgba(8, 5, 6, 0.68);
+      border-color: #d4ad62;
+      color: #f0ddbb;
+    }
+    body.pr-theme .pr-upload-label.disabled,
+    body.pr-theme .btn:disabled {
+      background: #221416;
+      color: #7f6863;
+      box-shadow: none;
+    }
+    body.pr-theme .timer-bar-wrap,
+    body.pr-theme .timer-wrap {
+      background: rgba(8, 5, 6, 0.82);
+      border-color: #6f151b;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.56);
+    }
+    body.pr-theme .timer-bar { background: #b71c1c; }
+    body.pr-theme #pr-guess-img,
+    body.pr-theme #pr-reveal-img,
+    body.pr-theme #dsp-pr-photo {
+      background: #f4ead8 !important;
+      border: 9px solid #f4ead8 !important;
+      border-bottom-width: 16px !important;
+      border-radius: 8px !important;
+      box-shadow: 0 16px 38px rgba(0,0,0,0.42), 0 0 0 2px #12090b, 0 0 0 3px rgba(212,173,98,0.42);
+    }
+    body.pr-theme #pr-guess-img { margin-bottom: 0.7rem !important; }
+    body.pr-theme .pr-your-photo-hint {
+      background: rgba(212, 173, 98, 0.12);
+      border-color: rgba(212, 173, 98, 0.44);
+      color: #f0ddbb;
+    }
+    body.pr-theme .pr-guess-btn {
+      position: relative;
+      min-height: 48px;
+      padding: 0.72rem 1rem 0.72rem 2.4rem;
+      background:
+        linear-gradient(90deg, rgba(183, 28, 28, 0.18) 0 2.1rem, transparent 2.1rem),
+        linear-gradient(135deg, rgba(244, 234, 216, 0.055) 0 14%, transparent 14%),
+        #12090b;
+      border-color: #5a1418;
+      color: #fff7e8;
+      box-shadow: inset 0 0 0 1px rgba(244, 234, 216, 0.04);
+    }
+    body.pr-theme .pr-guess-btn:nth-child(even) {
+      background:
+        linear-gradient(90deg, rgba(244, 234, 216, 0.12) 0 2.1rem, transparent 2.1rem),
+        linear-gradient(135deg, rgba(183, 28, 28, 0.08) 0 14%, transparent 14%),
+        #2a070b;
+    }
+    body.pr-theme .pr-guess-btn::before {
+      content: '';
+      position: absolute;
+      left: 0.82rem;
+      top: 50%;
+      width: 0.72rem;
+      height: 0.72rem;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background: #f4ead8;
+      box-shadow: 0 0 0 2px #b71c1c, 0 0 0 3px rgba(0,0,0,0.42);
+    }
+    body.pr-theme .pr-guess-btn:active {
+      background-color: #3b0a10;
+      border-color: #d4ad62;
+    }
+    body.pr-theme .pr-guess-ack { color: #f0ddbb; }
+    body.pr-theme .pr-reveal-guess-row {
+      min-height: 38px;
+      background: #12090b;
+      border: 1px solid #5a1418;
+      color: #fff7e8;
+    }
+    body.pr-theme .pr-reveal-guess-row.correct {
+      background: #211812;
+      border-color: #d4ad62;
+      border-left: 5px solid #d4ad62;
+    }
+    body.pr-theme .pr-reveal-guess-row.wrong {
+      background: #2a070b;
+      border-color: #b71c1c;
+      border-left: 5px solid #b71c1c;
+    }
+    body.pr-theme .pr-reveal-guess-row.no-guess {
+      background: #171012;
+      border-color: #332225;
+      color: #8f7772;
+    }
+    body.pr-theme .pr-score-row {
+      min-height: 44px;
+      padding: 0.65rem 0.85rem;
+      background: rgba(18, 9, 11, 0.86);
+      border: 1px solid #5a1418;
+      border-radius: 8px;
+      margin-bottom: 0.45rem;
+      color: #fff7e8;
+    }
+    body.pr-theme #screen-dsp-pr {
+      background:
+        linear-gradient(135deg, rgba(244, 234, 216, 0.035) 0 10%, transparent 10% 90%, rgba(183, 28, 28, 0.12) 90%),
+        repeating-linear-gradient(90deg, rgba(244, 234, 216, 0.028) 0 1px, transparent 1px 40px),
+        linear-gradient(90deg, #090607 0 56%, #2b080c 56% 100%);
+    }
+    body.pr-theme #screen-dsp-pr .dsp-header-bar {
+      background: #12090b;
+      border-bottom-color: #5a1418;
+    }
+    body.pr-theme #screen-dsp-pr .dsp-game-tag {
+      background: rgba(183, 28, 28, 0.18);
+      border-color: rgba(212, 173, 98, 0.42);
+      color: #f0ddbb;
+    }
+    body.pr-theme #screen-dsp-pr .dsp-body {
+      background:
+        linear-gradient(90deg, transparent 0 55.6%, rgba(244,234,216,0.055) 55.6% 56%, transparent 56%),
+        linear-gradient(135deg, transparent 0 64%, rgba(212,173,98,0.06) 64% 64.5%, transparent 64.5%),
+        transparent;
+    }
+    body.pr-theme #screen-dsp-pr .dsp-reveal-row,
+    body.pr-theme #screen-dsp-pr .dsp-score-row {
+      background: #12090b;
+      border-color: #5a1418;
+      color: #fff7e8;
+    }
+    body.pr-theme #screen-dsp-pr .dsp-reveal-row.correct { border-left-color: #d4ad62; }
+    body.pr-theme #screen-dsp-pr .dsp-reveal-row.wrong { border-left-color: #b71c1c; }
+    body.pr-theme #screen-dsp-pr .dsp-score-pts { color: #f0ddbb; }
+
+    body.light-mode .game-card.pr-game-card {
+      background:
+        linear-gradient(135deg, rgba(183, 28, 28, 0.08) 0 10%, transparent 10% 90%, rgba(23, 18, 19, 0.10) 90%),
+        repeating-linear-gradient(90deg, rgba(23,18,19,0.055) 0 1px, transparent 1px 26px),
+        linear-gradient(90deg, #fff7e8 0 50%, #f3dede 50% 100%);
+      border-color: #d4b7a0;
+    }
+    body.light-mode .game-card.pr-game-card .game-title { color: #991b1b; }
+    body.light-mode .game-card.pr-game-card .game-desc { color: #725551; }
+    body.light-mode .game-card.debate-game-card {
+      background:
+        radial-gradient(ellipse 76% 42% at 50% -28%, rgba(58,66,78,0.085) 0 24%, transparent 25%),
+        radial-gradient(ellipse 44% 98% at 50% 14%, transparent 0 56%, rgba(153,119,58,0.14) 57%, transparent 59%),
+        conic-gradient(from 0deg at 25% -4%, transparent 0 128deg, rgba(87,94,107,0.06) 128deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.06) 230deg 232deg, transparent 232deg 360deg),
+        conic-gradient(from 0deg at 75% -4%, transparent 0 128deg, rgba(87,94,107,0.06) 128deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.06) 230deg 232deg, transparent 232deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(82,76,66,0.09) 9.38% 9.82%, rgba(87,94,107,0.04) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(82,76,66,0.075) 24.1% 24.45%, rgba(87,94,107,0.036) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(82,76,66,0.06) 39.5% 39.8%, rgba(87,94,107,0.032) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(87,94,107,0.032) 59.65% 59.9%, rgba(82,76,66,0.06) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(87,94,107,0.036) 74.95% 75.2%, rgba(82,76,66,0.075) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(87,94,107,0.04) 89.55% 89.8%, rgba(82,76,66,0.09) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(105,93,76,0.12) 0 7%, transparent 18% 82%, rgba(105,93,76,0.13) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(87,94,107,0.026) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(87,94,107,0.022) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(87,94,107,0.022) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(87,94,107,0.026) 87.3% 87.55%, transparent 87.55% 100%),
+        linear-gradient(180deg, #fbfaf6, #ece7dc);
+      border-color: #c8c1b3;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.56);
+    }
+    body.light-mode .game-card.debate-game-card .game-title { color: #7c602d; }
+    body.light-mode .game-card.debate-game-card .game-desc { color: #565d67; }
+    body.light-mode .game-card.auction-game-card {
+      background:
+        radial-gradient(circle at 16% 18%, rgba(154,43,75,0.12) 0 8%, transparent 9%),
+        radial-gradient(circle at 84% 18%, rgba(154,43,75,0.10) 0 7%, transparent 8%),
+        linear-gradient(90deg, transparent 0 14%, rgba(154,107,36,0.16) 14% 14.7%, transparent 14.7% 31%, rgba(124,75,179,0.17) 31% 69%, transparent 69% 85.3%, rgba(154,107,36,0.16) 85.3% 86%, transparent 86% 100%),
+        repeating-linear-gradient(90deg, rgba(74,53,105,0.045) 0 1px, transparent 1px 30px),
+        linear-gradient(180deg, #f6efff, #ded1f4);
+      border-color: #7c4bb3;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.58);
+    }
+    body.light-mode .game-card.auction-game-card .game-title { color: #56317f; }
+    body.light-mode .game-card.auction-game-card .game-desc { color: #65537c; }
+    body.light-mode.pr-theme {
+      background: #f4ead8;
+      background-image:
+        linear-gradient(135deg, rgba(183, 28, 28, 0.055) 0 10%, transparent 10% 90%, rgba(23, 18, 19, 0.07) 90%),
+        radial-gradient(ellipse at 18% 14%, rgba(183, 28, 28, 0.08), transparent 34%),
+        radial-gradient(ellipse at 82% 78%, rgba(154, 107, 36, 0.09), transparent 36%),
+        linear-gradient(90deg, #fff7e8 0 56%, #f7e8e4 56% 100%);
+      color: #171213;
+    }
+    body.light-mode.pr-theme::before {
+      background:
+        linear-gradient(90deg, transparent 0 55.55%, rgba(23,18,19,0.065) 55.55% 56%, transparent 56%),
+        linear-gradient(135deg, transparent 0 64%, rgba(154,107,36,0.075) 64% 64.5%, transparent 64.5%),
+        radial-gradient(circle at 50% 112%, rgba(92, 63, 38, 0.13), transparent 42%);
+      opacity: 0.62;
+    }
+    body.light-mode.pr-theme h1,
+    body.light-mode.pr-theme .watch-name,
+    body.light-mode.pr-theme .pr-upload-count,
+    body.light-mode.pr-theme .pr-score-pts,
+    body.light-mode.pr-theme #dsp-pr-upload-count,
+    body.light-mode.pr-theme #dsp-pr-photo-num,
+    body.light-mode.pr-theme #dsp-pr-photographer,
+    body.light-mode.pr-theme #dsp-pr-scores-section > div:first-child {
+      color: #991b1b !important;
+      text-shadow: none;
+    }
+    body.light-mode.pr-theme h2,
+    body.light-mode.pr-theme .waiting,
+    body.light-mode.pr-theme .pr-upload-sub,
+    body.light-mode.pr-theme .pr-total-count,
+    body.light-mode.pr-theme .pr-photo-number,
+    body.light-mode.pr-theme .pr-guess-count-label,
+    body.light-mode.pr-theme .ht-advance-text,
+    body.light-mode.pr-theme #dsp-pr-phase-tag,
+    body.light-mode.pr-theme #dsp-pr-upload-section > div:last-child,
+    body.light-mode.pr-theme #dsp-pr-guess-count {
+      color: #6f5751 !important;
+    }
+    body.light-mode.pr-theme .btn,
+    body.light-mode.pr-theme .pr-upload-label {
+      background: #991b1b;
+      color: #fff7e8;
+      box-shadow: 0 0 0 2px rgba(255, 247, 232, 0.78), 0 12px 24px rgba(92, 63, 38, 0.14);
+    }
+    body.light-mode.pr-theme .btn:active,
+    body.light-mode.pr-theme .pr-upload-label:active { background: #b71c1c; }
+    body.light-mode.pr-theme .btn-ghost {
+      background: rgba(255, 247, 232, 0.72);
+      border-color: #991b1b;
+      color: #171213;
+    }
+    body.light-mode.pr-theme .pr-upload-label.disabled,
+    body.light-mode.pr-theme .btn:disabled {
+      background: #d6c6b1;
+      color: #8b7a66;
+      box-shadow: none;
+    }
+    body.light-mode.pr-theme .timer-bar-wrap,
+    body.light-mode.pr-theme .timer-wrap {
+      background: #dfcfba;
+      border-color: #d4b7a0;
+      box-shadow: inset 0 0 7px rgba(92, 63, 38, 0.16);
+    }
+    body.light-mode.pr-theme .timer-bar { background: #991b1b; }
+    body.light-mode.pr-theme #pr-guess-img,
+    body.light-mode.pr-theme #pr-reveal-img,
+    body.light-mode.pr-theme #dsp-pr-photo {
+      background: #fffaf1 !important;
+      border-color: #fffaf1 !important;
+      box-shadow: 0 14px 32px rgba(92, 63, 38, 0.18), 0 0 0 2px #171213, 0 0 0 3px rgba(154,107,36,0.32);
+    }
+    body.light-mode.pr-theme .pr-your-photo-hint {
+      background: rgba(154, 107, 36, 0.10);
+      border-color: rgba(154, 107, 36, 0.34);
+      color: #7a4d18;
+    }
+    body.light-mode.pr-theme .pr-guess-btn {
+      background:
+        linear-gradient(90deg, rgba(183, 28, 28, 0.13) 0 2.1rem, transparent 2.1rem),
+        linear-gradient(135deg, rgba(23,18,19,0.045) 0 14%, transparent 14%),
+        #fffaf1;
+      border-color: #d4b7a0;
+      color: #171213;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.72);
+    }
+    body.light-mode.pr-theme .pr-guess-btn:nth-child(even) {
+      background:
+        linear-gradient(90deg, rgba(23,18,19,0.10) 0 2.1rem, transparent 2.1rem),
+        linear-gradient(135deg, rgba(183, 28, 28, 0.055) 0 14%, transparent 14%),
+        #fffaf1;
+    }
+    body.light-mode.pr-theme .pr-guess-btn::before {
+      background: #fffaf1;
+      box-shadow: 0 0 0 2px #991b1b, 0 0 0 3px rgba(23,18,19,0.24);
+    }
+    body.light-mode.pr-theme .pr-guess-btn:active {
+      background-color: #f3dede;
+      border-color: #991b1b;
+    }
+    body.light-mode.pr-theme .pr-guess-ack { color: #7a4d18; }
+    body.light-mode.pr-theme .pr-reveal-guess-row {
+      background: #fffaf1;
+      border-color: #d4b7a0;
+      color: #171213;
+    }
+    body.light-mode.pr-theme .pr-reveal-guess-row.correct {
+      background: #fff3d7;
+      border-color: #9a6b24;
+      border-left-color: #9a6b24;
+    }
+    body.light-mode.pr-theme .pr-reveal-guess-row.wrong {
+      background: #f3dede;
+      border-color: #991b1b;
+      border-left-color: #991b1b;
+    }
+    body.light-mode.pr-theme .pr-reveal-guess-row.no-guess {
+      background: #eadcca;
+      border-color: #d4b7a0;
+      color: #75665c;
+    }
+    body.light-mode.pr-theme .pr-score-row {
+      background: rgba(255, 250, 241, 0.84);
+      border-color: #d4b7a0;
+      color: #171213;
+    }
+    body.light-mode.pr-theme #screen-dsp-pr {
+      background:
+        linear-gradient(135deg, rgba(183, 28, 28, 0.055) 0 10%, transparent 10% 90%, rgba(23, 18, 19, 0.07) 90%),
+        linear-gradient(90deg, #fff7e8 0 56%, #f7e8e4 56% 100%);
+    }
+    body.light-mode.pr-theme #screen-dsp-pr .dsp-header-bar {
+      background: #fffaf1;
+      border-bottom-color: #d4b7a0;
+    }
+    body.light-mode.pr-theme #screen-dsp-pr .dsp-game-tag {
+      background: rgba(183, 28, 28, 0.10);
+      border-color: rgba(154, 107, 36, 0.34);
+      color: #991b1b;
+    }
+    body.light-mode.pr-theme #screen-dsp-pr .dsp-body {
+      background:
+        linear-gradient(90deg, transparent 0 55.6%, rgba(23,18,19,0.055) 55.6% 56%, transparent 56%),
+        linear-gradient(135deg, transparent 0 64%, rgba(154,107,36,0.06) 64% 64.5%, transparent 64.5%),
+        transparent;
+    }
+    body.light-mode.pr-theme #screen-dsp-pr .dsp-reveal-row,
+    body.light-mode.pr-theme #screen-dsp-pr .dsp-score-row {
+      background: #fffaf1;
+      border-color: #d4b7a0;
+      color: #171213;
+    }
+    body.light-mode.pr-theme #screen-dsp-pr .dsp-score-pts { color: #991b1b; }
+
+
     .et-topic-list, .et-stats-list { text-align: left; margin-top: 1rem; }
     .et-topic-row, .et-score-row, .et-stat-row {
       background: #1a1232; border: 1px solid #2d1f50; border-radius: 10px;
@@ -384,6 +868,183 @@
     .et-stat-value { font-size: 1rem; color: #ede9f8; font-weight: 500; }
     .et-correct-answer-big { font-size: 2.3rem !important; line-height: 1.15; }
 
+    body.et-theme {
+      background: #130910;
+      background-image:
+        linear-gradient(90deg, rgba(244,114,182,0.10) 0 1px, transparent 1px 44px),
+        linear-gradient(0deg, rgba(244,114,182,0.065) 0 1px, transparent 1px 44px),
+        linear-gradient(180deg, #130910 0%, #0f0610 100%);
+      color: #f3efe3;
+    }
+    body.et-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(138deg, transparent 0 23%, rgba(244,114,182,0.22) 23.2%, transparent 23.9% 66%, rgba(253,164,175,0.18) 66.2%, transparent 66.9%);
+      opacity: 0.75;
+    }
+    body.et-theme h1,
+    body.et-theme .watch-name,
+    body.et-theme .ht-round-label,
+    body.et-theme .et-correct-answer-big,
+    body.et-theme .et-score-total,
+    body.et-theme .submit-count-wrap span {
+      color: #fda4af;
+      text-shadow: 0 0 22px rgba(253,164,175,0.25);
+    }
+    body.et-theme h2,
+    body.et-theme .watch-label,
+    body.et-theme .your-turn-sub,
+    body.et-theme .pr-guess-count-label,
+    body.et-theme .ht-advance-text {
+      color: #c084a0;
+    }
+    body.et-theme input {
+      background: rgba(28, 5, 14, 0.92);
+      border-color: #4a1828;
+      color: #f3efe3;
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.2);
+    }
+    body.et-theme input:focus {
+      border-color: #f472b6;
+      box-shadow: 0 0 14px rgba(244,114,182,0.2);
+    }
+    body.et-theme .btn {
+      background: #f472b6;
+      color: #130910;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.22);
+    }
+    body.et-theme .btn:active { background: #f9a8d4; }
+    body.et-theme .btn:disabled {
+      background: #3a1020;
+      color: #b07090;
+      box-shadow: none;
+    }
+    body.et-theme .btn-ghost {
+      background: rgba(28,5,14,0.58);
+      border-color: #f472b6;
+      color: #fda4af;
+    }
+    body.et-theme .timer-bar-wrap {
+      background: rgba(28,5,14,0.82);
+      border-color: #4a1828;
+    }
+    body.et-theme .timer-bar { background: #f472b6; }
+    body.et-theme .submit-count-wrap,
+    body.et-theme .et-topic-row,
+    body.et-theme .et-score-row,
+    body.et-theme .et-stat-row,
+    body.et-theme .et-answer-btn {
+      background:
+        radial-gradient(circle at calc(100% - 8px) 8px, transparent 0 15px, rgba(253,164,175,0.13) 16px 17px, transparent 18px),
+        linear-gradient(135deg, transparent 0 72%, rgba(244,114,182,0.055) 72.2% 72.8%, transparent 73%),
+        radial-gradient(circle at calc(100% - 18px) 50%, rgba(244,114,182,0.12) 0 3px, transparent 4px),
+        linear-gradient(90deg, rgba(253,164,175,0.08) 0 3px, transparent 3px),
+        rgba(38, 8, 20, 0.86);
+      border-color: #4a1828;
+      color: #f3efe3;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.14);
+      overflow: hidden;
+      position: relative;
+    }
+    body.et-theme .submit-count-wrap::before,
+    body.et-theme .et-topic-row::before,
+    body.et-theme .et-score-row::before,
+    body.et-theme .et-stat-row::before,
+    body.et-theme .et-answer-btn::before {
+      content: '';
+      position: absolute;
+      right: 0.45rem;
+      top: 0.42rem;
+      width: 38px;
+      height: 18px;
+      pointer-events: none;
+      border-top: 1px solid rgba(253,164,175,0.20);
+      border-right: 1px solid rgba(253,164,175,0.16);
+      border-radius: 0 8px 0 0;
+      opacity: 0.72;
+    }
+    body.et-theme .et-answer-btn {
+      border-left-width: 4px;
+      border-left-color: #f472b6;
+    }
+    body.et-theme .et-answer-btn::after {
+      content: '';
+      position: absolute;
+      right: 0.85rem;
+      top: 50%;
+      width: 28px;
+      height: 1px;
+      background: #f472b6;
+      opacity: 0.26;
+      transform: translateY(-50%);
+      box-shadow: -8px -5px 0 -0.5px rgba(253,164,175,0.20), -16px 5px 0 -0.5px rgba(251,146,60,0.16);
+    }
+    body.et-theme .et-answer-btn:active {
+      border-color: #fda4af;
+      border-left-color: #fda4af;
+      background: rgba(38, 8, 22, 0.94);
+    }
+    body.et-theme .et-topic-name,
+    body.et-theme .et-stat-value,
+    body.et-theme .ht-p-question {
+      color: #f3efe3;
+    }
+    body.et-theme .et-topic-meta,
+    body.et-theme .et-score-sub {
+      color: #c084a0;
+    }
+    body.et-theme .et-status {
+      color: #fb923c;
+      border: 1px solid rgba(251,146,60,0.45);
+      border-radius: 6px;
+      padding: 0.18rem 0.45rem;
+      background: rgba(251,146,60,0.08);
+      transform: rotate(-1.5deg);
+    }
+    body.et-theme .et-lock-msg {
+      color: #f472b6;
+    }
+    body.et-theme .et-reveal-row.correct { border-left-color: #f472b6; }
+    body.et-theme .et-reveal-row.wrong { border-left-color: #fb923c; }
+    body.et-theme .et-reveal-row.missed { border-left-color: #6b2040; color: #c084a0; }
+    body.et-theme #screen-dsp-et {
+      background:
+        linear-gradient(138deg, transparent 0 23%, rgba(244,114,182,0.22) 23.2%, transparent 23.9% 66%, rgba(253,164,175,0.18) 66.2%, transparent 66.9%),
+        linear-gradient(90deg, rgba(244,114,182,0.10) 0 1px, transparent 1px 64px),
+        linear-gradient(0deg, rgba(244,114,182,0.065) 0 1px, transparent 1px 64px),
+        #130910;
+    }
+    body.et-theme #screen-dsp-et .dsp-header-bar {
+      background: rgba(20, 4, 12, 0.94);
+      border-bottom-color: #4a1828;
+    }
+    body.et-theme #screen-dsp-et .dsp-game-tag,
+    body.et-theme #screen-dsp-et #dsp-et-intro-topic,
+    body.et-theme #screen-dsp-et #dsp-et-correct,
+    body.et-theme #screen-dsp-et .dsp-score-pts {
+      color: #fda4af !important;
+    }
+    body.et-theme #screen-dsp-et .dsp-pill,
+    body.et-theme #screen-dsp-et .dsp-answer-chip,
+    body.et-theme #screen-dsp-et .dsp-topic-row,
+    body.et-theme #screen-dsp-et .dsp-reveal-row,
+    body.et-theme #screen-dsp-et .dsp-score-row {
+      background:
+        radial-gradient(circle at calc(100% - 10px) 10px, transparent 0 16px, rgba(253,164,175,0.12) 17px 18px, transparent 19px),
+        rgba(38,8,20,0.88);
+      border-color: #4a1828;
+      color: #f3efe3;
+    }
+    body.et-theme #screen-dsp-et .dsp-answer-chip.correct {
+      background: rgba(244,114,182,0.16);
+      border-color: #f472b6 !important;
+      color: #fda4af;
+    }
+
     .mafia-wrap {
       --mafia-accent: #fca5a5;
       --mafia-accent-strong: #b91c1c;
@@ -394,8 +1055,8 @@
       --mafia-hero-border: #7f1d1d;
       --mafia-card-bg: linear-gradient(180deg, #1a1221, #120c19);
       --mafia-card-border: #35213e;
-      --mafia-news-bg: linear-gradient(180deg, #3b111a, #210b11);
-      --mafia-news-border: #b91c1c;
+      --mafia-event-bg: linear-gradient(180deg, #3b111a, #210b11);
+      --mafia-event-border: #b91c1c;
       --mafia-button-bg: #18111f;
       --mafia-button-selected-bg: linear-gradient(180deg, #2b1320, #180d14);
       text-align: left;
@@ -418,9 +1079,9 @@
       background: var(--mafia-card-bg);
       border: 1px solid var(--mafia-card-border); border-radius: 12px; padding: 0.9rem 1rem; margin-bottom: 0.65rem;
     }
-    .mafia-news-card {
-      background: var(--mafia-news-bg);
-      border-color: var(--mafia-news-border);
+    .mafia-event-card {
+      background: var(--mafia-event-bg);
+      border-color: var(--mafia-event-border);
       color: #fee2e2;
       box-shadow: 0 8px 24px rgba(0,0,0,0.18);
       font-size: 1.2rem;
@@ -429,19 +1090,19 @@
       padding: 1.25rem 1.15rem;
       text-align: center;
     }
-    .mafia-news-card.good {
+    .mafia-event-card.good {
       background: linear-gradient(180deg, #133a20, #0d2213);
       border-color: #22c55e;
       color: #dcfce7;
       box-shadow: 0 12px 30px rgba(34,197,94,0.2);
     }
-    .mafia-news-card.bad {
+    .mafia-event-card.bad {
       background: linear-gradient(180deg, #4a1220, #240d13);
       border-color: #f43f5e;
       color: #ffe4e6;
       box-shadow: 0 12px 30px rgba(244,63,94,0.2);
     }
-    .mafia-news-card.joker {
+    .mafia-event-card.joker {
       background:
         radial-gradient(circle at top, rgba(250,204,21,0.16), transparent 35%),
         linear-gradient(180deg, #2f123d, #170d22);
@@ -487,18 +1148,18 @@
     #mafia-host-controls { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.85rem; }
     #mafia-host-controls .mafia-host-btn { margin-bottom: 0; }
     #screen-mafia-setup .mafia-host-btn {
-      background: linear-gradient(180deg, #dc2626, #991b1b);
-      border-color: #f87171;
-      color: #fff1f2;
-      box-shadow: 0 10px 24px rgba(220,38,38,0.18);
+      background: linear-gradient(180deg, #2f5f89, #183653);
+      border-color: #8fb3d5;
+      color: #eef7ff;
+      box-shadow: 0 10px 24px rgba(47,95,137,0.18);
     }
     #screen-mafia-setup .mafia-rules-btn {
       background: transparent;
-      border-color: #a8853a;
-      color: #a8853a;
+      border-color: #8fb3d5;
+      color: #b8d7f0;
       box-shadow: none;
     }
-    #screen-mafia-setup .mafia-rules-btn:hover { background: rgba(168,133,58,0.1); }
+    #screen-mafia-setup .mafia-rules-btn:hover { background: rgba(143,179,213,0.1); }
     .mafia-banner-dead { color: var(--mafia-accent); font-family: 'Cinzel', serif; font-size: 1.6rem; text-align: center; margin-bottom: 0.6rem; }
     .mafia-note { color: #a78bfa; font-size: 0.88rem; margin-bottom: 0.8rem; text-align: center; }
     .mafia-poll-result { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.9rem; }
@@ -507,9 +1168,9 @@
     #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row {
       opacity: 0.72;
       border-style: dashed;
-      border-color: #fca5a5;
-      background: linear-gradient(180deg, rgba(90,18,18,0.5), rgba(30,10,14,0.88));
-      box-shadow: inset 0 0 0 1px rgba(248,113,113,0.16);
+      border-color: #8fb3d5;
+      background: linear-gradient(180deg, rgba(18,42,62,0.58), rgba(8,14,22,0.88));
+      box-shadow: inset 0 0 0 1px rgba(143,179,213,0.16);
     }
     #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row::after {
       content: 'Host Only';
@@ -519,9 +1180,9 @@
       transform: translateY(-50%);
       padding: 0.28rem 0.55rem;
       border-radius: 999px;
-      border: 1px solid rgba(252,165,165,0.45);
-      background: rgba(127,29,29,0.35);
-      color: #fecaca;
+      border: 1px solid rgba(143,179,213,0.45);
+      background: rgba(21,47,70,0.52);
+      color: #d8e8f6;
       font-size: 0.66rem;
       font-weight: 800;
       letter-spacing: 0.12rem;
@@ -582,7 +1243,7 @@
     .mafia-toggle::after {
       content: ''; width: 24px; height: 24px; border-radius: 50%; background: #f8fafc; position: absolute; top: 3px; left: 4px; transition: transform 0.2s;
     }
-    .mafia-toggle:checked { background: #7f1d1d; }
+    .mafia-toggle:checked { background: #2f5f89; }
     .mafia-toggle:checked::after { transform: translateX(24px); }
     .mafia-toggle:disabled { opacity: 1; }
     .mafia-team-card {
@@ -684,7 +1345,216 @@
       50% { transform: scale(1.02); box-shadow: 0 28px 72px rgba(244,63,94,0.24); }
     }
 
-    /* ── Hot Takes ── */
+    body.mafia-game-theme {
+      background-color: #07111c;
+      background-image:
+        linear-gradient(104deg, rgba(210,230,248,0.06) 0 7%, transparent 7% 14%, rgba(210,230,248,0.035) 14% 21%, transparent 21%),
+        radial-gradient(ellipse at 82% 12%, rgba(96,165,250,0.14), transparent 38%),
+        radial-gradient(ellipse at 16% 86%, rgba(34,87,122,0.18), transparent 42%),
+        linear-gradient(180deg, #0d1b2a 0%, #050a11 100%);
+      color: #e8f1f8;
+    }
+    body.mafia-game-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(210,230,248,0.026) 0 1px, transparent 1px 9px),
+        linear-gradient(90deg, transparent 0 68%, rgba(96,165,250,0.12) 68.2%, transparent 68.6%);
+      opacity: 0.75;
+    }
+    body.mafia-game-theme h1,
+    body.mafia-game-theme .mafia-over-title,
+    body.mafia-game-theme .mafia-win-title {
+      color: #b8d7f0;
+      text-shadow: 0 0 22px rgba(96,165,250,0.22);
+    }
+    body.mafia-game-theme h2,
+    body.mafia-game-theme .waiting {
+      color: #9fb4c8 !important;
+    }
+    body.mafia-game-theme .mafia-wrap {
+      --mafia-accent: #9fc3e6;
+      --mafia-accent-strong: #3b82c4;
+      --mafia-accent-soft: #d8e8f6;
+      --mafia-chip-bg: rgba(15, 31, 48, 0.9);
+      --mafia-chip-border: #355574;
+      --mafia-hero-bg:
+        linear-gradient(180deg, #132235, #09111d);
+      --mafia-hero-border: #355574;
+      --mafia-card-bg:
+        linear-gradient(90deg, rgba(147,181,213,0.10) 0 4px, transparent 4px),
+        linear-gradient(180deg, rgba(17,29,43,0.96), rgba(8,14,22,0.96));
+      --mafia-card-border: #2f455d;
+      --mafia-event-bg:
+        linear-gradient(90deg, rgba(96,165,250,0.18) 0 5px, transparent 5px),
+        linear-gradient(180deg, #14283d, #08121e);
+      --mafia-event-border: #355574;
+      --mafia-button-bg: #0d1724;
+      --mafia-button-selected-bg: linear-gradient(180deg, #16304a, #0a1522);
+    }
+    body.mafia-game-theme .mafia-theme-role .mafia-wrap {
+      --mafia-accent: #93a9c8;
+      --mafia-accent-strong: #45627f;
+      --mafia-accent-soft: #d7e0ea;
+      --mafia-chip-bg: #17212c;
+      --mafia-chip-border: #405a73;
+      --mafia-hero-border: #405a73;
+      --mafia-card-border: #334455;
+      --mafia-event-border: #45627f;
+    }
+    body.mafia-game-theme .mafia-theme-discussion .mafia-wrap {
+      --mafia-accent: #89b8d8;
+      --mafia-accent-strong: #3a6f93;
+      --mafia-accent-soft: #d4e7f4;
+      --mafia-chip-bg: #102434;
+      --mafia-chip-border: #345d78;
+      --mafia-hero-border: #345d78;
+      --mafia-card-border: #294358;
+      --mafia-event-border: #3a6f93;
+    }
+    body.mafia-game-theme .mafia-theme-voting .mafia-wrap,
+    body.mafia-game-theme .mafia-theme-revote .mafia-wrap {
+      --mafia-accent: #a9c7df;
+      --mafia-accent-strong: #587f9f;
+      --mafia-accent-soft: #e1edf6;
+      --mafia-chip-bg: #15283a;
+      --mafia-chip-border: #4e6f8a;
+      --mafia-hero-border: #4e6f8a;
+      --mafia-card-border: #344d66;
+      --mafia-event-border: #587f9f;
+    }
+    body.mafia-game-theme .mafia-theme-night .mafia-wrap {
+      --mafia-accent: #9da8c6;
+      --mafia-accent-strong: #4f5d86;
+      --mafia-accent-soft: #d9def0;
+      --mafia-chip-bg: #15192c;
+      --mafia-chip-border: #3d4770;
+      --mafia-hero-border: #3d4770;
+      --mafia-card-border: #303852;
+      --mafia-event-border: #4f5d86;
+    }
+    body.mafia-game-theme .mafia-theme-day-result .mafia-wrap {
+      --mafia-accent: #df8e8e;
+      --mafia-accent-strong: #9f1d2e;
+      --mafia-accent-soft: #f2c6c6;
+      --mafia-chip-bg: #2d1419;
+      --mafia-chip-border: #7f1d2d;
+      --mafia-hero-border: #7f1d2d;
+      --mafia-card-border: #4c252d;
+      --mafia-event-border: #9f1d2e;
+    }
+    body.mafia-game-theme .mafia-phase-hero {
+      border-radius: 10px;
+      box-shadow: 0 18px 44px rgba(0,0,0,0.32), inset 0 0 0 1px rgba(255,255,255,0.035);
+    }
+    body.mafia-game-theme .mafia-phase-title {
+      color: #e8f1f8;
+      letter-spacing: 0.02rem;
+      text-shadow: 0 0 20px rgba(0,0,0,0.45);
+    }
+    body.mafia-game-theme .mafia-chip {
+      border-radius: 6px;
+      transform: rotate(-1deg);
+      box-shadow: 0 8px 18px rgba(0,0,0,0.18);
+    }
+    body.mafia-game-theme .mafia-card,
+    body.mafia-game-theme .mafia-player-row,
+    body.mafia-game-theme .mafia-vote-row,
+    body.mafia-game-theme .mafia-team-card {
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22);
+    }
+    body.mafia-game-theme .mafia-event-card {
+      border-radius: 8px;
+      text-transform: none;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.28);
+      position: relative;
+    }
+    body.mafia-game-theme .mafia-player-row.dead {
+      opacity: 0.54;
+      text-decoration: none;
+      background:
+        linear-gradient(12deg, transparent 0 48%, rgba(185,28,28,0.55) 48.4%, rgba(185,28,28,0.55) 50%, transparent 50.4%),
+        var(--mafia-card-bg);
+    }
+    body.mafia-game-theme button.mafia-player-row.selected-vote,
+    body.mafia-game-theme .mafia-action-btn.selected-vote {
+      border-color: var(--mafia-accent);
+      box-shadow: 0 0 0 2px rgba(147,181,213,0.16), 0 12px 28px rgba(0,0,0,0.24);
+    }
+    body.mafia-game-theme .mafia-role-hidden {
+      background:
+        linear-gradient(90deg, rgba(147,181,213,0.08) 0 4px, transparent 4px),
+        #09111d;
+      border-color: #334a62;
+      border-style: dashed;
+      color: #8fa6ba;
+      border-radius: 8px;
+    }
+    body.mafia-game-theme .mafia-role-reveal {
+      color: #e8f1f8;
+      text-shadow: 0 0 22px rgba(96,165,250,0.18);
+    }
+    body.mafia-game-theme .mafia-hold-btn,
+    body.mafia-game-theme .mafia-action-btn {
+      border-radius: 8px;
+    }
+    body.mafia-game-theme .mafia-rule-row {
+      background:
+        linear-gradient(90deg, rgba(147,181,213,0.08) 0 4px, transparent 4px),
+        rgba(10,18,29,0.72);
+      border-color: #2f455d;
+      border-radius: 8px;
+    }
+    body.mafia-game-theme .mafia-rule-label,
+    body.mafia-game-theme .mafia-team-heading {
+      color: var(--mafia-accent);
+    }
+    body.mafia-game-theme #screen-dsp-mafia {
+      background:
+        linear-gradient(104deg, rgba(210,230,248,0.055) 0 7%, transparent 7% 14%, rgba(210,230,248,0.035) 14% 21%, transparent 21%),
+        radial-gradient(ellipse at 82% 12%, rgba(96,165,250,0.14), transparent 38%),
+        #07111c;
+      color: #e8f1f8;
+    }
+    body.mafia-game-theme #screen-dsp-mafia .dsp-header-bar {
+      background: rgba(8,14,22,0.95);
+      border-bottom-color: #2f455d;
+    }
+    body.mafia-game-theme #screen-dsp-mafia .dsp-game-tag,
+    body.mafia-game-theme #screen-dsp-mafia #dsp-mafia-phase-label {
+      color: #b8d7f0 !important;
+    }
+    body.mafia-game-theme #screen-dsp-mafia .dsp-mafia-chip,
+    body.mafia-game-theme #screen-dsp-mafia .dsp-role-row {
+      background:
+        linear-gradient(90deg, rgba(147,181,213,0.10) 0 4px, transparent 4px),
+        rgba(17,29,43,0.92);
+      border-color: #2f455d;
+      border-radius: 8px;
+      color: #e8f1f8;
+    }
+    body.mafia-game-theme.mafia-phase-sweep::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 9000;
+      pointer-events: none;
+      background:
+        repeating-linear-gradient(0deg, rgba(0,0,0,0.72) 0 13px, rgba(147,181,213,0.15) 13px 15px, transparent 15px 26px),
+        linear-gradient(90deg, transparent, rgba(147,181,213,0.14), transparent);
+      animation: mafiaBlindsSweep 0.64s ease both;
+      mix-blend-mode: screen;
+    }
+    @keyframes mafiaBlindsSweep {
+      0% { opacity: 0; transform: translateX(-105%); }
+      22% { opacity: 0.72; }
+      100% { opacity: 0; transform: translateX(105%); }
+    }
+    /* ── Secret Superlatives (legacy ht ids) ── */
     .mafia-theme-role .mafia-wrap {
       --mafia-accent: #93c5fd;
       --mafia-accent-strong: #2563eb;
@@ -695,8 +1565,8 @@
       --mafia-hero-border: #1d4ed8;
       --mafia-card-bg: linear-gradient(180deg, #101a2a, #0c1220);
       --mafia-card-border: #274067;
-      --mafia-news-bg: linear-gradient(180deg, #11294d, #0c1c31);
-      --mafia-news-border: #2563eb;
+      --mafia-event-bg: linear-gradient(180deg, #11294d, #0c1c31);
+      --mafia-event-border: #2563eb;
       --mafia-button-bg: #101828;
       --mafia-button-selected-bg: linear-gradient(180deg, #13294b, #0d1c31);
     }
@@ -710,8 +1580,8 @@
       --mafia-hero-border: #15803d;
       --mafia-card-bg: linear-gradient(180deg, #131f19, #0d1510);
       --mafia-card-border: #23442f;
-      --mafia-news-bg: linear-gradient(180deg, #14341f, #0d2013);
-      --mafia-news-border: #16a34a;
+      --mafia-event-bg: linear-gradient(180deg, #14341f, #0d2013);
+      --mafia-event-border: #16a34a;
       --mafia-button-bg: #111b15;
       --mafia-button-selected-bg: linear-gradient(180deg, #173122, #0f1c14);
     }
@@ -726,8 +1596,8 @@
       --mafia-hero-border: #b45309;
       --mafia-card-bg: linear-gradient(180deg, #22170f, #14100d);
       --mafia-card-border: #4a3218;
-      --mafia-news-bg: linear-gradient(180deg, #43270e, #24160c);
-      --mafia-news-border: #d97706;
+      --mafia-event-bg: linear-gradient(180deg, #43270e, #24160c);
+      --mafia-event-border: #d97706;
       --mafia-button-bg: #1f150f;
       --mafia-button-selected-bg: linear-gradient(180deg, #36210e, #1d140d);
     }
@@ -741,8 +1611,8 @@
       --mafia-hero-border: #6d28d9;
       --mafia-card-bg: linear-gradient(180deg, #1a1430, #100d1f);
       --mafia-card-border: #3d2c64;
-      --mafia-news-bg: linear-gradient(180deg, #27174c, #160f2b);
-      --mafia-news-border: #7c3aed;
+      --mafia-event-bg: linear-gradient(180deg, #27174c, #160f2b);
+      --mafia-event-border: #7c3aed;
       --mafia-button-bg: #171225;
       --mafia-button-selected-bg: linear-gradient(180deg, #241844, #140f28);
     }
@@ -756,8 +1626,8 @@
       --mafia-hero-border: #be123c;
       --mafia-card-bg: linear-gradient(180deg, #22131a, #150d11);
       --mafia-card-border: #5a2433;
-      --mafia-news-bg: linear-gradient(180deg, #4a1220, #240d13);
-      --mafia-news-border: #e11d48;
+      --mafia-event-bg: linear-gradient(180deg, #4a1220, #240d13);
+      --mafia-event-border: #e11d48;
       --mafia-button-bg: #211118;
       --mafia-button-selected-bg: linear-gradient(180deg, #39131f, #1f0f15);
     }
@@ -771,8 +1641,8 @@
       --mafia-hero-border: #0e7490;
       --mafia-card-bg: linear-gradient(180deg, #10202b, #0b1319);
       --mafia-card-border: #255169;
-      --mafia-news-bg: linear-gradient(180deg, #133646, #0b1e28);
-      --mafia-news-border: #0891b2;
+      --mafia-event-bg: linear-gradient(180deg, #133646, #0b1e28);
+      --mafia-event-border: #0891b2;
       --mafia-button-bg: #101a21;
       --mafia-button-selected-bg: linear-gradient(180deg, #13313f, #0d1a24);
     }
@@ -795,6 +1665,225 @@
     .ht-expose-label { font-size: 0.7rem; text-transform: uppercase; letter-spacing: 3px; color: #c084fc; margin: 1.25rem 0 0.6rem; }
     .ht-vote-row { font-size: 0.9rem; margin-bottom: 0.35rem; }
     .ht-advance-text { font-size: 0.8rem; color: #4a3a6a; margin-top: 1.25rem; }
+
+    body.ss-theme {
+      background-color: #0b211c;
+      background-image: none;
+      color: #f5f0df;
+    }
+    body:not(.light-mode).ss-theme {
+      background-image:
+        url("data:image/svg+xml,<svg xmlns='http://www.w3.org/2000/svg' width='400' height='400'><filter id='n'><feTurbulence type='fractalNoise' baseFrequency='0.038 0.62' numOctaves='3' stitchTiles='stitch'/><feColorMatrix type='saturate' values='0'/></filter><rect width='400' height='400' filter='url(%23n)' opacity='0.048' fill='white'/></svg>"),
+        var(--ss-doodles, none),
+        radial-gradient(ellipse 88% 16% at 14% 22%, rgba(245,240,223,0.072) 0%, rgba(245,240,223,0.02) 55%, transparent 100%),
+        radial-gradient(ellipse 62% 12% at 76% 50%, rgba(245,240,223,0.058) 0%, rgba(245,240,223,0.015) 55%, transparent 100%),
+        radial-gradient(ellipse 80% 11% at 42% 78%, rgba(245,240,223,0.065) 0%, rgba(245,240,223,0.018) 55%, transparent 100%),
+        radial-gradient(ellipse 44% 9% at 86% 30%, rgba(245,240,223,0.04) 0%, transparent 100%);
+      background-size: 400px 400px, 100% 100%, 100% 100%, 100% 100%, 100% 100%, 100% 100%;
+      background-repeat: repeat, no-repeat, no-repeat, no-repeat, no-repeat, no-repeat;
+    }
+    body:not(.light-mode).ss-theme::before {
+      content: '';
+      position: fixed;
+      left: 9vw;
+      top: 12vh;
+      width: 2px;
+      height: 2px;
+      z-index: 0;
+      pointer-events: none;
+      background: rgba(245,240,223,0.14);
+      border-radius: 50%;
+      box-shadow:
+        10vw 6vh 0 rgba(245,240,223,0.09),
+        22vw 28vh 0 rgba(245,240,223,0.11),
+        34vw 11vh 0 rgba(245,240,223,0.07),
+        47vw 45vh 0 rgba(245,240,223,0.10),
+        58vw 23vh 0 rgba(245,240,223,0.08),
+        69vw 52vh 0 rgba(245,240,223,0.11),
+        78vw 16vh 0 rgba(245,240,223,0.08),
+        84vw 64vh 0 rgba(245,240,223,0.09),
+        4vw 58vh 0 rgba(245,240,223,0.07),
+        39vw 70vh 0 rgba(245,240,223,0.08);
+      opacity: 0.9;
+    }
+    body:not(.light-mode).ss-theme::after {
+      content: '';
+      position: fixed;
+      inset: 0;
+      z-index: 0;
+      pointer-events: none;
+      background: transparent;
+      box-shadow:
+        inset 0 0 120px rgba(2,8,7,0.32),
+        18vw 18vh 80px 24px rgba(245,240,223,0.035),
+        66vw 36vh 95px 26px rgba(245,240,223,0.025),
+        38vw 74vh 75px 18px rgba(245,240,223,0.03);
+      opacity: 0.92;
+    }
+    body:not(.light-mode).ss-theme .screen.active::after {
+      content: '';
+      position: absolute;
+      left: 7%;
+      right: 7%;
+      bottom: 8%;
+      height: 18%;
+      z-index: -1;
+      pointer-events: none;
+      border-radius: 50%;
+      background: rgba(245,240,223,0.018);
+      box-shadow:
+        0 -8px 36px 10px rgba(245,240,223,0.026),
+        26vw -22vh 42px 8px rgba(245,240,223,0.018),
+        -19vw -34vh 34px 6px rgba(245,240,223,0.02);
+      transform: rotate(-2deg);
+    }
+    body.ss-theme h1,
+    body.ss-theme .ht-round-label,
+    body.ss-theme .ht-expose-label {
+      color: #f8e9b4;
+      text-shadow:
+        0 0 1px rgba(255,255,255,0.9),
+        0 0 18px rgba(245,240,223,0.16);
+    }
+    body.ss-theme h2,
+    body.ss-theme .ht-advance-text,
+    body.ss-theme .waiting {
+      color: #b9d8ca !important;
+    }
+    body.ss-theme .btn {
+      background: #e8d88f;
+      color: #10241f;
+      box-shadow: 0 10px 24px rgba(0,0,0,0.22), inset 0 -2px 0 rgba(55,45,12,0.14);
+    }
+    body.ss-theme .btn-ghost {
+      background: rgba(13,33,28,0.58);
+      border-color: #f5c84b;
+      color: #f5e5a3;
+    }
+    body.ss-theme .timer-bar-wrap,
+    body.ss-theme .ht-p-result-bar-wrap {
+      background: rgba(7,20,17,0.78);
+      border-color: #2e5d4f;
+    }
+    body.ss-theme .timer-bar {
+      background: #e8d88f;
+      box-shadow: inset 0 0 8px rgba(255,255,255,0.24);
+    }
+    body.ss-theme .ht-p-question,
+    body.ss-theme .ss-rules-panel,
+    body.ss-theme .ht-vote-btn,
+    body.ss-theme .ht-p-result-row {
+      background: rgba(13,48,39,0.88) !important;
+      border: 1px solid rgba(213,226,208,0.22) !important;
+      border-radius: 8px;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.22), inset 0 0 18px rgba(245,240,223,0.025);
+      position: relative;
+      overflow: hidden;
+    }
+    body:not(.light-mode).ss-theme .ht-p-question::before,
+    body:not(.light-mode).ss-theme .ss-rules-panel::before,
+    body:not(.light-mode).ss-theme .ht-p-result-row::before {
+      content: '';
+      position: absolute;
+      left: 14%;
+      top: 22%;
+      width: 2px;
+      height: 2px;
+      border-radius: 50%;
+      background: rgba(245,240,223,0.16);
+      box-shadow:
+        8vw 1vh 0 rgba(245,240,223,0.08),
+        16vw 6vh 0 rgba(245,240,223,0.10),
+        24vw 2vh 0 rgba(245,240,223,0.07),
+        31vw 7vh 0 rgba(245,240,223,0.09),
+        5vw 9vh 0 rgba(245,240,223,0.06);
+      pointer-events: none;
+    }
+    body.ss-theme .ht-p-question {
+      padding: 1rem 1.05rem 1rem 1.25rem;
+      color: #f5f0df;
+      text-shadow: 0 0 1px rgba(255,255,255,0.45);
+    }
+    body.ss-theme .ht-vote-btn {
+      color: #f5f0df;
+      text-align: left;
+      padding-left: 1.15rem;
+      text-shadow: 0 0 1px rgba(255,255,255,0.38);
+    }
+    body.ss-theme .ht-vote-btn:active {
+      border-color: #f5c84b;
+      background: rgba(24,66,55,0.96);
+    }
+    body.ss-theme .ht-voted-msg {
+      color: #93d9b4;
+    }
+    body.ss-theme .ht-p-result-row {
+      padding: 0.65rem 0.75rem;
+    }
+    body.ss-theme .ht-p-result-name {
+      color: #f5f0df;
+    }
+    body.ss-theme .ss-rules-panel > div:first-child {
+      color: #b9d8ca !important;
+    }
+    body.ss-theme #ht-exposure-label {
+      color: #f5c84b !important;
+    }
+    body.ss-theme #ht-exposure-slider {
+      accent-color: #f5c84b !important;
+    }
+    body.ss-theme .ss-rules-panel.locked {
+      opacity: 0.78;
+    }
+    body.ss-theme .ss-rules-panel.locked #ht-exposure-slider {
+      cursor: not-allowed !important;
+      filter: saturate(0.2);
+      opacity: 0.45;
+    }
+    body.ss-theme .ss-setup-note,
+    body.ss-theme .ss-results-label {
+      color: #b9d8ca;
+      font-size: 0.72rem;
+      font-weight: 900;
+      letter-spacing: 0.12rem;
+      text-transform: uppercase;
+    }
+    body.ss-theme .ss-results-label {
+      margin: -0.45rem 0 0.9rem;
+      color: #f5c84b;
+    }
+    body.ss-theme .ht-vote-row {
+      background: rgba(13,48,39,0.72);
+      border: 1px solid rgba(213,226,208,0.20);
+      border-radius: 6px;
+      padding: 0.45rem 0.55rem;
+    }
+    body.ss-theme #screen-dsp-ht {
+      background: #0b211c;
+      color: #f5f0df;
+    }
+    body.ss-theme #screen-dsp-ht .dsp-header-bar {
+      background: rgba(7,20,17,0.94);
+      border-bottom-color: #2e5d4f;
+    }
+    body.ss-theme #screen-dsp-ht .dsp-game-tag,
+    body.ss-theme #screen-dsp-ht .dsp-pill,
+    body.ss-theme #screen-dsp-ht .dsp-pct {
+      color: #f5c84b !important;
+    }
+    body.ss-theme #screen-dsp-ht .dsp-option-card {
+      background: rgba(13,48,39,0.88);
+      border-color: rgba(213,226,208,0.22) !important;
+      border-radius: 8px;
+      box-shadow: 0 16px 34px rgba(0,0,0,0.24), inset 0 0 18px rgba(245,240,223,0.025);
+    }
+    body.ss-theme #screen-dsp-ht .dsp-bar-wrap {
+      background: rgba(7,20,17,0.78);
+      border-color: #2e5d4f;
+    }
+    body.ss-theme #screen-dsp-ht #dsp-ht-count {
+      color: #b9d8ca !important;
+    }
 
     /* ── Debate player ── */
     .db-p-timer { font-family: 'Cinzel', serif; font-size: 5rem; font-weight: 900; color: #a78bfa; text-shadow: 0 0 40px rgba(167,139,250,0.3); line-height: 1; margin: 0.5rem 0; }
@@ -871,6 +1960,192 @@
     .db-vote-col { flex: 1; background: #1a1232; border: 1.5px solid #2d1f50; border-radius: 10px; padding: 0.75rem; text-align: center; font-size: .95rem; }
     .db-vote-tally { font-family: 'Cinzel', serif; font-size: 1.5rem; color: #a78bfa; margin-top: 0.4rem; }
     .db-chip { background: #1a1232; border: 1px solid #c084fc; border-radius: 999px; padding: 0.18rem 0.65rem; font-size: 0.85rem; color: #c084fc; }
+    body.debate-theme {
+      background-color: #090b10;
+      background-image:
+        radial-gradient(ellipse 70% 34% at 50% -11%, rgba(232,224,207,0.105) 0 24%, transparent 25%),
+        radial-gradient(ellipse 33% 62% at 50% 18%, transparent 0 58%, rgba(185,155,98,0.08) 59%, transparent 60%),
+        conic-gradient(from 0deg at 25% 0%, transparent 0 129deg, rgba(232,224,207,0.05) 129deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.05) 230deg 231deg, transparent 231deg 360deg),
+        conic-gradient(from 0deg at 75% 0%, transparent 0 129deg, rgba(232,224,207,0.05) 129deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.05) 230deg 231deg, transparent 231deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(0,0,0,0.16) 9.38% 9.82%, rgba(232,224,207,0.028) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(0,0,0,0.13) 24.1% 24.45%, rgba(232,224,207,0.026) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(0,0,0,0.12) 39.5% 39.8%, rgba(232,224,207,0.024) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(232,224,207,0.024) 59.65% 59.9%, rgba(0,0,0,0.12) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(232,224,207,0.026) 74.95% 75.2%, rgba(0,0,0,0.13) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(232,224,207,0.028) 89.55% 89.8%, rgba(0,0,0,0.16) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.36) 0 7%, transparent 18% 82%, rgba(0,0,0,0.38) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(232,224,207,0.018) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(232,224,207,0.016) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(232,224,207,0.016) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(232,224,207,0.018) 87.3% 87.55%, transparent 87.55% 100%),
+        linear-gradient(180deg, #15161b 0%, #090b10 100%);
+      color: #f1eadc;
+    }
+    body.debate-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(90deg, transparent 0 13%, rgba(232,224,207,0.055) 13.2% 13.55%, transparent 13.75% 86.45%, rgba(232,224,207,0.045) 86.45% 86.8%, transparent 87%),
+        linear-gradient(90deg, transparent 0 18.8%, rgba(232,224,207,0.035) 18.8% 19.1%, transparent 19.1% 34.4%, rgba(232,224,207,0.03) 34.4% 34.7%, transparent 34.7% 65.3%, rgba(232,224,207,0.03) 65.3% 65.6%, transparent 65.6% 80.9%, rgba(232,224,207,0.035) 80.9% 81.2%, transparent 81.2% 100%);
+      opacity: 0.66;
+    }
+    body.debate-theme h1,
+    body.debate-theme .db-title-line,
+    body.debate-theme .db-p-timer,
+    body.debate-theme .db-score-pts,
+    body.debate-theme .db-vote-tally,
+    body.debate-theme .dsp-debate-timer {
+      color: #e8e0cf;
+      text-shadow: 0 0 24px rgba(185,155,98,0.18);
+    }
+    body.debate-theme h2,
+    body.debate-theme .waiting,
+    body.debate-theme .db-waiting-line,
+    body.debate-theme .db-round-context-meta,
+    body.debate-theme .debate-setup-note,
+    body.debate-theme .debate-forbidden-sub,
+    body.debate-theme .dsp-debater-side {
+      color: #b8bcc5;
+    }
+    body.debate-theme .btn {
+      background: #b99b62;
+      color: #101217;
+      box-shadow: 0 10px 26px rgba(0,0,0,0.26);
+    }
+    body.debate-theme .btn:active { background: #d5bf89; }
+    body.debate-theme .btn:disabled {
+      background: #2b3038;
+      color: #777f8c;
+      box-shadow: none;
+    }
+    body.debate-theme .btn-ghost {
+      background: rgba(13,15,21,0.68);
+      border-color: #7d8490;
+      color: #e8e0cf;
+    }
+    body.debate-theme .debate-rules-card,
+    body.debate-theme .db-round-context,
+    body.debate-theme .db-round-context-side,
+    body.debate-theme .db-pick-btn,
+    body.debate-theme .db-vote-btn,
+    body.debate-theme .db-score-row,
+    body.debate-theme .db-vote-col,
+    body.debate-theme .db-tier-btn,
+    body.debate-theme .debate-forbidden-control {
+      background:
+        linear-gradient(118deg, transparent 0 58%, rgba(232,224,207,0.035) 58.2%, transparent 58.8%),
+        rgba(15,18,25,0.88);
+      border-color: #343943;
+      border-radius: 8px;
+      color: #f1eadc;
+      box-shadow: inset 0 0 0 1px rgba(232,224,207,0.035);
+    }
+    body.debate-theme .debate-rules-card {
+      max-width: 340px;
+      border-top-color: #b99b62;
+    }
+    body.debate-theme .db-round-context-title,
+    body.debate-theme .debate-rules-heading,
+    body.debate-theme .db-phase-chip {
+      color: #c7ab73;
+    }
+    body.debate-theme .db-topic-text,
+    body.debate-theme .db-p-topic,
+    body.debate-theme .db-round-context-topic,
+    body.debate-theme .db-round-context-name,
+    body.debate-theme .db-score-name,
+    body.debate-theme .debate-rules-list {
+      color: #f1eadc;
+    }
+    body.debate-theme .db-round-context-side.mine,
+    body.debate-theme .db-score-row.leader,
+    body.debate-theme .db-score-row.just-scored {
+      border-color: #b99b62;
+      box-shadow: 0 0 0 2px rgba(185,155,98,0.28);
+    }
+    body.debate-theme .db-phase-chip,
+    body.debate-theme .db-chip,
+    body.debate-theme .db-p-banned-chip {
+      background: rgba(185,155,98,0.12);
+      border-color: rgba(185,155,98,0.38);
+      color: #d5bf89;
+    }
+    body.debate-theme .db-catch-btn {
+      background: #171217;
+      border-color: #a94444;
+      color: #f0c8c8;
+      border-radius: 8px;
+    }
+    body.debate-theme .db-catch-btn:active { background: #231318; }
+    body.debate-theme .db-catch-btn.inactive {
+      background: #101217;
+      border-color: #343943;
+      color: #777f8c;
+    }
+    body.debate-theme .db-catch-vote-btn {
+      border-radius: 8px;
+      background: #101217;
+      color: #f1eadc;
+    }
+    body.debate-theme .debate-toggle-knob { background: #343943; }
+    body.debate-theme .debate-toggle-wrap input:checked + .debate-toggle-knob { background: #b99b62; }
+    body.debate-theme .db-tier-btn input,
+    body.debate-theme .debate-toggle-wrap input,
+    body.debate-theme .debate-count-input { accent-color: #b99b62; }
+    body.debate-theme .debate-count-input {
+      background: #0d0f15;
+      border-color: #343943;
+      color: #f1eadc;
+    }
+    body.debate-theme .db-p-bar-bg,
+    body.debate-theme .dsp-vote-bar-wrap {
+      background: #242832;
+      border: 1px solid #343943;
+    }
+    body.debate-theme .db-p-bar { background: #b99b62; }
+    body.debate-theme .site-notice {
+      background: #101217;
+      border-color: #b99b62;
+      color: #f1eadc;
+    }
+    body.debate-theme #screen-dsp-debate {
+      background:
+        radial-gradient(ellipse 78% 36% at 50% -12%, rgba(232,224,207,0.115) 0 24%, transparent 25%),
+        radial-gradient(ellipse 38% 62% at 50% 18%, transparent 0 58%, rgba(185,155,98,0.09) 59%, transparent 60%),
+        conic-gradient(from 0deg at 25% 0%, transparent 0 129deg, rgba(232,224,207,0.052) 129deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.052) 230deg 231deg, transparent 231deg 360deg),
+        conic-gradient(from 0deg at 75% 0%, transparent 0 129deg, rgba(232,224,207,0.052) 129deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.052) 230deg 231deg, transparent 231deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(0,0,0,0.18) 9.38% 9.82%, rgba(232,224,207,0.03) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(0,0,0,0.15) 24.1% 24.45%, rgba(232,224,207,0.028) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(0,0,0,0.14) 39.5% 39.8%, rgba(232,224,207,0.026) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(232,224,207,0.026) 59.65% 59.9%, rgba(0,0,0,0.14) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(232,224,207,0.028) 74.95% 75.2%, rgba(0,0,0,0.15) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(232,224,207,0.03) 89.55% 89.8%, rgba(0,0,0,0.18) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.42) 0 7%, transparent 18% 82%, rgba(0,0,0,0.44) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(232,224,207,0.018) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(232,224,207,0.016) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(232,224,207,0.016) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(232,224,207,0.018) 87.3% 87.55%, transparent 87.55% 100%),
+        #090b10;
+    }
+    body.debate-theme #screen-dsp-debate .dsp-header-bar {
+      background: rgba(15,18,25,0.94);
+      border-bottom-color: #343943;
+    }
+    body.debate-theme #screen-dsp-debate .dsp-game-tag,
+    body.debate-theme #screen-dsp-debate .dsp-phase-tag,
+    body.debate-theme #screen-dsp-debate .dsp-score-pts {
+      color: #e8e0cf;
+    }
+    body.debate-theme #screen-dsp-debate .dsp-debater-card,
+    body.debate-theme #screen-dsp-debate .dsp-score-chip,
+    body.debate-theme #screen-dsp-debate .dsp-score-row {
+      background: rgba(15,18,25,0.88);
+      border-color: #343943;
+      border-radius: 8px;
+      color: #f1eadc;
+    }
+    body.debate-theme #screen-dsp-debate .dsp-debate-topic {
+      color: #f1eadc;
+      text-shadow: 0 0 20px rgba(185,155,98,0.12);
+    }
+    body.debate-theme .dsp-debate-vs-label {
+      font-family: 'Cinzel', serif;
+      font-size: 1.3rem;
+      color: #b99b62;
+      flex-shrink: 0;
+    }
+    body.debate-theme #dsp-vote-count-a,
+    body.debate-theme #dsp-vote-count-b,
+    body.debate-theme #dsp-debate-waiting {
+      color: #b8bcc5 !important;
+    }
 
     /* ── Auction ── */
     .auction-screen { max-width: 520px; }
@@ -918,6 +2193,172 @@
     .auction-modal-actions.two { grid-template-columns:1fr 1fr; }
     .auction-letter-row { display:flex; flex-wrap:wrap; justify-content:center; gap:0.55rem; margin:0.85rem 0; }
     .auction-letter-chip { min-width:3.2rem; height:3.2rem; display:inline-flex; align-items:center; justify-content:center; border:1.5px solid rgba(207,185,145,0.45); border-radius:8px; background:#100b22; color:#cfb991; font-family:'Cinzel',serif; font-size:2rem; font-weight:900; }
+    body.auction-theme {
+      background-color:#0b0709;
+      background-image:
+        radial-gradient(ellipse 2.2rem 1.05rem at 17% 24%, rgba(255,206,116,0.10) 0 35%, transparent 68%),
+        radial-gradient(ellipse 2.2rem 1.05rem at 83% 24%, rgba(255,206,116,0.10) 0 35%, transparent 68%),
+        radial-gradient(ellipse 1.7rem 0.82rem at 27% 39%, rgba(255,206,116,0.075) 0 35%, transparent 68%),
+        radial-gradient(ellipse 1.7rem 0.82rem at 73% 39%, rgba(255,206,116,0.075) 0 35%, transparent 68%),
+        linear-gradient(90deg, transparent 0 16.65%, rgba(176,131,61,0.30) 16.65% 17.35%, transparent 17.35% 82.65%, rgba(176,131,61,0.30) 82.65% 83.35%, transparent 83.35% 100%),
+        linear-gradient(90deg, transparent 0 15.8%, rgba(176,131,61,0.22) 15.8% 18.2%, transparent 18.2% 81.8%, rgba(176,131,61,0.22) 81.8% 84.2%, transparent 84.2% 100%),
+        linear-gradient(90deg, transparent 0 26.72%, rgba(176,131,61,0.22) 26.72% 27.28%, transparent 27.28% 72.72%, rgba(176,131,61,0.22) 72.72% 73.28%, transparent 73.28% 100%),
+        linear-gradient(90deg, transparent 0 26.25%, rgba(176,131,61,0.16) 26.25% 27.75%, transparent 27.75% 72.25%, rgba(176,131,61,0.16) 72.25% 73.75%, transparent 73.75% 100%),
+        linear-gradient(105deg, transparent 0 42%, rgba(176,131,61,0.16) 42.2% 42.75%, transparent 43% 100%),
+        linear-gradient(75deg, transparent 0 57%, rgba(176,131,61,0.16) 57.25% 57.8%, transparent 58% 100%),
+        linear-gradient(90deg, transparent 0 26%, rgba(176,131,61,0.22) 26% 26.55%, rgba(75,35,126,0.44) 26.55% 73.45%, rgba(176,131,61,0.22) 73.45% 74%, transparent 74% 100%),
+        repeating-linear-gradient(90deg, rgba(255,236,191,0.035) 0 1px, transparent 1px 44px),
+        linear-gradient(90deg, rgba(0,0,0,0.5) 0 9%, rgba(27,17,42,0.74) 9% 26%, transparent 26% 74%, rgba(27,17,42,0.74) 74% 91%, rgba(0,0,0,0.5) 91% 100%),
+        linear-gradient(180deg, #1b132d 0%, #10091e 52%, #080506 100%);
+      color:#fff2d6;
+    }
+    body.auction-theme::before {
+      content:'';
+      position:fixed;
+      inset:0;
+      pointer-events:none;
+      background:
+        linear-gradient(180deg, transparent 0 12%, rgba(176,131,61,0.16) 12% 12.6%, transparent 12.6% 61%, rgba(176,131,61,0.12) 61% 61.45%, transparent 61.45% 100%),
+        radial-gradient(ellipse 36% 18% at 50% 18%, rgba(255,216,138,0.12), transparent 68%),
+        linear-gradient(90deg, transparent 0 31%, rgba(0,0,0,0.30) 31% 34%, transparent 34% 66%, rgba(0,0,0,0.30) 66% 69%, transparent 69% 100%),
+        radial-gradient(ellipse 62% 24% at 50% 111%, rgba(0,0,0,0.58), transparent 72%);
+      opacity:0.82;
+      z-index:0;
+    }
+    body.auction-theme h1,
+    body.auction-theme .auction-listing-name,
+    body.auction-theme .auction-stat-value,
+    body.auction-theme .auction-score-points,
+    body.auction-theme .auction-modal-title,
+    body.auction-theme .auction-modal-timer,
+    body.auction-theme .auction-letter-chip,
+    body.auction-theme .auction-secret-word {
+      color:#ffd88a;
+      text-shadow:0 0 18px rgba(109,53,176,0.34), 0 0 24px rgba(212,166,88,0.14);
+    }
+    body.auction-theme h2,
+    body.auction-theme .auction-topline,
+    body.auction-theme .auction-item-summary,
+    body.auction-theme .auction-message,
+    body.auction-theme .auction-stat-label,
+    body.auction-theme .auction-modal-kicker,
+    body.auction-theme .debate-setup-note,
+    body.auction-theme .debate-forbidden-sub,
+    body.auction-theme .non-host-only {
+      color:#cbb8e8 !important;
+    }
+    body.auction-theme .auction-panel,
+    body.auction-theme .debate-rules-card,
+    body.auction-theme .debate-setup-panel {
+      background:
+        linear-gradient(90deg, rgba(212,166,88,0.05) 0 1px, transparent 1px),
+        linear-gradient(180deg, rgba(33,20,50,0.94), rgba(12,8,22,0.96));
+      border-color:#4f3478;
+      box-shadow:inset 0 0 0 1px rgba(212,166,88,0.11), 0 16px 34px rgba(0,0,0,0.26);
+    }
+    body.auction-theme #auction-rules-host-controls {
+      padding:0.95rem 1rem 1rem;
+      border-radius:8px;
+    }
+    body.auction-theme #auction-rules-host-controls.locked {
+      padding-bottom:1.35rem;
+    }
+    body.auction-theme #auction-rules-host-controls .debate-forbidden-control {
+      margin-top:0;
+      padding:0.75rem 0;
+      background:transparent;
+      border:0;
+      border-top:1px solid rgba(212,166,88,0.24);
+      border-bottom:1px solid rgba(212,166,88,0.24);
+      border-radius:0;
+      box-shadow:none;
+    }
+    body.auction-theme #auction-rules-host-controls .debate-count-input {
+      border-radius:4px;
+      border-color:#6d35b0;
+      background:#160b0e;
+      box-shadow:inset 0 0 0 1px rgba(212,166,88,0.08);
+    }
+    body.auction-theme .auction-panel.bidder-wrap {
+      background:
+        radial-gradient(circle at 50% 20%, rgba(255,216,138,0.08), transparent 42%),
+        linear-gradient(180deg, rgba(38,22,60,0.94), rgba(12,7,18,0.96));
+    }
+    body.auction-theme .auction-item,
+    body.auction-theme .auction-stat,
+    body.auction-theme .auction-tutorial-step {
+      background:#120b20;
+      border-color:#3f2b62;
+      box-shadow:inset 4px 0 0 rgba(109,53,176,0.44);
+    }
+    body.auction-theme .auction-item-name,
+    body.auction-theme .auction-modal-body,
+    body.auction-theme .auction-secret,
+    body.auction-theme .debate-rules-list,
+    body.auction-theme .debate-forbidden-label {
+      color:#fff2d6;
+    }
+    body.auction-theme .auction-type-icon {
+      background:rgba(109,53,176,0.28);
+      border-color:rgba(212,166,88,0.38);
+      box-shadow:0 0 14px rgba(109,53,176,0.18);
+    }
+    body.auction-theme .auction-score-row {
+      min-height:40px;
+      border-bottom-color:rgba(79,52,120,0.74);
+    }
+    body.auction-theme .auction-score-money { color:#f7b267; }
+    body.auction-theme .auction-secret {
+      background:#13091f;
+      border-color:#b0833d;
+    }
+    body.auction-theme .btn,
+    body.auction-theme .auction-bid-btn {
+      background:#6d35b0;
+      color:#fff2d6;
+      box-shadow:0 0 0 2px rgba(7,5,6,0.72), 0 10px 22px rgba(0,0,0,0.26);
+    }
+    body.auction-theme .btn:active,
+    body.auction-theme .auction-bid-btn:active { background:#7f45c7; }
+    body.auction-theme .btn:disabled {
+      background:#21182d;
+      color:#806c99;
+      box-shadow:none;
+    }
+    body.auction-theme .btn-ghost {
+      background:rgba(13,7,9,0.68);
+      border-color:#b0833d;
+      color:#ffd88a;
+    }
+    body.auction-theme input {
+      background:#160b0e;
+      border-color:#4f3478;
+      color:#fff2d6;
+    }
+    body.auction-theme .auction-modal-backdrop {
+      background:rgba(8,5,6,0.82);
+    }
+    body.auction-theme .auction-modal {
+      background:
+        linear-gradient(90deg, rgba(212,166,88,0.06) 0 1px, transparent 1px),
+        linear-gradient(180deg, rgba(32,18,50,0.98), rgba(12,7,18,0.98));
+      border-color:#6d35b0;
+      box-shadow:0 24px 70px rgba(0,0,0,0.58), 0 0 0 1px rgba(212,166,88,0.16);
+    }
+    body.auction-theme .auction-modal-timer,
+    body.auction-theme .auction-letter-chip {
+      background:#120b20;
+      border-color:rgba(212,166,88,0.42);
+    }
+    body.auction-theme .bidder-bubble {
+      background:#fff2d6;
+      color:#3b1d63;
+      border-color:#b0833d;
+    }
+    body.auction-theme .bidder-bubble::after {
+      background:#fff2d6;
+      border-color:#b0833d;
+    }
     .bidder-wrap { display:flex; flex-direction:column; align-items:center; gap:0.45rem; text-align:center; }
     .bidder-bubble { position:relative; max-width:230px; background:#f8f1e4; color:#24153d; border:2px solid #cfb991; border-radius:8px; padding:0.55rem 0.75rem; font-weight:700; box-shadow:0 10px 30px rgba(0,0,0,0.22); white-space:pre-line; }
     .bidder-bubble::after { content:''; position:absolute; left:50%; bottom:-9px; width:14px; height:14px; background:#f8f1e4; border-right:2px solid #cfb991; border-bottom:2px solid #cfb991; transform:translateX(-50%) rotate(45deg); }
@@ -926,7 +2367,7 @@
     .bidder-face.laughing { animation: bidder-laugh 0.6s ease; }
     .bidder-face.laughing .bidder-eye { height:4px; top:49px; border-radius:50% 50% 0 0; }
     .bidder-face.laughing .bidder-mouth { width:28px; height:14px; left:46px; top:64px; border-radius:0 0 16px 16px; }
-    .bidder-head { position:absolute; left:18px; top:18px; width:84px; height:78px; background:linear-gradient(180deg,#6d2847,#2b1328); border:3px solid #140917; border-radius:42% 42% 48% 48%; }
+    .bidder-head { position:absolute; left:18px; top:18px; width:84px; height:78px; background:linear-gradient(180deg,#5b2a86,#24133d); border:3px solid #140917; border-radius:42% 42% 48% 48%; }
     .bidder-horn { position:absolute; top:4px; width:22px; height:32px; background:#d9c4a0; border:3px solid #140917; border-radius:70% 20% 70% 20%; }
     .bidder-horn.left { left:25px; transform:rotate(-28deg); }
     .bidder-horn.right { right:25px; transform:scaleX(-1) rotate(-28deg); }
@@ -935,7 +2376,7 @@
     .bidder-eye.right { right:41px; }
     .bidder-mouth { position:absolute; left:52px; top:70px; width:17px; height:7px; border-bottom:3px solid #fda4af; border-radius:0 0 20px 20px; }
     .bidder-body { position:absolute; left:32px; top:90px; width:56px; height:38px; background:linear-gradient(180deg,#20112d,#090512); border:3px solid #140917; border-radius:10px 10px 6px 6px; }
-    .bidder-arm { position:absolute; right:20px; top:96px; width:28px; height:10px; background:#6d2847; border:3px solid #140917; border-radius:999px; transform:rotate(-22deg); transform-origin:left center; z-index:1; }
+    .bidder-arm { position:absolute; right:20px; top:96px; width:28px; height:10px; background:#5b2a86; border:3px solid #140917; border-radius:999px; transform:rotate(-22deg); transform-origin:left center; z-index:1; }
     .bidder-gavel { position:absolute; right:-2px; top:91px; width:48px; height:8px; background:#8b5e34; border:2px solid #140917; transform:rotate(-22deg); transform-origin:left center; z-index:2; }
     .bidder-gavel::before { content:''; position:absolute; right:-8px; top:-8px; width:18px; height:18px; background:#a16207; border:2px solid #140917; border-radius:4px; }
     .bidder-face.sold .bidder-gavel,
@@ -989,6 +2430,151 @@
     body.light-mode .auction-topline,
     body.light-mode .auction-tutorial-step { color:#5c4080; }
     body.light-mode .auction-type-icon { background:rgba(139,105,20,0.1); border-color:rgba(139,105,20,0.35); }
+    body.light-mode.auction-theme {
+      background-color:#eee7fb;
+      background-image:
+        radial-gradient(ellipse 2.2rem 1.05rem at 17% 24%, rgba(154,107,36,0.10) 0 35%, transparent 68%),
+        radial-gradient(ellipse 2.2rem 1.05rem at 83% 24%, rgba(154,107,36,0.10) 0 35%, transparent 68%),
+        radial-gradient(ellipse 1.7rem 0.82rem at 27% 39%, rgba(154,107,36,0.075) 0 35%, transparent 68%),
+        radial-gradient(ellipse 1.7rem 0.82rem at 73% 39%, rgba(154,107,36,0.075) 0 35%, transparent 68%),
+        linear-gradient(90deg, transparent 0 16.65%, rgba(154,107,36,0.28) 16.65% 17.35%, transparent 17.35% 82.65%, rgba(154,107,36,0.28) 82.65% 83.35%, transparent 83.35% 100%),
+        linear-gradient(90deg, transparent 0 15.8%, rgba(154,107,36,0.18) 15.8% 18.2%, transparent 18.2% 81.8%, rgba(154,107,36,0.18) 81.8% 84.2%, transparent 84.2% 100%),
+        linear-gradient(90deg, transparent 0 26.72%, rgba(154,107,36,0.18) 26.72% 27.28%, transparent 27.28% 72.72%, rgba(154,107,36,0.18) 72.72% 73.28%, transparent 73.28% 100%),
+        linear-gradient(90deg, transparent 0 26.25%, rgba(154,107,36,0.12) 26.25% 27.75%, transparent 27.75% 72.25%, rgba(154,107,36,0.12) 72.25% 73.75%, transparent 73.75% 100%),
+        linear-gradient(105deg, transparent 0 42%, rgba(154,107,36,0.18) 42.2% 42.75%, transparent 43% 100%),
+        linear-gradient(75deg, transparent 0 57%, rgba(154,107,36,0.18) 57.25% 57.8%, transparent 58% 100%),
+        linear-gradient(90deg, transparent 0 26%, rgba(154,107,36,0.20) 26% 26.55%, rgba(124,75,179,0.24) 26.55% 73.45%, rgba(154,107,36,0.20) 73.45% 74%, transparent 74% 100%),
+        repeating-linear-gradient(90deg, rgba(74,53,105,0.04) 0 1px, transparent 1px 44px),
+        linear-gradient(90deg, rgba(80,62,108,0.12) 0 9%, rgba(119,92,151,0.17) 9% 26%, transparent 26% 74%, rgba(119,92,151,0.17) 74% 91%, rgba(80,62,108,0.12) 91% 100%),
+        linear-gradient(180deg, #f8f4ff 0%, #ddd1f2 100%);
+      color:#28141b;
+    }
+    body.light-mode.auction-theme::before {
+      background:
+        linear-gradient(180deg, transparent 0 12%, rgba(154,107,36,0.14) 12% 12.6%, transparent 12.6% 61%, rgba(154,107,36,0.11) 61% 61.45%, transparent 61.45% 100%),
+        radial-gradient(ellipse 36% 18% at 50% 18%, rgba(154,107,36,0.10), transparent 68%),
+        linear-gradient(90deg, transparent 0 31%, rgba(80,62,108,0.10) 31% 34%, transparent 34% 66%, rgba(80,62,108,0.10) 66% 69%, transparent 69% 100%),
+        radial-gradient(ellipse 62% 24% at 50% 111%, rgba(80,62,108,0.16), transparent 72%);
+      opacity:0.86;
+    }
+    body.light-mode.auction-theme h1,
+    body.light-mode.auction-theme .auction-listing-name,
+    body.light-mode.auction-theme .auction-stat-value,
+    body.light-mode.auction-theme .auction-score-points,
+    body.light-mode.auction-theme .auction-modal-title,
+    body.light-mode.auction-theme .auction-modal-timer,
+    body.light-mode.auction-theme .auction-letter-chip,
+    body.light-mode.auction-theme .auction-secret-word {
+      color:#56317f;
+      text-shadow:none;
+    }
+    body.light-mode.auction-theme h2,
+    body.light-mode.auction-theme .auction-topline,
+    body.light-mode.auction-theme .auction-item-summary,
+    body.light-mode.auction-theme .auction-message,
+    body.light-mode.auction-theme .auction-stat-label,
+    body.light-mode.auction-theme .auction-modal-kicker,
+    body.light-mode.auction-theme .debate-setup-note,
+    body.light-mode.auction-theme .debate-forbidden-sub,
+    body.light-mode.auction-theme .non-host-only {
+      color:#65537c !important;
+    }
+    body.light-mode.auction-theme .auction-panel,
+    body.light-mode.auction-theme .debate-rules-card,
+    body.light-mode.auction-theme .debate-setup-panel {
+      background:
+        linear-gradient(90deg, rgba(154,107,36,0.07) 0 1px, transparent 1px),
+        linear-gradient(180deg, rgba(250,247,255,0.96), rgba(224,214,242,0.96));
+      border-color:#b89edc;
+      box-shadow:inset 0 0 0 1px rgba(255,255,255,0.58), 0 14px 32px rgba(80,62,108,0.12);
+    }
+    body.light-mode.auction-theme #auction-rules-host-controls .debate-forbidden-control {
+      border-top-color:rgba(154,107,36,0.28);
+      border-bottom-color:rgba(154,107,36,0.28);
+    }
+    body.light-mode.auction-theme #auction-rules-host-controls .debate-count-input {
+      background:#fbf8ff;
+      border-color:#7c4bb3;
+      box-shadow:inset 0 0 0 1px rgba(154,107,36,0.08);
+    }
+    body.light-mode.auction-theme .auction-panel.bidder-wrap {
+      background:
+        radial-gradient(circle at 50% 20%, rgba(124,75,179,0.10), transparent 42%),
+        linear-gradient(180deg, rgba(250,247,255,0.96), rgba(224,214,242,0.96));
+    }
+    body.light-mode.auction-theme .auction-item,
+    body.light-mode.auction-theme .auction-stat,
+    body.light-mode.auction-theme .auction-tutorial-step {
+      background:#fbf8ff;
+      border-color:#c7b3e4;
+      box-shadow:inset 4px 0 0 rgba(124,75,179,0.22);
+    }
+    body.light-mode.auction-theme .auction-item-name,
+    body.light-mode.auction-theme .auction-modal-body,
+    body.light-mode.auction-theme .auction-secret,
+    body.light-mode.auction-theme .debate-rules-list,
+    body.light-mode.auction-theme .debate-forbidden-label {
+      color:#28141b;
+    }
+    body.light-mode.auction-theme .auction-type-icon {
+      background:rgba(124,75,179,0.10);
+      border-color:rgba(154,107,36,0.32);
+    }
+    body.light-mode.auction-theme .auction-score-row {
+      border-bottom-color:rgba(184,158,220,0.56);
+    }
+    body.light-mode.auction-theme .auction-score-money { color:#9a6b24; }
+    body.light-mode.auction-theme .auction-secret {
+      background:#fbf8ff;
+      border-color:#7c4bb3;
+    }
+    body.light-mode.auction-theme .btn,
+    body.light-mode.auction-theme .auction-bid-btn {
+      background:#7c4bb3;
+      color:#f8f4ff;
+      box-shadow:0 10px 20px rgba(80,62,108,0.16);
+    }
+    body.light-mode.auction-theme .btn:active,
+    body.light-mode.auction-theme .auction-bid-btn:active { background:#56317f; }
+    body.light-mode.auction-theme .btn:disabled {
+      background:#ded2f0;
+      color:#817197;
+      box-shadow:none;
+    }
+    body.light-mode.auction-theme .btn-ghost {
+      background:rgba(250,247,255,0.68);
+      border-color:#9a6b24;
+      color:#56317f;
+    }
+    body.light-mode.auction-theme input {
+      background:#fbf8ff;
+      border-color:#b89edc;
+      color:#28141b;
+    }
+    body.light-mode.auction-theme .auction-modal-backdrop {
+      background:rgba(238,231,251,0.84);
+    }
+    body.light-mode.auction-theme .auction-modal {
+      background:
+        linear-gradient(90deg, rgba(154,107,36,0.06) 0 1px, transparent 1px),
+        linear-gradient(180deg, rgba(250,247,255,0.98), rgba(228,219,244,0.98));
+      border-color:#b89edc;
+      box-shadow:0 20px 60px rgba(80,62,108,0.16);
+    }
+    body.light-mode.auction-theme .auction-modal-timer,
+    body.light-mode.auction-theme .auction-letter-chip {
+      background:#fbf8ff;
+      border-color:#b89edc;
+    }
+    body.light-mode.auction-theme .bidder-bubble {
+      background:#fbf8ff;
+      color:#56317f;
+      border-color:#9a6b24;
+    }
+    body.light-mode.auction-theme .bidder-bubble::after {
+      background:#fbf8ff;
+      border-color:#9a6b24;
+    }
 
     @keyframes ripple-expand {
       from { transform: scale(0); opacity: 0.35; }
@@ -1139,6 +2725,182 @@
     body.light-mode .db-p-timer,
     body.light-mode .db-score-pts,
     body.light-mode .db-vote-tally { color: #6d28d9; text-shadow: none; }
+    body.light-mode.debate-theme {
+      background-color: #f4f1ea;
+      background-image:
+        radial-gradient(ellipse 70% 34% at 50% -11%, rgba(58,66,78,0.075) 0 24%, transparent 25%),
+        radial-gradient(ellipse 33% 62% at 50% 18%, transparent 0 58%, rgba(153,119,58,0.105) 59%, transparent 60%),
+        conic-gradient(from 0deg at 25% 0%, transparent 0 129deg, rgba(87,94,107,0.042) 129deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.042) 230deg 231deg, transparent 231deg 360deg),
+        conic-gradient(from 0deg at 75% 0%, transparent 0 129deg, rgba(87,94,107,0.042) 129deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.042) 230deg 231deg, transparent 231deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(82,76,66,0.07) 9.38% 9.82%, rgba(87,94,107,0.025) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(82,76,66,0.06) 24.1% 24.45%, rgba(87,94,107,0.023) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(82,76,66,0.055) 39.5% 39.8%, rgba(87,94,107,0.021) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(87,94,107,0.021) 59.65% 59.9%, rgba(82,76,66,0.055) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(87,94,107,0.023) 74.95% 75.2%, rgba(82,76,66,0.06) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(87,94,107,0.025) 89.55% 89.8%, rgba(82,76,66,0.07) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(82,76,66,0.10) 0 7%, transparent 18% 82%, rgba(82,76,66,0.11) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(87,94,107,0.016) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(87,94,107,0.014) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(87,94,107,0.014) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(87,94,107,0.016) 87.3% 87.55%, transparent 87.55% 100%),
+        linear-gradient(180deg, #fbfaf6 0%, #ece7dc 100%);
+      color: #1b2028;
+    }
+    body.light-mode.debate-theme::before {
+      background:
+        linear-gradient(90deg, transparent 0 13%, rgba(87,94,107,0.04) 13.2% 13.55%, transparent 13.75% 86.45%, rgba(87,94,107,0.035) 86.45% 86.8%, transparent 87%),
+        linear-gradient(90deg, transparent 0 18.8%, rgba(87,94,107,0.026) 18.8% 19.1%, transparent 19.1% 34.4%, rgba(87,94,107,0.023) 34.4% 34.7%, transparent 34.7% 65.3%, rgba(87,94,107,0.023) 65.3% 65.6%, transparent 65.6% 80.9%, rgba(87,94,107,0.026) 80.9% 81.2%, transparent 81.2% 100%);
+      opacity: 0.56;
+    }
+    body.light-mode.debate-theme h1,
+    body.light-mode.debate-theme .db-title-line,
+    body.light-mode.debate-theme .db-p-timer,
+    body.light-mode.debate-theme .db-score-pts,
+    body.light-mode.debate-theme .db-vote-tally,
+    body.light-mode.debate-theme .dsp-debate-timer {
+      color: #7c602d;
+      text-shadow: none;
+    }
+    body.light-mode.debate-theme h2,
+    body.light-mode.debate-theme .waiting,
+    body.light-mode.debate-theme .db-waiting-line,
+    body.light-mode.debate-theme .db-round-context-meta,
+    body.light-mode.debate-theme .debate-setup-note,
+    body.light-mode.debate-theme .debate-forbidden-sub,
+    body.light-mode.debate-theme .dsp-debater-side {
+      color: #5e6470;
+    }
+    body.light-mode.debate-theme .btn {
+      background: #263246;
+      color: #fffaf0;
+      box-shadow: none;
+    }
+    body.light-mode.debate-theme .btn:active { background: #1b2534; }
+    body.light-mode.debate-theme .btn:disabled {
+      background: #d8d2c5;
+      color: #8a8274;
+      box-shadow: none;
+    }
+    body.light-mode.debate-theme .btn-ghost {
+      background: rgba(255,255,255,0.68);
+      border-color: #9a8c73;
+      color: #263246;
+    }
+    body.light-mode.debate-theme .debate-rules-card,
+    body.light-mode.debate-theme .db-round-context,
+    body.light-mode.debate-theme .db-round-context-side,
+    body.light-mode.debate-theme .db-pick-btn,
+    body.light-mode.debate-theme .db-vote-btn,
+    body.light-mode.debate-theme .db-score-row,
+    body.light-mode.debate-theme .db-vote-col,
+    body.light-mode.debate-theme .db-tier-btn,
+    body.light-mode.debate-theme .debate-forbidden-control {
+      background:
+        linear-gradient(118deg, transparent 0 58%, rgba(87,94,107,0.028) 58.2%, transparent 58.8%),
+        rgba(255,255,255,0.90);
+      border-color: #c8c1b3;
+      border-radius: 8px;
+      color: #1b2028;
+      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.58);
+    }
+    body.light-mode.debate-theme .debate-rules-card {
+      border-top-color: #9a7742;
+      box-shadow: 0 14px 36px rgba(38,50,70,0.10);
+    }
+    body.light-mode.debate-theme .db-round-context-title,
+    body.light-mode.debate-theme .debate-rules-heading,
+    body.light-mode.debate-theme .db-phase-chip {
+      color: #7c602d;
+    }
+    body.light-mode.debate-theme .db-topic-text,
+    body.light-mode.debate-theme .db-p-topic,
+    body.light-mode.debate-theme .db-round-context-topic,
+    body.light-mode.debate-theme .db-round-context-name,
+    body.light-mode.debate-theme .db-score-name,
+    body.light-mode.debate-theme .debate-rules-list {
+      color: #1b2028;
+      text-shadow: none;
+    }
+    body.light-mode.debate-theme .db-round-context-side.mine,
+    body.light-mode.debate-theme .db-score-row.leader,
+    body.light-mode.debate-theme .db-score-row.just-scored {
+      border-color: #9a7742;
+      box-shadow: 0 0 0 2px rgba(154,119,66,0.24);
+    }
+    body.light-mode.debate-theme .db-phase-chip,
+    body.light-mode.debate-theme .db-chip,
+    body.light-mode.debate-theme .db-p-banned-chip {
+      background: rgba(154,119,66,0.11);
+      border-color: rgba(154,119,66,0.32);
+      color: #6f5426;
+    }
+    body.light-mode.debate-theme .db-catch-btn {
+      background: #fff8f4;
+      border-color: #a94444;
+      color: #8f2f2f;
+      border-radius: 8px;
+      box-shadow: none;
+    }
+    body.light-mode.debate-theme .db-catch-btn.inactive {
+      background: #ede8de;
+      border-color: #c8c1b3;
+      color: #8a8274;
+    }
+    body.light-mode.debate-theme .db-catch-vote-btn {
+      border-radius: 8px;
+      background: #fffaf0;
+      color: #1b2028;
+    }
+    body.light-mode.debate-theme .debate-toggle-knob { background: #c8c1b3; }
+    body.light-mode.debate-theme .debate-toggle-wrap input:checked + .debate-toggle-knob { background: #9a7742; }
+    body.light-mode.debate-theme .db-tier-btn input,
+    body.light-mode.debate-theme .debate-count-input { accent-color: #9a7742; }
+    body.light-mode.debate-theme .debate-count-input {
+      background: #fffaf0;
+      border-color: #c8c1b3;
+      color: #1b2028;
+    }
+    body.light-mode.debate-theme .db-p-bar-bg,
+    body.light-mode.debate-theme .dsp-vote-bar-wrap {
+      background: #ded8cc;
+      border: 1px solid #c8c1b3;
+    }
+    body.light-mode.debate-theme .db-p-bar { background: #9a7742; }
+    body.light-mode.debate-theme .site-notice {
+      background: #fffaf0;
+      border-color: #9a7742;
+      color: #1b2028;
+    }
+    body.light-mode.debate-theme #screen-dsp-debate {
+      background:
+        radial-gradient(ellipse 78% 36% at 50% -12%, rgba(58,66,78,0.08) 0 24%, transparent 25%),
+        radial-gradient(ellipse 38% 62% at 50% 18%, transparent 0 58%, rgba(153,119,58,0.12) 59%, transparent 60%),
+        conic-gradient(from 0deg at 25% 0%, transparent 0 129deg, rgba(87,94,107,0.045) 129deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.045) 230deg 231deg, transparent 231deg 360deg),
+        conic-gradient(from 0deg at 75% 0%, transparent 0 129deg, rgba(87,94,107,0.045) 129deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.045) 230deg 231deg, transparent 231deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(82,76,66,0.075) 9.38% 9.82%, rgba(87,94,107,0.028) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(82,76,66,0.065) 24.1% 24.45%, rgba(87,94,107,0.026) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(82,76,66,0.06) 39.5% 39.8%, rgba(87,94,107,0.024) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(87,94,107,0.024) 59.65% 59.9%, rgba(82,76,66,0.06) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(87,94,107,0.026) 74.95% 75.2%, rgba(82,76,66,0.065) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(87,94,107,0.028) 89.55% 89.8%, rgba(82,76,66,0.075) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(82,76,66,0.12) 0 7%, transparent 18% 82%, rgba(82,76,66,0.13) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(87,94,107,0.016) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(87,94,107,0.014) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(87,94,107,0.014) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(87,94,107,0.016) 87.3% 87.55%, transparent 87.55% 100%),
+        #f4f1ea;
+    }
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-header-bar {
+      background: rgba(255,250,240,0.94);
+      border-bottom-color: #c8c1b3;
+    }
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-game-tag,
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-phase-tag,
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-score-pts {
+      color: #7c602d;
+    }
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-debater-card,
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-score-chip,
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-score-row {
+      background: rgba(255,255,255,0.90);
+      border-color: #c8c1b3;
+      border-radius: 8px;
+      color: #1b2028;
+    }
+    body.light-mode.debate-theme #screen-dsp-debate .dsp-debate-topic {
+      color: #1b2028;
+      text-shadow: none;
+    }
+    body.light-mode.debate-theme .dsp-debate-vs-label { color: #7c602d; }
+    body.light-mode.debate-theme #dsp-vote-count-a,
+    body.light-mode.debate-theme #dsp-vote-count-b,
+    body.light-mode.debate-theme #dsp-debate-waiting {
+      color: #5e6470 !important;
+    }
     body.light-mode .pr-guess-btn { background: #fff; border-color: #c8b4e0; color: #1a0a2e; }
     body.light-mode .pr-reveal-guess-row.correct { background: #e8faf0; }
     body.light-mode .pr-reveal-guess-row.wrong { background: #fce8f5; }
@@ -1169,8 +2931,8 @@
       --mafia-hero-border: #fca5a5;
       --mafia-card-bg: #ffffff;
       --mafia-card-border: #e5d0f5;
-      --mafia-news-bg: linear-gradient(180deg, #fff1f2, #fef2f2);
-      --mafia-news-border: #f87171;
+      --mafia-event-bg: linear-gradient(180deg, #fff1f2, #fef2f2);
+      --mafia-event-border: #f87171;
       --mafia-button-bg: #f9f7f4;
       --mafia-button-selected-bg: linear-gradient(180deg, #fef2f2, #fee2e2);
     }
@@ -1184,8 +2946,8 @@
       --mafia-hero-border: #93c5fd;
       --mafia-card-bg: #ffffff;
       --mafia-card-border: #bfdbfe;
-      --mafia-news-bg: linear-gradient(180deg, #eff6ff, #dbeafe);
-      --mafia-news-border: #3b82f6;
+      --mafia-event-bg: linear-gradient(180deg, #eff6ff, #dbeafe);
+      --mafia-event-border: #3b82f6;
       --mafia-button-bg: #f8faff;
       --mafia-button-selected-bg: linear-gradient(180deg, #dbeafe, #bfdbfe);
     }
@@ -1199,8 +2961,8 @@
       --mafia-hero-border: #86efac;
       --mafia-card-bg: #ffffff;
       --mafia-card-border: #bbf7d0;
-      --mafia-news-bg: linear-gradient(180deg, #f0fdf4, #dcfce7);
-      --mafia-news-border: #22c55e;
+      --mafia-event-bg: linear-gradient(180deg, #f0fdf4, #dcfce7);
+      --mafia-event-border: #22c55e;
       --mafia-button-bg: #f8fdf9;
       --mafia-button-selected-bg: linear-gradient(180deg, #dcfce7, #bbf7d0);
     }
@@ -1215,8 +2977,8 @@
       --mafia-hero-border: #fcd34d;
       --mafia-card-bg: #ffffff;
       --mafia-card-border: #fde68a;
-      --mafia-news-bg: linear-gradient(180deg, #fffbeb, #fef9c3);
-      --mafia-news-border: #f59e0b;
+      --mafia-event-bg: linear-gradient(180deg, #fffbeb, #fef9c3);
+      --mafia-event-border: #f59e0b;
       --mafia-button-bg: #fffdf5;
       --mafia-button-selected-bg: linear-gradient(180deg, #fef9c3, #fde68a);
     }
@@ -1230,8 +2992,8 @@
       --mafia-hero-border: #c4b5fd;
       --mafia-card-bg: #ffffff;
       --mafia-card-border: #ddd6fe;
-      --mafia-news-bg: linear-gradient(180deg, #f5f3ff, #ede9fe);
-      --mafia-news-border: #7c3aed;
+      --mafia-event-bg: linear-gradient(180deg, #f5f3ff, #ede9fe);
+      --mafia-event-border: #7c3aed;
       --mafia-button-bg: #faf9ff;
       --mafia-button-selected-bg: linear-gradient(180deg, #ede9fe, #ddd6fe);
     }
@@ -1245,8 +3007,8 @@
       --mafia-hero-border: #fda4af;
       --mafia-card-bg: #ffffff;
       --mafia-card-border: #fecdd3;
-      --mafia-news-bg: linear-gradient(180deg, #fff1f2, #ffe4e6);
-      --mafia-news-border: #f43f5e;
+      --mafia-event-bg: linear-gradient(180deg, #fff1f2, #ffe4e6);
+      --mafia-event-border: #f43f5e;
       --mafia-button-bg: #fff8f9;
       --mafia-button-selected-bg: linear-gradient(180deg, #ffe4e6, #fecdd3);
     }
@@ -1260,8 +3022,8 @@
       --mafia-hero-border: #67e8f9;
       --mafia-card-bg: #ffffff;
       --mafia-card-border: #a5f3fc;
-      --mafia-news-bg: linear-gradient(180deg, #ecfeff, #cffafe);
-      --mafia-news-border: #22d3ee;
+      --mafia-event-bg: linear-gradient(180deg, #ecfeff, #cffafe);
+      --mafia-event-border: #22d3ee;
       --mafia-button-bg: #f8feff;
       --mafia-button-selected-bg: linear-gradient(180deg, #cffafe, #a5f3fc);
     }
@@ -1270,20 +3032,20 @@
     body.light-mode .mafia-role-reveal,
     body.light-mode .mafia-over-title,
     body.light-mode .mafia-win-title { color: #1a0a2e; text-shadow: none; }
-    body.light-mode .mafia-news-card { color: #1a0a2e; }
-    body.light-mode .mafia-news-card.good {
+    body.light-mode .mafia-event-card { color: #1a0a2e; }
+    body.light-mode .mafia-event-card.good {
       background: linear-gradient(180deg, #f0fdf4, #dcfce7);
       border-color: #22c55e;
       color: #14532d;
       box-shadow: 0 12px 30px rgba(34,197,94,0.12);
     }
-    body.light-mode .mafia-news-card.bad {
+    body.light-mode .mafia-event-card.bad {
       background: linear-gradient(180deg, #fff1f2, #ffe4e6);
       border-color: #f43f5e;
       color: #881337;
       box-shadow: 0 12px 30px rgba(244,63,94,0.12);
     }
-    body.light-mode .mafia-news-card.joker {
+    body.light-mode .mafia-event-card.joker {
       background: linear-gradient(180deg, #fffbeb, #fef9c3);
       border-color: #f59e0b;
       color: #713f12;
@@ -1300,10 +3062,10 @@
     body.light-mode .mafia-killer-mark { color: #d97706; }
     body.light-mode .mafia-action-btn { background: #fff; border-color: #e5d0f5; color: #1a0a2e; }
     body.light-mode .mafia-action-btn.selected-vote { background: var(--mafia-button-selected-bg); }
-    body.light-mode .mafia-hold-btn { background: #fff1f2; border-color: #fca5a5; color: #b91c1c; }
+    body.light-mode .mafia-hold-btn { background: #f8fbfd; border-color: #8faac0; color: #2f5f89; }
     body.light-mode .abstain-row .mafia-player-name { color: #92400e !important; }
     body.light-mode .mafia-toggle { background: #e5d0f5; border-color: #c8b4e0; }
-    body.light-mode .mafia-toggle:checked { background: #b91c1c; }
+    body.light-mode .mafia-toggle:checked { background: #2f5f89; }
     body.light-mode .mafia-team-heading { color: var(--mafia-accent); }
     body.light-mode .mafia-joker-ult {
       background: linear-gradient(180deg, #fffbeb, #fef9c3);
@@ -1325,15 +3087,190 @@
     body.light-mode .mafia-joker-name { color: #d97706; }
     body.light-mode .mafia-joker-sub { color: #3b2a57; }
     body.light-mode #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row {
-      background: linear-gradient(180deg, rgba(254,226,226,0.7), rgba(254,242,242,0.9));
-      border-color: #fca5a5;
-      box-shadow: inset 0 0 0 1px rgba(252,165,165,0.3);
+      background: linear-gradient(180deg, rgba(219,232,242,0.76), rgba(245,249,252,0.92));
+      border-color: #8faac0;
+      box-shadow: inset 0 0 0 1px rgba(143,170,192,0.3);
     }
     body.light-mode #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row::after {
-      background: rgba(254,242,242,0.8);
-      border-color: rgba(252,165,165,0.7);
-      color: #b91c1c;
+      background: rgba(245,249,252,0.86);
+      border-color: rgba(143,170,192,0.76);
+      color: #2f5f89;
     }
+
+    body.light-mode.mafia-game-theme {
+      background-color: #e9f0f6;
+      background-image:
+        linear-gradient(104deg, rgba(36,58,80,0.045) 0 7%, transparent 7% 14%, rgba(36,58,80,0.028) 14% 21%, transparent 21%),
+        radial-gradient(ellipse at 82% 12%, rgba(59,130,196,0.10), transparent 38%),
+        radial-gradient(ellipse at 16% 86%, rgba(86,118,146,0.13), transparent 42%),
+        linear-gradient(180deg, #f5f9fc 0%, #dce8f1 100%);
+      color: #152232;
+    }
+    body.light-mode.mafia-game-theme::before {
+      background:
+        repeating-linear-gradient(0deg, rgba(36,58,80,0.035) 0 1px, transparent 1px 9px),
+        linear-gradient(90deg, transparent 0 68%, rgba(59,130,196,0.10) 68.2%, transparent 68.6%);
+      opacity: 0.62;
+    }
+    body.light-mode.mafia-game-theme h1,
+    body.light-mode.mafia-game-theme .mafia-over-title,
+    body.light-mode.mafia-game-theme .mafia-win-title {
+      color: #183653;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.75);
+    }
+    body.light-mode.mafia-game-theme h2,
+    body.light-mode.mafia-game-theme .waiting {
+      color: #536779 !important;
+    }
+    body.light-mode.mafia-game-theme .mafia-wrap {
+      --mafia-accent: #2f5f89;
+      --mafia-accent-strong: #1f4568;
+      --mafia-accent-soft: #2f5f89;
+      --mafia-chip-bg: #e5eef6;
+      --mafia-chip-border: #8faac0;
+      --mafia-hero-bg:
+        linear-gradient(180deg, #f5f9fc, #dbe8f2);
+      --mafia-hero-border: #8faac0;
+      --mafia-card-bg:
+        linear-gradient(90deg, rgba(47,95,137,0.12) 0 4px, transparent 4px),
+        #f8fbfd;
+      --mafia-card-border: #b7c9d8;
+      --mafia-event-bg:
+        linear-gradient(90deg, rgba(47,95,137,0.16) 0 5px, transparent 5px),
+        linear-gradient(180deg, #f5f9fc, #dbe8f2);
+      --mafia-event-border: #8faac0;
+      --mafia-button-bg: #f8fbfd;
+      --mafia-button-selected-bg: linear-gradient(180deg, #dbe8f2, #c6d8e5);
+    }
+    body.light-mode.mafia-game-theme .mafia-theme-role .mafia-wrap {
+      --mafia-accent: #395d7c;
+      --mafia-accent-strong: #27445c;
+      --mafia-chip-bg: #e7eef3;
+      --mafia-chip-border: #8ba3b6;
+      --mafia-hero-border: #8ba3b6;
+      --mafia-card-border: #b9c7d0;
+      --mafia-event-border: #8ba3b6;
+    }
+    body.light-mode.mafia-game-theme .mafia-theme-discussion .mafia-wrap {
+      --mafia-accent: #2d668b;
+      --mafia-accent-strong: #214c6b;
+      --mafia-chip-bg: #e5f0f6;
+      --mafia-chip-border: #92b2c6;
+      --mafia-hero-border: #92b2c6;
+      --mafia-card-border: #bdd0dc;
+      --mafia-event-border: #92b2c6;
+    }
+    body.light-mode.mafia-game-theme .mafia-theme-voting .mafia-wrap,
+    body.light-mode.mafia-game-theme .mafia-theme-revote .mafia-wrap {
+      --mafia-accent: #496d8c;
+      --mafia-accent-strong: #334f68;
+      --mafia-chip-bg: #eef4f8;
+      --mafia-chip-border: #9db4c8;
+      --mafia-hero-border: #9db4c8;
+      --mafia-card-border: #c6d5e1;
+      --mafia-event-border: #9db4c8;
+    }
+    body.light-mode.mafia-game-theme .mafia-theme-night .mafia-wrap {
+      --mafia-accent: #515b82;
+      --mafia-accent-strong: #38415f;
+      --mafia-chip-bg: #e8e9f1;
+      --mafia-chip-border: #9aa0bd;
+      --mafia-hero-border: #9aa0bd;
+      --mafia-card-border: #c2c5d6;
+      --mafia-event-border: #9aa0bd;
+    }
+    body.light-mode.mafia-game-theme .mafia-phase-title,
+    body.light-mode.mafia-game-theme .mafia-role-reveal {
+      color: #152232;
+      text-shadow: none;
+    }
+    body.light-mode.mafia-game-theme .mafia-card,
+    body.light-mode.mafia-game-theme .mafia-player-row,
+    body.light-mode.mafia-game-theme .mafia-vote-row,
+    body.light-mode.mafia-game-theme .mafia-team-card,
+    body.light-mode.mafia-game-theme .mafia-rule-row {
+      box-shadow: 0 12px 28px rgba(36,58,80,0.10);
+    }
+    body.light-mode.mafia-game-theme .mafia-event-card {
+      color: #152232;
+      box-shadow: 0 16px 38px rgba(36,58,80,0.13);
+    }
+    body.light-mode.mafia-game-theme .mafia-player-row.dead {
+      background:
+        linear-gradient(12deg, transparent 0 48%, rgba(127,29,29,0.45) 48.4%, rgba(127,29,29,0.45) 50%, transparent 50.4%),
+        var(--mafia-card-bg);
+    }
+    body.light-mode.mafia-game-theme .mafia-role-hidden {
+      background:
+        linear-gradient(90deg, rgba(47,95,137,0.08) 0 4px, transparent 4px),
+        #f8fbfd;
+      border-color: #8faac0;
+      color: #536779;
+    }
+    body.light-mode.mafia-game-theme .mafia-rule-label,
+    body.light-mode.mafia-game-theme .mafia-team-heading {
+      color: var(--mafia-accent);
+    }
+    body.light-mode.mafia-game-theme .mafia-rule-text,
+    body.light-mode.mafia-game-theme .mafia-action-btn,
+    body.light-mode.mafia-game-theme .mafia-player-name {
+      color: #152232;
+    }
+    body.light-mode.mafia-game-theme .mafia-player-sub,
+    body.light-mode.mafia-game-theme .mafia-note {
+      color: #536779;
+    }
+    body.light-mode.mafia-game-theme .mafia-host-btn {
+      background: #183653;
+      color: #f8fbfd;
+    }
+    body.light-mode.mafia-game-theme #screen-mafia-setup .mafia-rules-btn {
+      background: #f8fbfd;
+      border-color: #2f5f89;
+      color: #183653;
+      box-shadow: 0 8px 18px rgba(36,58,80,0.10);
+    }
+    body.light-mode.mafia-game-theme #screen-mafia-setup .mafia-rules-btn:hover,
+    body.light-mode.mafia-game-theme #screen-mafia-setup .mafia-rules-btn:active {
+      background: #dbe8f2;
+      color: #102438;
+    }
+    body.light-mode.mafia-game-theme #screen-dsp-mafia {
+      background:
+        linear-gradient(104deg, rgba(36,58,80,0.045) 0 7%, transparent 7% 14%, rgba(36,58,80,0.028) 14% 21%, transparent 21%),
+        radial-gradient(ellipse at 82% 12%, rgba(59,130,196,0.10), transparent 38%),
+        #e9f0f6;
+      color: #152232;
+    }
+    body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-header-bar {
+      background: rgba(248,251,253,0.94);
+      border-bottom-color: #b7c9d8;
+    }
+    body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-game-tag,
+    body.light-mode.mafia-game-theme #screen-dsp-mafia #dsp-mafia-phase-label {
+      color: #183653 !important;
+    }
+    body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-mafia-chip,
+    body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-role-row {
+      background:
+        linear-gradient(90deg, rgba(47,95,137,0.12) 0 4px, transparent 4px),
+        #f8fbfd;
+      border-color: #b7c9d8;
+      color: #152232;
+    }
+    body.light-mode .game-card.mafia-game-card {
+      background:
+        linear-gradient(112deg, rgba(36,58,80,0.045) 0 10%, transparent 10% 20%, rgba(36,58,80,0.03) 20% 30%, transparent 30%),
+        radial-gradient(circle at 82% 26%, rgba(59,130,196,0.12), transparent 35%),
+        repeating-linear-gradient(0deg, rgba(36,58,80,0.03) 0 1px, transparent 1px 13px),
+        linear-gradient(180deg, #f5f9fc, #dce8f1);
+      border-color: #8faac0;
+      box-shadow: inset 0 0 0 1px rgba(47,95,137,0.08);
+    }
+    body.light-mode .game-card.mafia-game-card:active { border-color: #2f5f89; }
+    body.light-mode .game-card.mafia-game-card .game-title { color: #183653; }
+    body.light-mode .game-card.mafia-game-card .game-desc { color: #536779; }
+
     body.light-mode h1,
     body.light-mode .lobby-pin,
     body.light-mode .watch-name,
@@ -1345,6 +3282,642 @@
     body.light-mode .et-score-total,
     body.light-mode .submit-count-wrap span,
     body.light-mode .confirm-modal-title { color: #8b6914; text-shadow: none; }
+
+    body.wheel-theme {
+      background: #12070d;
+      background-image:
+        radial-gradient(ellipse at 50% 14%, rgba(255, 187, 85, 0.16) 0%, transparent 34%),
+        radial-gradient(ellipse at 18% 78%, rgba(69, 163, 108, 0.12) 0%, transparent 40%),
+        repeating-linear-gradient(90deg, rgba(124, 21, 38, 0.28) 0 72px, rgba(22, 10, 17, 0.26) 72px 144px),
+        linear-gradient(180deg, #210812 0%, #0b0508 100%);
+      color: #fff3d8;
+    }
+    body.wheel-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 102%, rgba(85, 40, 14, 0.5), transparent 42%),
+        linear-gradient(90deg, rgba(255, 214, 130, 0.08) 0 1px, transparent 1px 92px);
+      opacity: 0.72;
+      z-index: 0;
+    }
+    body.wheel-theme h1,
+    body.light-mode.wheel-theme h1,
+    body.wheel-theme .watch-name,
+    body.light-mode.wheel-theme .watch-name,
+    body.wheel-theme .your-turn-label,
+    body.light-mode.wheel-theme .your-turn-label,
+    body.wheel-theme .watch-type,
+    body.light-mode.wheel-theme .watch-type {
+      color: #f6c56f;
+      text-shadow: 0 0 18px rgba(246, 197, 111, 0.38), 0 3px 0 rgba(60, 9, 20, 0.85);
+    }
+    body.wheel-theme h2,
+    body.light-mode.wheel-theme h2,
+    body.wheel-theme .watch-label,
+    body.wheel-theme .your-turn-sub,
+    body.wheel-theme .submit-count-wrap,
+    body.wheel-theme .waiting {
+      color: #c99a78 !important;
+    }
+    body.wheel-theme textarea,
+    body.light-mode.wheel-theme textarea {
+      background: rgba(20, 8, 14, 0.92);
+      border-color: #793018;
+      color: #fff3d8;
+      box-shadow: inset 0 0 18px rgba(0,0,0,0.22);
+    }
+    body.wheel-theme textarea:focus {
+      border-color: #f6c56f;
+      box-shadow: 0 0 16px rgba(246,197,111,0.22);
+    }
+    body.wheel-theme .btn,
+    body.light-mode.wheel-theme .btn {
+      background: #f6c56f;
+      color: #18070d;
+      box-shadow: 0 0 0 2px rgba(72, 21, 9, 0.65), 0 10px 24px rgba(0,0,0,0.28);
+    }
+    body.wheel-theme .btn:active { background: #ffd98a; }
+    body.wheel-theme .btn:disabled,
+    body.light-mode.wheel-theme .btn:disabled {
+      background: #2a1413;
+      color: #7f6248;
+      box-shadow: none;
+    }
+    body.wheel-theme .btn-ghost,
+    body.light-mode.wheel-theme .btn-ghost {
+      background: rgba(15, 6, 10, 0.58);
+      border-color: #6c8f56;
+      color: #bfe49f;
+    }
+    body.wheel-theme .type-btn,
+    body.light-mode.wheel-theme .type-btn {
+      background: rgba(20, 8, 14, 0.88);
+      border-color: #793018;
+      color: #c99a78;
+    }
+    body.wheel-theme .type-btn.active,
+    body.light-mode.wheel-theme .type-btn.active {
+      background: linear-gradient(180deg, rgba(86, 23, 37, 0.92), rgba(31, 75, 50, 0.72));
+      border-color: #f6c56f;
+      color: #fff3d8;
+      box-shadow: 0 0 18px rgba(246,197,111,0.16);
+    }
+    body.wheel-theme .submit-count-wrap,
+    body.light-mode.wheel-theme .submit-count-wrap,
+    body.wheel-theme .watch-reveal-box,
+    body.light-mode.wheel-theme .watch-reveal-box {
+      background: rgba(19, 8, 12, 0.78);
+      border-color: #793018;
+      box-shadow: 0 16px 36px rgba(0,0,0,0.24);
+    }
+    body.wheel-theme .watch-text,
+    body.light-mode.wheel-theme .watch-text { color: #fff3d8; }
+    body.wheel-theme #spin-overlay,
+    body.light-mode.wheel-theme #spin-overlay {
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(246,197,111,0.13), transparent 34%),
+        repeating-linear-gradient(90deg, rgba(124,21,38,0.3) 0 72px, rgba(15,6,10,0.42) 72px 144px),
+        rgba(12,5,8,0.98);
+    }
+    body.wheel-theme #spin-overlay-label,
+    body.light-mode.wheel-theme #spin-overlay-label {
+      color: #f6c56f;
+      text-shadow: 0 0 26px rgba(246,197,111,0.5);
+    }
+    body.wheel-theme .p-wheel-wrap {
+      padding: 12px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.04) 0 48%, transparent 49%),
+        conic-gradient(from 10deg, #401020, #17070d, #6b1a2d, #231007, #401020);
+      box-shadow:
+        0 0 0 2px #3b160d,
+        0 0 0 7px rgba(246, 197, 111, 0.12),
+        0 24px 70px rgba(0,0,0,0.48),
+        0 0 44px rgba(117, 28, 47, 0.45);
+    }
+    body.wheel-theme .p-wheel-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 5px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: repeating-conic-gradient(from 3deg, rgba(255, 220, 137, 0.95) 0 5deg, transparent 5deg 15deg);
+      -webkit-mask: radial-gradient(circle, transparent 0 88%, #000 89% 94%, transparent 95%);
+      mask: radial-gradient(circle, transparent 0 88%, #000 89% 94%, transparent 95%);
+      filter: drop-shadow(0 0 8px rgba(246,197,111,0.42));
+    }
+    body.wheel-theme .p-wheel-pointer {
+      top: -4px;
+      border-left-width: 16px;
+      border-right-width: 16px;
+      border-top: 27px solid #f6c56f;
+      filter: drop-shadow(0 0 10px rgba(246,197,111,0.84)) drop-shadow(0 4px 0 rgba(60,9,20,0.9));
+    }
+    body.wheel-theme #screen-dsp-qc {
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(246,197,111,0.16), transparent 35%),
+        repeating-linear-gradient(90deg, rgba(124, 21, 38, 0.28) 0 96px, rgba(22, 10, 17, 0.26) 96px 192px),
+        #12070d;
+    }
+    body.wheel-theme #screen-dsp-qc .dsp-header-bar {
+      background: rgba(17, 7, 12, 0.94);
+      border-bottom-color: #793018;
+    }
+    body.wheel-theme #screen-dsp-qc .dsp-game-tag { color: #f6c56f; }
+
+    body.light-mode.wheel-theme {
+      background: #fff7e8;
+      background-image:
+        radial-gradient(ellipse at 50% 10%, rgba(232, 126, 59, 0.15) 0%, transparent 34%),
+        radial-gradient(ellipse at 18% 82%, rgba(66, 137, 104, 0.13) 0%, transparent 42%),
+        repeating-linear-gradient(90deg, rgba(184, 52, 61, 0.11) 0 72px, rgba(255, 245, 224, 0.62) 72px 144px),
+        linear-gradient(180deg, #fff8ec 0%, #f5e6cb 100%);
+      color: #2a1711;
+    }
+    body.light-mode.wheel-theme::before {
+      background:
+        radial-gradient(circle at 50% 102%, rgba(205, 139, 74, 0.22), transparent 42%),
+        linear-gradient(90deg, rgba(154, 88, 37, 0.12) 0 1px, transparent 1px 92px);
+      opacity: 0.66;
+    }
+    body.light-mode.wheel-theme h1,
+    body.light-mode.wheel-theme .watch-name,
+    body.light-mode.wheel-theme .your-turn-label,
+    body.light-mode.wheel-theme .watch-type {
+      color: #9d3f25;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.85), 0 0 18px rgba(232,126,59,0.22);
+    }
+    body.light-mode.wheel-theme h2,
+    body.light-mode.wheel-theme .watch-label,
+    body.light-mode.wheel-theme .your-turn-sub,
+    body.light-mode.wheel-theme .submit-count-wrap,
+    body.light-mode.wheel-theme .waiting {
+      color: #76543f !important;
+    }
+    body.light-mode.wheel-theme textarea {
+      background: rgba(255, 252, 244, 0.94);
+      border-color: #d59c67;
+      color: #2a1711;
+      box-shadow: inset 0 0 16px rgba(154,88,37,0.08);
+    }
+    body.light-mode.wheel-theme textarea:focus {
+      border-color: #bd4f2f;
+      box-shadow: 0 0 16px rgba(189,79,47,0.18);
+    }
+    body.light-mode.wheel-theme .btn {
+      background: #bd4f2f;
+      color: #fffaf0;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.8), 0 10px 24px rgba(117,57,27,0.18);
+    }
+    body.light-mode.wheel-theme .btn:active { background: #9d3f25; }
+    body.light-mode.wheel-theme .btn:disabled {
+      background: #ead8bf;
+      color: #a1846a;
+      box-shadow: none;
+    }
+    body.light-mode.wheel-theme .btn-ghost {
+      background: rgba(255, 252, 244, 0.72);
+      border-color: #428968;
+      color: #216249;
+    }
+    body.light-mode.wheel-theme .type-btn {
+      background: rgba(255, 252, 244, 0.9);
+      border-color: #d59c67;
+      color: #76543f;
+    }
+    body.light-mode.wheel-theme .type-btn.active {
+      background: linear-gradient(180deg, rgba(255, 242, 218, 0.95), rgba(221, 237, 215, 0.9));
+      border-color: #bd4f2f;
+      color: #9d3f25;
+      box-shadow: 0 0 18px rgba(189,79,47,0.14);
+    }
+    body.light-mode.wheel-theme .submit-count-wrap,
+    body.light-mode.wheel-theme .watch-reveal-box {
+      background: rgba(255, 252, 244, 0.82);
+      border-color: #d59c67;
+      box-shadow: 0 16px 36px rgba(117,57,27,0.12);
+    }
+    body.light-mode.wheel-theme .watch-text { color: #2a1711; }
+    body.light-mode.wheel-theme #spin-overlay {
+      background:
+        radial-gradient(ellipse at 50% 35%, rgba(232,126,59,0.13), transparent 34%),
+        repeating-linear-gradient(90deg, rgba(184,52,61,0.12) 0 72px, rgba(255,248,236,0.78) 72px 144px),
+        rgba(255,247,232,0.98);
+    }
+    body.light-mode.wheel-theme #spin-overlay-label {
+      color: #9d3f25;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.85), 0 0 18px rgba(232,126,59,0.28);
+    }
+    body.light-mode.wheel-theme .p-wheel-wrap {
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.55) 0 48%, transparent 49%),
+        conic-gradient(from 10deg, #ffe3a8, #fff8ec, #c75143, #dbeccf, #ffe3a8);
+      box-shadow:
+        0 0 0 2px #d59c67,
+        0 0 0 7px rgba(189,79,47,0.08),
+        0 22px 52px rgba(117,57,27,0.18),
+        0 0 34px rgba(232,126,59,0.22);
+    }
+    body.light-mode.wheel-theme .p-wheel-wrap::after {
+      background: repeating-conic-gradient(from 3deg, rgba(189, 79, 47, 0.9) 0 5deg, transparent 5deg 15deg);
+      filter: drop-shadow(0 0 6px rgba(232,126,59,0.28));
+    }
+    body.light-mode.wheel-theme .p-wheel-pointer {
+      border-top-color: #bd4f2f;
+      filter: drop-shadow(0 0 8px rgba(189,79,47,0.34)) drop-shadow(0 3px 0 rgba(255,255,255,0.9));
+    }
+    body.light-mode.wheel-theme #screen-dsp-qc {
+      background:
+        radial-gradient(ellipse at 50% 18%, rgba(232,126,59,0.14), transparent 35%),
+        repeating-linear-gradient(90deg, rgba(184, 52, 61, 0.12) 0 96px, rgba(255, 248, 236, 0.62) 96px 192px),
+        #fff7e8;
+    }
+    body.light-mode.wheel-theme #screen-dsp-qc .dsp-header-bar {
+      background: rgba(255, 252, 244, 0.94);
+      border-bottom-color: #d59c67;
+    }
+    body.light-mode.wheel-theme #screen-dsp-qc .dsp-game-tag { color: #9d3f25; }
+    body.light-mode .game-card.wheel-game-card {
+      background:
+        radial-gradient(circle at 8% 50%, rgba(249,115,22,0.17), transparent 40%),
+        repeating-linear-gradient(90deg, rgba(249,115,22,0.13) 0 28px, rgba(255,247,237,0.80) 28px 56px),
+        #fff4e6;
+      border-color: #c58b5a;
+      box-shadow: inset 0 0 0 1px rgba(249,115,22,0.10);
+    }
+    body.light-mode .game-card.wheel-game-card .game-title { color: #c2410c; }
+    body.light-mode .game-card.wheel-game-card .game-desc { color: #9a4f1f; }
+    body.light-mode.et-theme {
+      background: #fff5f7;
+      background-image:
+        linear-gradient(90deg, rgba(219,39,119,0.028) 0 1px, transparent 1px 44px),
+        linear-gradient(0deg, rgba(219,39,119,0.020) 0 1px, transparent 1px 44px),
+        linear-gradient(180deg, #fffafc 0%, #fce7f3 100%);
+      color: #1f0a14;
+    }
+    body.light-mode.et-theme::before {
+      background:
+        linear-gradient(138deg, transparent 0 23%, rgba(244,114,182,0.10) 23.2%, transparent 23.9% 66%, rgba(219,39,119,0.08) 66.2%, transparent 66.9%);
+      opacity: 0.55;
+    }
+    body.light-mode.et-theme h1,
+    body.light-mode.et-theme .watch-name,
+    body.light-mode.et-theme .ht-round-label,
+    body.light-mode.et-theme .et-correct-answer-big,
+    body.light-mode.et-theme .et-score-total,
+    body.light-mode.et-theme .submit-count-wrap span {
+      color: #be185d;
+      text-shadow: none;
+    }
+    body.light-mode.et-theme h2,
+    body.light-mode.et-theme .watch-label,
+    body.light-mode.et-theme .your-turn-sub,
+    body.light-mode.et-theme .pr-guess-count-label,
+    body.light-mode.et-theme .ht-advance-text {
+      color: #9d4d6a !important;
+    }
+    body.light-mode.et-theme input {
+      background: rgba(255,255,255,0.94);
+      border-color: #f9c4d4;
+      color: #1f0a14;
+      box-shadow: none;
+    }
+    body.light-mode.et-theme input:focus {
+      border-color: #db2777;
+      box-shadow: none;
+    }
+    body.light-mode.et-theme .btn {
+      background: #be185d;
+      color: #fff5f7;
+      box-shadow: none;
+    }
+    body.light-mode.et-theme .btn:active { background: #9d174d; }
+    body.light-mode.et-theme .btn:disabled {
+      background: #fce7f3;
+      color: #c084a0;
+      box-shadow: none;
+    }
+    body.light-mode.et-theme .btn-ghost {
+      background: rgba(255,255,255,0.72);
+      border-color: #db2777;
+      color: #9d174d;
+    }
+    body.light-mode.et-theme .timer-bar-wrap {
+      background: rgba(255,255,255,0.82);
+      border-color: #f9c4d4;
+    }
+    body.light-mode.et-theme .timer-bar { background: #db2777; }
+    body.light-mode.et-theme .submit-count-wrap,
+    body.light-mode.et-theme .et-topic-row,
+    body.light-mode.et-theme .et-score-row,
+    body.light-mode.et-theme .et-stat-row,
+    body.light-mode.et-theme .et-answer-btn {
+      background:
+        radial-gradient(circle at calc(100% - 8px) 8px, transparent 0 15px, rgba(244,114,182,0.13) 16px 17px, transparent 18px),
+        linear-gradient(135deg, transparent 0 72%, rgba(219,39,119,0.04) 72.2% 72.8%, transparent 73%),
+        radial-gradient(circle at calc(100% - 18px) 50%, rgba(219,39,119,0.08) 0 3px, transparent 4px),
+        linear-gradient(90deg, rgba(244,114,182,0.12) 0 4px, transparent 4px),
+        rgba(255, 255, 255, 0.92);
+      border-color: #f9c4d4;
+      color: #1f0a14;
+      box-shadow: none;
+      overflow: hidden;
+      position: relative;
+    }
+    body.light-mode.et-theme .submit-count-wrap::before,
+    body.light-mode.et-theme .et-topic-row::before,
+    body.light-mode.et-theme .et-score-row::before,
+    body.light-mode.et-theme .et-stat-row::before,
+    body.light-mode.et-theme .et-answer-btn::before {
+      content: '';
+      position: absolute;
+      right: 0.45rem;
+      top: 0.42rem;
+      width: 38px;
+      height: 18px;
+      pointer-events: none;
+      border-top: 1px solid rgba(244,114,182,0.22);
+      border-right: 1px solid rgba(244,114,182,0.16);
+      border-radius: 0 8px 0 0;
+      opacity: 0.7;
+    }
+    body.light-mode.et-theme .et-answer-btn {
+      border-left-width: 4px;
+      border-left-color: #db2777;
+    }
+    body.light-mode.et-theme .et-answer-btn:active {
+      border-color: #be185d;
+      border-left-color: #be185d;
+      background: #fffafc;
+    }
+    body.light-mode.et-theme .et-topic-name,
+    body.light-mode.et-theme .et-stat-value,
+    body.light-mode.et-theme .ht-p-question,
+    body.light-mode.et-theme .watch-text {
+      color: #1f0a14;
+    }
+    body.light-mode.et-theme .et-topic-meta,
+    body.light-mode.et-theme .et-score-sub {
+      color: #9d4d6a;
+    }
+    body.light-mode.et-theme .et-status {
+      color: #ea580c;
+      border-color: rgba(234,88,12,0.38);
+      background: rgba(234,88,12,0.08);
+      transform: rotate(-1.5deg);
+    }
+    body.light-mode.et-theme .et-lock-msg {
+      color: #db2777;
+    }
+    body.light-mode.et-theme .et-reveal-row.correct { border-left-color: #db2777; }
+    body.light-mode.et-theme .et-reveal-row.wrong { border-left-color: #ea580c; }
+    body.light-mode.et-theme .et-reveal-row.missed { border-left-color: #f9c4d4; color: #9d4d6a; }
+    body.light-mode.et-theme #screen-dsp-et {
+      background:
+        linear-gradient(138deg, transparent 0 23%, rgba(244,114,182,0.10) 23.2%, transparent 23.9% 66%, rgba(219,39,119,0.08) 66.2%, transparent 66.9%),
+        linear-gradient(90deg, rgba(219,39,119,0.028) 0 1px, transparent 1px 64px),
+        linear-gradient(0deg, rgba(219,39,119,0.020) 0 1px, transparent 1px 64px),
+        #fff5f7;
+      color: #1f0a14;
+    }
+    body.light-mode.et-theme #screen-dsp-et .dsp-header-bar {
+      background: rgba(255,255,255,0.92);
+      border-bottom-color: #f9c4d4;
+    }
+    body.light-mode.et-theme #screen-dsp-et .dsp-game-tag,
+    body.light-mode.et-theme #screen-dsp-et #dsp-et-intro-topic,
+    body.light-mode.et-theme #screen-dsp-et #dsp-et-correct,
+    body.light-mode.et-theme #screen-dsp-et .dsp-score-pts {
+      color: #be185d !important;
+    }
+    body.light-mode.et-theme #screen-dsp-et .dsp-pill,
+    body.light-mode.et-theme #screen-dsp-et .dsp-answer-chip,
+    body.light-mode.et-theme #screen-dsp-et .dsp-topic-row,
+    body.light-mode.et-theme #screen-dsp-et .dsp-reveal-row,
+    body.light-mode.et-theme #screen-dsp-et .dsp-score-row {
+      background:
+        radial-gradient(circle at calc(100% - 10px) 10px, transparent 0 16px, rgba(244,114,182,0.11) 17px 18px, transparent 19px),
+        rgba(255,255,255,0.9);
+      border-color: #f9c4d4;
+      color: #1f0a14;
+    }
+    body.light-mode.et-theme #screen-dsp-et .dsp-answer-chip.correct {
+      background: rgba(219,39,119,0.14);
+      border-color: #db2777 !important;
+      color: #9d174d;
+    }
+    body.light-mode .game-card.et-game-card {
+      background:
+        radial-gradient(circle at 12% 48%, rgba(236,72,153,0.10), transparent 38%),
+        radial-gradient(circle at 74% 30%, rgba(236,72,153,0.14) 0 2px, transparent 3px),
+        radial-gradient(circle at 86% 68%, rgba(244,114,182,0.10) 0 2px, transparent 3px),
+        linear-gradient(136deg, transparent 0 24%, rgba(236,72,153,0.10) 24.3%, transparent 24.8% 66%, rgba(244,114,182,0.08) 66.3%, transparent 66.8%),
+        linear-gradient(90deg, rgba(236,72,153,0.045) 0 1px, transparent 1px 28px),
+        linear-gradient(0deg, rgba(236,72,153,0.032) 0 1px, transparent 1px 28px),
+        #fff0f8;
+      border-color: #f472b6;
+      box-shadow: inset 0 0 0 1px rgba(236,72,153,0.10);
+    }
+    body.light-mode .game-card.et-game-card .game-title { color: #be185d; }
+    body.light-mode .game-card.et-game-card .game-desc { color: #a43a6d; }
+    body.light-mode .game-card.ss-game-card {
+      background:
+        repeating-linear-gradient(0deg, rgba(38,98,82,0.08) 0 1px, transparent 1px 18px),
+        radial-gradient(circle at 84% 24%, rgba(190,132,22,0.15), transparent 34%),
+        #fffaf0;
+      border-color: #4f9d72;
+      box-shadow: inset 0 0 0 1px rgba(185,52,52,0.08);
+    }
+    body.light-mode .game-card.ss-game-card .game-title { color: #25634f; }
+    body.light-mode .game-card.ss-game-card .game-desc { color: #6b5945; }
+    body.light-mode.ss-theme {
+      background-color: #fffefa;
+      background-image:
+        repeating-linear-gradient(0deg, rgba(70,130,180,0.12) 0 1px, transparent 1px 28px),
+        radial-gradient(ellipse at 82% 10%, rgba(190,132,22,0.10), transparent 38%),
+        linear-gradient(180deg, #fffefa 0%, #fbf7ef 100%);
+      color: #17251f;
+    }
+    body.light-mode.ss-theme::before {
+      background:
+        linear-gradient(90deg, transparent 0 10%, rgba(185,52,52,0.10) 10.2%, transparent 10.5%),
+        radial-gradient(circle at 72% 24%, rgba(38,98,82,0.08) 0 1px, transparent 2px),
+        radial-gradient(circle at 28% 74%, rgba(190,132,22,0.08) 0 1px, transparent 2px),
+        radial-gradient(circle at 18% 78%, rgba(38,98,82,0.10), transparent 34%);
+      opacity: 0.74;
+    }
+    body.light-mode.ss-theme h1,
+    body.light-mode.ss-theme .ht-round-label,
+    body.light-mode.ss-theme .ht-expose-label {
+      color: #25634f;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.75);
+    }
+    body.light-mode.ss-theme h2,
+    body.light-mode.ss-theme .ht-advance-text,
+    body.light-mode.ss-theme .waiting {
+      color: #6b5945 !important;
+    }
+    body.light-mode.ss-theme .btn {
+      background: #25634f;
+      color: #fffaf0;
+      box-shadow: 0 10px 24px rgba(38,98,82,0.16);
+    }
+    body.light-mode.ss-theme .btn-ghost {
+      background: rgba(255,250,240,0.72);
+      border-color: #b88416;
+      color: #7a520b;
+    }
+    body.light-mode.ss-theme .timer-bar-wrap,
+    body.light-mode.ss-theme .ht-p-result-bar-wrap {
+      background: rgba(255,250,240,0.86);
+      border-color: #d2bf98;
+    }
+    body.light-mode.ss-theme .timer-bar {
+      background: #b88416;
+    }
+    body.light-mode.ss-theme .ht-p-question,
+    body.light-mode.ss-theme .ss-rules-panel,
+    body.light-mode.ss-theme .ht-vote-btn,
+    body.light-mode.ss-theme .ht-p-result-row {
+      background:
+        repeating-linear-gradient(0deg, rgba(70,130,180,0.11) 0 1px, transparent 1px 26px),
+        rgba(255,255,252,0.95) !important;
+      border-color: #d8caa8 !important;
+      color: #17251f;
+      box-shadow: 0 12px 26px rgba(92,67,35,0.08);
+    }
+    body.light-mode.ss-theme .ht-p-question,
+    body.light-mode.ss-theme .ht-vote-btn {
+      color: #17251f;
+    }
+    body.light-mode.ss-theme .ht-p-question {
+      position: relative;
+      padding-right: 2.2rem;
+    }
+    body.light-mode.ss-theme .ht-p-question::after {
+      content: 'A+';
+      position: absolute;
+      right: 0.65rem;
+      bottom: 0.45rem;
+      color: rgba(185,52,52,0.55);
+      font-weight: 900;
+      transform: rotate(-8deg);
+    }
+    body.light-mode.ss-theme .ht-voted-msg {
+      color: #25634f;
+    }
+    body.light-mode.ss-theme .ss-rules-panel > div:first-child {
+      color: #6b5945 !important;
+    }
+    body.light-mode.ss-theme #ht-exposure-label {
+      color: #25634f !important;
+    }
+    body.light-mode.ss-theme #ht-exposure-slider {
+      accent-color: #25634f !important;
+    }
+    body.light-mode.ss-theme .ss-setup-note {
+      color: #6b5945;
+    }
+    body.light-mode.ss-theme .ss-results-label {
+      color: #b88416;
+      text-shadow: none;
+    }
+    body.light-mode.ss-theme .ht-vote-row {
+      background: rgba(255,250,240,0.86);
+      border: 1px solid #d2bf98;
+      border-radius: 6px;
+      padding: 0.45rem 0.55rem;
+    }
+    body.light-mode.ss-theme .ht-p-result-row {
+      position: relative;
+      display: grid;
+      grid-template-columns: minmax(74px, 0.45fr) minmax(0, 1fr) minmax(42px, auto);
+      padding-top: 0.65rem;
+    }
+    body.light-mode.ss-theme .ht-p-result-bar {
+      background-image:
+        linear-gradient(90deg, rgba(255,255,255,0.22), transparent 40%);
+      border-radius: 999px;
+    }
+    body.light-mode.ss-theme #ht-p-expose-section {
+      position: relative;
+    }
+    body.light-mode.ss-theme #ht-p-expose-section::after {
+      content: '★';
+      position: absolute;
+      right: 0.2rem;
+      top: 0;
+      color: rgba(184,132,22,0.32);
+      font-size: 2.6rem;
+      line-height: 1;
+      transform: rotate(12deg);
+    }
+    body.light-mode.ss-theme #screen-dsp-ht {
+      background:
+        repeating-linear-gradient(0deg, rgba(70,130,180,0.10) 0 1px, transparent 1px 34px),
+        radial-gradient(ellipse at 82% 10%, rgba(190,132,22,0.10), transparent 38%),
+        #fffefa;
+      color: #17251f;
+    }
+    body.light-mode.ss-theme #screen-dsp-ht .dsp-header-bar {
+      background: rgba(255,250,240,0.94);
+      border-bottom-color: #d2bf98;
+    }
+    body.light-mode.ss-theme #screen-dsp-ht .dsp-game-tag,
+    body.light-mode.ss-theme #screen-dsp-ht .dsp-pill,
+    body.light-mode.ss-theme #screen-dsp-ht .dsp-pct {
+      color: #25634f !important;
+    }
+    body.light-mode.ss-theme #screen-dsp-ht .dsp-option-card {
+      background:
+        repeating-linear-gradient(0deg, rgba(70,130,180,0.09) 0 1px, transparent 1px 28px),
+        rgba(255,255,252,0.94);
+      border-color: #d2bf98;
+      border-radius: 8px;
+      box-shadow: 0 16px 34px rgba(92,67,35,0.10);
+    }
+    body.light-mode.ss-theme #screen-ht-over h1::after {
+      content: ' ★';
+      color: #b88416;
+    }
+    body.light-mode.ss-theme #screen-ht-over .over-emoji {
+      color: #b88416;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.8), 0 0 24px rgba(184,132,22,0.22);
+    }
+    body.light-mode.ss-theme #screen-ht-over::before {
+      content: '★';
+      position: absolute;
+      top: 0.15rem;
+      right: 0.6rem;
+      color: rgba(184,132,22,0.22);
+      font-size: 4.2rem;
+      line-height: 1;
+      transform: rotate(12deg);
+      pointer-events: none;
+    }
+    body.light-mode.ss-theme #screen-dsp-ht .dsp-bar-wrap {
+      background: rgba(255,250,240,0.88);
+      border-color: #d2bf98;
+    }
+    body.light-mode.ss-theme #screen-dsp-ht #dsp-ht-count {
+      color: #6b5945 !important;
+    }
+    body.light-mode.ss-theme .screen.active::after {
+      content: '✓  ☆  ?';
+      position: absolute;
+      right: 0.15rem;
+      bottom: -0.35rem;
+      color: rgba(37,99,79,0.20);
+      font-size: 1.15rem;
+      font-weight: 900;
+      letter-spacing: 0.35rem;
+      transform: rotate(-6deg);
+      pointer-events: none;
+    }
 
     /* ── Display mode ── */
     .dsp-screen { flex-direction: column; align-items: center; justify-content: center; gap: 1.5rem; }
@@ -1495,49 +4068,49 @@
   <div id="screen-game-select" class="screen">
     <h1>Pick a Game</h1>
     <div class="game-list">
-      <div class="game-card" onclick="selectGame('everything-trivia')">
+      <div class="game-card et-game-card" onclick="selectGame('everything-trivia')">
         <div class="game-icon">🧠</div>
         <div>
           <div class="game-title">Everything Trivia</div>
           <div class="game-desc"><em>Anything</em> can be a topic.</div>
         </div>
       </div>
-      <div class="game-card" onclick="selectGame('questions-challenges')">
+      <div class="game-card wheel-game-card" onclick="selectGame('questions-challenges')">
         <div class="game-icon">🎡</div>
         <div>
           <div class="game-title">The Wheel</div>
           <div class="game-desc">Submit questions and challenges.</div>
         </div>
       </div>
-      <div class="game-card" onclick="selectGame('mafia')">
+      <div class="game-card mafia-game-card" onclick="selectGame('mafia')">
         <div class="game-icon">🕵️</div>
         <div>
           <div class="game-title">Mafia</div>
           <div class="game-desc">Find the secret killers.</div>
         </div>
       </div>
-      <div class="game-card" onclick="showHTRulesScreen()">
-        <div class="game-icon">🔥</div>
+      <div class="game-card ss-game-card" onclick="showHTRulesScreen()">
+        <div class="game-icon">A+</div>
         <div>
           <div class="game-title">Secret Superlatives</div>
           <div class="game-desc">Spicy questions with hidden* results.</div>
         </div>
       </div>
-      <div class="game-card" onclick="selectGame('photo-roulette')">
+      <div class="game-card pr-game-card" onclick="selectGame('photo-roulette')">
         <div class="game-icon">📸</div>
         <div>
           <div class="game-title">Photo Roulette</div>
           <div class="game-desc">Upload photos. Can you guess who took what?</div>
         </div>
       </div>
-      <div class="game-card" onclick="showDebateRulesScreen()">
+      <div class="game-card debate-game-card" onclick="showDebateRulesScreen()">
         <div class="game-icon">🗣️</div>
         <div>
           <div class="game-title">Debateish</div>
           <div class="game-desc">Judge who wins fun (or serious) debates.</div>
         </div>
       </div>
-      <div class="game-card" onclick="showAuctionRulesScreen()">
+      <div class="game-card auction-game-card" onclick="showAuctionRulesScreen()">
         <div class="game-icon">🔨</div>
         <div>
           <div class="game-title">Bidder's Auction</div>
@@ -1552,15 +4125,16 @@
   <div id="screen-ht-rules" class="screen">
     <h1>Secret Superlatives</h1>
     <h2>Everyone votes who fits the prompt more.</h2>
-    <div style="background:#1a1232; border:2px solid #2d1f50; border-radius:12px; padding:1.25rem 1.5rem; margin:1.5rem auto; max-width:320px;">
+    <div class="ss-rules-panel" id="ss-rules-panel" style="background:#1a1232; border:2px solid #2d1f50; border-radius:12px; padding:1.25rem 1.5rem; margin:1.5rem auto; max-width:320px;">
       <div style="font-size:0.95rem; color:#c4b5e0; margin-bottom:0.5rem;">Chance votes get exposed</div>
       <div style="font-size:2.5rem; font-weight:700; color:#fff; margin-bottom:0.75rem;" id="ht-exposure-label">10%</div>
       <input type="range" id="ht-exposure-slider" min="0" max="100" step="10" value="10"
         style="width:100%; accent-color:#a855f7; cursor:pointer;"
-        oninput="document.getElementById('ht-exposure-label').textContent = this.value + '%'" />
+        oninput="emitSSSetupSettings()" />
+      <div class="ss-setup-note non-host-only" style="margin-top:0.85rem;">Waiting for the host to choose settings.</div>
     </div>
     <div class="host-only" style="margin-top:1rem;">
-      <button class="btn btn-ghost" onclick="startHTGame()">Begin Game</button>
+      <button class="btn btn-ghost" id="ss-begin-btn" type="button" onclick="startSSGame()">Begin Game</button>
       <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
   </div>
@@ -1702,7 +4276,7 @@
         <div class="mafia-phase-timer" id="mafia-main-subtitle"></div>
         <div id="mafia-host-controls"></div>
       </div>
-      <div class="mafia-card mafia-news-card" id="mafia-event-card"></div>
+      <div class="mafia-card mafia-event-card" id="mafia-event-card"></div>
       <div class="mafia-card" id="mafia-poll-card" style="display:none;"></div>
       <div class="mafia-card" id="mafia-killer-card" style="display:none;"></div>
       <div class="mafia-majority-note" id="mafia-majority-note" style="display:none;"></div>
@@ -1896,9 +4470,9 @@
     <div class="ht-advance-text" id="pr-advance-text" style="display:none;"></div>
   </div>
 
-  <!-- ── Screen 12: Hot Takes — Vote ── -->
+  <!-- ── Screen 12: Secret Superlatives — Vote ── -->
   <div id="screen-ht-vote" class="screen">
-    <div class="ht-round-label">🔥 Round <span id="ht-p-round-num">1</span> of 20</div>
+    <div class="ht-round-label">Round <span id="ht-p-round-num">1</span> of 20</div>
     <div class="ht-p-question" id="ht-p-question"></div>
     <div class="timer-bar-wrap"><div class="timer-bar" id="ht-p-timer-bar"></div></div>
     <div id="ht-p-vote-buttons">
@@ -1911,13 +4485,13 @@
     </div>
   </div>
 
-  <!-- ── Screen 13: Hot Takes — Reveal ── -->
+  <!-- ── Screen 13: Secret Superlatives — Reveal ── -->
   <div id="screen-ht-reveal-p" class="screen">
-    <div class="ht-round-label">Results</div>
+    <div class="ht-round-label">Class Results</div>
     <div class="ht-p-question" id="ht-p-rev-question"></div>
     <div id="ht-p-rev-bars" style="margin:1rem 0;"></div>
     <div id="ht-p-expose-section" style="display:none;">
-      <div class="ht-expose-label">🔍 votes exposed</div>
+      <div class="ht-expose-label">Votes exposed</div>
       <div id="ht-p-vote-list"></div>
     </div>
     <div class="ht-advance-text" id="ht-p-advance-text">Next round in 10...</div>
@@ -1926,9 +4500,9 @@
     </div>
   </div>
 
-  <!-- ── Screen 14: Hot Takes — Game Over ── -->
+  <!-- ── Screen 14: Secret Superlatives — Game Over ── -->
   <div id="screen-ht-over" class="screen">
-    <div class="over-emoji">🔥</div>
+    <div class="over-emoji">A+</div>
     <h1>Secret Superlatives</h1>
     <h2>All 20 rounds done!</h2>
     <div class="host-only">
@@ -2117,8 +4691,10 @@
     let myQCCount = 0;
     let prMyUploadCount = 0;
     let prHasGuessed    = false;
+    let prCurrentRevealId = null;
     let etHasAnswered   = false;
     let mafiaState      = null;
+    let mafiaLastPhaseKey = '';
     let pendingConfirmAction = null;
 
     const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select', 'screen-ht-rules', 'screen-debate-rules', 'screen-auction-rules']);
@@ -2166,15 +4742,66 @@
     });
 
     // ── Screens ────────────────────────────────────────────────────
+    function generateSSChalkDoodles() {
+      const R = (mn, mx) => mn + Math.random() * (mx - mn);
+      const f = n => n.toFixed(1);
+      const sw = '0.7';
+      // edge/corner zones — avoid the center where content lives
+      const zones = [
+        [3,17,5,22],[62,93,4,21],[3,16,40,60],[84,97,37,63],
+        [5,24,78,95],[58,93,79,95],[28,70,4,15],[26,72,85,96],
+        [3,16,64,82],[84,97,15,34],
+      ];
+      for (let i = zones.length-1; i>0; i--) {
+        const j = Math.floor(Math.random()*(i+1));
+        [zones[i],zones[j]]=[zones[j],zones[i]];
+      }
+      const builders = [
+        (cx,cy,r) => { // star
+          const pts=[];
+          for(let i=0;i<10;i++){const a=(Math.PI/5)*i-Math.PI/2,rad=i%2===0?r:r*0.42;pts.push(`${f(cx+rad*Math.cos(a))},${f(cy+rad*Math.sin(a))}`);}
+          return `<path d='M${pts.join(' L')} Z' stroke-width='${sw}' stroke-dasharray='1.8 0.6' opacity='0.2'/>`;
+        },
+        (cx,cy,r) => `<circle cx='${f(cx)}' cy='${f(cy)}' r='${f(r)}' stroke-width='${sw}' stroke-dasharray='2 0.6' opacity='0.2'/>`,
+        (cx,cy,r) => `<line x1='${f(cx-r)}' y1='${f(cy)}' x2='${f(cx+r)}' y2='${f(cy)}' stroke-width='${sw}' stroke-dasharray='1.8 0.6' opacity='0.2'/><line x1='${f(cx)}' y1='${f(cy-r)}' x2='${f(cx)}' y2='${f(cy+r)}' stroke-width='${sw}' stroke-dasharray='1.8 0.6' opacity='0.2'/>`,
+        (cx,cy,r) => `<path d='M${f(cx)},${f(cy-r)} L${f(cx+r)},${f(cy+r)} L${f(cx-r)},${f(cy+r)} Z' stroke-width='${sw}' stroke-dasharray='2 0.6' opacity='0.2'/>`,
+        (cx,cy,r) => `<path d='M${f(cx-r)},${f(cy)} Q${f(cx-r/2)},${f(cy-3)} ${f(cx)},${f(cy)} Q${f(cx+r/2)},${f(cy+3)} ${f(cx+r)},${f(cy)}' stroke-width='${sw}' stroke-dasharray='1.8 0.6' opacity='0.2'/>`,
+        (cx,cy,r) => `<path d='M${f(cx-r*.6)},${f(cy)} L${f(cx)},${f(cy-r)} L${f(cx+r*.6)},${f(cy)}' stroke-width='${sw}' stroke-dasharray='1.8 0.6' opacity='0.2'/><line x1='${f(cx)}' y1='${f(cy-r)}' x2='${f(cx)}' y2='${f(cy+r)}' stroke-width='${sw}' stroke-dasharray='1.8 0.6' opacity='0.2'/>`,
+        (cx,cy,r) => `<path d='M${f(cx)},${f(cy-r)} L${f(cx+r*.6)},${f(cy)} L${f(cx)},${f(cy+r)} L${f(cx-r*.6)},${f(cy)} Z' stroke-width='${sw}' stroke-dasharray='2 0.6' opacity='0.2'/>`,
+        (cx,cy,r) => `<path d='M${f(cx+r)},${f(cy)} Q${f(cx+r)},${f(cy-r)} ${f(cx)},${f(cy-r)} Q${f(cx-r)},${f(cy-r)} ${f(cx-r)},${f(cy)} Q${f(cx-r)},${f(cy+r*.5)} ${f(cx)},${f(cy+r*.5)} Q${f(cx+r*.4)},${f(cy+r*.5)} ${f(cx+r*.4)},${f(cy)}' stroke-width='${sw}' stroke-dasharray='1.8 0.6' opacity='0.2'/>`,
+      ];
+      for(let i=builders.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[builders[i],builders[j]]=[builders[j],builders[i]];}
+      const count = 7 + Math.floor(Math.random()*2);
+      const shapes = [];
+      for(let i=0;i<Math.min(count,builders.length,zones.length);i++){
+        const [x0,x1,y0,y1]=zones[i];
+        const cx=R(x0+2.5,x1-2.5), cy=R(y0+2.5,y1-2.5), r=R(1.8,3.2);
+        shapes.push(builders[i](cx,cy,r));
+      }
+      const seed = Math.floor(Math.random()*98)+1;
+      const svg = `<svg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 100 100'><filter id='ck'><feTurbulence type='fractalNoise' baseFrequency='0.055' numOctaves='4' seed='${seed}' result='warp'/><feDisplacementMap in='SourceGraphic' in2='warp' scale='2' xChannelSelector='R' yChannelSelector='G' result='displaced'/><feTurbulence type='fractalNoise' baseFrequency='0.55' numOctaves='2' seed='${seed}' result='grain'/><feColorMatrix in='grain' type='matrix' values='0 0 0 0 1 0 0 0 0 1 0 0 0 0 1 2.5 0 0 0 -0.8' result='grainMask'/><feComposite in='displaced' in2='grainMask' operator='in'/></filter><g fill='none' stroke='white' stroke-linecap='round' stroke-linejoin='round' filter='url(%23ck)'>${shapes.join('')}</g></svg>`;
+      document.documentElement.style.setProperty('--ss-doodles', `url("data:image/svg+xml,${encodeURIComponent(svg)}")`);
+    }
+
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      document.body.classList.toggle('wheel-theme', id.startsWith('screen-qc') || id === 'screen-dsp-qc');
+      document.body.classList.toggle('et-theme', id.startsWith('screen-et') || id === 'screen-dsp-et');
+      document.body.classList.toggle('mafia-game-theme', id.startsWith('screen-mafia') || id === 'screen-dsp-mafia');
+      document.body.classList.toggle('pr-theme', id.startsWith('screen-pr') || id === 'screen-dsp-pr');
+      document.body.classList.toggle('debate-theme', id.startsWith('screen-debate') || id === 'screen-dsp-debate');
+      document.body.classList.toggle('auction-theme', id.startsWith('screen-auction') || id === 'screen-dsp-auction');
+      const enteringSS = !document.body.classList.contains('ss-theme') && (id.startsWith('screen-ht') || id === 'screen-dsp-ht');
+      document.body.classList.toggle('ss-theme', id.startsWith('screen-ht') || id === 'screen-dsp-ht');
+      if (enteringSS) generateSSChalkDoodles();
       if (id.endsWith('-over')) launchConfetti();
     }
 
     function setHostMode(h) {
       isHost = h;
       document.body.classList.toggle('host-mode', h);
+      setSSSetupLocked(!h);
       setDebateSetupLocked(!h);
       setAuctionSetupLocked(!h);
       updateDebateStartState();
@@ -2301,12 +4928,12 @@
       socket.emit('join-room', { pin, name: myName });
     }
 
-    socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId }) => {
+    socket.on('joined-room', ({ name, players, pin, qrDataURL, playerURL, hostId, isHost: joinedAsHost = false }) => {
       if (isDisplayMode) return;
       myName = name;
       myPin = pin;
       roomHostId = hostId;
-      setHostMode(false);
+      setHostMode(!!joinedAsHost);
       setupLobby(pin, playerURL, qrDataURL, players, hostId);
       saveSession(pin, name);
       showScreen('screen-lobby');
@@ -2389,6 +5016,9 @@
     // ── Host transfer ──────────────────────────────────────────────
     socket.on('you-are-now-host', () => {
       setHostMode(true);
+      if (document.getElementById('screen-ht-rules')?.classList.contains('active')) {
+        setSSSetupLocked(false);
+      }
       // Refresh start button state if on lobby
       const lobbyActive = document.getElementById('screen-lobby').classList.contains('active');
       if (lobbyActive) {
@@ -2400,6 +5030,9 @@
 
     socket.on('host-transferred', () => {
       setHostMode(false);
+      if (document.getElementById('screen-ht-rules')?.classList.contains('active')) {
+        setSSSetupLocked(true);
+      }
     });
 
     socket.on('host-changed', ({ newHostId }) => {
@@ -2448,7 +5081,37 @@
 
     function showHTRulesScreen() {
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
+      applySSSetupSettings({ exposureChance: 0.10 });
+      setSSSetupLocked(!isHost);
       showScreen('screen-ht-rules');
+      socket.emit('ht-show-rules', getSSSetupSettings());
+    }
+
+    function getSSSetupSettings() {
+      const slider = document.getElementById('ht-exposure-slider');
+      const pct = Math.max(0, Math.min(100, parseInt(slider?.value || '10', 10) || 0));
+      return { exposureChance: pct / 100 };
+    }
+
+    function applySSSetupSettings(settings = {}) {
+      const slider = document.getElementById('ht-exposure-slider');
+      const label = document.getElementById('ht-exposure-label');
+      const pct = Math.max(0, Math.min(100, Math.round(((settings.exposureChance ?? 0.10) || 0) * 100)));
+      if (slider) slider.value = String(pct);
+      if (label) label.textContent = `${pct}%`;
+    }
+
+    function setSSSetupLocked(locked) {
+      const panel = document.getElementById('ss-rules-panel');
+      const slider = document.getElementById('ht-exposure-slider');
+      panel?.classList.toggle('locked', !!locked);
+      if (slider) slider.disabled = !!locked;
+    }
+
+    function emitSSSetupSettings() {
+      applySSSetupSettings(getSSSetupSettings());
+      if (!isHost) return;
+      socket.emit('ht-settings-preview', getSSSetupSettings());
     }
 
     function getDebateSetupSettings() {
@@ -2555,6 +5218,18 @@
       if (debateSettings) applyDebateSetupSettings(debateSettings);
     });
 
+    socket.on('ht-show-rules', (settings = {}) => {
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: false });
+      applySSSetupSettings(settings);
+      setSSSetupLocked(!isHost);
+      showScreen('screen-ht-rules');
+    });
+
+    socket.on('ht-settings-updated', (settings = {}) => {
+      applySSSetupSettings(settings);
+      setSSSetupLocked(!isHost);
+    });
+
     function startDebateGame() {
       if (currentPlayers.length < DEBATE_MIN_PLAYERS) {
         showSiteNotice(`Debateish needs at least ${DEBATE_MIN_PLAYERS} players to start.`);
@@ -2623,9 +5298,20 @@
       socket.emit('start-game', { game });
     }
 
+    function startSSGame() {
+      if (!isHost) {
+        showSiteNotice('Only the host can start Secret Superlatives.');
+        return;
+      }
+      if (currentPlayers.length < 2) {
+        showSiteNotice('Secret Superlatives needs at least 2 players.');
+        return;
+      }
+      socket.emit('start-game', { game: 'hot-takes', ...getSSSetupSettings() });
+    }
+
     function startHTGame() {
-      const pct = parseInt(document.getElementById('ht-exposure-slider').value, 10);
-      socket.emit('start-game', { game: 'hot-takes', exposureChance: pct / 100 });
+      startSSGame();
     }
 
     let auctionState = null;
@@ -2917,7 +5603,7 @@
       showScreen('screen-auction');
     }
 
-    socket.on('game-started', ({ game, debateSettings, auctionSettings }) => {
+    socket.on('game-started', ({ game, debateSettings, auctionSettings, exposureChance, resume = false }) => {
       if (typeof stopBgLines === 'function') stopBgLines({ burst: game !== 'debate' });
       if (game === 'debate-setup') {
         if (debateSettings) applyDebateSetupSettings(debateSettings);
@@ -2931,42 +5617,58 @@
         showScreen('screen-auction-rules');
         return;
       }
+      if (game === 'hot-takes-setup') {
+        applySSSetupSettings({ exposureChance });
+        setSSSetupLocked(!isHost);
+        showScreen('screen-ht-rules');
+        return;
+      }
       if (game === 'questions-challenges') {
-        myQCCount = 0;
-        document.getElementById('qc-my-count').textContent = '0';
-        document.getElementById('qc-input').value = '';
-        document.getElementById('qc-submit-btn').disabled = false;
-        setType('question');
+        if (!resume) {
+          myQCCount = 0;
+          document.getElementById('qc-my-count').textContent = '0';
+          document.getElementById('qc-input').value = '';
+          document.getElementById('qc-submit-btn').disabled = false;
+          setType('question');
+        }
         showScreen('screen-qc-submit');
-        if (isHost) socket.emit('qc-start-collecting');
+        if (isHost && !resume) socket.emit('qc-start-collecting');
       } else if (game === 'photo-roulette') {
-        prMyUploadCount = 0;
-        document.getElementById('pr-my-count').textContent = '0';
-        document.getElementById('pr-total-count').textContent = '';
-        document.getElementById('pr-upload-error').textContent = '';
-        document.getElementById('pr-upload-label').classList.remove('disabled');
-        document.getElementById('pr-file-input').value = '';
+        if (!resume) {
+          prMyUploadCount = 0;
+          document.getElementById('pr-my-count').textContent = '0';
+          document.getElementById('pr-total-count').textContent = '';
+          document.getElementById('pr-upload-error').textContent = '';
+          document.getElementById('pr-upload-label').classList.remove('disabled');
+          document.getElementById('pr-file-input').value = '';
+        }
         showScreen('screen-pr-upload');
       } else if (game === 'everything-trivia') {
-        etHasAnswered = false;
-        document.getElementById('et-topic-input').value = '';
-        document.getElementById('et-topic-message').textContent = '';
-        document.getElementById('et-topic-submit-btn').disabled = false;
-        document.getElementById('et-topic-ready-count').textContent = '0';
-        document.getElementById('et-topic-total-count').textContent = '0';
-        document.getElementById('et-topic-list').innerHTML = '';
+        if (!resume) {
+          etHasAnswered = false;
+          document.getElementById('et-topic-input').value = '';
+          document.getElementById('et-topic-message').textContent = '';
+          document.getElementById('et-topic-submit-btn').disabled = false;
+          document.getElementById('et-topic-ready-count').textContent = '0';
+          document.getElementById('et-topic-total-count').textContent = '0';
+          document.getElementById('et-topic-list').innerHTML = '';
+        }
         showScreen('screen-et-topic');
       } else if (game === 'mafia') {
-        mafiaState = null;
-        document.getElementById('mafia-joker-toggle').checked = false;
+        if (!resume) {
+          mafiaState = null;
+          document.getElementById('mafia-joker-toggle').checked = false;
+        }
         showScreen('screen-mafia-setup');
       } else if (game === 'auction') {
-        auctionState = null;
-        auctionTargetSelection = [];
-        auctionTargetKey = '';
+        if (!resume) {
+          auctionState = null;
+          auctionTargetSelection = [];
+          auctionTargetKey = '';
+        }
         showScreen('screen-auction');
       } else if (game === 'hot-takes') {
-        htHasVoted = false;
+        if (!resume) htHasVoted = false;
         // server immediately fires ht-round-start — just wait for it
       }
     });
@@ -3006,7 +5708,7 @@
         <div class="mafia-rule-row"><span class="mafia-rule-label">🃏 <span class="mafia-role-joker">Joker:</span></span><span class="mafia-rule-text">Optional chaos role. Get eliminated by vote and you win instantly.</span></div>
         <div class="mafia-rule-row"><span class="mafia-rule-label">Night:</span><span class="mafia-rule-text">No talking during the night.</span></div>
         <div class="mafia-rule-row"><span class="mafia-rule-label">Polls:</span><span class="mafia-rule-text">Answer the overnight poll silently. You cannot discuss the poll.</span></div>
-        <div class="mafia-rule-row"><span class="mafia-rule-label">🗳️ Voting:</span><span class="mafia-rule-text">Votes are public. A true majority instantly resolves the vote.</span></div>
+        <div class="mafia-rule-row"><span class="mafia-rule-label">Voting:</span><span class="mafia-rule-text">Votes are public. A true majority instantly resolves the vote.</span></div>
       `;
     }
 
@@ -3016,6 +5718,10 @@
 
     function startMafiaVoting() {
       socket.emit('mafia-start-voting');
+    }
+
+    function skipMafiaVote() {
+      socket.emit('mafia-skip-vote');
     }
 
     function startMafiaNight() {
@@ -3028,7 +5734,9 @@
       if (event) event.preventDefault();
       if (!mafiaState || !mafiaState.myRole) return;
       const labelMap = { killer: 'Killer', doctor: 'Doctor', villager: 'Villager', joker: 'Joker' };
-      document.getElementById(targetId).innerHTML = `<div class="mafia-role-reveal">${labelMap[mafiaState.myRole] || mafiaState.myRole}</div>`;
+      const box = document.getElementById(targetId);
+      if (!box) return;
+      box.innerHTML = `<div class="mafia-role-reveal">${labelMap[mafiaState.myRole] || mafiaState.myRole}</div>`;
     }
 
     function getMafiaRoleEmoji(role) {
@@ -3049,6 +5757,11 @@
       return html.replace(/\n/g, '<br>');
     }
 
+    function isMafiaDeathMessage(state) {
+      const message = state?.eventMessage || '';
+      return ['day-result', 'night-result'].includes(state?.phase) && (/was voted out|was killed overnight/i).test(message);
+    }
+
     function formatMafiaWinnerMessage(winner, players) {
       if (!winner || !winner.text) return 'Game over';
       let html = winner.text.replace(/&/g, '&amp;').replace(/</g, '&lt;').replace(/>/g, '&gt;');
@@ -3065,7 +5778,9 @@
       const event = typeof eventOrTarget === 'string' ? null : eventOrTarget;
       if (event) event.preventDefault();
       const box = document.getElementById(targetId);
-      if (box) box.textContent = targetId === 'mafia-role-box' ? 'Press and hold below' : 'Hold below to view';
+      if (box) {
+        box.textContent = targetId === 'mafia-role-box' ? 'Press and hold below' : 'Hold below to view';
+      }
     }
 
     function mafiaVote(targetId) {
@@ -3162,7 +5877,9 @@
         ['voting', 'revote'].includes(state.phase) ? `${state.timer.voting}s remaining to vote` :
         `${state.aliveKillers} killer${state.aliveKillers === 1 ? '' : 's'} left in the game`;
       document.getElementById('mafia-dead-banner').style.display = state.isAlive ? 'none' : 'block';
-      document.getElementById('mafia-event-card').textContent = state.eventMessage || '';
+      const legacyEventCard = document.getElementById('mafia-event-card');
+      legacyEventCard.classList.toggle('death-bulletin', isMafiaDeathMessage(state));
+      legacyEventCard.textContent = state.eventMessage || '';
       const majorityNote = document.getElementById('mafia-majority-note');
       if (['voting', 'revote'].includes(state.phase)) {
         majorityNote.style.display = 'block';
@@ -3276,6 +5993,13 @@
         btn.onclick = startMafiaVoting;
         hostWrap.appendChild(btn);
       }
+      if (state.canHostSkipVote) {
+        const btn = document.createElement('button');
+        btn.className = 'mafia-host-btn';
+        btn.textContent = 'Skip Voting';
+        btn.onclick = skipMafiaVote;
+        hostWrap.appendChild(btn);
+      }
       if (state.canHostStartDiscussion) {
         const btn = document.createElement('button');
         btn.className = 'mafia-host-btn';
@@ -3287,8 +6011,19 @@
       showScreen('screen-mafia-main');
     }
 
+    function triggerMafiaPhaseSweep(phaseKey) {
+      if (!phaseKey || mafiaLastPhaseKey === phaseKey) return;
+      mafiaLastPhaseKey = phaseKey;
+      if (!document.body.classList.contains('mafia-game-theme')) return;
+      document.body.classList.remove('mafia-phase-sweep');
+      void document.body.offsetWidth;
+      document.body.classList.add('mafia-phase-sweep');
+      setTimeout(() => document.body.classList.remove('mafia-phase-sweep'), 720);
+    }
+
     function renderMafiaState(state) {
       mafiaState = state;
+      triggerMafiaPhaseSweep(`${state.phase}:${state.dayNumber || 0}:${state.nightNumber || 0}`);
       const mafiaMainScreen = document.getElementById('screen-mafia-main');
       const mafiaRoleScreen = document.getElementById('screen-mafia-role');
       if (mafiaMainScreen) mafiaMainScreen.classList.toggle('mafia-dead-mode', !!state.started && !state.isAlive && !['game-over', 'winner-splash'].includes(state.phase));
@@ -3351,10 +6086,12 @@
           'Joker Unleashed';
         winnerNameEl.textContent = '';
         winnerNameEl.style.display = 'none';
+        const lastDeathName = state.winner?.lastDeath?.playerName || '';
         document.getElementById('mafia-win-sub').textContent =
           state.winner?.team === 'town' ? 'Every killer is gone. The village holds the line.' :
-          state.winner?.team === 'killers' ? 'The killers now control the town.' :
-          'The Joker got voted out and stole the whole game.';
+          state.winner?.team === 'killers'
+            ? (lastDeathName ? `The killers now control the town. ${lastDeathName} was the last to die.` : 'The killers now control the town.')
+            : 'The Joker got voted out and stole the whole game.';
         const winWrap = document.querySelector('#screen-mafia-joker-win .mafia-joker-ult');
         if (winWrap) {
           winWrap.classList.remove('win-town', 'win-killers');
@@ -3429,8 +6166,9 @@
       document.getElementById('mafia-dead-banner').style.display = state.isAlive ? 'none' : 'block';
 
       const eventCard = document.getElementById('mafia-event-card');
-      eventCard.classList.remove('good', 'bad', 'joker');
+      eventCard.classList.remove('good', 'bad', 'joker', 'death-bulletin');
       if (state.eventTone === 'good' || state.eventTone === 'bad' || state.eventTone === 'joker') eventCard.classList.add(state.eventTone);
+      if (isMafiaDeathMessage(state)) eventCard.classList.add('death-bulletin');
       eventCard.innerHTML = formatMafiaEventMessage(state.eventMessage || '', state.players || []);
 
       const majorityNote = document.getElementById('mafia-majority-note');
@@ -3604,6 +6342,13 @@
         btn.className = 'mafia-host-btn';
         btn.textContent = 'Skip to Voting';
         btn.onclick = startMafiaVoting;
+        hostWrap.appendChild(btn);
+      }
+      if (state.canHostSkipVote) {
+        const btn = document.createElement('button');
+        btn.className = 'mafia-host-btn';
+        btn.textContent = 'Skip Voting';
+        btn.onclick = skipMafiaVote;
         hostWrap.appendChild(btn);
       }
       if (state.canHostStartDiscussion) {
@@ -3869,6 +6614,43 @@
     let playerWheelAngle = 0;
     let playerWheelAnimFrame = null;
 
+    function getPlayerWheelPalette() {
+      const light = document.body.classList.contains('light-mode');
+      return light ? {
+        emptyFill: '#fff8ec',
+        emptyStroke: '#d59c67',
+        questionColors: ['#f4d3a4', '#f9e1bb', '#eebf88'],
+        challengeColors: ['#cde3bf', '#e3edcf', '#bcd7b2'],
+        sliceStroke: '#fff8ec',
+        questionText: '#9d3f25',
+        challengeText: '#216249',
+        questionGlow: 'rgba(189,79,47,0.24)',
+        challengeGlow: 'rgba(66,137,104,0.24)',
+        ring: '#bd4f2f',
+        bulbA: '#bd4f2f',
+        bulbB: '#f0b15d',
+        bulbGlow: 'rgba(232,126,59,0.36)',
+        cap: '#ffe3a8',
+        capStroke: '#bd4f2f',
+      } : {
+        emptyFill: '#17070d',
+        emptyStroke: '#793018',
+        questionColors: ['#5c1428', '#7a1e35', '#431020'],
+        challengeColors: ['#1f4b32', '#385f28', '#6a3917'],
+        sliceStroke: '#17070d',
+        questionText: '#ffd98a',
+        challengeText: '#bfe49f',
+        questionGlow: 'rgba(255,217,138,0.45)',
+        challengeGlow: 'rgba(191,228,159,0.45)',
+        ring: '#f6c56f',
+        bulbA: '#f6c56f',
+        bulbB: '#fff1bd',
+        bulbGlow: 'rgba(246,197,111,0.72)',
+        cap: '#f6c56f',
+        capStroke: '#6b1a2d',
+      };
+    }
+
     function drawPlayerWheel(angle) {
       const canvas = document.getElementById('player-wheel-canvas');
       if (!canvas) return;
@@ -3877,16 +6659,17 @@
       const cx = size / 2, cy = size / 2;
       const r = size / 2 - 8;
       const N = playerWheelSegments.length;
+      const palette = getPlayerWheelPalette();
 
       ctx.clearRect(0, 0, size, size);
 
       if (N === 0) {
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-        ctx.fillStyle = '#0f0a20';
+        ctx.fillStyle = palette.emptyFill;
         ctx.fill();
-        ctx.strokeStyle = '#2d1f50';
-        ctx.lineWidth = 3;
+        ctx.strokeStyle = palette.emptyStroke;
+        ctx.lineWidth = 5;
         ctx.stroke();
         return;
       }
@@ -3901,9 +6684,9 @@
         ctx.moveTo(cx, cy);
         ctx.arc(cx, cy, r, startA, endA);
         ctx.closePath();
-        ctx.fillStyle = isQ ? '#1e1050' : '#2d1800';
+        ctx.fillStyle = isQ ? palette.questionColors[i % palette.questionColors.length] : palette.challengeColors[i % palette.challengeColors.length];
         ctx.fill();
-        ctx.strokeStyle = '#08041a';
+        ctx.strokeStyle = palette.sliceStroke;
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -3914,24 +6697,43 @@
         ctx.save();
         ctx.translate(tx, ty);
         ctx.rotate(midA + Math.PI / 2);
-        ctx.font = N <= 10 ? 'bold 22px sans-serif' : 'bold 14px sans-serif';
+        ctx.font = N <= 10 ? 'bold 22px Jost, sans-serif' : 'bold 14px Jost, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = isQ ? '#c084fc' : '#cfb991';
-        ctx.fillText(isQ ? '?' : '⚡', 0, 0);
+        ctx.fillStyle = isQ ? palette.questionText : palette.challengeText;
+        ctx.shadowColor = isQ ? palette.questionGlow : palette.challengeGlow;
+        ctx.shadowBlur = 8;
+        ctx.fillText(isQ ? '?' : '!', 0, 0);
         ctx.restore();
       }
 
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#cfb991';
-      ctx.lineWidth = 3;
+      ctx.strokeStyle = palette.ring;
+      ctx.lineWidth = 5;
       ctx.stroke();
 
+      const bulbCount = 24;
+      for (let i = 0; i < bulbCount; i++) {
+        const a = angle * 0.08 + (i / bulbCount) * 2 * Math.PI;
+        const bx = cx + (r - 7) * Math.cos(a);
+        const by = cy + (r - 7) * Math.sin(a);
+        ctx.beginPath();
+        ctx.arc(bx, by, 2.7, 0, 2 * Math.PI);
+        ctx.fillStyle = i % 2 ? palette.bulbA : palette.bulbB;
+        ctx.shadowColor = palette.bulbGlow;
+        ctx.shadowBlur = 7;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
+
       ctx.beginPath();
-      ctx.arc(cx, cy, 12, 0, 2 * Math.PI);
-      ctx.fillStyle = '#cfb991';
+      ctx.arc(cx, cy, 17, 0, 2 * Math.PI);
+      ctx.fillStyle = palette.cap;
       ctx.fill();
+      ctx.lineWidth = 3;
+      ctx.strokeStyle = palette.capStroke;
+      ctx.stroke();
     }
 
     function spinPlayerWheel(pickedId, onComplete) {
@@ -4034,7 +6836,7 @@
 
             // Hide spin button and show result all at once
             document.getElementById('spin-btn-wrap').style.display = 'none';
-            const typeLabel = isQ ? '❓ Question' : '⚡ Challenge';
+            const typeLabel = isQ ? '? Question' : '! Challenge';
             document.getElementById('watch-type').textContent = typeLabel;
             document.getElementById('watch-text').textContent = picked.text;
             document.getElementById('watch-reveal-box').style.display = 'block';
@@ -4113,6 +6915,12 @@
       resetBar('pr-guess-bar');
       document.getElementById('pr-guess-ack').textContent = '';
       document.getElementById('pr-guess-count-label').textContent = '';
+      const advanceText = document.getElementById('pr-advance-text');
+      if (advanceText) {
+        advanceText.textContent = '';
+        advanceText.style.display = 'none';
+      }
+      prCurrentRevealId = null;
 
       const hint = document.getElementById('pr-your-photo-hint');
       hint.style.display = isYourPhoto ? 'block' : 'none';
@@ -4153,7 +6961,8 @@
     });
 
     // ── Photo Roulette — Reveal ────────────────────────────────────
-    socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound, hasMorePhotos }) => {
+    socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound, hasMorePhotos, advanceTime = 5, revealId }) => {
+      prCurrentRevealId = revealId;
       document.getElementById('pr-reveal-name').textContent = photographerName + "'s photo!";
       document.getElementById('pr-reveal-img').src = document.getElementById('pr-guess-img').src;
 
@@ -4187,17 +6996,27 @@
           hasMorePhotos ? 'Next Photo →' : 'See Final Scores';
       }
 
+      const advanceText = document.getElementById('pr-advance-text');
+      if (advanceText) {
+        advanceText.style.display = 'block';
+        advanceText.textContent = hasMorePhotos ? `Next photo in ${advanceTime}...` : `Final scores in ${advanceTime}...`;
+      }
       showScreen('screen-pr-reveal');
     });
 
     function revealNow()    { socket.emit('pr-reveal-now'); }
     function prNextPhoto()  { socket.emit('pr-next-photo'); }
 
-    socket.on('pr-advance-tick', ({ timeLeft }) => {
+    socket.on('pr-advance-tick', ({ timeLeft, revealId }) => {
+      if (revealId !== prCurrentRevealId) return;
       const el = document.getElementById('pr-advance-text');
       if (!el) return;
       el.style.display = 'block';
-      el.textContent = timeLeft > 0 ? `Next photo in ${timeLeft}...` : 'Loading next photo...';
+      const nextBtn = document.getElementById('pr-next-btn');
+      const finalScores = nextBtn && nextBtn.textContent.includes('Final Scores');
+      el.textContent = timeLeft > 0
+        ? `${finalScores ? 'Final scores' : 'Next photo'} in ${timeLeft}...`
+        : (finalScores ? 'Loading final scores...' : 'Loading next photo...');
     });
 
     socket.on('pr-game-over', ({ scores }) => {
@@ -4213,7 +7032,7 @@
       showScreen('screen-pr-over');
     });
 
-    // ── Hot Takes ──────────────────────────────────────────────────
+    // ── Secret Superlatives (legacy ht events) ─────────────────────
     let htHasVoted = false;
     let htPlayerColors = {};
 
@@ -5179,7 +7998,7 @@
       });
     }
 
-    // ── Hot Takes display ─────────────────────────────────────────
+    // ── Secret Superlatives display ────────────────────────────────
     socket.on('ht-round-start', (data) => {
       if (!isDisplayMode || !useCustomDisplayScreens) return;
       const { question, optionA, optionB, roundNumber, playerColors } = data;
@@ -5487,7 +8306,7 @@
 
   <div id="screen-dsp-ht" class="screen dsp-screen" style="gap:0;padding:0">
     <div class="dsp-header-bar">
-      <span class="dsp-game-tag">Hot Takes</span>
+      <span class="dsp-game-tag">Secret Superlatives</span>
       <span id="dsp-ht-round-pill" class="dsp-pill"></span>
       <span id="dsp-ht-vote-tag" class="dsp-phase-tag"></span>
     </div>
@@ -5605,7 +8424,7 @@
           <div class="dsp-debater-name" id="dsp-debate-name-a"></div>
           <div class="dsp-debater-side" id="dsp-debate-side-a"></div>
         </div>
-        <div style="font-family:'Cinzel',serif;font-size:1.3rem;color:#5a4a7a;flex-shrink:0">VS</div>
+        <div class="dsp-debate-vs-label">VS</div>
         <div class="dsp-debater-card" id="dsp-debate-card-b">
           <div class="dsp-debater-name" id="dsp-debate-name-b"></div>
           <div class="dsp-debater-side" id="dsp-debate-side-b"></div>
@@ -5631,7 +8450,7 @@
 
   <div id="screen-dsp-qc" class="screen dsp-screen" style="gap:0;padding:0">
     <div class="dsp-header-bar">
-      <span class="dsp-game-tag">Questions &amp; Challenges</span>
+      <span class="dsp-game-tag">The Wheel</span>
       <span id="dsp-qc-phase-tag" class="dsp-phase-tag"></span>
     </div>
     <div class="dsp-body">
@@ -5646,7 +8465,3 @@
   </div>
 </body>
 </html>
-
-
-
-

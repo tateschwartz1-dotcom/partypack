@@ -77,6 +77,7 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_TRIVIA_MODEL = process.env.OPENAI_TRIVIA_MODEL || 'gpt-5-mini';
 const TRIVIA_API_KEY = process.env.TRIVIA_API_KEY || '';
 const DEBATE_MIN_PLAYERS = 3;
+const REJOIN_GRACE_MS = 90000;
 
 LEGACY_BASE_PATHS.forEach((legacyBasePath) => {
   app.get(new RegExp(`^${escapeRegExp(legacyBasePath)}(?:/.*)?$`), (req, res) => {
@@ -1641,25 +1642,32 @@ function reemitStateToPlayer(pin, socket) {
     qrDataURL: room.qrDataURL,
     playerURL: room.playerURL,
     hostId: room.hostSocketId,
+    isHost: socket.data.isHost,
   });
 
   const gs = room.gameState;
   if (gs === 'lobby') return;
 
   if (gs === 'mafia' && room.mafia) {
-    socket.emit('game-started', { game: 'mafia' });
+    socket.emit('game-started', { game: 'mafia', resume: true });
     socket.emit('mafia-state', buildMafiaStateForPlayer(room, socket.id));
     return;
   }
 
   if (gs === 'debate' && room.debate) {
-    socket.emit('game-started', { game: 'debate-setup', debateSettings: room.debate.settings });
+    socket.emit('game-started', { game: 'debate-setup', debateSettings: room.debate.settings, resume: true });
     emitDebateState(pin);
     return;
   }
 
+  if (gs === 'hot-takes-setup') {
+    socket.emit('game-started', { game: 'hot-takes-setup', exposureChance: room.pendingHTSettings?.exposureChance ?? 0.10, resume: true });
+    socket.emit('ht-show-rules', room.pendingHTSettings || { exposureChance: 0.10 });
+    return;
+  }
+
   if (gs === 'hot-takes' && room.ht) {
-    socket.emit('game-started', { game: 'hot-takes' });
+    socket.emit('game-started', { game: 'hot-takes', resume: true });
     if (room.ht.optionA && room.ht.optionB) {
       socket.emit('ht-round-start', {
         question: room.ht.currentQuestionText,
@@ -1674,7 +1682,7 @@ function reemitStateToPlayer(pin, socket) {
   }
 
   if (gs === 'photo-roulette' && room.pr) {
-    socket.emit('game-started', { game: 'photo-roulette' });
+    socket.emit('game-started', { game: 'photo-roulette', resume: true });
     socket.emit('pr-photo-count', { count: room.pr.photos.length });
     if (room.pr.currentPhoto) {
       const photo = room.pr.currentPhoto;
@@ -1695,7 +1703,7 @@ function reemitStateToPlayer(pin, socket) {
   }
 
   if (gs === 'everything-trivia' && room.et) {
-    socket.emit('game-started', { game: 'everything-trivia' });
+    socket.emit('game-started', { game: 'everything-trivia', resume: true });
     if (room.et.currentQuestion) {
       const section = room.et.randomizedTopics[room.et.currentSectionIndex];
       socket.emit('et-question-start', {
@@ -1727,23 +1735,23 @@ function reemitStateToPlayer(pin, socket) {
   }
 
   if (gs === 'questions-challenges' && room.qc) {
-    socket.emit('game-started', { game: 'questions-challenges' });
+    socket.emit('game-started', { game: 'questions-challenges', resume: true });
     const cp = room.qc.playerOrder[room.qc.currentPlayerIndex];
     if (cp) {
       const available = room.qc.submissions.filter(s => !room.qc.usedIds.has(s.id));
-      socket.emit('qc-round-start', { currentPlayer: cp.name, available: available.length });
+      socket.emit('qc-round-start', { currentPlayer: cp, available });
     }
     return;
   }
 
   if (gs === 'auction-setup') {
-    socket.emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings });
+    socket.emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings, resume: true });
     socket.emit('auction-show-rules', { auctionSettings: room.pendingAuctionSettings });
     return;
   }
 
   if (gs === 'auction' && room.auction) {
-    socket.emit('game-started', { game: 'auction' });
+    socket.emit('game-started', { game: 'auction', resume: true });
     emitAuctionState(pin);
     return;
   }
@@ -1777,6 +1785,7 @@ io.on('connection', (socket) => {
       timers: [],
       displaySockets: new Set(),
       recentlyLeft: {},
+      pendingHTSettings: { exposureChance: 0.10 },
     };
 
     socket.join(pin);
@@ -1797,7 +1806,7 @@ io.on('connection', (socket) => {
 
     const rejoinEntry = room.recentlyLeft && room.recentlyLeft[name];
 
-    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup' && room.gameState !== 'auction-setup' && !rejoinEntry) {
+    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup' && room.gameState !== 'auction-setup' && room.gameState !== 'hot-takes-setup' && !rejoinEntry) {
       socket.emit('join-error', { message: 'Game already in progress.' });
       return;
     }
@@ -1820,6 +1829,7 @@ io.on('connection', (socket) => {
 
     if (rejoinEntry) {
       remapPlayerId(room, rejoinEntry.oldSocketId, socket.id);
+      socket.data.isHost = room.hostSocketId === socket.id;
       delete room.recentlyLeft[name];
       io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
       reemitStateToPlayer(pin, socket);
@@ -1833,11 +1843,16 @@ io.on('connection', (socket) => {
       qrDataURL: room.qrDataURL,
       playerURL: room.playerURL,
       hostId: room.hostSocketId,
+      isHost: false,
     });
     io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
     if (room.gameState === 'debate-setup') {
       socket.emit('game-started', { game: 'debate-setup', debateSettings: room.pendingDebateSettings });
       socket.emit('debate-show-rules', { debateSettings: room.pendingDebateSettings });
+    }
+    if (room.gameState === 'hot-takes-setup') {
+      socket.emit('game-started', { game: 'hot-takes-setup', exposureChance: room.pendingHTSettings?.exposureChance ?? 0.10 });
+      socket.emit('ht-show-rules', room.pendingHTSettings || { exposureChance: 0.10 });
     }
     if (room.gameState === 'auction-setup') {
       socket.emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings });
@@ -1932,6 +1947,14 @@ io.on('connection', (socket) => {
       return;
     }
 
+    if (game === 'hot-takes' && room.players.length < 2) {
+      socket.emit('game-start-error', {
+        game,
+        message: 'Secret Superlatives needs at least 2 players to start.',
+      });
+      return;
+    }
+
     room.gameState = game;
 
     if (game === 'photo-roulette') {
@@ -1951,6 +1974,10 @@ io.on('connection', (socket) => {
       room.players.forEach((p, i) => {
         playerColors[p.name] = PLAYER_COLORS[i % PLAYER_COLORS.length];
       });
+      const exposure = (typeof exposureChance === 'number')
+        ? Math.max(0, Math.min(1, exposureChance))
+        : (room.pendingHTSettings?.exposureChance ?? 0.10);
+      room.pendingHTSettings = { exposureChance: exposure };
       room.ht = {
         selectedQuestions: selectHTQuestions(room.players, 20),
         currentRound: 0,
@@ -1960,7 +1987,7 @@ io.on('connection', (socket) => {
         optionB: null,
         currentQuestionText: '',
         revealVotes: false,
-        exposureChance: (typeof exposureChance === 'number') ? exposureChance : 0.10,
+        exposureChance: exposure,
         playerColors,
       };
     }
@@ -1988,9 +2015,10 @@ io.on('connection', (socket) => {
     }
 
     if (game === 'mafia') {
+      const settings = room.pendingMafiaSettings || { jokerEnabled: false, hiddenPollsUntilEnd: true };
       room.mafia = {
-        jokerEnabled: false,
-        hiddenPollsUntilEnd: true,
+        jokerEnabled: !!settings.jokerEnabled,
+        hiddenPollsUntilEnd: settings.hiddenPollsUntilEnd !== undefined ? !!settings.hiddenPollsUntilEnd : true,
         started: false,
         roles: {},
         alive: {},
@@ -2114,7 +2142,9 @@ io.on('connection', (socket) => {
     room.mafia = null;
     room.debate = null;
     room.auction = null;
+    room.pendingHTSettings = { exposureChance: 0.10 };
     room.pendingDebateSettings = null;
+    room.pendingMafiaSettings = null;
     room.pendingAuctionSettings = null;
     io.to(pin).emit('returned-to-lobby');
   });
@@ -2133,7 +2163,9 @@ io.on('connection', (socket) => {
     room.mafia = null;
     room.debate = null;
     room.auction = null;
+    room.pendingHTSettings = { exposureChance: 0.10 };
     room.pendingDebateSettings = null;
+    room.pendingMafiaSettings = null;
     room.pendingAuctionSettings = null;
     io.to(pin).emit('returned-to-game-select');
   });
@@ -2300,7 +2332,7 @@ io.on('connection', (socket) => {
     doPRReveal(pin);
   });
 
-  // ── Hot Takes ──────────────────────────────────────────────────
+  // ── Secret Superlatives (legacy ht events) ─────────────────────
 
   socket.on('ht-vote', ({ votedFor }) => {
     const pin = socket.data.pin;
@@ -2425,6 +2457,10 @@ io.on('connection', (socket) => {
     if (!room || room.hostSocketId !== socket.id || !room.mafia || room.mafia.started) return;
     room.mafia.jokerEnabled = !!jokerEnabled;
     room.mafia.hiddenPollsUntilEnd = hiddenPollsUntilEnd !== undefined ? !!hiddenPollsUntilEnd : room.mafia.hiddenPollsUntilEnd;
+    room.pendingMafiaSettings = {
+      jokerEnabled: room.mafia.jokerEnabled,
+      hiddenPollsUntilEnd: room.mafia.hiddenPollsUntilEnd,
+    };
     emitMafiaState(pin);
   });
 
@@ -2439,6 +2475,10 @@ io.on('connection', (socket) => {
     }
 
     assignMafiaRoles(room);
+    room.pendingMafiaSettings = {
+      jokerEnabled: room.mafia.jokerEnabled,
+      hiddenPollsUntilEnd: room.mafia.hiddenPollsUntilEnd,
+    };
     room.mafia.started = true;
     room.mafia.eventMessage = 'Roles assigned. Day 1 begins now.';
     room.mafia.eventTone = 'neutral';
@@ -2457,6 +2497,14 @@ io.on('connection', (socket) => {
     const room = rooms[pin];
     if (!room || room.hostSocketId !== socket.id || !room.mafia || room.mafia.phase !== 'discussion') return;
     startMafiaVoting(pin, false, []);
+  });
+
+  socket.on('mafia-skip-vote', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !room.mafia || !['voting', 'revote'].includes(room.mafia.phase)) return;
+    clearRoomTimers(room);
+    resolveMafiaVote(pin, false);
   });
 
   socket.on('mafia-start-night', () => {
@@ -2552,6 +2600,7 @@ io.on('connection', (socket) => {
   function startPRRound(pin) {
     const room = rooms[pin];
     if (!room || !room.pr) return;
+    clearRoomTimers(room);
 
     const available = room.pr.photos.filter(p => !room.pr.usedIds.has(p.id));
 
@@ -2561,6 +2610,7 @@ io.on('connection', (socket) => {
         .sort((a, b) => b.score - a.score);
       io.to(pin).emit('pr-game-over', { scores });
       room.gameState = 'lobby';
+      room.pr.phase = 'over';
       return;
     }
 
@@ -2568,6 +2618,7 @@ io.on('connection', (socket) => {
     room.pr.usedIds.add(photo.id);
     room.pr.currentPhoto = photo;
     room.pr.guesses = {};
+    room.pr.phase = 'guessing';
 
     const photoNumber = room.pr.photos.length - available.length + 1;
     const totalPhotos = room.pr.photos.length;
@@ -2624,6 +2675,9 @@ io.on('connection', (socket) => {
   function doPRReveal(pin) {
     const room = rooms[pin];
     if (!room || !room.pr || !room.pr.currentPhoto) return;
+    if (room.pr.phase === 'revealed') return;
+    clearRoomTimers(room);
+    room.pr.phase = 'revealed';
 
     const photo = room.pr.currentPhoto;
     const guesses = Object.values(room.pr.guesses);
@@ -2647,6 +2701,9 @@ io.on('connection', (socket) => {
     }
 
     const remaining = room.pr.photos.filter(p => !room.pr.usedIds.has(p.id));
+    const PR_ADVANCE_TIME = 5;
+    room.pr.revealId = (room.pr.revealId || 0) + 1;
+    const revealId = room.pr.revealId;
 
     io.to(pin).emit('pr-reveal', {
       photographerName: photo.playerName,
@@ -2654,15 +2711,16 @@ io.on('connection', (socket) => {
       pointsThisRound,
       scores: room.pr.scores,
       hasMorePhotos: remaining.length > 0,
+      advanceTime: PR_ADVANCE_TIME,
+      revealId,
     });
 
-    // Auto-advance to next photo after 8 seconds
-    const PR_ADVANCE_TIME = 8;
+    // Auto-advance to next photo after 5 seconds
     let prAdvLeft = PR_ADVANCE_TIME;
 
     const prAdvTimer = setInterval(() => {
       prAdvLeft--;
-      io.to(pin).emit('pr-advance-tick', { timeLeft: prAdvLeft });
+      io.to(pin).emit('pr-advance-tick', { timeLeft: prAdvLeft, revealId });
       if (prAdvLeft <= 0) {
         clearInterval(prAdvTimer);
         room.timers = room.timers.filter(t => t !== prAdvTimer);
@@ -2680,6 +2738,12 @@ io.on('connection', (socket) => {
     room.ht.currentRound++;
 
     if (room.ht.currentRound > room.ht.totalRounds) {
+      io.to(pin).emit('ht-game-over');
+      room.gameState = 'lobby';
+      return;
+    }
+
+    if (room.players.length < 2) {
       io.to(pin).emit('ht-game-over');
       room.gameState = 'lobby';
       return;
@@ -3181,6 +3245,7 @@ io.on('connection', (socket) => {
       lastPollResult: mafia.lastPollResult,
       pendingPoll: mafia.pendingPoll ? { question: mafia.pendingPoll.question, options: mafia.pendingPoll.options } : null,
       canHostAdvanceDiscussion: playerId === room.hostSocketId && mafia.phase === 'discussion',
+      canHostSkipVote: playerId === room.hostSocketId && ['voting', 'revote'].includes(mafia.phase),
       canHostStartGame: playerId === room.hostSocketId && mafia.phase === 'setup' && room.players.length >= 4,
       canHostStartNight: playerId === room.hostSocketId && mafia.phase === 'day-result',
       canHostStartDiscussion: false,
@@ -3283,6 +3348,8 @@ io.on('connection', (socket) => {
     const room = rooms[pin];
     if (!room || !room.mafia) return;
     clearRoomTimers(room);
+    const lastDeath = room.mafia.deathLog[room.mafia.deathLog.length - 1] || null;
+    if (lastDeath) winner.lastDeath = lastDeath;
     room.mafia.winner = winner;
     room.mafia.phase = 'winner-splash';
     room.mafia.eventMessage = winner.text;
@@ -3492,17 +3559,24 @@ io.on('connection', (socket) => {
     room.mafia.pollHistory.push(pollResult);
     room.mafia.lastPollResult = room.mafia.hiddenPollsUntilEnd ? null : pollResult;
 
-    const win = getMafiaWin(room);
-    if (win) {
-      startMafiaWinnerSplash(pin, win);
-      return;
-    }
-
     room.mafia.eventMessage = killedPlayer
       ? `${killedPlayer.name} was killed overnight.\n${room.mafia.roles[targetId] === 'killer' ? 'They were a killer.' : 'They were not a killer.'}`
       : 'Nobody died last night.';
     room.mafia.eventTone = killedPlayer ? 'bad' : 'good';
-    startMafiaDiscussion(pin, { incrementDay: true, keepEventMessage: true });
+    room.mafia.phase = 'night-result';
+    emitMafiaState(pin);
+
+    const win = getMafiaWin(room);
+    const timer = setTimeout(() => {
+      room.timers = room.timers.filter((entry) => entry !== timer);
+      if (!room.mafia) return;
+      if (win) {
+        startMafiaWinnerSplash(pin, win);
+      } else {
+        startMafiaDiscussion(pin, { incrementDay: true, keepEventMessage: true });
+      }
+    }, win ? 4500 : 5000);
+    room.timers.push(timer);
   }
 
   function getMafiaWin(room) {
@@ -3988,6 +4062,30 @@ io.on('connection', (socket) => {
     io.to(pin).emit('debate-settings-updated', { debateSettings: room.pendingDebateSettings });
   });
 
+  socket.on('ht-show-rules', ({ exposureChance } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    const exposure = (typeof exposureChance === 'number')
+      ? Math.max(0, Math.min(1, exposureChance))
+      : (room.pendingHTSettings?.exposureChance ?? 0.10);
+    room.pendingHTSettings = { exposureChance: exposure };
+    room.gameState = 'hot-takes-setup';
+    io.to(pin).emit('game-started', { game: 'hot-takes-setup', exposureChance: exposure });
+    io.to(pin).emit('ht-show-rules', room.pendingHTSettings);
+  });
+
+  socket.on('ht-settings-preview', ({ exposureChance } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    const exposure = (typeof exposureChance === 'number')
+      ? Math.max(0, Math.min(1, exposureChance))
+      : 0.10;
+    room.pendingHTSettings = { exposureChance: exposure };
+    io.to(pin).emit('ht-settings-updated', room.pendingHTSettings);
+  });
+
   socket.on('auction-show-rules', ({ auctionSettings } = {}) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
@@ -4116,10 +4214,55 @@ io.on('connection', (socket) => {
 
     // Save for potential mid-game rejoin (90s window)
     if (socket.data.name) {
-      room.recentlyLeft[socket.data.name] = { oldSocketId: socket.id, leftAt: Date.now() };
+      const leftName = socket.data.name;
+      room.recentlyLeft[leftName] = { oldSocketId: socket.id, leftAt: Date.now(), wasHost: !!socket.data.isHost };
       setTimeout(() => {
-        if (rooms[pin]) delete rooms[pin].recentlyLeft[socket.data.name];
-      }, 90000);
+        const currentRoom = rooms[pin];
+        const entry = currentRoom?.recentlyLeft?.[leftName];
+        if (!currentRoom || !entry || entry.oldSocketId !== socket.id) return;
+        delete currentRoom.recentlyLeft[leftName];
+
+        if (currentRoom.players.length === 0) {
+          clearRoomTimers(currentRoom);
+          delete rooms[pin];
+          return;
+        }
+
+        if (currentRoom.gameState === 'debate' && currentRoom.debate) {
+          const r = currentRoom.debate.currentRound;
+          if (r && r.debaterA && r.debaterB) {
+            const isDebaterA = socket.id === r.debaterA.id;
+            const isDebaterB = socket.id === r.debaterB.id;
+            const isMidRound = ['speaking', 'catch-vote', 'voting'].includes(r.phase);
+            if ((isDebaterA || isDebaterB) && isMidRound) {
+              const winnerId = isDebaterA ? r.debaterB.id : r.debaterA.id;
+              endDebateRound(pin, winnerId, 'disconnect');
+            }
+          }
+          if (currentRoom.players.length < 3) {
+            clearRoomTimers(currentRoom);
+            currentRoom.gameState = 'lobby';
+            currentRoom.debate = null;
+            io.to(pin).emit('debate-stopped', { reason: 'A player left and there are not enough players to continue (need at least 3).' });
+            return;
+          }
+        }
+
+        if (currentRoom.gameState === 'auction' && currentRoom.auction) {
+          if (currentRoom.auction.highBidderId === socket.id && currentRoom.auction.phase === 'bidding') {
+            currentRoom.auction.highBidderId = null;
+            currentRoom.auction.currentBid = 0;
+            currentRoom.auction.message = 'High bidder left. Bidding resets.';
+            emitAuctionState(pin);
+          }
+          if (currentRoom.players.length < AUCTION_MIN_PLAYERS) {
+            clearRoomTimers(currentRoom);
+            currentRoom.gameState = 'lobby';
+            currentRoom.auction = null;
+            io.to(pin).emit('auction-stopped', { reason: `Bidder's Auction ended because there are fewer than ${AUCTION_MIN_PLAYERS} players.` });
+          }
+        }
+      }, REJOIN_GRACE_MS);
     }
 
     // Host is now a player too — remove from players list
@@ -4134,14 +4277,16 @@ io.on('connection', (socket) => {
         io.to(newHost.id).emit('you-are-now-host');
         io.to(pin).emit('host-changed', { newHostId: newHost.id });
       } else {
-        clearRoomTimers(room);
-        delete rooms[pin];
+        if (room.gameState === 'lobby') {
+          clearRoomTimers(room);
+          delete rooms[pin];
+        }
         return;
       }
     }
 
     // Debate disconnect handling
-    if (room.gameState === 'debate' && room.debate) {
+    if (!room.recentlyLeft?.[socket.data.name] && room.gameState === 'debate' && room.debate) {
       const r = room.debate.currentRound;
       if (r && r.debaterA && r.debaterB) {
         const isDebaterA = socket.id === r.debaterA.id;
@@ -4161,7 +4306,7 @@ io.on('connection', (socket) => {
       }
     }
 
-    if (room.gameState === 'auction' && room.auction) {
+    if (!room.recentlyLeft?.[socket.data.name] && room.gameState === 'auction' && room.auction) {
       if (room.auction.highBidderId === socket.id && room.auction.phase === 'bidding') {
         room.auction.highBidderId = null;
         room.auction.currentBid = 0;

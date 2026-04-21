@@ -117,6 +117,61 @@
       border: 2px solid #2d1f50; text-align: center;
     }
     .game-card:hover { transform: translateY(-6px); border-color: #cfb991; box-shadow: 0 10px 30px rgba(207,185,145,0.15); }
+    .game-card.wheel-game-card {
+      background:
+        radial-gradient(circle at 50% 0%, rgba(249,115,22,0.22), transparent 42%),
+        repeating-linear-gradient(90deg, rgba(194,65,12,0.26) 0 30px, rgba(20,8,14,0.3) 30px 60px),
+        #1b0b12;
+      border-color: #8f4a24;
+      box-shadow: inset 0 0 0 1px rgba(249,115,22,0.12);
+    }
+    .game-card.wheel-game-card:hover {
+      border-color: #fb923c;
+      box-shadow: 0 12px 32px rgba(154,52,18,0.30), 0 0 26px rgba(249,115,22,0.18);
+    }
+    .game-card.wheel-game-card .game-title { color: #fb923c; }
+    .game-card.wheel-game-card .game-desc { color: #f0a36d; }
+    .game-card.pr-game-card {
+      background:
+        linear-gradient(135deg, rgba(244, 234, 216, 0.08) 0 10%, transparent 10% 90%, rgba(183, 28, 28, 0.22) 90%),
+        repeating-linear-gradient(90deg, rgba(244, 234, 216, 0.045) 0 1px, transparent 1px 26px),
+        linear-gradient(90deg, #12090b 0 50%, #4b0c12 50% 100%);
+      border-color: #ff0000;
+      box-shadow: inset 0 0 0 1px rgba(244, 234, 216, 0.08);
+    }
+    .game-card.pr-game-card:hover {
+      border-color: #d4ad62;
+      box-shadow: 0 12px 32px rgba(15, 6, 8, 0.34), 0 0 26px rgba(183, 28, 28, 0.18);
+    }
+    .game-card.pr-game-card .game-title { color: #f0ddbb; }
+    .game-card.pr-game-card .game-desc { color: #d3aaa4; }
+    .game-card.ss-game-card { border-color: #38a169; }
+    .game-card.ss-game-card:hover {
+      border-color: #4ade80;
+      box-shadow: 0 12px 32px rgba(16,64,52,0.24), 0 0 22px rgba(74,222,128,0.14);
+    }
+    .game-card.debate-game-card {
+      background:
+        radial-gradient(ellipse 76% 42% at 50% -28%, rgba(232,224,207,0.13) 0 24%, transparent 25%),
+        radial-gradient(ellipse 44% 98% at 50% 14%, transparent 0 56%, rgba(185,155,98,0.12) 57%, transparent 59%),
+        conic-gradient(from 0deg at 25% -4%, transparent 0 128deg, rgba(232,224,207,0.09) 128deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.09) 230deg 232deg, transparent 232deg 360deg),
+        conic-gradient(from 0deg at 75% -4%, transparent 0 128deg, rgba(232,224,207,0.09) 128deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.09) 230deg 232deg, transparent 232deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(0,0,0,0.22) 9.38% 9.82%, rgba(232,224,207,0.05) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(0,0,0,0.17) 24.1% 24.45%, rgba(232,224,207,0.044) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(0,0,0,0.15) 39.5% 39.8%, rgba(232,224,207,0.04) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(232,224,207,0.04) 59.65% 59.9%, rgba(0,0,0,0.15) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(232,224,207,0.044) 74.95% 75.2%, rgba(0,0,0,0.17) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(232,224,207,0.05) 89.55% 89.8%, rgba(0,0,0,0.22) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.38) 0 7%, transparent 18% 82%, rgba(0,0,0,0.38) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(232,224,207,0.028) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(232,224,207,0.024) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(232,224,207,0.024) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(232,224,207,0.028) 87.3% 87.55%, transparent 87.55% 100%),
+        linear-gradient(180deg, #15161b, #090b10);
+      border-color: #343943;
+      box-shadow: inset 0 0 0 1px rgba(185,155,98,0.10);
+    }
+    .game-card.debate-game-card:hover {
+      border-color: #b99b62;
+      box-shadow: 0 12px 32px rgba(6,8,12,0.34), 0 0 26px rgba(185,155,98,0.16);
+    }
+    .game-card.debate-game-card .game-title { color: #e8e0cf; }
+    .game-card.debate-game-card .game-desc { color: #b8bcc5; }
+    @media (prefers-color-scheme: light) {
+      .game-card.pr-game-card { border-color: #e00; box-shadow: 0 0 0 1px #e00; }
+    }
     .game-icon { font-size: 3rem; margin-bottom: 1rem; }
     .game-title { font-size: 1.1rem; font-weight: 500; margin-bottom: 0.5rem; color: #ede9f8; }
     .game-desc { font-size: 0.85rem; color: #8b7aa8; line-height: 1.4; }
@@ -141,6 +196,110 @@
       border-top: 22px solid #cfb991;
       filter: drop-shadow(0 0 6px rgba(207,185,145,0.7));
       z-index: 2;
+    }
+
+    body.wheel-theme {
+      background: #12070d;
+      background-image:
+        radial-gradient(ellipse at 50% 18%, rgba(255, 187, 85, 0.16) 0%, transparent 34%),
+        radial-gradient(ellipse at 18% 78%, rgba(69, 163, 108, 0.12) 0%, transparent 40%),
+        repeating-linear-gradient(90deg, rgba(124, 21, 38, 0.28) 0 84px, rgba(22, 10, 17, 0.26) 84px 168px),
+        linear-gradient(180deg, #210812 0%, #0b0508 100%);
+    }
+    body.wheel-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        radial-gradient(circle at 50% 102%, rgba(85, 40, 14, 0.5), transparent 38%),
+        linear-gradient(90deg, rgba(255, 214, 130, 0.08) 0 1px, transparent 1px 110px);
+      opacity: 0.72;
+      z-index: 0;
+    }
+    body.wheel-theme h1,
+    body.wheel-theme .player-turn-name,
+    body.wheel-theme .sub-count-big {
+      color: #f6c56f;
+      text-shadow: 0 0 18px rgba(246, 197, 111, 0.38), 0 4px 0 rgba(60, 9, 20, 0.85);
+    }
+    body.wheel-theme h2,
+    body.wheel-theme .player-turn-label,
+    body.wheel-theme .sub-count-label,
+    body.wheel-theme .timer-text {
+      color: #c99a78;
+    }
+    body.wheel-theme input,
+    body.wheel-theme textarea {
+      background: rgba(20, 8, 14, 0.92);
+      border-color: #793018;
+      color: #fff3d8;
+    }
+    body.wheel-theme .btn {
+      background: #f6c56f;
+      color: #18070d;
+      box-shadow: 0 0 0 2px rgba(72, 21, 9, 0.65), 0 10px 24px rgba(0,0,0,0.28);
+    }
+    body.wheel-theme .btn:hover { background: #ffd98a; box-shadow: 0 0 24px rgba(246,197,111,0.34); }
+    body.wheel-theme .btn:disabled,
+    body.wheel-theme .btn:disabled:hover {
+      background: #2a1413;
+      color: #7f6248;
+      box-shadow: none;
+    }
+    body.wheel-theme .btn-ghost {
+      background: rgba(15, 6, 10, 0.58);
+      border-color: #6c8f56;
+      color: #bfe49f;
+    }
+    body.wheel-theme .btn-ghost:hover { background: rgba(53, 83, 43, 0.22); color: #e1ffbd; }
+    body.wheel-theme .timer-bar-wrap {
+      background: rgba(12, 5, 8, 0.84);
+      border-color: #793018;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.55);
+    }
+    body.wheel-theme .timer-bar { background: linear-gradient(90deg, #4d1a28, #a83f2f, #f6c56f); }
+    body.wheel-theme .wheel-canvas-wrap {
+      padding: 16px;
+      border-radius: 50%;
+      background:
+        radial-gradient(circle, rgba(255,255,255,0.04) 0 48%, transparent 49%),
+        conic-gradient(from 10deg, #401020, #17070d, #6b1a2d, #231007, #401020);
+      box-shadow:
+        0 0 0 2px #3b160d,
+        0 0 0 8px rgba(246, 197, 111, 0.12),
+        0 24px 70px rgba(0,0,0,0.48),
+        0 0 44px rgba(117, 28, 47, 0.45);
+    }
+    body.wheel-theme .wheel-canvas-wrap::after {
+      content: '';
+      position: absolute;
+      inset: 7px;
+      border-radius: 50%;
+      pointer-events: none;
+      background: repeating-conic-gradient(from 3deg, rgba(255, 220, 137, 0.95) 0 5deg, transparent 5deg 14deg);
+      -webkit-mask: radial-gradient(circle, transparent 0 88%, #000 89% 94%, transparent 95%);
+      mask: radial-gradient(circle, transparent 0 88%, #000 89% 94%, transparent 95%);
+      filter: drop-shadow(0 0 8px rgba(246,197,111,0.42));
+    }
+    body.wheel-theme .wheel-pointer {
+      top: -5px;
+      border-left-width: 18px;
+      border-right-width: 18px;
+      border-top: 30px solid #f6c56f;
+      filter: drop-shadow(0 0 10px rgba(246,197,111,0.84)) drop-shadow(0 4px 0 rgba(60,9,20,0.9));
+    }
+    body.wheel-theme .reveal-type {
+      color: #bfe49f;
+      text-shadow: 0 0 12px rgba(104, 167, 80, 0.36);
+    }
+    body.wheel-theme .reveal-text {
+      background: rgba(19, 8, 12, 0.78);
+      border: 1px solid #793018;
+      border-radius: 8px;
+      color: #fff3d8;
+      padding: 1.2rem 1.4rem;
+      box-shadow: 0 18px 42px rgba(0,0,0,0.32);
     }
 
     /* ── Reveal ── */
@@ -171,7 +330,115 @@
     .pr-score-name { font-size: 1.1rem; flex: 1; text-align: left; }
     .pr-score-pts { font-size: 1.2rem; font-weight: 500; color: #cfb991; }
 
-    /* ── Hot Takes ── */
+    body.pr-theme {
+      background: #090607;
+      background-image:
+        linear-gradient(135deg, rgba(244, 234, 216, 0.035) 0 10%, transparent 10% 90%, rgba(183, 28, 28, 0.12) 90%),
+        repeating-linear-gradient(90deg, rgba(244, 234, 216, 0.028) 0 1px, transparent 1px 40px),
+        radial-gradient(ellipse at 18% 14%, rgba(183, 28, 28, 0.15), transparent 34%),
+        radial-gradient(ellipse at 82% 78%, rgba(212, 173, 98, 0.08), transparent 36%),
+        linear-gradient(90deg, #090607 0 56%, #2b080c 56% 100%);
+    }
+    body.pr-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      background:
+        linear-gradient(90deg, transparent 0 55.55%, rgba(244,234,216,0.065) 55.55% 56%, transparent 56%),
+        linear-gradient(135deg, transparent 0 64%, rgba(212,173,98,0.075) 64% 64.5%, transparent 64.5%),
+        radial-gradient(circle at 50% 112%, rgba(0,0,0,0.46), transparent 44%);
+      opacity: 0.58;
+      z-index: 0;
+    }
+    body.pr-theme h1,
+    body.pr-theme .player-turn-name,
+    body.pr-theme .sub-count-big,
+    body.pr-theme .pr-score-pts {
+      color: #f0ddbb;
+      text-shadow: 0 0 20px rgba(183, 28, 28, 0.38), 0 0 28px rgba(212, 173, 98, 0.16);
+    }
+    body.pr-theme h2,
+    body.pr-theme .sub-count-label,
+    body.pr-theme .pr-photo-number,
+    body.pr-theme .pr-guess-count,
+    body.pr-theme .timer-text,
+    body.pr-theme .ht-advance-text {
+      color: #c9aaa4;
+    }
+    body.pr-theme .btn {
+      background: #b71c1c;
+      color: #fff7e8;
+      box-shadow: 0 0 0 2px rgba(10, 7, 8, 0.72), 0 14px 28px rgba(0,0,0,0.32);
+    }
+    body.pr-theme .btn:hover {
+      background: #d33131;
+      box-shadow: 0 0 24px rgba(183, 28, 28, 0.34), 0 14px 28px rgba(0,0,0,0.32);
+    }
+    body.pr-theme .btn-ghost {
+      background: rgba(8, 5, 6, 0.68);
+      border-color: #d4ad62;
+      color: #f0ddbb;
+    }
+    body.pr-theme .btn-ghost:hover {
+      background: rgba(183, 28, 28, 0.18);
+      color: #fff7e8;
+    }
+    body.pr-theme .timer-bar-wrap {
+      background: rgba(8, 5, 6, 0.82);
+      border-color: #6f151b;
+      box-shadow: inset 0 0 10px rgba(0,0,0,0.56);
+    }
+    body.pr-theme .timer-bar { background: #b71c1c; }
+    body.pr-theme .pr-photo-wrap img {
+      background: #f4ead8;
+      border: 12px solid #f4ead8;
+      border-bottom-width: 22px;
+      border-radius: 8px;
+      box-shadow: 0 18px 44px rgba(0,0,0,0.42), 0 0 0 2px #12090b, 0 0 0 3px rgba(212,173,98,0.42);
+    }
+    body.pr-theme .pr-photo-wrap-small img {
+      border-width: 8px;
+      border-bottom-width: 16px;
+    }
+    body.pr-theme .pr-guess-row {
+      min-height: 44px;
+      background: #12090b;
+      border: 1px solid #5a1418;
+      color: #fff7e8;
+    }
+    body.pr-theme .pr-guess-row.correct {
+      background: #211812;
+      border-color: #d4ad62;
+      border-left: 5px solid #d4ad62;
+    }
+    body.pr-theme .pr-guess-row.wrong {
+      background: #2a070b;
+      border-color: #b71c1c;
+      border-left: 5px solid #b71c1c;
+    }
+    body.pr-theme .pr-guess-row.no-guess {
+      background: #171012;
+      border-color: #332225;
+      color: #8f7772;
+    }
+    body.pr-theme .pr-point-badge {
+      background: #d4ad62;
+      color: #12090b;
+      border-radius: 8px;
+    }
+    body.pr-theme .pr-score-row {
+      background: rgba(18, 9, 11, 0.86);
+      border-color: #5a1418;
+      color: #fff7e8;
+    }
+    body.pr-theme .pr-score-row.first {
+      background: rgba(33, 24, 18, 0.94);
+      border-color: #d4ad62;
+      box-shadow: 0 0 22px rgba(212, 173, 98, 0.16);
+    }
+
+    /* ── Secret Superlatives (legacy ht ids) ── */
     .ht-round-label { font-size: 0.85rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1.5rem; }
     .ht-question { font-size: 2.2rem; font-weight: 500; max-width: 720px; margin: 0 auto 1.5rem; line-height: 1.3; color: #ede9f8; }
     .ht-vote-count { font-size: 1rem; color: #8b7aa8; margin-bottom: 0.5rem; }
@@ -242,6 +509,104 @@
     .debate-round-context-side { background:#1a1232; border:1px solid #2d1f50; border-radius:8px; padding:0.65rem; }
     .debate-round-context-name { font-size:1.45rem; font-weight:700; }
     .debate-round-context-meta { color:#8b7aa8; font-size:1.05rem; line-height:1.35; }
+    body.debate-theme {
+      background-color: #090b10;
+      background-image:
+        radial-gradient(ellipse 70% 34% at 50% -11%, rgba(232,224,207,0.105) 0 24%, transparent 25%),
+        radial-gradient(ellipse 33% 62% at 50% 18%, transparent 0 58%, rgba(185,155,98,0.08) 59%, transparent 60%),
+        conic-gradient(from 0deg at 25% 0%, transparent 0 129deg, rgba(232,224,207,0.05) 129deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.05) 230deg 231deg, transparent 231deg 360deg),
+        conic-gradient(from 0deg at 75% 0%, transparent 0 129deg, rgba(232,224,207,0.05) 129deg 130deg, transparent 130deg 230deg, rgba(232,224,207,0.05) 230deg 231deg, transparent 231deg 360deg),
+        linear-gradient(90deg, transparent 0 9%, rgba(0,0,0,0.16) 9.38% 9.82%, rgba(232,224,207,0.028) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(0,0,0,0.13) 24.1% 24.45%, rgba(232,224,207,0.026) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(0,0,0,0.12) 39.5% 39.8%, rgba(232,224,207,0.024) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(232,224,207,0.024) 59.65% 59.9%, rgba(0,0,0,0.12) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(232,224,207,0.026) 74.95% 75.2%, rgba(0,0,0,0.13) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(232,224,207,0.028) 89.55% 89.8%, rgba(0,0,0,0.16) 90.18% 90.62%, transparent 91% 100%),
+        linear-gradient(90deg, rgba(0,0,0,0.36) 0 7%, transparent 18% 82%, rgba(0,0,0,0.38) 93% 100%),
+        linear-gradient(90deg, transparent 0 12.45%, rgba(232,224,207,0.018) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(232,224,207,0.016) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(232,224,207,0.016) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(232,224,207,0.018) 87.3% 87.55%, transparent 87.55% 100%),
+        linear-gradient(180deg, #15161b 0%, #090b10 100%);
+      color: #f1eadc;
+    }
+    body.debate-theme::before {
+      content: '';
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+      background:
+        linear-gradient(90deg, transparent 0 13%, rgba(232,224,207,0.055) 13.2% 13.55%, transparent 13.75% 86.45%, rgba(232,224,207,0.045) 86.45% 86.8%, transparent 87%),
+        linear-gradient(90deg, transparent 0 18.8%, rgba(232,224,207,0.035) 18.8% 19.1%, transparent 19.1% 34.4%, rgba(232,224,207,0.03) 34.4% 34.7%, transparent 34.7% 65.3%, rgba(232,224,207,0.03) 65.3% 65.6%, transparent 65.6% 80.9%, rgba(232,224,207,0.035) 80.9% 81.2%, transparent 81.2% 100%);
+      opacity: 0.66;
+    }
+    body.debate-theme h1,
+    body.debate-theme .debate-phase-label,
+    body.debate-theme .debate-timer-big,
+    body.debate-theme .debate-score-pts,
+    body.debate-theme .debate-vote-tally {
+      color: #e8e0cf;
+      text-shadow: 0 0 24px rgba(185,155,98,0.18);
+    }
+    body.debate-theme .debate-topic,
+    body.debate-theme .debate-topic-text,
+    body.debate-theme .debate-side-topic,
+    body.debate-theme .debate-score-name,
+    body.debate-theme .debate-how-to-line {
+      color: #f1eadc;
+    }
+    body.debate-theme .debate-side-label,
+    body.debate-theme .debate-toggle-sub,
+    body.debate-theme .debate-round-context-meta,
+    body.debate-theme #db-picking-status,
+    body.debate-theme #db-speak-side-label,
+    body.debate-theme #db-speak-pre-msg,
+    body.debate-theme #db-catch-vote-count,
+    body.debate-theme #db-vote-count-label {
+      color: #b8bcc5 !important;
+    }
+    body.debate-theme .debate-score-row,
+    body.debate-theme .debate-toggle-row,
+    body.debate-theme .debate-how-to,
+    body.debate-theme .debate-round-context,
+    body.debate-theme .debate-round-context-side {
+      background:
+        linear-gradient(118deg, transparent 0 58%, rgba(232,224,207,0.035) 58.2%, transparent 58.8%),
+        rgba(15,18,25,0.88);
+      border-color: #343943;
+      border-radius: 8px;
+      color: #f1eadc;
+      box-shadow: inset 0 0 0 1px rgba(232,224,207,0.035);
+    }
+    body.debate-theme .debate-score-row.leader,
+    body.debate-theme .debate-score-row.just-scored {
+      border-color: #b99b62;
+      box-shadow: 0 0 0 2px rgba(185,155,98,0.28);
+    }
+    body.debate-theme .debate-how-to-title,
+    body.debate-theme .debate-round-context-title,
+    body.debate-theme .debate-vs {
+      color: #c7ab73;
+    }
+    body.debate-theme .debate-banned-chip {
+      background: rgba(185,155,98,0.12);
+      border-color: rgba(185,155,98,0.38);
+      color: #d5bf89;
+    }
+    body.debate-theme .debate-toggle { background: #343943; }
+    body.debate-theme .debate-toggle:checked { background: #b99b62; }
+    body.debate-theme .debate-number {
+      background: #0d0f15;
+      border-color: #343943;
+      color: #f1eadc;
+    }
+    body.debate-theme .timer-bar-wrap {
+      background: #242832;
+      border-color: #343943;
+    }
+    body.debate-theme .timer-bar { background: #b99b62; }
+    body.debate-theme .btn {
+      background: #b99b62;
+      color: #101217;
+    }
+    body.debate-theme .btn-ghost {
+      background: rgba(13,15,21,0.68);
+      border-color: #7d8490;
+      color: #e8e0cf;
+    }
 
     /* ── Photo guess screen — full-height layout ── */
     #screen-pr-guess {
@@ -394,22 +759,22 @@
   <div id="screen-game-select" class="screen">
     <h1>Pick a Game</h1>
     <div class="game-cards">
-      <div class="game-card" onclick="selectGame('questions-challenges')">
+      <div class="game-card wheel-game-card" onclick="selectGame('questions-challenges')">
         <div class="game-icon">🎡</div>
         <div class="game-title">The Wheel</div>
         <div class="game-desc">Submit prompts. The Wheel decides your fate.</div>
       </div>
-      <div class="game-card" onclick="showHTRulesScreen()">
-        <div class="game-icon">🔥</div>
+      <div class="game-card ss-game-card" onclick="showHTRulesScreen()">
+        <div class="game-icon">A+</div>
         <div class="game-title">Secret Superlatives</div>
         <div class="game-desc">Two players, one question. Everyone votes.</div>
       </div>
-      <div class="game-card" onclick="selectGame('photo-roulette')">
+      <div class="game-card pr-game-card" onclick="selectGame('photo-roulette')">
         <div class="game-icon">📸</div>
         <div class="game-title">Photo Roulette</div>
         <div class="game-desc">Upload photos. Can you guess who took what?</div>
       </div>
-      <div class="game-card" onclick="showDebateRulesScreen()">
+      <div class="game-card debate-game-card" onclick="showDebateRulesScreen()">
         <div class="game-icon">🗣️</div>
         <div class="game-title">Debate</div>
         <div class="game-desc">Two players argue opposite sides. Everyone votes.</div>
@@ -539,9 +904,9 @@
     <button class="btn btn-ghost btn-small" onclick="backToGameSelect()">Pick a Different Game</button>
   </div>
 
-  <!-- ── Screen 11: Hot Takes — Round ── -->
+  <!-- ── Screen 11: Secret Superlatives — Round ── -->
   <div id="screen-ht-round" class="screen">
-    <div class="ht-round-label">🔥 Round <span id="ht-round-num">1</span> of <span id="ht-round-total">20</span></div>
+    <div class="ht-round-label">Round <span id="ht-round-num">1</span> of <span id="ht-round-total">20</span></div>
     <div class="ht-question" id="ht-host-question"></div>
     <div class="timer-bar-wrap"><div class="timer-bar" id="ht-host-timer-bar"></div></div>
     <div class="ht-vote-count" id="ht-host-vote-count">0 votes in</div>
@@ -553,22 +918,22 @@
     <button class="btn btn-ghost btn-small" onclick="exitGame()">Exit Game</button>
   </div>
 
-  <!-- ── Screen 12: Hot Takes — Reveal ── -->
+  <!-- ── Screen 12: Secret Superlatives — Reveal ── -->
   <div id="screen-ht-reveal" class="screen">
-    <div class="ht-round-label">🔥 Round <span id="ht-rev-round-num">1</span> of <span id="ht-rev-round-total">20</span></div>
+    <div class="ht-round-label">Round <span id="ht-rev-round-num">1</span> of <span id="ht-rev-round-total">20</span></div>
     <div class="ht-question" id="ht-host-rev-question"></div>
     <div class="ht-result-wrap" id="ht-host-result-wrap"></div>
     <div class="ht-advance-text" id="ht-host-advance-text">Next round in 8...</div>
     <div id="ht-host-expose-section" style="display:none;">
-      <div class="ht-expose-label">🔍 votes exposed</div>
+      <div class="ht-expose-label">Votes exposed</div>
       <div id="ht-host-vote-list"></div>
     </div>
     <button class="btn btn-ghost btn-small" onclick="exitGame()" style="margin-top:0.75rem;">Exit Game</button>
   </div>
 
-  <!-- ── Screen 13: Hot Takes — Game Over ── -->
+  <!-- ── Screen 13: Secret Superlatives — Game Over ── -->
   <div id="screen-ht-over" class="screen">
-    <div class="over-emoji">🔥</div>
+    <div class="over-emoji">A+</div>
     <h1>Secret Superlatives</h1>
     <h2>All 20 rounds done!</h2>
     <br />
@@ -806,6 +1171,9 @@
     function showScreen(id) {
       document.querySelectorAll('.screen').forEach(s => s.classList.remove('active'));
       document.getElementById(id).classList.add('active');
+      document.body.classList.toggle('wheel-theme', id.startsWith('screen-qc'));
+      document.body.classList.toggle('pr-theme', id.startsWith('screen-pr'));
+      document.body.classList.toggle('debate-theme', id.startsWith('screen-debate'));
       if (id.endsWith('-over')) launchConfetti();
     }
 
@@ -1004,12 +1372,12 @@
       if (N === 0) {
         ctx.beginPath();
         ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-        ctx.fillStyle = '#0f0a20';
+        ctx.fillStyle = '#17070d';
         ctx.fill();
-        ctx.strokeStyle = '#2d1f50';
-        ctx.lineWidth = 3;
+        ctx.strokeStyle = '#793018';
+        ctx.lineWidth = 5;
         ctx.stroke();
-        ctx.fillStyle = '#8b7aa8';
+        ctx.fillStyle = '#f6c56f';
         ctx.font = '500 32px Jost, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
@@ -1018,6 +1386,8 @@
       }
 
       const sliceAngle = (2 * Math.PI) / N;
+      const questionColors = ['#5c1428', '#7a1e35', '#431020'];
+      const challengeColors = ['#1f4b32', '#385f28', '#6a3917'];
 
       for (let i = 0; i < N; i++) {
         const startA = angle + i * sliceAngle;
@@ -1028,9 +1398,9 @@
         ctx.moveTo(cx, cy);
         ctx.arc(cx, cy, r, startA, endA);
         ctx.closePath();
-        ctx.fillStyle = isQ ? '#1e1050' : '#2d1800';
+        ctx.fillStyle = isQ ? questionColors[i % questionColors.length] : challengeColors[i % challengeColors.length];
         ctx.fill();
-        ctx.strokeStyle = '#08041a';
+        ctx.strokeStyle = '#17070d';
         ctx.lineWidth = 2;
         ctx.stroke();
 
@@ -1042,26 +1412,45 @@
         ctx.save();
         ctx.translate(tx, ty);
         ctx.rotate(midA + Math.PI / 2);
-        ctx.font = N <= 10 ? 'bold 28px sans-serif' : 'bold 18px sans-serif';
+        ctx.font = N <= 10 ? 'bold 28px Jost, sans-serif' : 'bold 18px Jost, sans-serif';
         ctx.textAlign = 'center';
         ctx.textBaseline = 'middle';
-        ctx.fillStyle = isQ ? '#c084fc' : '#cfb991';
-        ctx.fillText(isQ ? '?' : '⚡', 0, 0);
+        ctx.fillStyle = isQ ? '#ffd98a' : '#bfe49f';
+        ctx.shadowColor = isQ ? 'rgba(255,217,138,0.45)' : 'rgba(191,228,159,0.45)';
+        ctx.shadowBlur = 8;
+        ctx.fillText(isQ ? '?' : '!', 0, 0);
         ctx.restore();
       }
 
       // Outer ring
       ctx.beginPath();
       ctx.arc(cx, cy, r, 0, 2 * Math.PI);
-      ctx.strokeStyle = '#cfb991';
-      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#f6c56f';
+      ctx.lineWidth = 6;
       ctx.stroke();
+
+      const bulbCount = 28;
+      for (let i = 0; i < bulbCount; i++) {
+        const a = angle * 0.08 + (i / bulbCount) * 2 * Math.PI;
+        const bx = cx + (r - 8) * Math.cos(a);
+        const by = cy + (r - 8) * Math.sin(a);
+        ctx.beginPath();
+        ctx.arc(bx, by, 3.2, 0, 2 * Math.PI);
+        ctx.fillStyle = i % 2 ? '#f6c56f' : '#fff1bd';
+        ctx.shadowColor = 'rgba(246,197,111,0.72)';
+        ctx.shadowBlur = 8;
+        ctx.fill();
+        ctx.shadowBlur = 0;
+      }
 
       // Center cap
       ctx.beginPath();
-      ctx.arc(cx, cy, 16, 0, 2 * Math.PI);
-      ctx.fillStyle = '#cfb991';
+      ctx.arc(cx, cy, 22, 0, 2 * Math.PI);
+      ctx.fillStyle = '#f6c56f';
       ctx.fill();
+      ctx.lineWidth = 4;
+      ctx.strokeStyle = '#6b1a2d';
+      ctx.stroke();
     }
 
     function setupSpinScreen(playerName, segments) {
@@ -1092,7 +1481,7 @@
     socket.on('qc-spin-result', ({ picked, isLast }) => {
       spinWheel(picked.id, picked.type, () => {
         document.getElementById('reveal-type').textContent =
-          picked.type === 'question' ? '❓  Question' : '⚡  Challenge';
+          picked.type === 'question' ? '? Question' : '! Challenge';
         document.getElementById('reveal-text').textContent = picked.text;
         document.getElementById('qc-next-btn').style.display = isLast ? 'none' : '';
         document.getElementById('qc-pre-spin').style.display  = 'none';
@@ -1163,6 +1552,7 @@
     });
 
     let prCurrentPhotoData = '';
+    let prCurrentRevealId = null;
 
     socket.on('pr-show-photo', ({ photoData, photoNumber, totalPhotos, nonPhotographerCount }) => {
       prCurrentPhotoData = photoData;
@@ -1171,6 +1561,9 @@
       document.getElementById('pr-guess-count').textContent = `0 / ${nonPhotographerCount} players have guessed`;
       document.getElementById('pr-timer-bar').style.width = '100%';
       document.getElementById('pr-timer-text').textContent = '30s remaining';
+      const advanceText = document.getElementById('pr-advance-text');
+      if (advanceText) advanceText.textContent = '';
+      prCurrentRevealId = null;
       showScreen('screen-pr-guess');
     });
 
@@ -1184,7 +1577,8 @@
         timeLeft > 0 ? `${timeLeft}s remaining` : "Time's up!";
     });
 
-    socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound, hasMorePhotos }) => {
+    socket.on('pr-reveal', ({ photographerName, guesses, pointsThisRound, hasMorePhotos, advanceTime = 5, revealId }) => {
+      prCurrentRevealId = revealId;
       document.getElementById('pr-photographer-name').textContent = photographerName + "'s photo!";
       document.getElementById('pr-reveal-photo').src = prCurrentPhotoData;
 
@@ -1217,6 +1611,10 @@
 
       document.getElementById('pr-next-btn').textContent =
         hasMorePhotos ? 'Next Photo →' : 'See Final Scores';
+      const advanceText = document.getElementById('pr-advance-text');
+      if (advanceText) {
+        advanceText.textContent = hasMorePhotos ? `Next photo in ${advanceTime}...` : `Final scores in ${advanceTime}...`;
+      }
       showScreen('screen-pr-reveal');
     });
 
@@ -1224,9 +1622,15 @@
 
     function prNextPhoto() { socket.emit('pr-next-photo'); }
 
-    socket.on('pr-advance-tick', ({ timeLeft }) => {
+    socket.on('pr-advance-tick', ({ timeLeft, revealId }) => {
+      if (revealId !== prCurrentRevealId) return;
       const el = document.getElementById('pr-advance-text');
-      if (el) el.textContent = timeLeft > 0 ? `Next photo in ${timeLeft}...` : 'Loading next photo...';
+      if (!el) return;
+      const nextBtn = document.getElementById('pr-next-btn');
+      const finalScores = nextBtn && nextBtn.textContent.includes('Final Scores');
+      el.textContent = timeLeft > 0
+        ? `${finalScores ? 'Final scores' : 'Next photo'} in ${timeLeft}...`
+        : (finalScores ? 'Loading final scores...' : 'Loading next photo...');
     });
 
     socket.on('pr-game-over', ({ scores }) => {
@@ -1242,7 +1646,7 @@
       showScreen('screen-pr-over');
     });
 
-    // ── Hot Takes ─────────────────────────────────────────────────
+    // ── Secret Superlatives (legacy ht events) ────────────────────
     let htHostPlayerColors = {};
     let htHostRoundNum = 0;
     let htHostRoundTotal = 20;
