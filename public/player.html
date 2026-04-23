@@ -114,6 +114,7 @@
       transition: border-color 0.2s, box-shadow 0.2s;
     }
     input:focus { border-color: #7c3aed; box-shadow: 0 0 12px rgba(124,58,237,0.22); }
+    input::placeholder { color: #6f6286; opacity: 0.72; }
     input#pin-input { letter-spacing: 0.4rem; font-size: 1.6rem; font-family: 'Cinzel', serif; }
 
     textarea {
@@ -236,6 +237,23 @@
     }
     .game-card:active { transform: scale(0.98); border-color: #cfb991; box-shadow: 0 6px 20px rgba(207,185,145,0.15); }
     .game-card.disabled { opacity: 0.4; cursor: not-allowed; }
+    body:not(.host-mode) #screen-game-select .game-card {
+      cursor: default;
+    }
+    body:not(.host-mode) #screen-game-select .game-card:active {
+      transform: none;
+      box-shadow: none;
+    }
+    .game-menu-actions {
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      gap: 0.6rem;
+      flex-wrap: wrap;
+    }
+    .game-menu-actions .btn-ghost {
+      margin-top: 0;
+    }
     .game-card.wheel-game-card {
       background:
         radial-gradient(circle at 8% 50%, rgba(249,115,22,0.20), transparent 40%),
@@ -248,8 +266,8 @@
       border-color: #fb923c;
       box-shadow: 0 8px 24px rgba(154,52,18,0.30), 0 0 22px rgba(249,115,22,0.18);
     }
-    .game-card.wheel-game-card .game-title { color: #fb923c; }
-    .game-card.wheel-game-card .game-desc { color: #f0a36d; }
+    .game-card.wheel-game-card .game-title { color: #fffaf0; }
+    .game-card.wheel-game-card .game-desc { color: #f3eadc; }
     .game-card.et-game-card {
       background:
         radial-gradient(circle at 12% 48%, rgba(236,72,153,0.18), transparent 38%),
@@ -313,6 +331,22 @@
     }
     .game-card.pr-game-card .game-title { color: #f0ddbb; }
     .game-card.pr-game-card .game-desc { color: #d3aaa4; }
+    .game-card.draft-game-card {
+      background:
+        linear-gradient(90deg, transparent 0 18px, rgba(255,138,61,0.18) 18px 19px, transparent 19px 100%),
+        linear-gradient(90deg, rgba(45,212,191,0.08) 0 1px, transparent 1px 28px),
+        linear-gradient(0deg, rgba(45,212,191,0.06) 0 1px, transparent 1px 28px),
+        linear-gradient(135deg, #061719, #0e2629);
+      background-size: 100% 100%, 28px 28px, 28px 28px, auto;
+      border-color: #24565c;
+      box-shadow: inset 0 0 0 1px rgba(45,212,191,0.12);
+    }
+    .game-card.draft-game-card:active {
+      border-color: #ff8a3d;
+      box-shadow: 0 8px 24px rgba(6,23,25,0.34), 0 0 20px rgba(45,212,191,0.16);
+    }
+    .game-card.draft-game-card .game-title { color: #ff8a3d; }
+    .game-card.draft-game-card .game-desc { color: #8ee9de; }
     .game-card.debate-game-card {
       background:
         radial-gradient(ellipse 76% 42% at 50% -28%, rgba(232,224,207,0.13) 0 24%, transparent 25%),
@@ -348,7 +382,8 @@
     }
     .game-card.auction-game-card .game-title { color: #ffd88a; }
     .game-card.auction-game-card .game-desc { color: #cbb8e8; }
-    .game-icon { font-size: 2rem; flex-shrink: 0; }
+    .game-icon { width: 2.65rem; min-width: 2.65rem; height: 2.65rem; display:flex; align-items:center; justify-content:center; font-size: 2rem; line-height:1; flex-shrink: 0; text-align:center; }
+    .game-card > div:last-child { min-width:0; }
     .game-title { font-size: 1rem; font-weight: 500; color: #ede9f8; }
     .game-desc { font-size: 0.8rem; color: #8b7aa8; margin-top: 0.15rem; line-height: 1.3; }
 
@@ -641,25 +676,28 @@
         linear-gradient(135deg, rgba(183, 28, 28, 0.08) 0 10%, transparent 10% 90%, rgba(23, 18, 19, 0.10) 90%),
         repeating-linear-gradient(90deg, rgba(23,18,19,0.055) 0 1px, transparent 1px 26px),
         linear-gradient(90deg, #fff7e8 0 50%, #f3dede 50% 100%);
-      border-color: #d4b7a0;
+      border-color: #c94a3f;
+      box-shadow:
+        inset 0 0 0 1px rgba(201, 74, 63, 0.16),
+        0 10px 28px rgba(153, 27, 27, 0.10);
     }
     body.light-mode .game-card.pr-game-card .game-title { color: #991b1b; }
     body.light-mode .game-card.pr-game-card .game-desc { color: #725551; }
     body.light-mode .game-card.debate-game-card {
       background:
-        radial-gradient(ellipse 76% 42% at 50% -28%, rgba(58,66,78,0.085) 0 24%, transparent 25%),
-        radial-gradient(ellipse 44% 98% at 50% 14%, transparent 0 56%, rgba(153,119,58,0.14) 57%, transparent 59%),
+        radial-gradient(ellipse 76% 42% at 50% -28%, rgba(154,119,66,0.18) 0 24%, transparent 25%),
+        radial-gradient(ellipse 44% 98% at 50% 14%, transparent 0 56%, rgba(122,96,45,0.18) 57%, transparent 59%),
         conic-gradient(from 0deg at 25% -4%, transparent 0 128deg, rgba(87,94,107,0.06) 128deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.06) 230deg 232deg, transparent 232deg 360deg),
         conic-gradient(from 0deg at 75% -4%, transparent 0 128deg, rgba(87,94,107,0.06) 128deg 130deg, transparent 130deg 230deg, rgba(87,94,107,0.06) 230deg 232deg, transparent 232deg 360deg),
         linear-gradient(90deg, transparent 0 9%, rgba(82,76,66,0.09) 9.38% 9.82%, rgba(87,94,107,0.04) 10.2% 10.45%, transparent 10.45% 23.75%, rgba(82,76,66,0.075) 24.1% 24.45%, rgba(87,94,107,0.036) 24.8% 25.05%, transparent 25.05% 39.2%, rgba(82,76,66,0.06) 39.5% 39.8%, rgba(87,94,107,0.032) 40.1% 40.35%, transparent 40.35% 59.65%, rgba(87,94,107,0.032) 59.65% 59.9%, rgba(82,76,66,0.06) 60.2% 60.5%, transparent 60.8% 74.95%, rgba(87,94,107,0.036) 74.95% 75.2%, rgba(82,76,66,0.075) 75.55% 75.9%, transparent 76.25% 89.55%, rgba(87,94,107,0.04) 89.55% 89.8%, rgba(82,76,66,0.09) 90.18% 90.62%, transparent 91% 100%),
         linear-gradient(90deg, rgba(105,93,76,0.12) 0 7%, transparent 18% 82%, rgba(105,93,76,0.13) 93% 100%),
         linear-gradient(90deg, transparent 0 12.45%, rgba(87,94,107,0.026) 12.45% 12.7%, transparent 12.7% 31.1%, rgba(87,94,107,0.022) 31.1% 31.35%, transparent 31.35% 68.65%, rgba(87,94,107,0.022) 68.65% 68.9%, transparent 68.9% 87.3%, rgba(87,94,107,0.026) 87.3% 87.55%, transparent 87.55% 100%),
         linear-gradient(180deg, #fbfaf6, #ece7dc);
-      border-color: #c8c1b3;
-      box-shadow: inset 0 0 0 1px rgba(255,255,255,0.56);
+      border-color: #9a7742;
+      box-shadow: inset 0 0 0 1px rgba(154,119,66,0.18), 0 10px 28px rgba(122,96,45,0.11);
     }
     body.light-mode .game-card.debate-game-card .game-title { color: #7c602d; }
-    body.light-mode .game-card.debate-game-card .game-desc { color: #565d67; }
+    body.light-mode .game-card.debate-game-card .game-desc { color: #5f533f; }
     body.light-mode .game-card.auction-game-card {
       background:
         radial-gradient(circle at 16% 18%, rgba(154,43,75,0.12) 0 8%, transparent 9%),
@@ -2147,6 +2185,221 @@
       color: #b8bcc5 !important;
     }
 
+    /* Draft Board */
+    .draft-screen { max-width: 560px; }
+    body.draft-theme .draft-screen > h1 { color:#ff8a3d; font-family:'Cinzel',serif; letter-spacing:0.02em; text-shadow:0 0 18px rgba(255,138,61,0.14); }
+    body.draft-theme .draft-screen > h2 { color:#8ee9de; font-weight:800; }
+    body.draft-theme {
+      background-color: #061719;
+      background-image:
+        linear-gradient(90deg, transparent 0 18px, rgba(255,138,61,0.09) 18px 19px, transparent 19px 100%),
+        linear-gradient(90deg, rgba(45,212,191,0.055) 0 1px, transparent 1px 32px),
+        linear-gradient(0deg, rgba(45,212,191,0.05) 0 1px, transparent 1px 32px),
+        linear-gradient(90deg, rgba(45,212,191,0.10) 0 1px, transparent 1px 128px),
+        linear-gradient(0deg, rgba(36,86,92,0.34) 0 2px, transparent 2px 128px),
+        radial-gradient(circle at 32px 32px, rgba(255,138,61,0.11) 0 1px, transparent 1.5px),
+        #061719;
+      background-size: 100% 100%, 32px 32px, 32px 32px, 128px 128px, 128px 128px, 32px 32px;
+      color:#f2fffd;
+    }
+    .draft-panel { background:#0e2629; border:1.5px solid #24565c; border-radius:8px; padding:0.95rem; margin:0.8rem 0; text-align:left; box-shadow:inset 0 0 0 1px rgba(45,212,191,0.04); position:relative; }
+    .draft-panel.locked {
+      border-color:#7a4a2a;
+      box-shadow: inset 0 0 0 1px rgba(255,138,61,0.16), 0 0 0 2px rgba(255,138,61,0.08);
+    }
+    .draft-panel.locked::before {
+      content:'HOST SETTINGS';
+      display:block;
+      width:max-content;
+      margin:0 0 0.65rem auto;
+      padding:0.18rem 0.55rem;
+      border:1px solid #ff8a3d;
+      border-radius:999px;
+      color:#ffd7bf;
+      background:#231d18;
+      font-size:0.66rem;
+      font-weight:900;
+      letter-spacing:0.12em;
+    }
+    .draft-panel.locked input,
+    .draft-panel.locked .draft-category-btn,
+    .draft-panel.locked .draft-metric-btn,
+    .draft-panel.locked .debate-toggle-wrap {
+      opacity:0.48;
+      cursor:not-allowed;
+    }
+    .draft-panel.locked #draft-topic-toggle,
+    .draft-panel.locked #draft-metric-toggle {
+      opacity:1;
+      cursor:pointer;
+    }
+    .draft-panel.locked .debate-setup-note {
+      display:block;
+      margin-top:0.85rem;
+      padding:0.55rem 0.7rem;
+      border:1px solid rgba(255,138,61,0.45);
+      border-radius:8px;
+      color:#ffd7bf;
+      background:rgba(35,29,24,0.82);
+      font-weight:800;
+      text-align:center;
+    }
+    .draft-kicker { color:#8ab8b4; font-size:0.74rem; text-transform:uppercase; letter-spacing:0.16em; margin-bottom:0.25rem; font-weight:700; }
+    .draft-category { font-family:'Cinzel',serif; color:#8ee9de; font-size:1.45rem; font-weight:900; line-height:1.1; text-align:center; margin:0.4rem 0 0.65rem; text-shadow:0 0 18px rgba(45,212,191,0.12); }
+    .draft-metric-display { display:inline-flex; align-items:center; justify-content:center; margin:0.15rem auto 0.25rem; padding:0.4rem 0.85rem; border:1.5px solid #ff8a3d; border-radius:999px; color:#ffd7bf; background:#231d18; font-weight:900; box-shadow:inset 0 0 0 1px rgba(255,138,61,0.08); }
+    body.draft-theme .btn { background:#ff8a3d; color:#082426; border:1px solid #ffad7a; font-weight:900; box-shadow:0 8px 22px rgba(255,138,61,0.16), inset 0 -2px 0 rgba(8,36,38,0.18); }
+    body.draft-theme .btn:active { background:#e66f22; box-shadow:0 4px 14px rgba(255,138,61,0.12), inset 0 -1px 0 rgba(8,36,38,0.18); }
+    body.draft-theme .btn-ghost { background:#123338; border-color:#2dd4bf; color:#c7fff6; box-shadow:inset 0 0 0 1px rgba(45,212,191,0.08); }
+    body.draft-theme .btn-ghost:active { background:#0e2629; border-color:#ff8a3d; color:#ffd7bf; }
+    body.draft-theme .btn:disabled,
+    body.draft-theme .btn-ghost:disabled,
+    body.draft-theme .btn-ghost:disabled:active { background:#0e2629; border-color:#24565c; color:#5f8584; box-shadow:none; opacity:0.62; cursor:not-allowed; }
+    .draft-topic-toggle-wrap { text-align:center; margin:0.2rem 0 0.45rem; }
+    #draft-topic-toggle,
+    #draft-metric-toggle { border-style:dashed; border-color:#ff8a3d; color:#ffd7bf; background:#123338; }
+    .draft-category-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.45rem; margin:0.7rem 0; }
+    .draft-category-grid:not(.expanded) .draft-category-btn:nth-child(n+7) { display:none; }
+    .draft-category-btn { margin:0; padding:0.55rem 0.6rem; border:1px solid #24565c; border-radius:999px; background:#123338; color:#d9fffb; font:inherit; font-size:0.85rem; cursor:pointer; }
+    .draft-category-btn.active { background:#2a3226; border-color:#ff8a3d; color:#ffd4bd; box-shadow:0 0 0 2px rgba(255,138,61,0.16); }
+    .draft-category-btn.utility { border:1.5px dashed #2dd4bf; color:#c7fff6; background:#082426; font-weight:800; letter-spacing:0.01em; }
+    .draft-category-btn.utility::before { content:'+'; margin-right:0.32rem; color:#ff8a3d; font-family:'Cinzel',serif; font-weight:900; }
+    .draft-metric-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.45rem; margin:0.7rem 0; }
+    .draft-metric-grid:not(.expanded) .draft-metric-btn:nth-child(n+5) { display:none; }
+    .draft-metric-btn { margin:0; padding:0.55rem 0.6rem; border:1px solid #24565c; border-radius:999px; background:#123338; color:#d9fffb; font:inherit; font-size:0.85rem; cursor:pointer; }
+    .draft-metric-btn.active { background:#0d3d3d; border-color:#2dd4bf; color:#c7fff6; box-shadow:0 0 0 2px rgba(45,212,191,0.16); }
+    .draft-control-row { display:flex; align-items:center; justify-content:space-between; gap:0.8rem; padding:0.72rem 0; border-top:1px solid rgba(36,86,92,0.75); }
+    .draft-count-input { width:78px; margin:0; font-family:'Cinzel',serif; }
+    .draft-board-grid { display:grid; grid-template-columns:1fr; gap:0.62rem; }
+    .draft-team-card { background:#123338; border:1.5px solid #24565c; border-radius:8px; padding:0.78rem; position:relative; overflow:hidden; animation:draft-card-rise 0.22s ease both; }
+    .draft-team-card::before { content:''; position:absolute; left:0; right:0; top:0; height:3px; background:#2dd4bf; opacity:0.28; }
+    .draft-team-card.active { border-color:#ff8a3d; box-shadow:0 0 0 2px rgba(255,138,61,0.18), 0 14px 32px rgba(0,0,0,0.20); }
+    .draft-team-card.active::before { background:#ff8a3d; opacity:1; }
+    .draft-team-head { display:flex; justify-content:space-between; align-items:center; gap:0.55rem; margin-bottom:0.5rem; }
+    .draft-team-name { font-weight:900; font-size:1.05rem; }
+    .draft-team-score { color:#ff8a3d; font-family:'Cinzel',serif; font-weight:900; }
+    .draft-pick-list { display:flex; flex-direction:column; gap:0.35rem; }
+    .draft-pick { background:#0e2629; border:1px solid #24565c; border-radius:8px; padding:0.48rem 0.6rem; color:#f2fffd; display:grid; grid-template-columns:auto 1fr; gap:0.55rem; align-items:center; min-height:40px; animation:draft-pick-stamp 0.18s ease both; }
+    .draft-pick-num { font-family:'Cinzel',serif; font-size:0.72rem; color:#ff8a3d; border:1px solid rgba(255,138,61,0.5); border-radius:999px; padding:0.08rem 0.35rem; min-width:2.25rem; text-align:center; font-style:normal; }
+    .draft-pick-text { min-width:0; overflow-wrap:anywhere; }
+    .draft-pick.empty { color:#6f9693; font-style:italic; }
+    .draft-turn-banner { background:#231d18; border:1.5px solid #ff8a3d; border-radius:8px; padding:0.95rem; margin:0.85rem 0; color:#ffd7bf; text-align:center; box-shadow:inset 0 0 0 1px rgba(255,138,61,0.08); position:relative; overflow:hidden; animation:draft-live-pulse 1.7s ease-in-out infinite; }
+    .draft-turn-name { display:block; font-family:'Cinzel',serif; font-size:1.55rem; line-height:1.1; margin-top:0.25rem; }
+    .draft-turn-meta { color:#8ab8b4; font-size:0.82rem; margin-top:0.2rem; }
+    .draft-up-next { display:flex; gap:0.5rem; flex-wrap:wrap; justify-content:center; margin:0.65rem 0 0.9rem; }
+    .draft-up-next-chip { border:1.5px solid #24565c; background:#123338; border-radius:999px; padding:0.38rem 0.78rem; font-size:0.92rem; font-weight:800; color:#d9fffb; display:inline-flex; gap:0.45rem; align-items:center; }
+    .draft-up-next-num { color:#082426; background:#ff8a3d; border-radius:999px; font-family:'Cinzel',serif; font-size:0.78rem; font-weight:900; padding:0.08rem 0.38rem; min-width:2.05rem; text-align:center; }
+    .draft-submit-row { display:grid; grid-template-columns:1fr auto; gap:0.55rem; align-items:start; }
+    .draft-submit-row input { margin:0; }
+    .draft-submit-row .btn { margin:0; width:auto; min-width:92px; }
+    .draft-rank-row { display:grid; grid-template-columns:78px 1fr; gap:0.55rem; align-items:center; margin:0.5rem 0; }
+    .draft-rank-row select { width:100%; padding:0.75rem; border-radius:8px; border:2px solid #24565c; background:#123338; color:#f2fffd; font-family:'Jost',sans-serif; }
+    .draft-result-card { background:#123338; border:1.5px solid #24565c; border-radius:8px; padding:0.8rem; margin:0.6rem 0; text-align:left; }
+    .draft-result-card.award { border-color:#ff8a3d; box-shadow:inset 0 0 0 1px rgba(255,138,61,0.09); }
+    .draft-result-title { color:#ff8a3d; font-family:'Cinzel',serif; font-weight:900; margin-bottom:0.25rem; }
+    .draft-vote-grid { display:grid; grid-template-columns:1fr; gap:0.55rem; margin-top:0.7rem; }
+    .draft-vote-btn { margin:0; background:#123338; border:1.5px solid #24565c; color:#f2fffd; text-align:left; }
+    .draft-coach-rock-wrap { display:flex; align-items:flex-start; gap:0.75rem; }
+    .draft-coach-rock { width:58px; height:46px; border-radius:47% 53% 42% 58%; background:linear-gradient(145deg,#8b8f95,#4b5563); border:2px solid #1f2937; box-shadow:inset -8px -8px 12px rgba(0,0,0,0.22), inset 5px 5px 10px rgba(255,255,255,0.18); flex-shrink:0; position:relative; }
+    .draft-coach-rock::before,
+    .draft-coach-rock::after { content:''; position:absolute; top:16px; width:6px; height:6px; border-radius:50%; background:#101827; }
+    .draft-coach-rock::before { left:18px; }
+    .draft-coach-rock::after { right:18px; }
+    .draft-coach-bubble { position:relative; background:#f2fffd; color:#082426; border:2px solid #ff8a3d; border-radius:14px; padding:0.72rem 0.85rem; flex:1; }
+    .draft-coach-live { color:#087f7a; font-size:0.68rem; text-transform:uppercase; letter-spacing:0.13em; font-weight:900; margin-bottom:0.25rem; }
+    .draft-coach-bubble::before { content:''; position:absolute; left:-10px; top:18px; width:16px; height:16px; background:#f2fffd; border-left:2px solid #ff8a3d; border-bottom:2px solid #ff8a3d; transform:rotate(45deg); }
+    .draft-message { color:#ffd7bf; min-height:1.2rem; margin-top:0.55rem; text-align:center; }
+    .draft-waiting { color:#8ab8b4; margin:0.65rem 0; }
+    @keyframes draft-pick-stamp {
+      from { opacity:0; transform:translateY(4px) scale(0.985); }
+      to { opacity:1; transform:translateY(0) scale(1); }
+    }
+    @keyframes draft-card-rise {
+      from { opacity:0; transform:translateY(5px); }
+      to { opacity:1; transform:translateY(0); }
+    }
+    @keyframes draft-live-pulse {
+      0%, 100% { box-shadow:inset 0 0 0 1px rgba(255,138,61,0.08), 0 0 0 rgba(255,138,61,0); }
+      50% { box-shadow:inset 0 0 0 1px rgba(255,138,61,0.14), 0 0 18px rgba(255,138,61,0.13); }
+    }
+    @media (prefers-reduced-motion: reduce) {
+      .draft-team-card,
+      .draft-pick,
+      .draft-turn-banner { animation:none; }
+    }
+    body.light-mode .game-card.draft-game-card {
+      background:
+        linear-gradient(90deg, transparent 0 18px, rgba(194,78,18,0.16) 18px 19px, transparent 19px 100%),
+        linear-gradient(90deg, rgba(8,127,122,0.08) 0 1px, transparent 1px 28px),
+        linear-gradient(0deg, rgba(8,127,122,0.06) 0 1px, transparent 1px 28px),
+        linear-gradient(135deg, #ffffff, #e8f7f7);
+      background-size: 100% 100%, 28px 28px, 28px 28px, auto;
+      border-color:#087f7a;
+      box-shadow:inset 0 0 0 1px rgba(8,127,122,0.10);
+    }
+    body.light-mode .game-card.draft-game-card .game-title { color:#c24e12; }
+    body.light-mode .game-card.draft-game-card .game-desc { color:#085f5b; }
+    body.light-mode.draft-theme {
+      background-color:#e8f7f7;
+      background-image:
+        linear-gradient(90deg, transparent 0 18px, rgba(194,78,18,0.16) 18px 19px, transparent 19px 100%),
+        linear-gradient(90deg, rgba(8,127,122,0.075) 0 1px, transparent 1px 32px),
+        linear-gradient(0deg, rgba(8,127,122,0.06) 0 1px, transparent 1px 32px),
+        linear-gradient(90deg, rgba(8,127,122,0.12) 0 1px, transparent 1px 128px),
+        linear-gradient(0deg, rgba(169,214,212,0.62) 0 2px, transparent 2px 128px),
+        radial-gradient(circle at 32px 32px, rgba(194,78,18,0.16) 0 1px, transparent 1.5px),
+        #e8f7f7;
+      background-size: 100% 100%, 32px 32px, 32px 32px, 128px 128px, 128px 128px, 32px 32px;
+      color:#082426;
+    }
+    body.light-mode.draft-theme .draft-screen > h1 { color:#c24e12; text-shadow:none; }
+    body.light-mode.draft-theme .draft-screen > h2 { color:#087f7a; }
+    body.light-mode.draft-theme .draft-panel,
+    body.light-mode.draft-theme .draft-team-card,
+    body.light-mode.draft-theme .draft-result-card { background:#f2fbfb; border-color:#a9d6d4; color:#082426; }
+    body.light-mode.draft-theme .draft-panel.locked {
+      border-color:#c24e12;
+      box-shadow:inset 0 0 0 1px rgba(194,78,18,0.18), 0 0 0 2px rgba(194,78,18,0.10);
+    }
+    body.light-mode.draft-theme .draft-panel.locked::before {
+      background:#fff2ea;
+      border-color:#c24e12;
+      color:#7b2f09;
+    }
+    body.light-mode.draft-theme .draft-panel.locked .debate-setup-note {
+      background:#fff2ea;
+      border-color:rgba(194,78,18,0.42);
+      color:#7b2f09;
+    }
+    body.light-mode.draft-theme .draft-pick { background:#ffffff; border-color:#a9d6d4; color:#082426; }
+    body.light-mode.draft-theme .draft-pick.empty,
+    body.light-mode.draft-theme .draft-kicker,
+    body.light-mode.draft-theme .draft-waiting { color:#587c7d; }
+    body.light-mode.draft-theme .draft-category { color:#087f7a; text-shadow:none; }
+    body.light-mode.draft-theme .draft-team-score,
+    body.light-mode.draft-theme .draft-result-title { color:#c24e12; text-shadow:none; }
+    body.light-mode.draft-theme .draft-metric-display { background:#fff2ea; border-color:#c24e12; color:#7b2f09; }
+    body.light-mode.draft-theme .btn { background:#c24e12; border-color:#a33f0e; color:#fff8f0; box-shadow:0 8px 20px rgba(194,78,18,0.14), inset 0 -2px 0 rgba(123,47,9,0.18); }
+    body.light-mode.draft-theme .btn:active { background:#a33f0e; }
+    body.light-mode.draft-theme .btn-ghost { background:#e1f5f3; border-color:#087f7a; color:#064f4d; box-shadow:inset 0 0 0 1px rgba(8,127,122,0.10); }
+    body.light-mode.draft-theme .btn-ghost:active { background:#fff2ea; border-color:#c24e12; color:#7b2f09; }
+    body.light-mode.draft-theme .btn:disabled,
+    body.light-mode.draft-theme .btn-ghost:disabled,
+    body.light-mode.draft-theme .btn-ghost:disabled:active { background:#d7e8e7; border-color:#a9d6d4; color:#78999a; box-shadow:none; opacity:0.7; cursor:not-allowed; }
+    body.light-mode.draft-theme .draft-category-btn,
+    body.light-mode.draft-theme .draft-metric-btn,
+    body.light-mode.draft-theme .draft-vote-btn,
+    body.light-mode.draft-theme .draft-rank-row select { background:#fff; border-color:#a9d6d4; color:#082426; }
+    body.light-mode.draft-theme .draft-category-btn.active { background:#ffe9dc; border-color:#c24e12; color:#7b2f09; box-shadow:0 0 0 3px rgba(194,78,18,0.18); }
+    body.light-mode.draft-theme .draft-category-btn.utility { background:#e1f5f3; border-color:#087f7a; color:#064f4d; box-shadow:none; }
+    body.light-mode.draft-theme .draft-metric-btn.active { background:#dff7f4; border-color:#087f7a; color:#085f5b; box-shadow:0 0 0 3px rgba(8,127,122,0.18); }
+    body.light-mode.draft-theme #draft-topic-toggle,
+    body.light-mode.draft-theme #draft-metric-toggle { background:#fff2ea; border-color:#c24e12; color:#7b2f09; box-shadow:0 0 0 2px rgba(194,78,18,0.12); }
+    body.light-mode.draft-theme .draft-turn-banner { background:#fff2ea; color:#7b2f09; border-color:#c24e12; }
+    body.light-mode.draft-theme .draft-coach-bubble { background:#ffffff; color:#082426; border-color:#c24e12; }
+    body.light-mode.draft-theme .draft-coach-bubble::before { background:#ffffff; border-left-color:#c24e12; border-bottom-color:#c24e12; }
+    body.light-mode.draft-theme .draft-pick-num { color:#c24e12; font-weight:900; }
+    body.light-mode.draft-theme .draft-up-next-num { background:#7b2f09; color:#fff8f0; font-weight:900; }
+
     /* ── Auction ── */
     .auction-screen { max-width: 520px; }
     body.display-mode .auction-screen { max-width: 1120px; }
@@ -3284,12 +3537,12 @@
     body.light-mode .confirm-modal-title { color: #8b6914; text-shadow: none; }
 
     body.wheel-theme {
-      background: #12070d;
+      background: #120b06;
       background-image:
         radial-gradient(ellipse at 50% 14%, rgba(255, 187, 85, 0.16) 0%, transparent 34%),
-        radial-gradient(ellipse at 18% 78%, rgba(69, 163, 108, 0.12) 0%, transparent 40%),
-        repeating-linear-gradient(90deg, rgba(124, 21, 38, 0.28) 0 72px, rgba(22, 10, 17, 0.26) 72px 144px),
-        linear-gradient(180deg, #210812 0%, #0b0508 100%);
+        radial-gradient(ellipse at 18% 78%, rgba(20, 184, 166, 0.10) 0%, transparent 40%),
+        repeating-linear-gradient(90deg, rgba(249, 115, 22, 0.20) 0 72px, rgba(22, 12, 7, 0.28) 72px 144px),
+        linear-gradient(180deg, #211006 0%, #0b0604 100%);
       color: #fff3d8;
     }
     body.wheel-theme::before {
@@ -3312,7 +3565,7 @@
     body.wheel-theme .watch-type,
     body.light-mode.wheel-theme .watch-type {
       color: #f6c56f;
-      text-shadow: 0 0 18px rgba(246, 197, 111, 0.38), 0 3px 0 rgba(60, 9, 20, 0.85);
+      text-shadow: 0 0 18px rgba(246, 197, 111, 0.38), 0 3px 0 rgba(67, 20, 7, 0.85);
     }
     body.wheel-theme h2,
     body.light-mode.wheel-theme h2,
@@ -3325,7 +3578,7 @@
     body.wheel-theme textarea,
     body.light-mode.wheel-theme textarea {
       background: rgba(20, 8, 14, 0.92);
-      border-color: #793018;
+      border-color: #8f4a24;
       color: #fff3d8;
       box-shadow: inset 0 0 18px rgba(0,0,0,0.22);
     }
@@ -3335,11 +3588,11 @@
     }
     body.wheel-theme .btn,
     body.light-mode.wheel-theme .btn {
-      background: #f6c56f;
-      color: #18070d;
-      box-shadow: 0 0 0 2px rgba(72, 21, 9, 0.65), 0 10px 24px rgba(0,0,0,0.28);
+      background: #149db0;
+      color: #061719;
+      box-shadow: 0 0 0 2px rgba(8, 47, 73, 0.65), 0 10px 24px rgba(0,0,0,0.28), 0 0 18px rgba(20,157,176,0.16);
     }
-    body.wheel-theme .btn:active { background: #ffd98a; }
+    body.wheel-theme .btn:active { background: #38b6c6; }
     body.wheel-theme .btn:disabled,
     body.light-mode.wheel-theme .btn:disabled {
       background: #2a1413;
@@ -3349,28 +3602,29 @@
     body.wheel-theme .btn-ghost,
     body.light-mode.wheel-theme .btn-ghost {
       background: rgba(15, 6, 10, 0.58);
-      border-color: #6c8f56;
-      color: #bfe49f;
+      border-color: #0e7490;
+      color: #7bc9d6;
     }
     body.wheel-theme .type-btn,
     body.light-mode.wheel-theme .type-btn {
       background: rgba(20, 8, 14, 0.88);
-      border-color: #793018;
+      border-color: #8f4a24;
       color: #c99a78;
     }
     body.wheel-theme .type-btn.active,
     body.light-mode.wheel-theme .type-btn.active {
-      background: linear-gradient(180deg, rgba(86, 23, 37, 0.92), rgba(31, 75, 50, 0.72));
-      border-color: #f6c56f;
-      color: #fff3d8;
-      box-shadow: 0 0 18px rgba(246,197,111,0.16);
+      background:
+        linear-gradient(180deg, rgba(12, 104, 122, 0.96), rgba(8, 47, 73, 0.92));
+      border-color: #7bc9d6;
+      color: #ecfeff;
+      box-shadow: 0 0 16px rgba(20,157,176,0.18), inset 0 0 0 1px rgba(236,254,255,0.10);
     }
     body.wheel-theme .submit-count-wrap,
     body.light-mode.wheel-theme .submit-count-wrap,
     body.wheel-theme .watch-reveal-box,
     body.light-mode.wheel-theme .watch-reveal-box {
       background: rgba(19, 8, 12, 0.78);
-      border-color: #793018;
+      border-color: #8f4a24;
       box-shadow: 0 16px 36px rgba(0,0,0,0.24);
     }
     body.wheel-theme .watch-text,
@@ -3390,42 +3644,42 @@
     body.wheel-theme .p-wheel-wrap {
       padding: 12px;
       border-radius: 50%;
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.04) 0 48%, transparent 49%),
-        conic-gradient(from 10deg, #401020, #17070d, #6b1a2d, #231007, #401020);
+      background: #140a05;
+      border: 2px solid #0e7490;
       box-shadow:
-        0 0 0 2px #3b160d,
-        0 0 0 7px rgba(246, 197, 111, 0.12),
+        inset 0 0 0 6px #211006,
+        inset 0 0 0 10px rgba(20,157,176,0.09),
+        0 0 0 7px rgba(20,157,176,0.09),
         0 24px 70px rgba(0,0,0,0.48),
-        0 0 44px rgba(117, 28, 47, 0.45);
+        0 0 36px rgba(14,116,144,0.28);
     }
     body.wheel-theme .p-wheel-wrap::after {
       content: '';
       position: absolute;
-      inset: 5px;
+      inset: 7px;
       border-radius: 50%;
       pointer-events: none;
-      background: repeating-conic-gradient(from 3deg, rgba(255, 220, 137, 0.95) 0 5deg, transparent 5deg 15deg);
-      -webkit-mask: radial-gradient(circle, transparent 0 88%, #000 89% 94%, transparent 95%);
-      mask: radial-gradient(circle, transparent 0 88%, #000 89% 94%, transparent 95%);
-      filter: drop-shadow(0 0 8px rgba(246,197,111,0.42));
+      border: 2px dashed rgba(123,201,214,0.68);
+      box-shadow:
+        inset 0 0 0 8px rgba(246,197,111,0.06),
+        0 0 12px rgba(20,157,176,0.24);
     }
     body.wheel-theme .p-wheel-pointer {
       top: -4px;
       border-left-width: 16px;
       border-right-width: 16px;
       border-top: 27px solid #f6c56f;
-      filter: drop-shadow(0 0 10px rgba(246,197,111,0.84)) drop-shadow(0 4px 0 rgba(60,9,20,0.9));
+      filter: drop-shadow(0 0 10px rgba(246,197,111,0.84)) drop-shadow(0 4px 0 rgba(67,20,7,0.9));
     }
     body.wheel-theme #screen-dsp-qc {
       background:
         radial-gradient(ellipse at 50% 18%, rgba(246,197,111,0.16), transparent 35%),
-        repeating-linear-gradient(90deg, rgba(124, 21, 38, 0.28) 0 96px, rgba(22, 10, 17, 0.26) 96px 192px),
-        #12070d;
+        repeating-linear-gradient(90deg, rgba(249, 115, 22, 0.18) 0 96px, rgba(22, 12, 7, 0.28) 96px 192px),
+        #120b06;
     }
     body.wheel-theme #screen-dsp-qc .dsp-header-bar {
       background: rgba(17, 7, 12, 0.94);
-      border-bottom-color: #793018;
+      border-bottom-color: #8f4a24;
     }
     body.wheel-theme #screen-dsp-qc .dsp-game-tag { color: #f6c56f; }
 
@@ -3433,7 +3687,7 @@
       background: #fff7e8;
       background-image:
         radial-gradient(ellipse at 50% 10%, rgba(232, 126, 59, 0.15) 0%, transparent 34%),
-        radial-gradient(ellipse at 18% 82%, rgba(66, 137, 104, 0.13) 0%, transparent 42%),
+        radial-gradient(ellipse at 18% 82%, rgba(14, 116, 144, 0.13) 0%, transparent 42%),
         repeating-linear-gradient(90deg, rgba(184, 52, 61, 0.11) 0 72px, rgba(255, 245, 224, 0.62) 72px 144px),
         linear-gradient(180deg, #fff8ec 0%, #f5e6cb 100%);
       color: #2a1711;
@@ -3469,11 +3723,11 @@
       box-shadow: 0 0 16px rgba(189,79,47,0.18);
     }
     body.light-mode.wheel-theme .btn {
-      background: #bd4f2f;
-      color: #fffaf0;
-      box-shadow: 0 0 0 2px rgba(255,255,255,0.8), 0 10px 24px rgba(117,57,27,0.18);
+      background: #0891b2;
+      color: #ecfeff;
+      box-shadow: 0 0 0 2px rgba(255,255,255,0.8), 0 10px 24px rgba(14,116,144,0.18);
     }
-    body.light-mode.wheel-theme .btn:active { background: #9d3f25; }
+    body.light-mode.wheel-theme .btn:active { background: #0e7490; }
     body.light-mode.wheel-theme .btn:disabled {
       background: #ead8bf;
       color: #a1846a;
@@ -3481,8 +3735,8 @@
     }
     body.light-mode.wheel-theme .btn-ghost {
       background: rgba(255, 252, 244, 0.72);
-      border-color: #428968;
-      color: #216249;
+      border-color: #0e7490;
+      color: #0e7490;
     }
     body.light-mode.wheel-theme .type-btn {
       background: rgba(255, 252, 244, 0.9);
@@ -3490,10 +3744,11 @@
       color: #76543f;
     }
     body.light-mode.wheel-theme .type-btn.active {
-      background: linear-gradient(180deg, rgba(255, 242, 218, 0.95), rgba(221, 237, 215, 0.9));
-      border-color: #bd4f2f;
-      color: #9d3f25;
-      box-shadow: 0 0 18px rgba(189,79,47,0.14);
+      background:
+        linear-gradient(180deg, rgba(236,254,255,0.98), rgba(165,243,252,0.88));
+      border-color: #0891b2;
+      color: #0e7490;
+      box-shadow: 0 0 18px rgba(14,116,144,0.16), inset 0 0 0 1px rgba(255,255,255,0.72);
     }
     body.light-mode.wheel-theme .submit-count-wrap,
     body.light-mode.wheel-theme .watch-reveal-box {
@@ -3513,18 +3768,22 @@
       text-shadow: 0 2px 0 rgba(255,255,255,0.85), 0 0 18px rgba(232,126,59,0.28);
     }
     body.light-mode.wheel-theme .p-wheel-wrap {
-      background:
-        radial-gradient(circle, rgba(255,255,255,0.55) 0 48%, transparent 49%),
-        conic-gradient(from 10deg, #ffe3a8, #fff8ec, #c75143, #dbeccf, #ffe3a8);
+      background: #fff8ec;
+      border: 2px solid #0891b2;
       box-shadow:
-        0 0 0 2px #d59c67,
-        0 0 0 7px rgba(189,79,47,0.08),
+        inset 0 0 0 6px #ffe3a8,
+        inset 0 0 0 10px rgba(14,116,144,0.08),
+        0 0 0 7px rgba(14,116,144,0.08),
         0 22px 52px rgba(117,57,27,0.18),
-        0 0 34px rgba(232,126,59,0.22);
+        0 0 34px rgba(14,116,144,0.18);
     }
     body.light-mode.wheel-theme .p-wheel-wrap::after {
-      background: repeating-conic-gradient(from 3deg, rgba(189, 79, 47, 0.9) 0 5deg, transparent 5deg 15deg);
-      filter: drop-shadow(0 0 6px rgba(232,126,59,0.28));
+      border: 2px dashed rgba(8,145,178,0.72);
+      background: transparent;
+      filter: none;
+      box-shadow:
+        inset 0 0 0 8px rgba(189,79,47,0.04),
+        0 0 12px rgba(14,116,144,0.16);
     }
     body.light-mode.wheel-theme .p-wheel-pointer {
       border-top-color: #bd4f2f;
@@ -3549,8 +3808,11 @@
       border-color: #c58b5a;
       box-shadow: inset 0 0 0 1px rgba(249,115,22,0.10);
     }
-    body.light-mode .game-card.wheel-game-card .game-title { color: #c2410c; }
-    body.light-mode .game-card.wheel-game-card .game-desc { color: #9a4f1f; }
+    body.light-mode .game-card.wheel-game-card .game-title {
+      color: #17120d;
+      text-shadow: none;
+    }
+    body.light-mode .game-card.wheel-game-card .game-desc { color: #4a3628; }
     body.light-mode.et-theme {
       background: #fff5f7;
       background-image:
@@ -4069,24 +4331,38 @@
     <h1>Pick a Game</h1>
     <div class="game-list">
       <div class="game-card et-game-card" onclick="selectGame('everything-trivia')">
-        <div class="game-icon">🧠</div>
+        <div class="game-icon">&#129504;</div>
         <div>
           <div class="game-title">Everything Trivia</div>
           <div class="game-desc"><em>Anything</em> can be a topic.</div>
         </div>
       </div>
       <div class="game-card wheel-game-card" onclick="selectGame('questions-challenges')">
-        <div class="game-icon">🎡</div>
+        <div class="game-icon">&#127905;</div>
         <div>
           <div class="game-title">The Wheel</div>
           <div class="game-desc">Submit questions and challenges.</div>
         </div>
       </div>
-      <div class="game-card mafia-game-card" onclick="selectGame('mafia')">
-        <div class="game-icon">🕵️</div>
+      <div class="game-card draft-game-card" onclick="showDraftBoardRulesScreen()">
+        <div class="game-icon">&#128013;</div>
         <div>
-          <div class="game-title">Mafia</div>
-          <div class="game-desc">Find the secret killers.</div>
+          <div class="game-title">Draft Board</div>
+          <div class="game-desc">Build the best team to win the category.</div>
+        </div>
+      </div>
+      <div class="game-card pr-game-card" onclick="selectGame('photo-roulette')">
+        <div class="game-icon">&#128248;</div>
+        <div>
+          <div class="game-title">Photo Roulette</div>
+          <div class="game-desc">Upload photos. Can you guess who took what?</div>
+        </div>
+      </div>
+      <div class="game-card debate-game-card" onclick="showDebateRulesScreen()">
+        <div class="game-icon">&#128483;&#65039;</div>
+        <div>
+          <div class="game-title">Debateish</div>
+          <div class="game-desc">Judge who wins fun (or serious) debates.</div>
         </div>
       </div>
       <div class="game-card ss-game-card" onclick="showHTRulesScreen()">
@@ -4096,29 +4372,26 @@
           <div class="game-desc">Spicy questions with hidden* results.</div>
         </div>
       </div>
-      <div class="game-card pr-game-card" onclick="selectGame('photo-roulette')">
-        <div class="game-icon">📸</div>
+      <div class="game-card mafia-game-card" onclick="selectGame('mafia')">
+        <div class="game-icon">&#128373;&#65039;</div>
         <div>
-          <div class="game-title">Photo Roulette</div>
-          <div class="game-desc">Upload photos. Can you guess who took what?</div>
-        </div>
-      </div>
-      <div class="game-card debate-game-card" onclick="showDebateRulesScreen()">
-        <div class="game-icon">🗣️</div>
-        <div>
-          <div class="game-title">Debateish</div>
-          <div class="game-desc">Judge who wins fun (or serious) debates.</div>
+          <div class="game-title">Mafia</div>
+          <div class="game-desc">Find the secret killers.</div>
         </div>
       </div>
       <div class="game-card auction-game-card" onclick="showAuctionRulesScreen()">
-        <div class="game-icon">🔨</div>
+        <div class="game-icon">&#128296;</div>
         <div>
           <div class="game-title">Bidder's Auction</div>
           <div class="game-desc">Bidder is the name of the demon auctioneer.</div>
         </div>
       </div>
     </div>
-    <button class="btn btn-ghost" onclick="backToLobby()">Back to Lobby</button>
+    <div class="game-menu-actions">
+      <button class="btn btn-ghost host-only" onclick="backToLobby()">Back to Lobby</button>
+      <button class="btn btn-ghost" id="menu-light-mode-btn" type="button" onclick="toggleLightMode()">â˜€ï¸ Light Mode</button>
+    </div>
+    <div class="non-host-only waiting"><span class="dot"></span> Waiting for host to pick a game...</div>
   </div>
 
   <!-- ── Screen: Secret Superlatives — Rules (local, host only) ── -->
@@ -4578,6 +4851,58 @@
     <div id="debate-content"></div>
   </div>
 
+  <div id="screen-draft-rules" class="screen draft-screen">
+    <h1>Draft Board</h1>
+    <h2>Pick a category. Build the strongest team.</h2>
+    <div class="draft-panel" id="draft-rules-card">
+      <div class="draft-kicker">Category</div>
+      <input id="draft-category-input" type="text" maxlength="80" placeholder="Write a category or choose one below" autocomplete="off" oninput="emitDraftBoardSetupSettings()" />
+      <div class="draft-category-grid" id="draft-category-grid"></div>
+      <div class="draft-topic-toggle-wrap">
+        <button class="btn btn-ghost" id="draft-topic-toggle" type="button" onclick="toggleDraftCategoryList()">Show all category ideas</button>
+      </div>
+      <div class="draft-control-row">
+        <div>
+          <div class="debate-forbidden-label">Grading Metric</div>
+          <div class="debate-forbidden-sub">What makes a board win?</div>
+        </div>
+      </div>
+      <div class="draft-metric-grid" id="draft-metric-grid"></div>
+      <div class="draft-topic-toggle-wrap">
+        <button class="btn btn-ghost" id="draft-metric-toggle" type="button" onclick="toggleDraftMetricList()">Show all grading metrics</button>
+      </div>
+      <div class="draft-control-row">
+        <div>
+          <div class="debate-forbidden-label">Picks per player</div>
+          <div class="debate-forbidden-sub">Snake draft, 2 to 5 picks</div>
+        </div>
+        <input class="draft-count-input" id="draft-pick-count" type="number" min="2" max="5" value="3" oninput="emitDraftBoardSetupSettings()" />
+      </div>
+      <div class="draft-control-row">
+        <div>
+          <div class="debate-forbidden-label">Coach Pick</div>
+          <div class="debate-forbidden-sub">Coach awards one bonus point</div>
+        </div>
+        <label class="debate-toggle-wrap" aria-label="Coach Pick">
+          <input type="checkbox" id="draft-coach-toggle" onchange="emitDraftBoardSetupSettings()" />
+          <span class="debate-toggle-knob"></span>
+        </label>
+      </div>
+      <div class="debate-setup-note">Only the host can change settings. Everyone can browse the ideas.</div>
+    </div>
+    <div class="host-only">
+      <div class="mafia-note debate-min-note" id="draft-setup-player-note">Draft Board needs at least 2 players.</div>
+      <button class="btn btn-ghost" id="draft-begin-btn" onclick="startDraftBoardGame()" disabled>Begin Game</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+    </div>
+    <div class="non-host-only draft-waiting">Waiting for the host to choose a category.</div>
+  </div>
+
+  <div id="screen-draft-board" class="screen draft-screen">
+    <h1>Draft Board</h1>
+    <div id="draft-game-content"></div>
+  </div>
+
   <div id="screen-auction-rules" class="screen">
     <h1>Bidder's Auction</h1>
     <div class="debate-rules-card" id="auction-rules-card">
@@ -4681,6 +5006,21 @@
     const socket = io({ path: `${BASE_PATH}/socket.io` });
     const DEBATE_MIN_PLAYERS = 3;
     const AUCTION_MIN_PLAYERS = 3;
+    const DRAFT_BOARD_MIN_PLAYERS = 2;
+    const DRAFT_BOARD_CATEGORIES = [
+      'Things you would bring to a desert island', 'Vacation spots', 'Athletes',
+      'Moments from the past month', 'School subjects', 'Chain restaurants',
+      'Movie & TV characters', 'Songs', 'Things at a gas station', 'Apps',
+      'Animals', 'Friend group lore', 'Celebrities', 'Jobs', 'Holidays',
+      'Fictional places', 'Childhood toys', 'Foods', 'Video game characters',
+      'Mall stores', 'Bad roommate traits', 'Superpowers', 'Countries',
+      'Villains', 'Random category', 'Clear the bar to write your own'
+    ];
+    const DRAFT_BOARD_METRICS = [
+      'Best', 'Worst', 'Would win in a fight', 'Banger party guest list',
+      'Best basketball team', 'Would win Survivor', 'Best heist crew',
+      "Coach's favorite"
+    ];
     const PLAYER_COLORS = ['#f87171', '#fb923c', '#d97706', '#4ade80', '#38bdf8', '#818cf8', '#e879f9', '#f472b6', '#65a30d', '#34d399'];
     let myName    = '';
     let myPin     = '';
@@ -4691,13 +5031,15 @@
     let myQCCount = 0;
     let prMyUploadCount = 0;
     let prHasGuessed    = false;
+    let draftBoardState = null;
+    let draftBoardCoachAvailable = true;
     let prCurrentRevealId = null;
     let etHasAnswered   = false;
     let mafiaState      = null;
     let mafiaLastPhaseKey = '';
     let pendingConfirmAction = null;
 
-    const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select', 'screen-ht-rules', 'screen-debate-rules', 'screen-auction-rules']);
+    const SAFE_NAV_SCREENS = new Set(['screen-home', 'screen-setup', 'screen-join', 'screen-lobby', 'screen-game-select', 'screen-ht-rules', 'screen-debate-rules', 'screen-auction-rules', 'screen-draft-rules']);
 
     function getActiveScreenId() {
       const active = document.querySelector('.screen.active');
@@ -4792,6 +5134,7 @@
       document.body.classList.toggle('pr-theme', id.startsWith('screen-pr') || id === 'screen-dsp-pr');
       document.body.classList.toggle('debate-theme', id.startsWith('screen-debate') || id === 'screen-dsp-debate');
       document.body.classList.toggle('auction-theme', id.startsWith('screen-auction') || id === 'screen-dsp-auction');
+      document.body.classList.toggle('draft-theme', id.startsWith('screen-draft') || id === 'screen-dsp-draft');
       const enteringSS = !document.body.classList.contains('ss-theme') && (id.startsWith('screen-ht') || id === 'screen-dsp-ht');
       document.body.classList.toggle('ss-theme', id.startsWith('screen-ht') || id === 'screen-dsp-ht');
       if (enteringSS) generateSSChalkDoodles();
@@ -4804,8 +5147,10 @@
       setSSSetupLocked(!h);
       setDebateSetupLocked(!h);
       setAuctionSetupLocked(!h);
+      setDraftBoardSetupLocked(!h);
       updateDebateStartState();
       updateAuctionStartState();
+      updateDraftBoardStartState();
     }
 
     let siteNoticeTimer = null;
@@ -4875,6 +5220,129 @@
           : `Bidder's Auction needs at least ${AUCTION_MIN_PLAYERS} players. ${joined} joined.`;
       }
       if (beginBtn) beginBtn.disabled = !hasEnoughPlayers;
+    }
+
+    function hydrateDraftBoardCategories() {
+      const grid = document.getElementById('draft-category-grid');
+      if (grid && !grid.dataset.ready) {
+        grid.dataset.ready = '1';
+        grid.innerHTML = DRAFT_BOARD_CATEGORIES.map((category) => {
+          const utilityClass = ['Random category', 'Clear the bar to write your own'].includes(category) ? ' utility' : '';
+          return `<button class="draft-category-btn${utilityClass}" type="button" onclick="chooseDraftCategory(${JSON.stringify(category).replace(/"/g, '&quot;')})">${escapeHtml(category)}</button>`;
+        }).join('');
+      }
+      const metricGrid = document.getElementById('draft-metric-grid');
+      if (metricGrid && !metricGrid.dataset.ready) {
+        metricGrid.dataset.ready = '1';
+        metricGrid.innerHTML = DRAFT_BOARD_METRICS.map((metric) => (
+          `<button class="draft-metric-btn" type="button" onclick="chooseDraftMetric(${JSON.stringify(metric).replace(/"/g, '&quot;')})">${escapeHtml(metric)}</button>`
+        )).join('');
+      }
+    }
+
+    function toggleDraftCategoryList() {
+      const grid = document.getElementById('draft-category-grid');
+      const button = document.getElementById('draft-topic-toggle');
+      if (!grid) return;
+      const expanded = grid.classList.toggle('expanded');
+      if (button) button.textContent = expanded ? 'Show fewer category ideas' : 'Show all category ideas';
+    }
+
+    function toggleDraftMetricList() {
+      const grid = document.getElementById('draft-metric-grid');
+      const button = document.getElementById('draft-metric-toggle');
+      if (!grid) return;
+      const expanded = grid.classList.toggle('expanded');
+      if (button) button.textContent = expanded ? 'Show fewer grading metrics' : 'Show all grading metrics';
+    }
+
+    function chooseDraftCategory(category) {
+      const input = document.getElementById('draft-category-input');
+      if (category === 'Random category') {
+        const choices = DRAFT_BOARD_CATEGORIES.filter((item) => !['Random category', 'Clear the bar to write your own'].includes(item));
+        category = choices[Math.floor(Math.random() * choices.length)] || '';
+      }
+      if (input) input.value = category === 'Clear the bar to write your own' ? '' : category;
+      emitDraftBoardSetupSettings();
+    }
+
+    function chooseDraftMetric(metric) {
+      document.querySelectorAll('.draft-metric-btn').forEach((button) => {
+        button.classList.toggle('active', button.textContent === metric);
+      });
+      emitDraftBoardSetupSettings();
+    }
+
+    function getDraftBoardSetupSettings() {
+      const categoryInput = document.getElementById('draft-category-input');
+      const pickInput = document.getElementById('draft-pick-count');
+      const category = (categoryInput?.value || '').trim().slice(0, 80);
+      const pickCount = Math.max(2, Math.min(5, Number.parseInt(pickInput?.value, 10) || 3));
+      const activeMetric = document.querySelector('.draft-metric-btn.active')?.textContent || 'Best';
+      if (pickInput) pickInput.value = pickCount;
+      return {
+        category,
+        metric: activeMetric,
+        pickCount,
+        coachEnabled: draftBoardCoachAvailable && !!document.getElementById('draft-coach-toggle')?.checked,
+      };
+    }
+
+    function applyDraftBoardSetupSettings(settings = {}) {
+      hydrateDraftBoardCategories();
+      const category = (settings.category || '').trim();
+      const metric = (settings.metric || 'Best').trim() || 'Best';
+      const categoryInput = document.getElementById('draft-category-input');
+      const pickInput = document.getElementById('draft-pick-count');
+      const coachToggle = document.getElementById('draft-coach-toggle');
+      if (categoryInput) categoryInput.value = category;
+      if (pickInput) pickInput.value = Math.max(2, Math.min(5, Number.parseInt(settings.pickCount, 10) || 3));
+      if (coachToggle) coachToggle.checked = !!settings.coachEnabled;
+      document.querySelectorAll('.draft-category-btn').forEach((button) => {
+        button.classList.toggle('active', button.textContent === category);
+      });
+      document.querySelectorAll('.draft-metric-btn').forEach((button) => {
+        button.classList.toggle('active', button.textContent === metric);
+      });
+      updateDraftBoardStartState();
+    }
+
+    function resetDraftBoardSetupDefaults() {
+      applyDraftBoardSetupSettings({ category: '', metric: 'Best', pickCount: 3, coachEnabled: draftBoardCoachAvailable });
+      document.getElementById('draft-category-grid')?.classList.remove('expanded');
+      document.getElementById('draft-metric-grid')?.classList.remove('expanded');
+      const button = document.getElementById('draft-topic-toggle');
+      if (button) button.textContent = 'Show all category ideas';
+      const metricButton = document.getElementById('draft-metric-toggle');
+      if (metricButton) metricButton.textContent = 'Show all grading metrics';
+    }
+
+    function setDraftBoardSetupLocked(locked) {
+      document.getElementById('draft-rules-card')?.classList.toggle('locked', locked);
+      document.querySelectorAll('#draft-category-input, #draft-pick-count, #draft-coach-toggle, .draft-category-btn, .draft-metric-btn').forEach((input) => {
+        input.disabled = locked;
+      });
+      const coachToggle = document.getElementById('draft-coach-toggle');
+      if (coachToggle && !draftBoardCoachAvailable) {
+        coachToggle.checked = false;
+        coachToggle.disabled = true;
+      }
+    }
+
+    function updateDraftBoardStartState() {
+      const joined = currentPlayers.length;
+      const hasEnoughPlayers = joined >= DRAFT_BOARD_MIN_PLAYERS;
+      const setupNote = document.getElementById('draft-setup-player-note');
+      const beginBtn = document.getElementById('draft-begin-btn');
+      const hasCategory = !!(document.getElementById('draft-category-input')?.value || '').trim();
+      if (setupNote) {
+        setupNote.textContent = !hasEnoughPlayers
+          ? `Draft Board needs at least ${DRAFT_BOARD_MIN_PLAYERS} players. ${joined} joined.`
+          : !hasCategory
+          ? 'Write a category or choose one below.'
+          : `${joined} players ready. Begin when you want.`;
+      }
+      if (beginBtn) beginBtn.disabled = !hasEnoughPlayers || !hasCategory;
     }
 
     function getPlayerColor(name) {
@@ -4967,6 +5435,7 @@
       renderPlayers(players, hostId);
       updateDebateStartState();
       updateAuctionStartState();
+      updateDraftBoardStartState();
     }
 
     socket.on('player-list-updated', ({ players, hostId }) => {
@@ -4974,6 +5443,7 @@
       renderPlayers(players, roomHostId);
       updateDebateStartState();
       updateAuctionStartState();
+      updateDraftBoardStartState();
       if (typeof spawnBgLine === 'function') spawnBgLine(false);
     });
 
@@ -5019,6 +5489,9 @@
       if (document.getElementById('screen-ht-rules')?.classList.contains('active')) {
         setSSSetupLocked(false);
       }
+      if (document.getElementById('screen-draft-rules')?.classList.contains('active')) {
+        setDraftBoardSetupLocked(false);
+      }
       // Refresh start button state if on lobby
       const lobbyActive = document.getElementById('screen-lobby').classList.contains('active');
       if (lobbyActive) {
@@ -5032,6 +5505,9 @@
       setHostMode(false);
       if (document.getElementById('screen-ht-rules')?.classList.contains('active')) {
         setSSSetupLocked(true);
+      }
+      if (document.getElementById('screen-draft-rules')?.classList.contains('active')) {
+        setDraftBoardSetupLocked(true);
       }
     });
 
@@ -5049,7 +5525,7 @@
       localStorage.setItem('jb-lightmode', on ? '1' : '0');
       const preloadStyle = document.getElementById('jb-theme-preload');
       if (preloadStyle) preloadStyle.remove();
-      const buttons = document.querySelectorAll('#light-mode-btn, #player-light-mode-btn, #home-light-mode-btn');
+      const buttons = document.querySelectorAll('#light-mode-btn, #player-light-mode-btn, #home-light-mode-btn, #menu-light-mode-btn, #global-light-mode-btn');
       buttons.forEach((button) => {
         button.textContent = on ? '🌙 Dark Mode' : '☀️ Light Mode';
       });
@@ -5062,13 +5538,19 @@
 
     // ── Game selector ──────────────────────────────────────────────
     hydrateMafiaRulesPanel();
-    function goToGameSelect() {
+    function showGameSelectScreen() {
       showScreen('screen-game-select');
       if (typeof resumeBgLines === 'function') resumeBgLines();
     }
+
+    function goToGameSelect() {
+      if (isHost) showGameSelectScreen();
+      socket.emit('show-game-select');
+    }
     function backToGameSelect() {
       if (!isGameFlowActive()) {
-        showScreen('screen-game-select');
+        if (isHost) showGameSelectScreen();
+        socket.emit('show-game-select');
         return;
       }
       openConfirmModal({
@@ -5080,6 +5562,10 @@
     }
 
     function showHTRulesScreen() {
+      if (!isHost) {
+        showSiteNotice('Only the host can pick games.');
+        return;
+      }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
       applySSSetupSettings({ exposureChance: 0.10 });
       setSSSetupLocked(!isHost);
@@ -5165,6 +5651,10 @@
     }
 
     function showDebateRulesScreen() {
+      if (!isHost) {
+        showSiteNotice('Only the host can pick games.');
+        return;
+      }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
       resetDebateSetupDefaults();
       showScreen('screen-debate-rules');
@@ -5186,12 +5676,35 @@
     }
 
     function showAuctionRulesScreen() {
+      if (!isHost) {
+        showSiteNotice('Only the host can pick games.');
+        return;
+      }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
       resetAuctionSetupDefaults();
       showScreen('screen-auction-rules');
       setAuctionSetupLocked(!isHost);
       updateAuctionStartState();
       socket.emit('auction-show-rules', { auctionSettings: getAuctionSetupSettings() });
+    }
+
+    function emitDraftBoardSetupSettings() {
+      applyDraftBoardSetupSettings(getDraftBoardSetupSettings());
+      if (!isHost) return;
+      socket.emit('draft-board-settings-preview', { draftBoardSettings: getDraftBoardSetupSettings() });
+    }
+
+    function showDraftBoardRulesScreen() {
+      if (!isHost) {
+        showSiteNotice('Only the host can pick games.');
+        return;
+      }
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
+      resetDraftBoardSetupDefaults();
+      showScreen('screen-draft-rules');
+      setDraftBoardSetupLocked(!isHost);
+      updateDraftBoardStartState();
+      socket.emit('draft-board-show-rules', { draftBoardSettings: getDraftBoardSetupSettings() });
     }
 
     socket.on('auction-show-rules', ({ auctionSettings } = {}) => {
@@ -5204,6 +5717,20 @@
 
     socket.on('auction-settings-updated', ({ auctionSettings } = {}) => {
       if (auctionSettings) applyAuctionSetupSettings(auctionSettings);
+    });
+
+    socket.on('draft-board-show-rules', ({ draftBoardSettings, coachAvailable } = {}) => {
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: false });
+      draftBoardCoachAvailable = coachAvailable !== false;
+      if (draftBoardSettings) applyDraftBoardSetupSettings(draftBoardSettings);
+      setDraftBoardSetupLocked(!isHost);
+      updateDraftBoardStartState();
+      showScreen('screen-draft-rules');
+    });
+
+    socket.on('draft-board-settings-updated', ({ draftBoardSettings, coachAvailable } = {}) => {
+      draftBoardCoachAvailable = coachAvailable !== false;
+      if (draftBoardSettings) applyDraftBoardSetupSettings(draftBoardSettings);
     });
 
     socket.on('debate-show-rules', ({ debateSettings } = {}) => {
@@ -5251,6 +5778,19 @@
       socket.emit('start-game', { game: 'auction', auctionSettings: getAuctionSetupSettings() });
     }
 
+    function startDraftBoardGame() {
+      if (currentPlayers.length < DRAFT_BOARD_MIN_PLAYERS) {
+        showSiteNotice(`Draft Board needs at least ${DRAFT_BOARD_MIN_PLAYERS} players.`);
+        return;
+      }
+      const draftBoardSettings = getDraftBoardSetupSettings();
+      if (!draftBoardSettings.category) {
+        showSiteNotice('Write a category or choose one below.');
+        return;
+      }
+      socket.emit('start-game', { game: 'draft-board', draftBoardSettings });
+    }
+
     document.querySelectorAll('#db-tier-toggles input, #db-limited-toggle, #db-forbidden-count').forEach((input) => {
       input.addEventListener(input.type === 'number' ? 'input' : 'change', emitDebateSetupSettings);
     });
@@ -5285,15 +5825,15 @@
     });
 
     socket.on('returned-to-game-select', () => {
-      if (isHost) {
-        showScreen('screen-game-select');
-      } else {
-        showScreen('screen-lobby');
-      }
-      if (typeof resumeBgLines === 'function') resumeBgLines();
+      showGameSelectScreen();
     });
+    socket.on('game-select-shown', showGameSelectScreen);
 
     function selectGame(game) {
+      if (!isHost) {
+        showSiteNotice('Only the host can pick games.');
+        return;
+      }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
       socket.emit('start-game', { game });
     }
@@ -5328,6 +5868,153 @@
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
     }
+
+    function renderDraftTeams(state, options = {}) {
+      const activeId = state.currentDrafterId;
+      const showScores = !!options.showScores;
+      const pickNumberByPlayer = {};
+      (state.draftOrder || []).forEach((playerId, orderIndex) => {
+        if (!pickNumberByPlayer[playerId]) pickNumberByPlayer[playerId] = [];
+        pickNumberByPlayer[playerId].push(orderIndex + 1);
+      });
+      return `<div class="draft-board-grid">${(state.players || []).map((player) => {
+        const picks = player.picks || [];
+        const slots = Array.from({ length: state.pickCount || 3 }, (_, index) => picks[index] || null);
+        return `
+          <div class="draft-team-card${player.id === activeId ? ' active' : ''}">
+            <div class="draft-team-head">
+              <div class="draft-team-name" style="color:${player.color || getPlayerColor(player.name)}">${escapeHtml(player.name)}</div>
+              <div class="draft-team-score">${showScores ? `${player.score || 0} pt${(player.score || 0) === 1 ? '' : 's'}` : `${picks.length}/${state.pickCount}`}</div>
+            </div>
+            <div class="draft-pick-list">
+              ${slots.map((pick, index) => {
+                const pickNumber = pickNumberByPlayer[player.id]?.[index] || index + 1;
+                return `<div class="draft-pick${pick ? '' : ' empty'}"><span class="draft-pick-num">#${pickNumber}</span><span class="draft-pick-text">${pick ? escapeHtml(pick) : `Pick ${index + 1}`}</span></div>`;
+              }).join('')}
+            </div>
+          </div>`;
+      }).join('')}</div>`;
+    }
+
+    function renderDraftVoting(state) {
+      if (state.myVote) {
+        return `<div class="draft-panel"><div class="draft-category">Vote submitted</div><div class="draft-waiting">Waiting for everyone else: ${state.voteCount}/${state.totalVotes}</div></div>`;
+      }
+      return `
+        <div class="draft-panel">
+          <div class="draft-kicker">Player's Choice</div>
+          <div class="draft-category">Vote: ${escapeHtml(state.settings?.metric || 'Best')}</div>
+          <div class="draft-vote-grid">
+            ${(state.eligibleVotes || []).map((player) => `<button class="btn draft-vote-btn" onclick="submitDraftVote(${JSON.stringify(player.id).replace(/"/g, '&quot;')})"><span style="color:${player.color || getPlayerColor(player.name)}">${escapeHtml(player.name)}</span></button>`).join('')}
+          </div>
+          <div class="draft-waiting">Votes in: ${state.voteCount}/${state.totalVotes}</div>
+        </div>`;
+    }
+
+    function renderDraftReveal(state) {
+      const byId = new Map((state.players || []).map((player) => [player.id, player]));
+      const playerChoiceNames = (state.playerChoiceWinners || []).map((id) => byId.get(id)?.name).filter(Boolean);
+      const coach = state.coachResult;
+      const standings = [...(state.players || [])].sort((a, b) => (b.score || 0) - (a.score || 0) || a.name.localeCompare(b.name));
+      return `
+        ${(state.players || []).length > 2 ? `<div class="draft-result-card award">
+          <div class="draft-result-title">Player's Choice</div>
+          <div>${playerChoiceNames.length ? `${playerChoiceNames.map(escapeHtml).join(' & ')} win${playerChoiceNames.length === 1 ? 's' : ''} Player's Choice.` : 'No Player\'s Choice point was awarded.'}</div>
+        </div>` : ''}
+        <div class="draft-result-card award">
+          <div class="draft-result-title">Coach the Pet Rock</div>
+          <div class="draft-coach-rock-wrap">
+            <div class="draft-coach-rock" aria-hidden="true"></div>
+            <div class="draft-coach-bubble"><div class="draft-coach-live">Coach's thoughts</div>${coach ? `${escapeHtml(coach.winnerName)} gets Coach's point. ${escapeHtml(coach.explanation)}` : escapeHtml(state.message || 'Coach was not used this game.')}</div>
+          </div>
+        </div>
+        <div class="draft-panel">
+          <div class="draft-kicker">Final Points</div>
+          ${standings.map((player) => `<div class="draft-team-head"><span style="color:${player.color || getPlayerColor(player.name)}">${escapeHtml(player.name)}</span><span class="draft-team-score">${player.score || 0}</span></div>`).join('')}
+        </div>
+        ${renderDraftTeams(state, { showScores: true })}
+        <div class="host-only" style="margin-top:0.8rem;">
+          <button class="btn" onclick="draftBoardPlayAgain()">Play Again</button>
+          <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+        </div>`;
+    }
+
+    function renderDraftBoardState(state) {
+      draftBoardState = state;
+      const content = document.getElementById('draft-game-content');
+      if (!content) return;
+      const isMyTurn = state.currentDrafterId === socket.id;
+      const currentPickNumber = (state.currentTurnIndex || 0) + 1;
+      const totalPickCount = (state.draftOrder || []).length;
+      let html = `
+        <div class="draft-panel">
+          <div class="draft-kicker">Category</div>
+          <div class="draft-category">${escapeHtml(state.settings?.category || 'Draft Board')}</div>
+          <div style="text-align:center;"><span class="draft-metric-display">${escapeHtml(state.settings?.metric || 'Best')}</span></div>
+        </div>`;
+
+      if (state.phase === 'drafting') {
+        html += `
+          ${state.upcomingPicks?.length ? `<div class="draft-panel"><div class="draft-kicker">Draft Order</div><div class="draft-up-next">${state.upcomingPicks.map((player, index) => `<span class="draft-up-next-chip" style="border-color:${player.color || getPlayerColor(player.name)}"><span class="draft-up-next-num">#${currentPickNumber + index + 1}</span>${escapeHtml(player.name)}</span>`).join('')}</div></div>` : ''}
+          <div class="draft-turn-banner">
+            <div class="draft-kicker">On the clock</div>
+            <span class="draft-turn-name">${escapeHtml(state.currentDrafterName || 'Someone')}</span>
+            <div class="draft-turn-meta">Pick ${currentPickNumber}${totalPickCount ? ` of ${totalPickCount}` : ''}</div>
+          </div>
+          ${isMyTurn ? `
+            <div class="draft-submit-row">
+              <input id="draft-pick-input" type="text" maxlength="50" placeholder="Type your pick" autocomplete="off" onkeydown="if(event.key==='Enter') submitDraftPick()" />
+              <button class="btn" onclick="submitDraftPick()">Draft</button>
+            </div>` : `<div class="draft-waiting">Waiting for ${escapeHtml(state.currentDrafterName || 'the next drafter')}...</div>`}
+          <div class="host-only"><button class="btn btn-ghost" onclick="draftBoardUndoPick()">Undo Last Pick</button></div>
+          <div class="draft-message">${escapeHtml(state.message || '')}</div>
+          ${renderDraftTeams(state)}`;
+      } else if (state.phase === 'voting') {
+        html += renderDraftTeams(state)
+          + `<div class="host-only"><button class="btn btn-ghost" onclick="draftBoardUndoPick()" ${state.voteCount > 0 ? 'disabled' : ''}>Undo Last Pick</button></div>`
+          + renderDraftVoting(state);
+      } else if (state.phase === 'coach') {
+        html += `<div class="draft-panel"><div class="draft-category">Coach the pet rock is reviewing the boards...</div><div class="draft-waiting">Coach is thinking extremely geological thoughts.</div></div>${renderDraftTeams(state, { showScores: true })}`;
+      } else if (state.phase === 'reveal') {
+        html += renderDraftReveal(state);
+      }
+
+      content.innerHTML = html;
+      showScreen('screen-draft-board');
+      if (state.phase === 'drafting' && isMyTurn) {
+        requestAnimationFrame(() => {
+          const pickInput = document.getElementById('draft-pick-input');
+          pickInput?.focus({ preventScroll: true });
+        });
+      }
+      if (state.phase === 'reveal' && typeof triggerConfetti === 'function') triggerConfetti();
+    }
+
+    function submitDraftPick() {
+      const input = document.getElementById('draft-pick-input');
+      socket.emit('draft-board-submit-pick', { pick: input?.value || '' });
+      if (input) input.value = '';
+    }
+
+    function draftBoardUndoPick() {
+      socket.emit('draft-board-undo-pick');
+    }
+
+    function submitDraftVote(votedForId) {
+      socket.emit('draft-board-submit-vote', { votedForId });
+    }
+
+    function draftBoardPlayAgain() {
+      socket.emit('draft-board-play-again');
+    }
+
+    socket.on('draft-board-state', renderDraftBoardState);
+    socket.on('draft-board-pick-error', ({ message } = {}) => showSiteNotice(message || 'Could not submit that pick.'));
+    socket.on('draft-board-vote-error', ({ message } = {}) => showSiteNotice(message || 'Could not submit that vote.'));
+    socket.on('draft-board-stopped', ({ reason } = {}) => {
+      showSiteNotice(reason || 'Draft Board ended.');
+      showScreen(isHost ? 'screen-game-select' : 'screen-lobby');
+    });
 
     function auctionBid(increment) { socket.emit('auction-bid', { increment }); }
     function auctionSkip() { socket.emit('auction-skip'); }
@@ -5603,7 +6290,7 @@
       showScreen('screen-auction');
     }
 
-    socket.on('game-started', ({ game, debateSettings, auctionSettings, exposureChance, resume = false }) => {
+    socket.on('game-started', ({ game, debateSettings, auctionSettings, draftBoardSettings, coachAvailable, exposureChance, resume = false }) => {
       if (typeof stopBgLines === 'function') stopBgLines({ burst: game !== 'debate' });
       if (game === 'debate-setup') {
         if (debateSettings) applyDebateSetupSettings(debateSettings);
@@ -5615,6 +6302,13 @@
         if (auctionSettings) applyAuctionSetupSettings(auctionSettings);
         setAuctionSetupLocked(!isHost);
         showScreen('screen-auction-rules');
+        return;
+      }
+      if (game === 'draft-board-setup') {
+        draftBoardCoachAvailable = coachAvailable !== false;
+        if (draftBoardSettings) applyDraftBoardSetupSettings(draftBoardSettings);
+        setDraftBoardSetupLocked(!isHost);
+        showScreen('screen-draft-rules');
         return;
       }
       if (game === 'hot-takes-setup') {
@@ -5667,6 +6361,9 @@
           auctionTargetKey = '';
         }
         showScreen('screen-auction');
+      } else if (game === 'draft-board') {
+        if (!resume) draftBoardState = null;
+        showScreen('screen-draft-board');
       } else if (game === 'hot-takes') {
         if (!resume) htHasVoted = false;
         // server immediately fires ht-round-start — just wait for it
@@ -6619,13 +7316,13 @@
       return light ? {
         emptyFill: '#fff8ec',
         emptyStroke: '#d59c67',
-        questionColors: ['#f4d3a4', '#f9e1bb', '#eebf88'],
-        challengeColors: ['#cde3bf', '#e3edcf', '#bcd7b2'],
+        questionColors: ['#f4d3a4'],
+        challengeColors: ['#bff4f7'],
         sliceStroke: '#fff8ec',
         questionText: '#9d3f25',
-        challengeText: '#216249',
+        challengeText: '#0e7490',
         questionGlow: 'rgba(189,79,47,0.24)',
-        challengeGlow: 'rgba(66,137,104,0.24)',
+        challengeGlow: 'rgba(14,116,144,0.24)',
         ring: '#bd4f2f',
         bulbA: '#bd4f2f',
         bulbB: '#f0b15d',
@@ -6633,21 +7330,21 @@
         cap: '#ffe3a8',
         capStroke: '#bd4f2f',
       } : {
-        emptyFill: '#17070d',
-        emptyStroke: '#793018',
-        questionColors: ['#5c1428', '#7a1e35', '#431020'],
-        challengeColors: ['#1f4b32', '#385f28', '#6a3917'],
-        sliceStroke: '#17070d',
-        questionText: '#ffd98a',
-        challengeText: '#bfe49f',
-        questionGlow: 'rgba(255,217,138,0.45)',
-        challengeGlow: 'rgba(191,228,159,0.45)',
+        emptyFill: '#140a05',
+        emptyStroke: '#8f4a24',
+        questionColors: ['#9a3412'],
+        challengeColors: ['#0e7490'],
+        sliceStroke: '#140a05',
+        questionText: '#fed7aa',
+        challengeText: '#7bc9d6',
+        questionGlow: 'rgba(251,146,60,0.42)',
+        challengeGlow: 'rgba(123,201,214,0.38)',
         ring: '#f6c56f',
         bulbA: '#f6c56f',
         bulbB: '#fff1bd',
         bulbGlow: 'rgba(246,197,111,0.72)',
         cap: '#f6c56f',
-        capStroke: '#6b1a2d',
+        capStroke: '#8f4a24',
       };
     }
 
@@ -6836,7 +7533,7 @@
 
             // Hide spin button and show result all at once
             document.getElementById('spin-btn-wrap').style.display = 'none';
-            const typeLabel = isQ ? '? Question' : '! Challenge';
+            const typeLabel = isQ ? 'Question' : 'Challenge';
             document.getElementById('watch-type').textContent = typeLabel;
             document.getElementById('watch-text').textContent = picked.text;
             document.getElementById('watch-reveal-box').style.display = 'block';
@@ -7918,7 +8615,7 @@
       roomHostId = null;
       setHostMode(false);
       setupLobby(pin, playerURL, qrDataURL, players, null);
-      showScreen('screen-lobby');
+      showScreen(gameState === 'game-select' ? 'screen-dsp-game-select' : 'screen-lobby');
     });
 
     function dspRenderPlayers(players) {

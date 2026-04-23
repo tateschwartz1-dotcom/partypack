@@ -73,6 +73,7 @@ const server = http.createServer(app);
 const io = new Server(server, { maxHttpBufferSize: 5e6, path: SOCKET_PATH });
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
 const ANTHROPIC_TRIVIA_MODEL = process.env.ANTHROPIC_TRIVIA_MODEL || 'claude-haiku-4-5-20251001';
+const ANTHROPIC_COACH_MODEL = process.env.ANTHROPIC_COACH_MODEL || ANTHROPIC_TRIVIA_MODEL;
 const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_TRIVIA_MODEL = process.env.OPENAI_TRIVIA_MODEL || 'gpt-5-mini';
 const TRIVIA_API_KEY = process.env.TRIVIA_API_KEY || '';
@@ -997,6 +998,248 @@ function normalizeDebateSettings(debateSettings = {}) {
   };
 }
 
+function normalizeDraftBoardSettings(settings = {}) {
+  const rawCategory = String(settings.category || '').trim();
+  const rawMetric = String(settings.metric || '').trim();
+  const rawPickCount = Number.parseInt(settings.pickCount, 10);
+  return {
+    category: rawCategory.slice(0, 80),
+    metric: rawMetric.slice(0, 80) || DRAFT_BOARD_DEFAULT_METRIC,
+    pickCount: Math.max(2, Math.min(5, Number.isFinite(rawPickCount) ? rawPickCount : 3)),
+    coachEnabled: settings.coachEnabled !== false && !!ANTHROPIC_API_KEY,
+  };
+}
+
+function normalizeDraftPickText(value = '') {
+  return String(value || '')
+    .trim()
+    .replace(/\s+/g, ' ')
+    .toLowerCase();
+}
+
+function buildDraftBoardOrder(players, pickCount) {
+  const order = [];
+  for (let round = 0; round < pickCount; round++) {
+    const roundPlayers = round % 2 === 0 ? players : [...players].reverse();
+    roundPlayers.forEach((player) => order.push(player.id));
+  }
+  return order;
+}
+
+function createDraftBoardState(room, settings) {
+  const teamsByPlayerId = {};
+  const scores = {};
+  room.players.forEach((player) => {
+    teamsByPlayerId[player.id] = [];
+    scores[player.id] = 0;
+  });
+  return {
+    settings,
+    phase: 'drafting',
+    draftOrder: buildDraftBoardOrder(room.players, settings.pickCount),
+    currentTurnIndex: 0,
+    teamsByPlayerId,
+    picks: [],
+    votes: {},
+    scores,
+    voteScores: {},
+    playerChoiceWinners: [],
+    coachResult: null,
+    message: '',
+  };
+}
+
+function buildDraftBoardStatePayload(room, viewerId = null) {
+  const db = room.draftBoard;
+  if (!db) return null;
+  const players = room.players.map((player, index) => ({
+    id: player.id,
+    name: player.name,
+    color: PLAYER_COLORS[index % PLAYER_COLORS.length],
+    picks: db.teamsByPlayerId[player.id] || [],
+    score: db.scores[player.id] || 0,
+    voteScore: db.voteScores[player.id] || 0,
+  }));
+  const currentDrafterId = db.draftOrder[db.currentTurnIndex] || null;
+  const eligibleVotes = viewerId
+    ? players.filter((player) => player.id !== viewerId).map((player) => ({ id: player.id, name: player.name, color: player.color }))
+    : [];
+  const upcomingPickIds = db.draftOrder.slice(db.currentTurnIndex + 1, db.currentTurnIndex + 6);
+  return {
+    phase: db.phase,
+    settings: db.settings,
+    players,
+    draftOrder: db.draftOrder,
+    currentTurnIndex: db.currentTurnIndex,
+    currentDrafterId,
+    currentDrafterName: players.find((player) => player.id === currentDrafterId)?.name || '',
+    upcomingPicks: upcomingPickIds.map((playerId) => {
+      const player = players.find((entry) => entry.id === playerId);
+      return player ? { id: player.id, name: player.name, color: player.color } : null;
+    }).filter(Boolean),
+    picks: db.picks,
+    pickCount: db.settings.pickCount,
+    voteCount: Object.keys(db.votes || {}).length,
+    totalVotes: Math.max(0, room.players.length),
+    myVote: viewerId ? (db.votes[viewerId] || null) : null,
+    eligibleVotes,
+    playerChoiceWinners: db.playerChoiceWinners,
+    coachResult: db.coachResult,
+    message: db.message,
+    isCoachAvailable: !!ANTHROPIC_API_KEY,
+  };
+}
+
+function emitDraftBoardState(pin) {
+  const room = rooms[pin];
+  if (!room || !room.draftBoard) return;
+  room.players.forEach((player) => {
+    io.to(player.id).emit('draft-board-state', buildDraftBoardStatePayload(room, player.id));
+  });
+  if (room.displaySockets) {
+    room.displaySockets.forEach((socketId) => {
+      io.to(socketId).emit('draft-board-state', buildDraftBoardStatePayload(room, null));
+    });
+  }
+}
+
+function advanceDraftBoardAfterPick(pin) {
+  const room = rooms[pin];
+  if (!room || !room.draftBoard) return;
+  const db = room.draftBoard;
+  db.currentTurnIndex += 1;
+  if (db.currentTurnIndex >= db.draftOrder.length) {
+    if (room.players.length <= 2) {
+      db.phase = 'coach';
+      db.message = db.settings.coachEnabled ? 'Coach is reviewing the boards...' : DRAFT_BOARD_COACH_ERROR;
+      emitDraftBoardState(pin);
+      finishDraftBoardGame(pin);
+      return;
+    }
+    db.phase = 'voting';
+    db.message = `Draft complete. Vote: ${db.settings.metric}.`;
+  }
+  emitDraftBoardState(pin);
+}
+
+function resolveDraftBoardVotes(pin) {
+  const room = rooms[pin];
+  if (!room || !room.draftBoard) return;
+  const db = room.draftBoard;
+  const voteScores = {};
+  room.players.forEach((player) => { voteScores[player.id] = 0; });
+  Object.values(db.votes).forEach((playerId) => {
+    if (voteScores[playerId] !== undefined) voteScores[playerId] += 1;
+  });
+  db.voteScores = voteScores;
+  const maxScore = Math.max(...Object.values(voteScores));
+  db.playerChoiceWinners = maxScore > 0
+    ? room.players.filter((player) => voteScores[player.id] === maxScore).map((player) => player.id)
+    : [];
+  db.playerChoiceWinners.forEach((playerId) => {
+    db.scores[playerId] = (db.scores[playerId] || 0) + 1;
+  });
+}
+
+function extractAnthropicText(response) {
+  if (!response || !Array.isArray(response.content)) return '';
+  return response.content
+    .filter((item) => item && item.type === 'text' && typeof item.text === 'string')
+    .map((item) => item.text)
+    .join('\n')
+    .trim();
+}
+
+function parseJSONFromText(text = '') {
+  try {
+    return JSON.parse(text);
+  } catch (error) {
+    const match = String(text).match(/\{[\s\S]*\}/);
+    if (!match) return null;
+    try {
+      return JSON.parse(match[0]);
+    } catch (innerError) {
+      return null;
+    }
+  }
+}
+
+async function fetchDraftBoardCoachResult(room) {
+  if (!ANTHROPIC_API_KEY || !room?.draftBoard) return null;
+  const db = room.draftBoard;
+  const teams = room.players.map((player) => ({
+    playerName: player.name,
+    picks: db.teamsByPlayerId[player.id] || [],
+  }));
+  const body = {
+    model: ANTHROPIC_COACH_MODEL,
+    max_tokens: 220,
+    system: [
+      'You are Coach, a concise judge for a party draft game.',
+      'Pick exactly one winning team based only on the category, grading metric, and drafted picks.',
+      'Do not invent picks. Be fair. Be straight and to the point.',
+      'Return valid JSON only with shape {"winnerName":"...","explanation":"..."}',
+      'The explanation must be 30 words or fewer.',
+    ].join(' '),
+    messages: [
+      {
+        role: 'user',
+        content: JSON.stringify({ category: db.settings.category, gradingMetric: db.settings.metric, teams }),
+      },
+    ],
+  };
+  const response = await httpsPostJSON('https://api.anthropic.com/v1/messages', body, {
+    'x-api-key': ANTHROPIC_API_KEY,
+    'anthropic-version': '2023-06-01',
+    'content-type': 'application/json',
+  });
+  if (response.error) {
+    throw new Error(response.error.message || 'Anthropic Coach request failed');
+  }
+  const parsed = parseJSONFromText(extractAnthropicText(response));
+  if (!parsed || typeof parsed.winnerName !== 'string') return null;
+  const winner = room.players.find((player) => player.name.toLowerCase() === parsed.winnerName.trim().toLowerCase());
+  if (!winner) return null;
+  const explanation = String(parsed.explanation || '').trim().split(/\s+/).slice(0, 30).join(' ');
+  return {
+    winnerId: winner.id,
+    winnerName: winner.name,
+    explanation: explanation || 'Coach likes this board best.',
+  };
+}
+
+async function finishDraftBoardGame(pin) {
+  const room = rooms[pin];
+  if (!room || !room.draftBoard) return;
+  const db = room.draftBoard;
+  if (!['voting', 'coach'].includes(db.phase)) return;
+  if (db.phase === 'voting') resolveDraftBoardVotes(pin);
+  const needsCoachOnly = room.players.length <= 2;
+  db.phase = db.settings.coachEnabled ? 'coach' : 'reveal';
+  db.message = db.settings.coachEnabled ? 'Coach is reviewing the boards...' : (needsCoachOnly ? DRAFT_BOARD_COACH_ERROR : '');
+  emitDraftBoardState(pin);
+  if (!db.settings.coachEnabled) return;
+
+  try {
+    const coachResult = await fetchDraftBoardCoachResult(room);
+    if (!room.draftBoard || room.draftBoard !== db) return;
+    if (coachResult) {
+      db.coachResult = coachResult;
+      db.scores[coachResult.winnerId] = (db.scores[coachResult.winnerId] || 0) + 1;
+      db.message = '';
+    } else {
+      db.coachResult = null;
+      db.message = DRAFT_BOARD_COACH_ERROR;
+    }
+  } catch (error) {
+    if (!room.draftBoard || room.draftBoard !== db) return;
+    db.coachResult = null;
+    db.message = DRAFT_BOARD_COACH_ERROR;
+  }
+  db.phase = 'reveal';
+  emitDraftBoardState(pin);
+}
+
 function getMafiaPollGap(counts) {
   const sortedCounts = [...counts].map((entry) => entry.count).sort((a, b) => b - a);
   const top = sortedCounts[0] || 0;
@@ -1480,6 +1723,10 @@ const DEBATE_REBUTTAL_SECONDS = 15;
 const DEBATE_VOTE_SECONDS = 20;
 const DEBATE_CATCH_SECONDS = 10;
 const AUCTION_MIN_PLAYERS = 3;
+const DRAFT_BOARD_MIN_PLAYERS = 2;
+const DRAFT_BOARD_DEFAULT_CATEGORY = '';
+const DRAFT_BOARD_DEFAULT_METRIC = 'Best';
+const DRAFT_BOARD_COACH_ERROR = 'Coach had clipboard issues and could not make a pick.';
 const AUCTION_STARTING_MONEY = 100;
 const AUCTION_LISTINGS_PER_PLAYER = 2;
 const AUCTION_PREVIEW_SECONDS = 4;
@@ -1617,6 +1864,18 @@ function remapPlayerId(room, oldId, newId) {
     remapKey(room.et.currentAnswers);
   }
 
+  if (room.draftBoard) {
+    const db = room.draftBoard;
+    if (db.teamsByPlayerId) remapKey(db.teamsByPlayerId);
+    if (db.votes) { remapKey(db.votes); remapVal(db.votes); }
+    if (db.scores) remapKey(db.scores);
+    if (db.voteScores) remapKey(db.voteScores);
+    if (db.draftOrder) db.draftOrder = db.draftOrder.map(id => id === oldId ? newId : id);
+    if (db.picks) db.picks.forEach((pick) => { if (pick.playerId === oldId) pick.playerId = newId; });
+    if (db.playerChoiceWinners) db.playerChoiceWinners = db.playerChoiceWinners.map(id => id === oldId ? newId : id);
+    if (db.coachResult?.winnerId === oldId) db.coachResult.winnerId = newId;
+  }
+
   if (room.qc) {
     room.qc.submissions?.forEach(s => { if (s.playerId === oldId) s.playerId = newId; });
     room.qc.playerOrder?.forEach(p => { if (p.id === oldId) p.id = newId; });
@@ -1647,6 +1906,12 @@ function reemitStateToPlayer(pin, socket) {
 
   const gs = room.gameState;
   if (gs === 'lobby') return;
+
+  if (gs === 'game-select') {
+    socket.emit('returned-to-game-select');
+    socket.emit('game-select-shown');
+    return;
+  }
 
   if (gs === 'mafia' && room.mafia) {
     socket.emit('game-started', { game: 'mafia', resume: true });
@@ -1755,6 +2020,18 @@ function reemitStateToPlayer(pin, socket) {
     emitAuctionState(pin);
     return;
   }
+
+  if (gs === 'draft-board-setup') {
+    socket.emit('game-started', { game: 'draft-board-setup', draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY, resume: true });
+    socket.emit('draft-board-show-rules', { draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
+    return;
+  }
+
+  if (gs === 'draft-board' && room.draftBoard) {
+    socket.emit('game-started', { game: 'draft-board', resume: true });
+    emitDraftBoardState(pin);
+    return;
+  }
 }
 
 io.on('connection', (socket) => {
@@ -1786,6 +2063,7 @@ io.on('connection', (socket) => {
       displaySockets: new Set(),
       recentlyLeft: {},
       pendingHTSettings: { exposureChance: 0.10 },
+      pendingDraftBoardSettings: normalizeDraftBoardSettings(),
     };
 
     socket.join(pin);
@@ -1806,7 +2084,7 @@ io.on('connection', (socket) => {
 
     const rejoinEntry = room.recentlyLeft && room.recentlyLeft[name];
 
-    if (room.gameState !== 'lobby' && room.gameState !== 'debate-setup' && room.gameState !== 'auction-setup' && room.gameState !== 'hot-takes-setup' && !rejoinEntry) {
+    if (room.gameState !== 'lobby' && room.gameState !== 'game-select' && room.gameState !== 'debate-setup' && room.gameState !== 'auction-setup' && room.gameState !== 'hot-takes-setup' && room.gameState !== 'draft-board-setup' && !rejoinEntry) {
       socket.emit('join-error', { message: 'Game already in progress.' });
       return;
     }
@@ -1846,6 +2124,10 @@ io.on('connection', (socket) => {
       isHost: false,
     });
     io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
+    if (room.gameState === 'game-select') {
+      socket.emit('returned-to-game-select');
+      socket.emit('game-select-shown');
+    }
     if (room.gameState === 'debate-setup') {
       socket.emit('game-started', { game: 'debate-setup', debateSettings: room.pendingDebateSettings });
       socket.emit('debate-show-rules', { debateSettings: room.pendingDebateSettings });
@@ -1857,6 +2139,10 @@ io.on('connection', (socket) => {
     if (room.gameState === 'auction-setup') {
       socket.emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings });
       socket.emit('auction-show-rules', { auctionSettings: room.pendingAuctionSettings });
+    }
+    if (room.gameState === 'draft-board-setup') {
+      socket.emit('game-started', { game: 'draft-board-setup', draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
+      socket.emit('draft-board-show-rules', { draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
     }
   });
 
@@ -1926,7 +2212,31 @@ io.on('connection', (socket) => {
 
   // ── Game selector ──────────────────────────────────────────────
 
-  socket.on('start-game', ({ game, exposureChance, debateSettings, auctionSettings }) => {
+  socket.on('show-game-select', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+
+    clearRoomTimers(room);
+    room.gameState = 'game-select';
+    room.qc = null;
+    room.pr = null;
+    room.ht = null;
+    room.et = null;
+    room.mafia = null;
+    room.debate = null;
+    room.auction = null;
+    room.draftBoard = null;
+    room.pendingHTSettings = { exposureChance: 0.10 };
+    room.pendingDebateSettings = null;
+    room.pendingMafiaSettings = null;
+    room.pendingAuctionSettings = null;
+    room.pendingDraftBoardSettings = normalizeDraftBoardSettings();
+    io.to(pin).emit('returned-to-game-select');
+    io.to(pin).emit('game-select-shown');
+  });
+
+  socket.on('start-game', ({ game, exposureChance, debateSettings, auctionSettings, draftBoardSettings }) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
     if (!room || room.hostSocketId !== socket.id) return;
@@ -1951,6 +2261,14 @@ io.on('connection', (socket) => {
       socket.emit('game-start-error', {
         game,
         message: 'Secret Superlatives needs at least 2 players to start.',
+      });
+      return;
+    }
+
+    if (game === 'draft-board' && room.players.length < DRAFT_BOARD_MIN_PLAYERS) {
+      socket.emit('game-start-error', {
+        game,
+        message: `Draft Board needs at least ${DRAFT_BOARD_MIN_PLAYERS} players to start.`,
       });
       return;
     }
@@ -2104,6 +2422,20 @@ io.on('connection', (socket) => {
       };
     }
 
+    if (game === 'draft-board') {
+      const settings = normalizeDraftBoardSettings(draftBoardSettings || room.pendingDraftBoardSettings);
+      if (!settings.category) {
+        socket.emit('game-start-error', {
+          game,
+          message: 'Write a category or choose one below.',
+        });
+        return;
+      }
+      if (room.players.length <= 2 && ANTHROPIC_API_KEY) settings.coachEnabled = true;
+      room.pendingDraftBoardSettings = settings;
+      room.draftBoard = createDraftBoardState(room, settings);
+    }
+
     io.to(pin).emit('game-started', { game });
 
     if (game === 'hot-takes') {
@@ -2126,6 +2458,10 @@ io.on('connection', (socket) => {
     if (game === 'auction') {
       startAuctionListing(pin);
     }
+
+    if (game === 'draft-board') {
+      emitDraftBoardState(pin);
+    }
   });
 
   socket.on('back-to-lobby', () => {
@@ -2142,10 +2478,12 @@ io.on('connection', (socket) => {
     room.mafia = null;
     room.debate = null;
     room.auction = null;
+    room.draftBoard = null;
     room.pendingHTSettings = { exposureChance: 0.10 };
     room.pendingDebateSettings = null;
     room.pendingMafiaSettings = null;
     room.pendingAuctionSettings = null;
+    room.pendingDraftBoardSettings = normalizeDraftBoardSettings();
     io.to(pin).emit('returned-to-lobby');
   });
 
@@ -2155,7 +2493,7 @@ io.on('connection', (socket) => {
     if (!room || room.hostSocketId !== socket.id) return;
 
     clearRoomTimers(room);
-    room.gameState = 'lobby';
+    room.gameState = 'game-select';
     room.qc = null;
     room.pr = null;
     room.ht = null;
@@ -2163,11 +2501,14 @@ io.on('connection', (socket) => {
     room.mafia = null;
     room.debate = null;
     room.auction = null;
+    room.draftBoard = null;
     room.pendingHTSettings = { exposureChance: 0.10 };
     room.pendingDebateSettings = null;
     room.pendingMafiaSettings = null;
     room.pendingAuctionSettings = null;
+    room.pendingDraftBoardSettings = normalizeDraftBoardSettings();
     io.to(pin).emit('returned-to-game-select');
+    io.to(pin).emit('game-select-shown');
   });
 
   // ── Questions & Challenges ─────────────────────────────────────
@@ -4104,6 +4445,108 @@ io.on('connection', (socket) => {
     io.to(pin).emit('auction-settings-updated', { auctionSettings: room.pendingAuctionSettings });
   });
 
+  socket.on('draft-board-show-rules', ({ draftBoardSettings } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    room.pendingDraftBoardSettings = normalizeDraftBoardSettings(draftBoardSettings || room.pendingDraftBoardSettings);
+    room.gameState = 'draft-board-setup';
+    io.to(pin).emit('game-started', { game: 'draft-board-setup', draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
+    io.to(pin).emit('draft-board-show-rules', { draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
+  });
+
+  socket.on('draft-board-settings-preview', ({ draftBoardSettings } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !draftBoardSettings) return;
+    room.pendingDraftBoardSettings = normalizeDraftBoardSettings(draftBoardSettings);
+    io.to(pin).emit('draft-board-settings-updated', { draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
+  });
+
+  socket.on('draft-board-submit-pick', ({ pick } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.draftBoard || room.gameState !== 'draft-board') return;
+    const db = room.draftBoard;
+    if (db.phase !== 'drafting') return;
+    const activePlayerId = db.draftOrder[db.currentTurnIndex];
+    if (activePlayerId !== socket.id) {
+      socket.emit('draft-board-pick-error', { message: 'It is not your pick yet.' });
+      return;
+    }
+    const cleanPick = String(pick || '').trim().replace(/\s+/g, ' ').slice(0, 50);
+    if (!cleanPick) {
+      socket.emit('draft-board-pick-error', { message: 'Type a pick first.' });
+      return;
+    }
+    const normalized = normalizeDraftPickText(cleanPick);
+    if (db.picks.some((entry) => entry.normalized === normalized)) {
+      socket.emit('draft-board-pick-error', { message: 'That exact pick is already on the board.' });
+      return;
+    }
+    const player = room.players.find((entry) => entry.id === socket.id);
+    if (!player) return;
+    if (!db.teamsByPlayerId[socket.id]) db.teamsByPlayerId[socket.id] = [];
+    const pickEntry = {
+      id: `${Date.now()}-${Math.random().toString(36).slice(2, 8)}`,
+      playerId: socket.id,
+      playerName: player.name,
+      text: cleanPick,
+      normalized,
+    };
+    db.picks.push(pickEntry);
+    db.teamsByPlayerId[socket.id].push(cleanPick);
+    db.message = '';
+    advanceDraftBoardAfterPick(pin);
+  });
+
+  socket.on('draft-board-undo-pick', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id || !room.draftBoard) return;
+    const db = room.draftBoard;
+    if (!['drafting', 'voting'].includes(db.phase) || db.picks.length === 0) return;
+    if (db.phase === 'voting' && Object.keys(db.votes || {}).length > 0) return;
+    db.phase = 'drafting';
+    const lastPick = db.picks.pop();
+    if (lastPick && db.teamsByPlayerId[lastPick.playerId]) {
+      db.teamsByPlayerId[lastPick.playerId].pop();
+    }
+    db.currentTurnIndex = Math.max(0, db.currentTurnIndex - 1);
+    db.message = lastPick ? `Undid ${lastPick.playerName}'s pick: ${lastPick.text}` : '';
+    emitDraftBoardState(pin);
+  });
+
+  socket.on('draft-board-submit-vote', ({ votedForId } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.draftBoard || room.gameState !== 'draft-board') return;
+    const db = room.draftBoard;
+    if (db.phase !== 'voting') return;
+    const validIds = new Set(room.players.filter((player) => player.id !== socket.id).map((player) => player.id));
+    if (!validIds.has(votedForId)) {
+      socket.emit('draft-board-vote-error', { message: 'Choose one opponent board.' });
+      return;
+    }
+    db.votes[socket.id] = votedForId;
+    db.message = '';
+    emitDraftBoardState(pin);
+    if (Object.keys(db.votes).length >= room.players.length) {
+      finishDraftBoardGame(pin);
+    }
+  });
+
+  socket.on('draft-board-play-again', () => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || room.hostSocketId !== socket.id) return;
+    room.draftBoard = null;
+    room.pendingDraftBoardSettings = normalizeDraftBoardSettings(room.pendingDraftBoardSettings);
+    room.gameState = 'draft-board-setup';
+    io.to(pin).emit('game-started', { game: 'draft-board-setup', draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
+    io.to(pin).emit('draft-board-show-rules', { draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY });
+  });
+
   socket.on('auction-bid', ({ increment }) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
@@ -4262,6 +4705,13 @@ io.on('connection', (socket) => {
             io.to(pin).emit('auction-stopped', { reason: `Bidder's Auction ended because there are fewer than ${AUCTION_MIN_PLAYERS} players.` });
           }
         }
+
+        if (currentRoom.gameState === 'draft-board' && currentRoom.draftBoard) {
+          clearRoomTimers(currentRoom);
+          currentRoom.gameState = 'lobby';
+          currentRoom.draftBoard = null;
+          io.to(pin).emit('draft-board-stopped', { reason: 'Draft Board ended because a player left.' });
+        }
       }, REJOIN_GRACE_MS);
     }
 
@@ -4320,6 +4770,17 @@ io.on('connection', (socket) => {
         io.to(pin).emit('auction-stopped', { reason: `Bidder's Auction ended because there are fewer than ${AUCTION_MIN_PLAYERS} players.` });
         return;
       }
+    }
+
+    if (!room.recentlyLeft?.[socket.data.name] && room.gameState === 'draft-board' && room.draftBoard) {
+      if (room.players.length < DRAFT_BOARD_MIN_PLAYERS) {
+        clearRoomTimers(room);
+        room.gameState = 'lobby';
+        room.draftBoard = null;
+        io.to(pin).emit('draft-board-stopped', { reason: `Draft Board ended because there are fewer than ${DRAFT_BOARD_MIN_PLAYERS} players.` });
+        return;
+      }
+      emitDraftBoardState(pin);
     }
 
     // Send updated list after hostId is finalized
