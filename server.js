@@ -1389,13 +1389,13 @@ function getETPlayerStatsTemplate() {
 
 async function fetchETQuestionsForTopic(topic) {
   const anthropicQuestions = await fetchETAnthropicQuestions(topic);
-  if (anthropicQuestions.length >= 3) {
-    return anthropicQuestions.slice(0, 3);
+  if (anthropicQuestions.length > 0) {
+    return anthropicQuestions;
   }
 
   const openAIQuestions = await fetchETOpenAIQuestions(topic);
-  if (openAIQuestions.length >= 3) {
-    return openAIQuestions.slice(0, 3);
+  if (openAIQuestions.length > 0) {
+    return openAIQuestions;
   }
 
   const response = await fetchETSemanticQuestions(topic);
@@ -1406,20 +1406,22 @@ async function fetchETQuestionsForTopic(topic) {
   return fetchETFallbackQuestions(topic);
 }
 
-async function fetchETAnthropicQuestions(topic) {
-  if (!ANTHROPIC_API_KEY) return [];
-
+async function generateETAnthropicRaw(topic, count, existingQuestions = []) {
+  const avoidLine = existingQuestions.length > 0
+    ? `Do not repeat or rephrase any of these already-used questions: ${existingQuestions.map((q) => `"${q.question}"`).join('; ')}.`
+    : null;
   const body = {
     model: ANTHROPIC_TRIVIA_MODEL,
-    max_tokens: 1200,
+    max_tokens: Math.max(500, count * 500),
     system: [
-      'Generate exactly 3 multiple-choice trivia questions for the given topic.',
+      `Generate exactly ${count} multiple-choice trivia question${count === 1 ? '' : 's'} for the given topic.`,
       'Return valid JSON only.',
       'The JSON must have the shape {"questions":[{"question":"...","correctAnswer":"...","answers":["...","...","...","..."]}]}',
       'Each question must be factual, clear, and suitable for a party trivia game.',
       'Each answers array must have exactly 4 distinct answers and include the correct answer.',
       'Avoid trick questions, subjective questions, and duplicates.',
       'If the topic is narrow, reinterpret it into the closest fair trivia topic instead of refusing.',
+      ...(avoidLine ? [avoidLine] : []),
     ].join(' '),
     messages: [
       {
@@ -1440,15 +1442,17 @@ async function fetchETAnthropicQuestions(topic) {
   }
 
   const parsed = extractAnthropicTriviaPayload(response);
-  if (!parsed || !Array.isArray(parsed.questions)) {
-    return [];
-  }
+  if (!parsed || !Array.isArray(parsed.questions)) return [];
 
-  const normalized = parsed.questions
+  return parsed.questions
     .map((item, index) => normalizeGeneratedTriviaQuestion(item, `anthropic-${Date.now()}-${index}`))
-    .filter(Boolean);
+    .filter(Boolean)
+    .slice(0, count);
+}
 
-  return verifyETGeneratedQuestions(normalized.slice(0, 3), topic, 'Anthropic');
+async function fetchETAnthropicQuestions(topic) {
+  if (!ANTHROPIC_API_KEY) return [];
+  return retryVerifyETQuestions(topic, (count, existing) => generateETAnthropicRaw(topic, count, existing), 'Anthropic');
 }
 
 function extractAnthropicTriviaPayload(response) {
@@ -1476,9 +1480,10 @@ function extractAnthropicTriviaPayload(response) {
   return null;
 }
 
-async function fetchETOpenAIQuestions(topic) {
-  if (!OPENAI_API_KEY) return [];
-
+async function generateETOpenAIRaw(topic, count, existingQuestions = []) {
+  const avoidLine = existingQuestions.length > 0
+    ? `Do not repeat or rephrase any of these already-used questions: ${existingQuestions.map((q) => `"${q.question}"`).join('; ')}.`
+    : null;
   const schema = {
     name: 'everything_trivia_questions',
     strict: true,
@@ -1488,8 +1493,8 @@ async function fetchETOpenAIQuestions(topic) {
       properties: {
         questions: {
           type: 'array',
-          minItems: 3,
-          maxItems: 3,
+          minItems: count,
+          maxItems: count,
           items: {
             type: 'object',
             additionalProperties: false,
@@ -1520,13 +1525,14 @@ async function fetchETOpenAIQuestions(topic) {
           {
             type: 'input_text',
             text: [
-              'Generate exactly 3 multiple-choice trivia questions for the given topic.',
+              `Generate exactly ${count} multiple-choice trivia question${count === 1 ? '' : 's'} for the given topic.`,
               'The questions must be factual, broadly answerable, and suitable for a party trivia game.',
               'Avoid trick questions, subjective questions, and ambiguous wording.',
               'Each question must have exactly 4 distinct answer choices, with exactly 1 correct answer.',
               'Include the correct answer inside the answers array.',
               'Use concise wording and keep difficulty mixed but fair.',
               'If the topic is too narrow, reinterpret it into the closest fair trivia topic instead of refusing.',
+              ...(avoidLine ? [avoidLine] : []),
             ].join(' '),
           },
         ],
@@ -1562,15 +1568,17 @@ async function fetchETOpenAIQuestions(topic) {
   }
 
   const parsed = extractOpenAITriviaPayload(response);
-  if (!parsed || !Array.isArray(parsed.questions)) {
-    return [];
-  }
+  if (!parsed || !Array.isArray(parsed.questions)) return [];
 
-  const normalized = parsed.questions
+  return parsed.questions
     .map((item, index) => normalizeGeneratedTriviaQuestion(item, `openai-${Date.now()}-${index}`))
-    .filter(Boolean);
+    .filter(Boolean)
+    .slice(0, count);
+}
 
-  return verifyETGeneratedQuestions(normalized.slice(0, 3), topic, 'OpenAI');
+async function fetchETOpenAIQuestions(topic) {
+  if (!OPENAI_API_KEY) return [];
+  return retryVerifyETQuestions(topic, (count, existing) => generateETOpenAIRaw(topic, count, existing), 'OpenAI');
 }
 
 function summarizeProviderError(error) {
@@ -1642,25 +1650,56 @@ function normalizeGeneratedTriviaQuestion(item, idPrefix) {
   };
 }
 
-async function verifyETGeneratedQuestions(questions, topic, providerName) {
-  if (!Array.isArray(questions) || questions.length === 0) return [];
+async function retryVerifyETQuestions(topic, generateFn, providerName) {
+  const MAX_ATTEMPTS = 3;
+  const verified = [];
+  let needed = 3;
 
-  try {
-    const verdicts = await verifyETQuestionsWithAI(topic, questions);
-    if (!Array.isArray(verdicts) || verdicts.length !== questions.length) {
-      return [];
+  const seenQuestions = new Set();
+  const isDuplicate = (q) => {
+    const key = q.question.trim().toLowerCase();
+    if (seenQuestions.has(key)) return true;
+    seenQuestions.add(key);
+    return false;
+  };
+
+  for (let attempt = 1; attempt <= MAX_ATTEMPTS && needed > 0; attempt++) {
+    let raw;
+    try {
+      raw = await generateFn(needed, verified);
+    } catch (err) {
+      console.error(`[Everything Trivia] ${providerName} generation attempt ${attempt} failed for "${topic}": ${err && err.message ? err.message : err}`);
+      break;
+    }
+    if (!raw || raw.length === 0) break;
+
+    const deduped = raw.filter((q) => !isDuplicate(q));
+
+    let verdicts;
+    try {
+      verdicts = await verifyETQuestionsWithAI(topic, deduped);
+    } catch (err) {
+      console.warn(`[Everything Trivia] ${providerName} verification attempt ${attempt} failed for "${topic}", accepting as-is: ${err && err.message ? err.message : err}`);
+      verified.push(...deduped.slice(0, needed));
+      break;
     }
 
-    const verified = questions.filter((question, index) => verdicts[index] && verdicts[index].isValid === true);
-    const rejectedCount = questions.length - verified.length;
-    if (rejectedCount > 0) {
-      console.warn(`[Everything Trivia] ${providerName} verification rejected ${rejectedCount} generated question(s) for topic "${topic}".`);
+    if (!Array.isArray(verdicts) || verdicts.length !== deduped.length) {
+      console.warn(`[Everything Trivia] ${providerName} verification attempt ${attempt} returned unexpected shape for "${topic}", accepting as-is.`);
+      verified.push(...deduped.slice(0, needed));
+      break;
     }
-    return verified;
-  } catch (error) {
-    console.error(`[Everything Trivia] ${providerName} verification failed for topic "${topic}": ${error && error.message ? error.message : error}`);
-    return [];
+
+    const passed = deduped.filter((q, i) => verdicts[i] && verdicts[i].isValid === true);
+    const rejected = deduped.length - passed.length;
+    if (rejected > 0) {
+      console.warn(`[Everything Trivia] ${providerName} attempt ${attempt}: rejected ${rejected}/${deduped.length} for "${topic}"${attempt < MAX_ATTEMPTS ? ', retrying...' : ', using what passed.'}`);
+    }
+    verified.push(...passed);
+    needed = 3 - verified.length;
   }
+
+  return verified.slice(0, 3);
 }
 
 async function verifyETQuestionsWithAI(topic, questions) {
@@ -1710,8 +1749,8 @@ async function verifyETQuestionsWithOpenAI(topic, questions) {
             type: 'input_text',
             text: [
               'You verify multiple-choice trivia questions for factual accuracy.',
-              'Mark isValid true only when the listed correctAnswer is clearly correct using general world knowledge and the other three choices are not also correct.',
-              'If a question is ambiguous, misleading, has multiple plausible answers, or you are not confident, mark isValid false.',
+              'Mark isValid false ONLY when the listed correctAnswer is definitively and clearly wrong.',
+              'Give questions the benefit of the doubt — accept anything reasonable even if slightly imprecise or subjective.',
               'Do not rewrite the questions.',
             ].join(' '),
           },
@@ -1763,8 +1802,8 @@ async function verifyETQuestionsWithAnthropic(topic, questions) {
       'You verify multiple-choice trivia questions for factual accuracy.',
       'Return valid JSON only.',
       'The JSON must have the shape {"verdicts":[{"isValid":true,"reason":"..."},{"isValid":false,"reason":"..."}]}.',
-      'Mark isValid true only if the listed correctAnswer is clearly correct and the other answer choices are not also correct.',
-      'If a question is ambiguous, misleading, has more than one plausible correct answer, or you are unsure, mark isValid false.',
+      'Mark isValid false ONLY when the listed correctAnswer is definitively and clearly wrong.',
+      'Give questions the benefit of the doubt — accept anything reasonable even if slightly imprecise or subjective.',
     ].join(' '),
     messages: [
       {
@@ -3030,12 +3069,12 @@ io.on('connection', (socket) => {
       const currentEntry = room.et && room.et.topicsByPlayerId[socket.id];
       if (!currentEntry || currentEntry.requestId !== requestId) return;
 
-      if (questions.length < 3) {
+      if (questions.length < 1) {
         currentEntry.status = 'needs-resubmit';
         currentEntry.questions = [];
         socket.emit('et-topic-invalid', {
           topic: trimmedTopic,
-          message: `Couldn't find 3 solid questions for "${trimmedTopic}". Try a new topic.`,
+          message: `Couldn't find any solid questions for "${trimmedTopic}". Try a new topic.`,
         });
         emitETTopicStatus(pin);
         return;
@@ -3044,12 +3083,12 @@ io.on('connection', (socket) => {
       currentEntry.status = 'ready';
       currentEntry.questions = questions;
 
-      socket.emit('et-topic-accepted', { topic: trimmedTopic });
+      socket.emit('et-topic-accepted', { topic: trimmedTopic, questionCount: questions.length });
       emitETTopicStatus(pin);
 
       const allReady = room.players.every((roomPlayer) => {
         const entry = room.et.topicsByPlayerId[roomPlayer.id];
-        return entry && entry.status === 'ready' && entry.questions.length === 3;
+        return entry && entry.status === 'ready' && entry.questions.length >= 1;
       });
 
       if (allReady) {
