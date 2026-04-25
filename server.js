@@ -1164,6 +1164,29 @@ function parseJSONFromText(text = '') {
   }
 }
 
+function getDraftBoardMetricCoachingGuidance(metric = '') {
+  switch (String(metric || '').trim()) {
+    case 'Best':
+      return 'Judge by overall quality, desirability, and cultural prestige. Consider the whole vibe of the board instead of reducing it to one stat.';
+    case 'Worst':
+      return 'Judge by overall undesirability, weakness, or cultural embarrassment. Consider the full negative gestalt instead of one narrow metric.';
+    case 'Would win in a fight':
+      return 'Judge by raw combat advantage: toughness, size, weaponry, aggression, and cunning. For fictional or abstract entries, use their own internal logic creatively.';
+    case 'Banger party guest list':
+      return 'Judge by vibe, chemistry, and storytelling potential. Favor energy, chaos, wisdom, and unforgettable interactions over mere fame.';
+    case 'Best basketball team':
+      return 'Judge by teamwork, athleticism, competitive spirit, and character. Do not care whether entries are literally linked to basketball; reward a squad that feels like a real identity-driven team.';
+    case 'Would win Survivor':
+      return 'Judge by social game, endurance, strategy, adaptability, and the ability to avoid getting voted out.';
+    case 'Best heist crew':
+      return 'Judge by complementary skills, trust, calm under pressure, ingenuity, and the ability to improvise when plans break down.';
+    case "Coach's favorite":
+      return 'Coach is a pet rock judging on pure chaotic whimsy. Reward the board Coach would irrationally vibe with, even if the choice is indefensible.';
+    default:
+      return 'Judge the boards according to the stated grading metric in a way that feels natural, balanced, and specific to the category.';
+  }
+}
+
 async function fetchDraftBoardCoachResult(room) {
   if (!ANTHROPIC_API_KEY || !room?.draftBoard) return null;
   const db = room.draftBoard;
@@ -1175,16 +1198,24 @@ async function fetchDraftBoardCoachResult(room) {
     model: ANTHROPIC_COACH_MODEL,
     max_tokens: 220,
     system: [
-      'You are Coach, a concise judge for a party draft game.',
+      'You are Coach, a concise pet rock judge for a party draft game.',
       'Pick exactly one winning team based only on the category, grading metric, and drafted picks.',
       'Do not invent picks. Be fair. Be straight and to the point.',
       'Return valid JSON only with shape {"winnerName":"...","explanation":"..."}',
       'The explanation must be 30 words or fewer.',
+      'Explain the pick in fresh, natural language.',
+      'Do not mention rubrics, criteria lists, "based on the metric", "according to the rules", or quote any hidden judging instructions.',
+      'Sound like Coach making a short instinctive call, not like a formal evaluator reading a checklist.',
     ].join(' '),
     messages: [
       {
         role: 'user',
-        content: JSON.stringify({ category: db.settings.category, gradingMetric: db.settings.metric, teams }),
+        content: JSON.stringify({
+          category: db.settings.category,
+          gradingMetric: db.settings.metric,
+          metricGuidance: getDraftBoardMetricCoachingGuidance(db.settings.metric),
+          teams,
+        }),
       },
     ],
   };
@@ -1417,7 +1448,7 @@ async function fetchETAnthropicQuestions(topic) {
     .map((item, index) => normalizeGeneratedTriviaQuestion(item, `anthropic-${Date.now()}-${index}`))
     .filter(Boolean);
 
-  return normalized.slice(0, 3);
+  return verifyETGeneratedQuestions(normalized.slice(0, 3), topic, 'Anthropic');
 }
 
 function extractAnthropicTriviaPayload(response) {
@@ -1539,7 +1570,7 @@ async function fetchETOpenAIQuestions(topic) {
     .map((item, index) => normalizeGeneratedTriviaQuestion(item, `openai-${Date.now()}-${index}`))
     .filter(Boolean);
 
-  return normalized.slice(0, 3);
+  return verifyETGeneratedQuestions(normalized.slice(0, 3), topic, 'OpenAI');
 }
 
 function summarizeProviderError(error) {
@@ -1609,6 +1640,156 @@ function normalizeGeneratedTriviaQuestion(item, idPrefix) {
     answers: shuffle(answers),
     correctAnswer,
   };
+}
+
+async function verifyETGeneratedQuestions(questions, topic, providerName) {
+  if (!Array.isArray(questions) || questions.length === 0) return [];
+
+  try {
+    const verdicts = await verifyETQuestionsWithAI(topic, questions);
+    if (!Array.isArray(verdicts) || verdicts.length !== questions.length) {
+      return [];
+    }
+
+    const verified = questions.filter((question, index) => verdicts[index] && verdicts[index].isValid === true);
+    const rejectedCount = questions.length - verified.length;
+    if (rejectedCount > 0) {
+      console.warn(`[Everything Trivia] ${providerName} verification rejected ${rejectedCount} generated question(s) for topic "${topic}".`);
+    }
+    return verified;
+  } catch (error) {
+    console.error(`[Everything Trivia] ${providerName} verification failed for topic "${topic}": ${error && error.message ? error.message : error}`);
+    return [];
+  }
+}
+
+async function verifyETQuestionsWithAI(topic, questions) {
+  if (OPENAI_API_KEY) {
+    return verifyETQuestionsWithOpenAI(topic, questions);
+  }
+  if (ANTHROPIC_API_KEY) {
+    return verifyETQuestionsWithAnthropic(topic, questions);
+  }
+  return questions.map(() => ({ isValid: true, reason: 'No AI verifier configured.' }));
+}
+
+async function verifyETQuestionsWithOpenAI(topic, questions) {
+  const schema = {
+    name: 'everything_trivia_verification',
+    strict: true,
+    schema: {
+      type: 'object',
+      additionalProperties: false,
+      properties: {
+        verdicts: {
+          type: 'array',
+          minItems: questions.length,
+          maxItems: questions.length,
+          items: {
+            type: 'object',
+            additionalProperties: false,
+            properties: {
+              isValid: { type: 'boolean' },
+              reason: { type: 'string' },
+            },
+            required: ['isValid', 'reason'],
+          },
+        },
+      },
+      required: ['verdicts'],
+    },
+  };
+
+  const body = {
+    model: OPENAI_TRIVIA_MODEL,
+    input: [
+      {
+        role: 'system',
+        content: [
+          {
+            type: 'input_text',
+            text: [
+              'You verify multiple-choice trivia questions for factual accuracy.',
+              'Mark isValid true only when the listed correctAnswer is clearly correct using general world knowledge and the other three choices are not also correct.',
+              'If a question is ambiguous, misleading, has multiple plausible answers, or you are not confident, mark isValid false.',
+              'Do not rewrite the questions.',
+            ].join(' '),
+          },
+        ],
+      },
+      {
+        role: 'user',
+        content: [
+          {
+            type: 'input_text',
+            text: JSON.stringify({ topic, questions }),
+          },
+        ],
+      },
+    ],
+    text: {
+      format: {
+        type: 'json_schema',
+        ...schema,
+      },
+    },
+    reasoning: {
+      effort: 'minimal',
+    },
+  };
+
+  const response = await httpsPostJSON('https://api.openai.com/v1/responses', body, {
+    Authorization: `Bearer ${OPENAI_API_KEY}`,
+    'Content-Type': 'application/json',
+  });
+
+  if (response.error) {
+    throw new Error(response.error.message || 'OpenAI verification request failed');
+  }
+
+  const parsed = extractOpenAITriviaPayload(response);
+  if (!parsed || !Array.isArray(parsed.verdicts)) {
+    throw new Error('OpenAI verification returned an invalid payload');
+  }
+
+  return parsed.verdicts;
+}
+
+async function verifyETQuestionsWithAnthropic(topic, questions) {
+  const body = {
+    model: ANTHROPIC_TRIVIA_MODEL,
+    max_tokens: 900,
+    system: [
+      'You verify multiple-choice trivia questions for factual accuracy.',
+      'Return valid JSON only.',
+      'The JSON must have the shape {"verdicts":[{"isValid":true,"reason":"..."},{"isValid":false,"reason":"..."}]}.',
+      'Mark isValid true only if the listed correctAnswer is clearly correct and the other answer choices are not also correct.',
+      'If a question is ambiguous, misleading, has more than one plausible correct answer, or you are unsure, mark isValid false.',
+    ].join(' '),
+    messages: [
+      {
+        role: 'user',
+        content: JSON.stringify({ topic, questions }),
+      },
+    ],
+  };
+
+  const response = await httpsPostJSON('https://api.anthropic.com/v1/messages', body, {
+    'x-api-key': ANTHROPIC_API_KEY,
+    'anthropic-version': '2023-06-01',
+    'content-type': 'application/json',
+  });
+
+  if (response.error) {
+    throw new Error(response.error.message || 'Anthropic verification request failed');
+  }
+
+  const parsed = extractAnthropicTriviaPayload(response);
+  if (!parsed || !Array.isArray(parsed.verdicts)) {
+    throw new Error('Anthropic verification returned an invalid payload');
+  }
+
+  return parsed.verdicts;
 }
 
 async function fetchETSemanticQuestions(topic) {
@@ -1890,6 +2071,118 @@ function remapPlayerId(room, oldId, newId) {
   }
 }
 
+function getMafiaLivingPlayersForState(room) {
+  return room.players.filter((player) => room.mafia.alive[player.id]);
+}
+
+function getMafiaVoteCountsForState(room, sourceVotes = room.mafia.votes) {
+  return Object.values(sourceVotes || {}).reduce((acc, targetId) => {
+    acc[targetId] = (acc[targetId] || 0) + 1;
+    return acc;
+  }, {});
+}
+
+function buildMafiaRejoinStateForPlayer(room, playerId) {
+  const mafia = room.mafia;
+  const myRole = mafia.roles[playerId] || null;
+  const isAlive = !!mafia.alive[playerId];
+  const livingPlayers = getMafiaLivingPlayersForState(room);
+  const aliveKillers = livingPlayers.filter((player) => mafia.roles[player.id] === 'killer').length;
+  const publicVoteCounts = getMafiaVoteCountsForState(room);
+  const killers = room.players.filter((player) => mafia.roles[player.id] === 'killer');
+  const pendingNight = mafia.pendingNight || { killerVotes: {}, pollVotes: {} };
+  const killerTeam = myRole === 'killer'
+    ? killers.map((player) => ({ id: player.id, name: player.name, alive: !!mafia.alive[player.id] }))
+    : [];
+  const canShowNightKillerMarkers = myRole === 'killer' && mafia.phase === 'night' && !pendingNight.killerVotes[playerId];
+
+  let actionOptions = [];
+  let actionType = null;
+  if (mafia.phase === 'night' && isAlive) {
+    if (myRole === 'killer') {
+      actionType = 'killer';
+      actionOptions = livingPlayers
+        .filter((player) => mafia.roles[player.id] !== 'killer')
+        .map((player) => ({ id: player.id, name: player.name }));
+    } else if (myRole === 'doctor') {
+      actionType = 'doctor';
+      actionOptions = livingPlayers
+        .filter((player) => player.id !== mafia.doctorLastProtectedId)
+        .map((player) => ({ id: player.id, name: player.name }));
+    } else if (['villager', 'joker'].includes(myRole) && mafia.pendingPoll) {
+      actionType = 'poll';
+      actionOptions = mafia.pendingPoll.options.map((option) => ({ id: option, name: option }));
+    }
+  }
+
+  const killerVoteView = myRole === 'killer'
+    ? killers.map((killer) => {
+        const targetId = pendingNight.killerVotes[killer.id];
+        const target = room.players.find((player) => player.id === targetId);
+        return { killerName: killer.name, targetName: target ? target.name : 'No vote yet' };
+      })
+    : [];
+
+  let selectedNightChoice = null;
+  if (mafia.phase === 'night' && isAlive) {
+    if (myRole === 'killer') selectedNightChoice = pendingNight.killerVotes[playerId] || null;
+    else if (myRole === 'doctor') selectedNightChoice = pendingNight.doctorTarget || null;
+    else if (['villager', 'joker'].includes(myRole)) selectedNightChoice = pendingNight.pollVotes[playerId] || null;
+  }
+
+  return {
+    started: mafia.started,
+    playerId,
+    isHost: playerId === room.hostSocketId,
+    phase: mafia.phase,
+    dayNumber: mafia.dayNumber,
+    nightNumber: mafia.nightNumber,
+    aliveKillers,
+    abstainVoteCount: publicVoteCounts.__abstain__ || 0,
+    majorityNeeded: Math.floor(livingPlayers.length / 2) + 1,
+    jokerEnabled: mafia.jokerEnabled,
+    hiddenPollsUntilEnd: mafia.hiddenPollsUntilEnd,
+    roleCounts: getMafiaRoleCounts(room.players.length, mafia.jokerEnabled),
+    minPlayers: 4,
+    myRole,
+    isAlive,
+    players: room.players.map((player) => ({
+      id: player.id,
+      name: player.name,
+      alive: !!mafia.alive[player.id],
+      voteCount: publicVoteCounts[player.id] || 0,
+      isKnownKiller: myRole === 'killer' && mafia.roles[player.id] === 'killer',
+    })),
+    eventMessage: mafia.eventMessage,
+    eventTone: mafia.eventTone || 'neutral',
+    actionType,
+    actionOptions,
+    selectedNightChoice,
+    currentVote: mafia.votes[playerId] || null,
+    killerVoteView,
+    revoteCandidates: mafia.revoteCandidates,
+    timer: {
+      discussion: mafia.discussionTimeLeft,
+      voting: mafia.voteTimeLeft,
+      night: mafia.nightTimeLeft || 0,
+    },
+    lastPollResult: mafia.lastPollResult,
+    pendingPoll: mafia.pendingPoll ? { question: mafia.pendingPoll.question, options: mafia.pendingPoll.options } : null,
+    canHostAdvanceDiscussion: playerId === room.hostSocketId && mafia.phase === 'discussion',
+    canHostSkipVote: playerId === room.hostSocketId && ['voting', 'revote'].includes(mafia.phase),
+    canHostStartGame: playerId === room.hostSocketId && mafia.phase === 'setup' && room.players.length >= 4,
+    canHostStartNight: playerId === room.hostSocketId && mafia.phase === 'day-result',
+    canHostStartDiscussion: false,
+    winner: mafia.winner,
+    killerTeam,
+    canShowNightKillerMarkers,
+    finalPolarizedPoll: mafia.phase === 'game-over' ? mafia.finalPolarizedPoll : null,
+    revealedRoles: mafia.phase === 'game-over'
+      ? room.players.map((player) => ({ name: player.name, role: mafia.roles[player.id] }))
+      : [],
+  };
+}
+
 function reemitStateToPlayer(pin, socket) {
   const room = rooms[pin];
   if (!room) return;
@@ -1915,7 +2208,7 @@ function reemitStateToPlayer(pin, socket) {
 
   if (gs === 'mafia' && room.mafia) {
     socket.emit('game-started', { game: 'mafia', resume: true });
-    socket.emit('mafia-state', buildMafiaStateForPlayer(room, socket.id));
+    socket.emit('mafia-state', buildMafiaRejoinStateForPlayer(room, socket.id));
     return;
   }
 
@@ -2082,40 +2375,54 @@ io.on('connection', (socket) => {
       return;
     }
 
-    const rejoinEntry = room.recentlyLeft && room.recentlyLeft[name];
+    const normalizedName = (name || '').trim();
+    const rejoinEntry = room.recentlyLeft && room.recentlyLeft[normalizedName];
+    const existingPlayer = room.players.find(
+      (p) => p.name.toLowerCase() === normalizedName.toLowerCase()
+    );
+    const canReclaimExistingPlayer = !!existingPlayer && !['lobby', 'game-select'].includes(room.gameState);
+    const effectiveRejoinEntry = rejoinEntry || (canReclaimExistingPlayer
+      ? { oldSocketId: existingPlayer.id, wasHost: room.hostSocketId === existingPlayer.id }
+      : null);
 
-    if (room.gameState !== 'lobby' && room.gameState !== 'game-select' && room.gameState !== 'debate-setup' && room.gameState !== 'auction-setup' && room.gameState !== 'hot-takes-setup' && room.gameState !== 'draft-board-setup' && !rejoinEntry) {
+    if (room.gameState !== 'lobby' && room.gameState !== 'game-select' && room.gameState !== 'debate-setup' && room.gameState !== 'auction-setup' && room.gameState !== 'hot-takes-setup' && room.gameState !== 'draft-board-setup' && !effectiveRejoinEntry) {
       socket.emit('join-error', { message: 'Game already in progress.' });
       return;
     }
 
     const nameTaken = room.players.some(
-      (p) => p.name.toLowerCase() === name.toLowerCase()
+      (p) => p.name.toLowerCase() === normalizedName.toLowerCase()
     );
-    if (nameTaken) {
+    if (nameTaken && !effectiveRejoinEntry) {
       socket.emit('join-error', { message: 'That name is already taken.' });
       return;
     }
 
-    const player = { id: socket.id, name };
-    room.players.push(player);
+    const player = { id: socket.id, name: normalizedName };
+    if (!effectiveRejoinEntry) room.players.push(player);
 
     socket.join(pin);
     socket.data.pin = pin;
-    socket.data.name = name;
+    socket.data.name = normalizedName;
     socket.data.isHost = false;
 
-    if (rejoinEntry) {
-      remapPlayerId(room, rejoinEntry.oldSocketId, socket.id);
+    if (effectiveRejoinEntry) {
+      const oldSocket = io.sockets.sockets.get(effectiveRejoinEntry.oldSocketId);
+      if (oldSocket && oldSocket.id !== socket.id) {
+        oldSocket.data.replacedBy = socket.id;
+        oldSocket.leave(pin);
+      }
+      if (!existingPlayer) room.players.push(player);
+      remapPlayerId(room, effectiveRejoinEntry.oldSocketId, socket.id);
       socket.data.isHost = room.hostSocketId === socket.id;
-      delete room.recentlyLeft[name];
+      if (room.recentlyLeft) delete room.recentlyLeft[normalizedName];
       io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
       reemitStateToPlayer(pin, socket);
       return;
     }
 
     socket.emit('joined-room', {
-      name,
+      name: normalizedName,
       players: room.players,
       pin,
       qrDataURL: room.qrDataURL,
@@ -3904,20 +4211,14 @@ io.on('connection', (socket) => {
       ? `${killedPlayer.name} was killed overnight.\n${room.mafia.roles[targetId] === 'killer' ? 'They were a killer.' : 'They were not a killer.'}`
       : 'Nobody died last night.';
     room.mafia.eventTone = killedPlayer ? 'bad' : 'good';
-    room.mafia.phase = 'night-result';
-    emitMafiaState(pin);
 
     const win = getMafiaWin(room);
-    const timer = setTimeout(() => {
-      room.timers = room.timers.filter((entry) => entry !== timer);
-      if (!room.mafia) return;
-      if (win) {
-        startMafiaWinnerSplash(pin, win);
-      } else {
-        startMafiaDiscussion(pin, { incrementDay: true, keepEventMessage: true });
-      }
-    }, win ? 4500 : 5000);
-    room.timers.push(timer);
+    if (win) {
+      startMafiaWinnerSplash(pin, win);
+      return;
+    }
+
+    startMafiaDiscussion(pin, { incrementDay: true, keepEventMessage: true });
   }
 
   function getMafiaWin(room) {
@@ -4647,6 +4948,10 @@ io.on('connection', (socket) => {
     if (!pin || !rooms[pin]) return;
 
     const room = rooms[pin];
+
+    if (socket.data.replacedBy) {
+      return;
+    }
 
     if (socket.data.isDisplay) {
       if (room.displaySockets) room.displaySockets.delete(socket.id);

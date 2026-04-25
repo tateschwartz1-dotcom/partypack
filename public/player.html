@@ -42,47 +42,21 @@
       justify-content: center;
       padding: 1.25rem;
     }
-    body.mafia-phase-discussion {
-      background-color: #06120b;
-      background-image:
-        radial-gradient(ellipse at 20% 30%, rgba(34,197,94,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(21,128,61,0.10) 0%, transparent 50%);
-    }
-    body.mafia-phase-voting, body.mafia-phase-revote {
-      background-color: #1a1005;
-      background-image:
-        radial-gradient(ellipse at 20% 30%, rgba(245,158,11,0.14) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(180,83,9,0.10) 0%, transparent 50%);
-    }
-    body.mafia-phase-night {
-      background-color: #090514;
-      background-image:
-        radial-gradient(ellipse at 20% 30%, rgba(124,58,237,0.16) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(91,33,182,0.12) 0%, transparent 50%);
-    }
-    body.mafia-phase-day-result {
-      background-color: #18070d;
-      background-image:
-        radial-gradient(ellipse at 20% 30%, rgba(225,29,72,0.16) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(190,24,93,0.10) 0%, transparent 50%);
-    }
-    body.mafia-phase-winner-town {
-      background-color: #07140b;
-      background-image:
-        radial-gradient(ellipse at 20% 30%, rgba(34,197,94,0.18) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(22,163,74,0.12) 0%, transparent 50%);
-    }
-    body.mafia-phase-winner-killers {
-      background-color: #18070d;
-      background-image:
-        radial-gradient(ellipse at 20% 30%, rgba(244,63,94,0.20) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(225,29,72,0.12) 0%, transparent 50%);
-    }
+    body.mafia-phase-discussion,
+    body.mafia-phase-voting,
+    body.mafia-phase-revote,
+    body.mafia-phase-night,
+    body.mafia-phase-day-result,
+    body.mafia-phase-winner-town,
+    body.mafia-phase-winner-killers,
     body.mafia-phase-winner-joker {
-      background-color: #140917;
+      background-color: #0a1010;
       background-image:
-        radial-gradient(ellipse at 20% 30%, rgba(245,158,11,0.16) 0%, transparent 55%),
-        radial-gradient(ellipse at 80% 70%, rgba(168,85,247,0.12) 0%, transparent 50%);
+        radial-gradient(circle at 76% 12%, rgba(176,31,48,0.40) 0 6rem, transparent 6.2rem),
+        radial-gradient(ellipse at 50% 112%, rgba(51,81,55,0.36), transparent 52%),
+        linear-gradient(180deg, #151719 0%, #080b0b 100%);
+      background-attachment: fixed;
+      background-size: 100vw 100vh;
     }
 
     .screen { display: none; text-align: center; width: 100%; max-width: 400px; position: relative; z-index: 1; }
@@ -291,19 +265,17 @@
     }
     .game-card.mafia-game-card {
       background:
-        linear-gradient(112deg, rgba(210,230,248,0.06) 0 10%, transparent 10% 20%, rgba(210,230,248,0.04) 20% 30%, transparent 30%),
-        radial-gradient(circle at 82% 26%, rgba(96,165,250,0.14), transparent 35%),
-        repeating-linear-gradient(0deg, rgba(210,230,248,0.025) 0 1px, transparent 1px 13px),
-        linear-gradient(180deg, #101927, #080d14);
-      border-color: #385878;
-      box-shadow: inset 0 0 0 1px rgba(147,181,213,0.10);
+        radial-gradient(circle at 82% 20%, rgba(178,28,46,0.44) 0 2.4rem, transparent 2.5rem),
+        linear-gradient(180deg, #151819, #08100f);
+      border-color: #683036;
+      box-shadow: inset 0 0 0 1px rgba(214,91,97,0.12);
     }
     .game-card.mafia-game-card:active {
-      border-color: #7fb0dd;
-      box-shadow: 0 8px 24px rgba(7,18,31,0.34), 0 0 20px rgba(96,165,250,0.14);
+      border-color: #d65b61;
+      box-shadow: 0 8px 24px rgba(7,12,10,0.36), 0 0 20px rgba(178,28,46,0.18);
     }
-    .game-card.mafia-game-card .game-title { color: #b8d7f0; }
-    .game-card.mafia-game-card .game-desc { color: #93a8bb; }
+    .game-card.mafia-game-card .game-title { color: #f1ded1; }
+    .game-card.mafia-game-card .game-desc { color: #b8b89e; }
     .game-card.ss-game-card {
       background: #10241f;
       border-color: #38a169;
@@ -673,8 +645,8 @@
 
     body.light-mode .game-card.pr-game-card {
       background:
+        radial-gradient(circle at 18% 22%, rgba(183, 28, 28, 0.10), transparent 34%),
         linear-gradient(135deg, rgba(183, 28, 28, 0.08) 0 10%, transparent 10% 90%, rgba(23, 18, 19, 0.10) 90%),
-        repeating-linear-gradient(90deg, rgba(23,18,19,0.055) 0 1px, transparent 1px 26px),
         linear-gradient(90deg, #fff7e8 0 50%, #f3dede 50% 100%);
       border-color: #c94a3f;
       box-shadow:
@@ -1084,19 +1056,19 @@
     }
 
     .mafia-wrap {
-      --mafia-accent: #fca5a5;
-      --mafia-accent-strong: #b91c1c;
-      --mafia-accent-soft: #fecaca;
-      --mafia-chip-bg: #2b1020;
-      --mafia-chip-border: #7f1d1d;
-      --mafia-hero-bg: linear-gradient(180deg, #29121d, #160d14);
-      --mafia-hero-border: #7f1d1d;
-      --mafia-card-bg: linear-gradient(180deg, #1a1221, #120c19);
-      --mafia-card-border: #35213e;
-      --mafia-event-bg: linear-gradient(180deg, #3b111a, #210b11);
-      --mafia-event-border: #b91c1c;
-      --mafia-button-bg: #18111f;
-      --mafia-button-selected-bg: linear-gradient(180deg, #2b1320, #180d14);
+      --mafia-accent: #d65b61;
+      --mafia-accent-strong: #9f1f2f;
+      --mafia-accent-soft: #f3b7aa;
+      --mafia-chip-bg: #251815;
+      --mafia-chip-border: #7b2f31;
+      --mafia-hero-bg: linear-gradient(180deg, #20281f, #0d120f);
+      --mafia-hero-border: #7b2f31;
+      --mafia-card-bg: linear-gradient(180deg, #181f18, #0a0e0c);
+      --mafia-card-border: #344235;
+      --mafia-event-bg: linear-gradient(180deg, #291b19, #100d0b);
+      --mafia-event-border: #7b2f31;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a32232 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #2a1716, #12100d);
       text-align: left;
       transition: color 0.2s ease, background 0.2s ease, border-color 0.2s ease, box-shadow 0.2s ease;
     }
@@ -1108,10 +1080,10 @@
     }
     .mafia-phase-hero {
       background: var(--mafia-hero-bg);
-      border: 1px solid var(--mafia-hero-border); border-radius: 16px; padding: 1rem 1rem 0.9rem; margin-bottom: 0.8rem; text-align: center;
+      border: 1px solid var(--mafia-hero-border); border-radius: 8px; padding: 1rem 1rem 0.9rem; margin-bottom: 0.8rem; text-align: center;
       box-shadow: 0 10px 30px rgba(0,0,0,0.22);
     }
-    .mafia-phase-title { font-family: 'Cinzel', serif; font-size: 2rem; color: #fef2f2; margin-bottom: 0.25rem; }
+    .mafia-phase-title { font-family: 'Cinzel', serif; font-size: 2rem; color: #f2e7dc; margin-bottom: 0.25rem; }
     .mafia-phase-timer { color: var(--mafia-accent-soft); font-size: 1rem; font-weight: 800; }
     .mafia-card, .mafia-player-row, .mafia-vote-row {
       background: var(--mafia-card-bg);
@@ -1129,24 +1101,24 @@
       text-align: center;
     }
     .mafia-event-card.good {
-      background: linear-gradient(180deg, #133a20, #0d2213);
-      border-color: #22c55e;
-      color: #dcfce7;
-      box-shadow: 0 12px 30px rgba(34,197,94,0.2);
+      background: linear-gradient(180deg, #1e2e1d, #0c140d);
+      border-color: #6f8b54;
+      color: #e3ead0;
+      box-shadow: 0 12px 30px rgba(86,107,60,0.2);
     }
     .mafia-event-card.bad {
-      background: linear-gradient(180deg, #4a1220, #240d13);
-      border-color: #f43f5e;
-      color: #ffe4e6;
-      box-shadow: 0 12px 30px rgba(244,63,94,0.2);
+      background: linear-gradient(180deg, #3b1718, #170b0a);
+      border-color: #a32232;
+      color: #ffd0c1;
+      box-shadow: 0 12px 30px rgba(163,34,50,0.22);
     }
     .mafia-event-card.joker {
       background:
-        radial-gradient(circle at top, rgba(250,204,21,0.16), transparent 35%),
-        linear-gradient(180deg, #2f123d, #170d22);
-      border-color: #f59e0b;
-      color: #fef3c7;
-      box-shadow: 0 12px 34px rgba(245,158,11,0.22);
+        radial-gradient(circle at top, rgba(194,135,51,0.18), transparent 35%),
+        linear-gradient(180deg, #291f18, #120e0b);
+      border-color: #c28733;
+      color: #f9e6bd;
+      box-shadow: 0 12px 34px rgba(194,135,51,0.22);
     }
     .mafia-player-row.dead { opacity: 0.45; text-decoration: line-through; }
     .mafia-player-row {
@@ -1159,16 +1131,16 @@
     }
     .mafia-player-main { display: flex; flex-direction: column; gap: 0.15rem; }
     .mafia-player-name { font-weight: 800; font-size: 1rem; }
-    .mafia-player-sub { font-size: 0.78rem; color: #a78bfa; }
+    .mafia-player-sub { font-size: 0.78rem; color: #b6bda8; }
     .mafia-count { color: var(--mafia-accent); font-weight: 800; }
     .mafia-vote-icons { color: var(--mafia-accent); font-size: 0.95rem; letter-spacing: 0.12rem; }
     .mafia-role-hidden {
-      min-height: 4rem; border: 1px dashed #4b2d57; border-radius: 12px; display: flex;
-      align-items: center; justify-content: center; background: #0f0a16; color: #8b7aa8; padding: 1rem; text-align: center;
+      min-height: 4rem; border: 1px dashed #3d4d39; border-radius: 8px; display: flex;
+      align-items: center; justify-content: center; background: #0b100e; color: #9ba690; padding: 1rem; text-align: center;
     }
-    .mafia-role-reveal { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #fef2f2; }
+    .mafia-role-reveal { font-family: 'Cinzel', serif; font-size: 1.8rem; color: #f2e7dc; }
     .mafia-hold-btn {
-      width: 100%; padding: 1rem; border-radius: 12px; border: 2px solid var(--mafia-chip-border); background: var(--mafia-chip-bg); color: var(--mafia-accent-soft);
+      width: 100%; padding: 1rem; border-radius: 8px; border: 2px solid var(--mafia-chip-border); background: var(--mafia-chip-bg); color: var(--mafia-accent-soft);
       font-size: 1rem; font-weight: 500; cursor: pointer; margin-top: 1rem; margin-bottom: 0.75rem;
       text-transform: uppercase; letter-spacing: 0.1rem;
     }
@@ -1182,33 +1154,33 @@
       background: var(--mafia-button-selected-bg);
     }
     .mafia-action-btn:disabled, .mafia-host-btn:disabled { opacity: 0.45; cursor: not-allowed; }
-    .mafia-host-btn { background: #cfb991; border: none; color: #08041a; text-align: center; font-weight: 500; }
+    .mafia-host-btn { background: #8f1d2a; border: none; color: #fff2e6; text-align: center; font-weight: 500; }
     #mafia-host-controls { display: flex; flex-direction: column; gap: 0.5rem; margin-top: 0.85rem; }
     #mafia-host-controls .mafia-host-btn { margin-bottom: 0; }
     #screen-mafia-setup .mafia-host-btn {
-      background: linear-gradient(180deg, #2f5f89, #183653);
-      border-color: #8fb3d5;
-      color: #eef7ff;
-      box-shadow: 0 10px 24px rgba(47,95,137,0.18);
+      background: linear-gradient(180deg, #8f1d2a, #4b1719);
+      border-color: #d65b61;
+      color: #fff2e6;
+      box-shadow: 0 10px 24px rgba(143,29,42,0.2);
     }
     #screen-mafia-setup .mafia-rules-btn {
       background: transparent;
-      border-color: #8fb3d5;
-      color: #b8d7f0;
+      border-color: #7b2f31;
+      color: #f3b7aa;
       box-shadow: none;
     }
-    #screen-mafia-setup .mafia-rules-btn:hover { background: rgba(143,179,213,0.1); }
+    #screen-mafia-setup .mafia-rules-btn:hover { background: rgba(214,91,97,0.1); }
     .mafia-banner-dead { color: var(--mafia-accent); font-family: 'Cinzel', serif; font-size: 1.6rem; text-align: center; margin-bottom: 0.6rem; }
-    .mafia-note { color: #a78bfa; font-size: 0.88rem; margin-bottom: 0.8rem; text-align: center; }
+    .mafia-note { color: #b6bda8; font-size: 0.88rem; margin-bottom: 0.8rem; text-align: center; }
     .mafia-poll-result { display: flex; justify-content: space-between; gap: 0.75rem; font-size: 0.9rem; }
     .mafia-majority-note { color: var(--mafia-accent-soft); font-size: 0.9rem; margin-bottom: 0.6rem; text-align: center; }
     .mafia-toggle-row { display: flex; justify-content: space-between; align-items: center; gap: 1rem; text-align: left; position: relative; padding-right: 5.8rem; }
     #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row {
       opacity: 0.72;
       border-style: dashed;
-      border-color: #8fb3d5;
-      background: linear-gradient(180deg, rgba(18,42,62,0.58), rgba(8,14,22,0.88));
-      box-shadow: inset 0 0 0 1px rgba(143,179,213,0.16);
+      border-color: #7b2f31;
+      background: linear-gradient(180deg, rgba(32,40,31,0.58), rgba(10,14,12,0.88));
+      box-shadow: inset 0 0 0 1px rgba(214,91,97,0.16);
     }
     #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row::after {
       content: 'Host Only';
@@ -1218,9 +1190,9 @@
       transform: translateY(-50%);
       padding: 0.28rem 0.55rem;
       border-radius: 999px;
-      border: 1px solid rgba(143,179,213,0.45);
-      background: rgba(21,47,70,0.52);
-      color: #d8e8f6;
+      border: 1px solid rgba(214,91,97,0.48);
+      background: rgba(65,27,27,0.56);
+      color: #f3b7aa;
       font-size: 0.66rem;
       font-weight: 800;
       letter-spacing: 0.12rem;
@@ -1260,34 +1232,34 @@
     .mafia-rules-list { display: flex; flex-direction: column; gap: 0.7rem; }
     .mafia-rule-row {
       font-size: 0.9rem;
-      color: #d9d0eb;
+      color: #ded4c2;
       line-height: 1.5;
-      background: rgba(15,10,32,0.44);
-      border: 1px solid rgba(124,58,237,0.18);
-      border-radius: 12px;
+      background: rgba(12,18,14,0.56);
+      border: 1px solid rgba(106,125,94,0.22);
+      border-radius: 8px;
       padding: 0.8rem 0.9rem;
     }
-    .mafia-rule-label { display: block; text-align: right; font-weight: 700; color: #fff7ed; margin-bottom: 0.18rem; }
-    .mafia-rule-text { display: block; text-align: left; color: #f4effc; font-weight: 600; }
-    .mafia-role-killer { color: #f87171; }
-    .mafia-role-town { color: #4ade80; }
-    .mafia-role-joker { color: #fbbf24; }
-    .mafia-killer-mark { color: #fbbf24; margin-right: 0.4rem; }
+    .mafia-rule-label { display: block; text-align: right; font-weight: 700; color: #f2e7dc; margin-bottom: 0.18rem; }
+    .mafia-rule-text { display: block; text-align: left; color: #ded4c2; font-weight: 600; }
+    .mafia-role-killer { color: #e0716f; }
+    .mafia-role-town { color: #9fb27d; }
+    .mafia-role-joker { color: #d8a756; }
+    .mafia-killer-mark { color: #d8a756; margin-right: 0.4rem; }
     .mafia-toggle {
-      appearance: none; width: 56px; height: 32px; border-radius: 999px; background: #2c1a34; position: relative; cursor: pointer;
-      border: 1px solid #4b2d57;
+      appearance: none; width: 56px; height: 32px; border-radius: 999px; background: #152017; position: relative; cursor: pointer;
+      border: 1px solid #3d4d39;
       flex-shrink: 0;
     }
     .mafia-toggle::after {
       content: ''; width: 24px; height: 24px; border-radius: 50%; background: #f8fafc; position: absolute; top: 3px; left: 4px; transition: transform 0.2s;
     }
-    .mafia-toggle:checked { background: #2f5f89; }
+    .mafia-toggle:checked { background: #8f1d2a; }
     .mafia-toggle:checked::after { transform: translateX(24px); }
     .mafia-toggle:disabled { opacity: 1; }
     .mafia-team-card {
       background: var(--mafia-card-bg);
       border: 1px solid var(--mafia-card-border);
-      border-radius: 14px;
+      border-radius: 8px;
       padding: 0.9rem;
       margin-bottom: 0.8rem;
       text-align: left;
@@ -1304,12 +1276,12 @@
       font-family: 'Cinzel', serif;
       font-size: 1.9rem;
       line-height: 1.2;
-      color: #fff7ed;
+      color: #f2e7dc;
       margin-bottom: 1rem;
       text-shadow: 0 0 26px rgba(255,255,255,0.08);
     }
     .mafia-player-sub.joker-tag {
-      color: #fbbf24;
+      color: #d8a756;
       font-weight: 800;
       letter-spacing: 0.08rem;
       text-transform: uppercase;
@@ -1317,24 +1289,21 @@
     .mafia-joker-ult {
       position: relative;
       overflow: hidden;
-      border-radius: 24px;
+      border-radius: 8px;
       padding: 2rem 1.4rem;
       background:
-        radial-gradient(circle at 20% 20%, rgba(250,204,21,0.3), transparent 22%),
-        radial-gradient(circle at 80% 25%, rgba(244,63,94,0.25), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(168,85,247,0.25), transparent 28%),
-        linear-gradient(180deg, #32123d, #140d1f);
-      border: 2px solid #f59e0b;
-      box-shadow: 0 24px 60px rgba(245,158,11,0.22);
+        linear-gradient(180deg, #271d17, #0c100d);
+      border: 2px solid #c28733;
+      box-shadow: 0 24px 60px rgba(143,29,42,0.24);
       animation: mafiaJokerPulse 1.2s ease-in-out infinite;
     }
     .mafia-joker-badge {
       display: inline-block;
       padding: 0.35rem 0.7rem;
       border-radius: 999px;
-      background: rgba(250,204,21,0.14);
-      border: 1px solid #fbbf24;
-      color: #fde68a;
+      background: rgba(194,135,51,0.14);
+      border: 1px solid #c28733;
+      color: #f9e6bd;
       text-transform: uppercase;
       letter-spacing: 0.18rem;
       font-size: 0.72rem;
@@ -1344,53 +1313,43 @@
     .mafia-joker-title {
       font-family: 'Cinzel', serif;
       font-size: 2.2rem;
-      color: #fff7ed;
+      color: #f2e7dc;
       margin-bottom: 0.65rem;
       text-shadow: 0 0 24px rgba(245,158,11,0.5);
     }
     .mafia-joker-name {
       font-size: 2rem;
       font-weight: 900;
-      color: #fbbf24;
+      color: #d8a756;
       margin-bottom: 0.65rem;
     }
     .mafia-joker-sub {
-      color: #fce7f3;
+      color: #ded4c2;
       font-size: 1rem;
       line-height: 1.45;
     }
     .mafia-joker-ult.win-town {
       background:
-        radial-gradient(circle at 20% 20%, rgba(34,197,94,0.24), transparent 22%),
-        radial-gradient(circle at 80% 25%, rgba(134,239,172,0.18), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(74,222,128,0.18), transparent 28%),
-        linear-gradient(180deg, #14311e, #0a170f);
-      border-color: #22c55e;
-      box-shadow: 0 24px 60px rgba(34,197,94,0.24);
+        linear-gradient(180deg, #1e2e1d, #0a170f);
+      border-color: #6f8b54;
+      box-shadow: 0 24px 60px rgba(86,107,60,0.24);
     }
     .mafia-joker-ult.win-killers {
       background:
-        radial-gradient(circle at 20% 20%, rgba(244,63,94,0.26), transparent 22%),
-        radial-gradient(circle at 80% 25%, rgba(251,113,133,0.18), transparent 25%),
-        radial-gradient(circle at 50% 80%, rgba(225,29,72,0.18), transparent 28%),
-        linear-gradient(180deg, #3a1019, #18090d);
-      border-color: #f43f5e;
-      box-shadow: 0 24px 60px rgba(244,63,94,0.24);
+        linear-gradient(180deg, #3b1718, #170b0a);
+      border-color: #a32232;
+      box-shadow: 0 24px 60px rgba(163,34,50,0.24);
     }
-    .mafia-win-title { font-family: 'Cinzel', serif; font-size: 2.2rem; color: #fff7ed; margin-bottom: 0.65rem; }
+    .mafia-win-title { font-family: 'Cinzel', serif; font-size: 2.2rem; color: #f2e7dc; margin-bottom: 0.65rem; }
     @keyframes mafiaJokerPulse {
       0%, 100% { transform: scale(1); box-shadow: 0 24px 60px rgba(245,158,11,0.22); }
       50% { transform: scale(1.02); box-shadow: 0 28px 72px rgba(244,63,94,0.24); }
     }
 
     body.mafia-game-theme {
-      background-color: #07111c;
-      background-image:
-        linear-gradient(104deg, rgba(210,230,248,0.06) 0 7%, transparent 7% 14%, rgba(210,230,248,0.035) 14% 21%, transparent 21%),
-        radial-gradient(ellipse at 82% 12%, rgba(96,165,250,0.14), transparent 38%),
-        radial-gradient(ellipse at 16% 86%, rgba(34,87,122,0.18), transparent 42%),
-        linear-gradient(180deg, #0d1b2a 0%, #050a11 100%);
-      color: #e8f1f8;
+      background-color: #050706;
+      background-image: none;
+      color: #f2e7dc;
     }
     body.mafia-game-theme::before {
       content: '';
@@ -1399,103 +1358,153 @@
       z-index: 0;
       pointer-events: none;
       background:
-        repeating-linear-gradient(0deg, rgba(210,230,248,0.026) 0 1px, transparent 1px 9px),
-        linear-gradient(90deg, transparent 0 68%, rgba(96,165,250,0.12) 68.2%, transparent 68.6%);
-      opacity: 0.75;
+        radial-gradient(circle at 75% 10%, rgba(178,28,46,0.55) 0 5.6rem, rgba(111,21,33,0.28) 5.7rem 7.6rem, transparent 7.8rem),
+        radial-gradient(ellipse at 72% 8%, rgba(255,122,113,0.10), transparent 24%),
+        radial-gradient(ellipse at 50% 100%, rgba(6,10,8,0.78), transparent 48%),
+        radial-gradient(ellipse at 18% 86%, rgba(91,111,70,0.16), transparent 40%),
+        linear-gradient(180deg, rgba(255,230,210,0.035), transparent 38%),
+        radial-gradient(ellipse at 50% 98%, rgba(7,10,8,0.86), transparent 44%),
+        linear-gradient(180deg, #151819 0%, #08100f 54%, #050706 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      opacity: 1;
+    }
+    body.mafia-game-theme:not(.mafia-phase-sweep)::after {
+      content: none;
     }
     body.mafia-game-theme h1,
     body.mafia-game-theme .mafia-over-title,
     body.mafia-game-theme .mafia-win-title {
-      color: #b8d7f0;
-      text-shadow: 0 0 22px rgba(96,165,250,0.22);
+      color: #f1ded1;
+      text-shadow: 0 0 26px rgba(178,28,46,0.36), 0 2px 0 rgba(5,7,6,0.82);
     }
     body.mafia-game-theme h2,
     body.mafia-game-theme .waiting {
-      color: #9fb4c8 !important;
+      color: #b6bda8 !important;
     }
     body.mafia-game-theme .mafia-wrap {
-      --mafia-accent: #9fc3e6;
-      --mafia-accent-strong: #3b82c4;
-      --mafia-accent-soft: #d8e8f6;
-      --mafia-chip-bg: rgba(15, 31, 48, 0.9);
-      --mafia-chip-border: #355574;
+      --mafia-accent: #d65b61;
+      --mafia-accent-strong: #9f1f2f;
+      --mafia-accent-soft: #f3b7aa;
+      --mafia-chip-bg: rgba(37, 24, 21, 0.9);
+      --mafia-chip-border: #7b2f31;
       --mafia-hero-bg:
-        linear-gradient(180deg, #132235, #09111d);
-      --mafia-hero-border: #355574;
+        linear-gradient(180deg, rgba(32,40,31,0.96), rgba(13,18,15,0.96));
+      --mafia-hero-border: #7b2f31;
       --mafia-card-bg:
-        linear-gradient(90deg, rgba(147,181,213,0.10) 0 4px, transparent 4px),
-        linear-gradient(180deg, rgba(17,29,43,0.96), rgba(8,14,22,0.96));
-      --mafia-card-border: #2f455d;
+        linear-gradient(90deg, rgba(106,125,94,0.13) 0 4px, transparent 4px),
+        linear-gradient(180deg, rgba(24,31,24,0.96), rgba(10,14,12,0.97));
+      --mafia-card-border: #344235;
       --mafia-event-bg:
-        linear-gradient(90deg, rgba(96,165,250,0.18) 0 5px, transparent 5px),
-        linear-gradient(180deg, #14283d, #08121e);
-      --mafia-event-border: #355574;
-      --mafia-button-bg: #0d1724;
-      --mafia-button-selected-bg: linear-gradient(180deg, #16304a, #0a1522);
+        radial-gradient(circle at 84% 12%, rgba(178,28,46,0.25), transparent 18%),
+        linear-gradient(90deg, rgba(159,31,47,0.32) 0 5px, transparent 5px),
+        linear-gradient(180deg, #291b19, #100d0b);
+      --mafia-event-border: #7b2f31;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a32232 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #2a1716, #12100d);
     }
     body.mafia-game-theme .mafia-theme-role .mafia-wrap {
-      --mafia-accent: #93a9c8;
-      --mafia-accent-strong: #45627f;
-      --mafia-accent-soft: #d7e0ea;
-      --mafia-chip-bg: #17212c;
-      --mafia-chip-border: #405a73;
-      --mafia-hero-border: #405a73;
-      --mafia-card-border: #334455;
-      --mafia-event-border: #45627f;
+      --mafia-accent: #b6bda8;
+      --mafia-accent-strong: #6d7c59;
+      --mafia-accent-soft: #e6dccb;
+      --mafia-chip-bg: #1b241b;
+      --mafia-chip-border: #5e6f4d;
+      --mafia-hero-bg: linear-gradient(180deg, #20281f, #0d120f);
+      --mafia-hero-border: #5e6f4d;
+      --mafia-card-bg: linear-gradient(90deg, rgba(106,125,94,0.13) 0 4px, transparent 4px), linear-gradient(180deg, #181f18, #0a0e0c);
+      --mafia-card-border: #3b4b39;
+      --mafia-event-bg: linear-gradient(90deg, rgba(106,125,94,0.22) 0 5px, transparent 5px), linear-gradient(180deg, #20281f, #0d120f);
+      --mafia-event-border: #5e6f4d;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #6d7c59 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #20281f, #0d120f);
     }
     body.mafia-game-theme .mafia-theme-discussion .mafia-wrap {
-      --mafia-accent: #89b8d8;
-      --mafia-accent-strong: #3a6f93;
-      --mafia-accent-soft: #d4e7f4;
-      --mafia-chip-bg: #102434;
-      --mafia-chip-border: #345d78;
-      --mafia-hero-border: #345d78;
-      --mafia-card-border: #294358;
-      --mafia-event-border: #3a6f93;
+      --mafia-accent: #b7c79a;
+      --mafia-accent-strong: #64794d;
+      --mafia-accent-soft: #e3ead0;
+      --mafia-chip-bg: #182316;
+      --mafia-chip-border: #506843;
+      --mafia-hero-bg: linear-gradient(180deg, #1f2d1d, #0d160d);
+      --mafia-hero-border: #506843;
+      --mafia-card-bg: linear-gradient(90deg, rgba(100,121,77,0.18) 0 4px, transparent 4px), linear-gradient(180deg, #172117, #0a100b);
+      --mafia-card-border: #33462f;
+      --mafia-event-bg: linear-gradient(90deg, rgba(100,121,77,0.24) 0 5px, transparent 5px), linear-gradient(180deg, #1f2d1d, #0d160d);
+      --mafia-event-border: #64794d;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #64794d 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #1f2d1d, #0d160d);
     }
     body.mafia-game-theme .mafia-theme-voting .mafia-wrap,
     body.mafia-game-theme .mafia-theme-revote .mafia-wrap {
-      --mafia-accent: #a9c7df;
-      --mafia-accent-strong: #587f9f;
-      --mafia-accent-soft: #e1edf6;
-      --mafia-chip-bg: #15283a;
-      --mafia-chip-border: #4e6f8a;
-      --mafia-hero-border: #4e6f8a;
-      --mafia-card-border: #344d66;
-      --mafia-event-border: #587f9f;
+      --mafia-accent: #e0a04a;
+      --mafia-accent-strong: #a9651f;
+      --mafia-accent-soft: #f4d49a;
+      --mafia-chip-bg: #2b1d12;
+      --mafia-chip-border: #8d551e;
+      --mafia-hero-bg: linear-gradient(180deg, #302112, #14100b);
+      --mafia-hero-border: #8d551e;
+      --mafia-card-bg: linear-gradient(90deg, rgba(169,101,31,0.20) 0 4px, transparent 4px), linear-gradient(180deg, #24190f, #100d0a);
+      --mafia-card-border: #5b371b;
+      --mafia-event-bg: linear-gradient(90deg, rgba(224,160,74,0.30) 0 5px, transparent 5px), linear-gradient(180deg, #35210f, #17100a);
+      --mafia-event-border: #a9651f;
+      --mafia-button-bg: #1d140d;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a9651f 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #302112, #14100b);
     }
     body.mafia-game-theme .mafia-theme-night .mafia-wrap {
-      --mafia-accent: #9da8c6;
-      --mafia-accent-strong: #4f5d86;
-      --mafia-accent-soft: #d9def0;
-      --mafia-chip-bg: #15192c;
+      --mafia-accent: #96a3d7;
+      --mafia-accent-strong: #4d5a8f;
+      --mafia-accent-soft: #d0d5f0;
+      --mafia-chip-bg: #171b2b;
       --mafia-chip-border: #3d4770;
+      --mafia-hero-bg: linear-gradient(180deg, #1b1f32, #0b0d14);
       --mafia-hero-border: #3d4770;
+      --mafia-card-bg: linear-gradient(90deg, rgba(77,90,143,0.18) 0 4px, transparent 4px), linear-gradient(180deg, #151a2a, #080b12);
       --mafia-card-border: #303852;
-      --mafia-event-border: #4f5d86;
+      --mafia-event-bg: linear-gradient(90deg, rgba(77,90,143,0.28) 0 5px, transparent 5px), linear-gradient(180deg, #1b1f32, #0b0d14);
+      --mafia-event-border: #4d5a8f;
+      --mafia-button-bg: #111421;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #4d5a8f 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #1b1f32, #0b0d14);
     }
     body.mafia-game-theme .mafia-theme-day-result .mafia-wrap {
-      --mafia-accent: #df8e8e;
-      --mafia-accent-strong: #9f1d2e;
-      --mafia-accent-soft: #f2c6c6;
-      --mafia-chip-bg: #2d1419;
-      --mafia-chip-border: #7f1d2d;
-      --mafia-hero-border: #7f1d2d;
-      --mafia-card-border: #4c252d;
-      --mafia-event-border: #9f1d2e;
+      --mafia-accent: #e0716f;
+      --mafia-accent-strong: #a32232;
+      --mafia-accent-soft: #ffd0c1;
+      --mafia-chip-bg: #311817;
+      --mafia-chip-border: #8d2d32;
+      --mafia-hero-bg: linear-gradient(180deg, #311817, #150d0b);
+      --mafia-hero-border: #8d2d32;
+      --mafia-card-bg: linear-gradient(90deg, rgba(163,34,50,0.18) 0 4px, transparent 4px), linear-gradient(180deg, #1f1713, #0f0c0a);
+      --mafia-card-border: #58302c;
+      --mafia-event-bg: linear-gradient(90deg, rgba(224,113,111,0.32) 0 5px, transparent 5px), linear-gradient(180deg, #3b1718, #170b0a);
+      --mafia-event-border: #a32232;
+      --mafia-button-bg: #1b1411;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a32232 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #321615, #150d0b);
+    }
+    body.mafia-game-theme .mafia-theme-night-result .mafia-wrap {
+      --mafia-accent: #d65b61;
+      --mafia-accent-strong: #9f1f2f;
+      --mafia-accent-soft: #f3b7aa;
+      --mafia-chip-bg: #251815;
+      --mafia-chip-border: #7b2f31;
+      --mafia-hero-bg: linear-gradient(180deg, #20281f, #0d120f);
+      --mafia-hero-border: #7b2f31;
+      --mafia-card-bg: linear-gradient(90deg, rgba(159,31,47,0.18) 0 4px, transparent 4px), linear-gradient(180deg, #1d1f18, #0c0f0c);
+      --mafia-card-border: #4e3932;
+      --mafia-event-bg: linear-gradient(90deg, rgba(159,31,47,0.32) 0 5px, transparent 5px), linear-gradient(180deg, #291b19, #100d0b);
+      --mafia-event-border: #9f1f2f;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a32232 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #2a1716, #12100d);
     }
     body.mafia-game-theme .mafia-phase-hero {
       border-radius: 10px;
-      box-shadow: 0 18px 44px rgba(0,0,0,0.32), inset 0 0 0 1px rgba(255,255,255,0.035);
+      box-shadow: 0 18px 44px rgba(0,0,0,0.38), inset 0 0 0 1px rgba(255,237,210,0.045);
     }
     body.mafia-game-theme .mafia-phase-title {
-      color: #e8f1f8;
+      color: #f2e7dc;
       letter-spacing: 0.02rem;
       text-shadow: 0 0 20px rgba(0,0,0,0.45);
     }
     body.mafia-game-theme .mafia-chip {
-      border-radius: 6px;
-      transform: rotate(-1deg);
+      border-radius: 999px;
       box-shadow: 0 8px 18px rgba(0,0,0,0.18);
     }
     body.mafia-game-theme .mafia-card,
@@ -1511,30 +1520,53 @@
       box-shadow: 0 18px 42px rgba(0,0,0,0.28);
       position: relative;
     }
+    body.mafia-game-theme .mafia-event-card.death-bulletin {
+      background:
+        linear-gradient(90deg, rgba(159,31,47,0.38) 0 5px, transparent 5px),
+        linear-gradient(180deg, #2e1917, #100d0b);
+      border-color: #a32232;
+    }
     body.mafia-game-theme .mafia-player-row.dead {
       opacity: 0.54;
       text-decoration: none;
       background:
-        linear-gradient(12deg, transparent 0 48%, rgba(185,28,28,0.55) 48.4%, rgba(185,28,28,0.55) 50%, transparent 50.4%),
+        linear-gradient(12deg, transparent 0 48%, rgba(159,31,47,0.65) 48.4%, rgba(159,31,47,0.65) 50%, transparent 50.4%),
         var(--mafia-card-bg);
     }
     body.mafia-game-theme button.mafia-player-row.selected-vote,
     body.mafia-game-theme .mafia-action-btn.selected-vote {
       border-color: var(--mafia-accent);
-      box-shadow: 0 0 0 2px rgba(147,181,213,0.16), 0 12px 28px rgba(0,0,0,0.24);
+      box-shadow: 0 0 0 2px rgba(207,67,63,0.22), 0 12px 28px rgba(0,0,0,0.26);
+    }
+    body.mafia-game-theme button.mafia-player-row,
+    body.mafia-game-theme .mafia-action-btn {
+      position: relative;
+      overflow: hidden;
+    }
+    body.mafia-game-theme button.mafia-player-row.selected-vote::after,
+    body.mafia-game-theme .mafia-action-btn.selected-vote::after {
+      content: '';
+      position: absolute;
+      right: 0.9rem;
+      top: 50%;
+      width: 1.1rem;
+      height: 1.1rem;
+      border-radius: 50%;
+      transform: translateY(-50%);
+      background: var(--mafia-accent-strong);
+      box-shadow: inset 0 0 0 2px rgba(255,226,206,0.22), 0 0 0 1px rgba(65,15,19,0.65);
     }
     body.mafia-game-theme .mafia-role-hidden {
       background:
-        linear-gradient(90deg, rgba(147,181,213,0.08) 0 4px, transparent 4px),
-        #09111d;
-      border-color: #334a62;
+        var(--mafia-card-bg);
+      border-color: var(--mafia-card-border);
       border-style: dashed;
-      color: #8fa6ba;
+      color: #9ba690;
       border-radius: 8px;
     }
     body.mafia-game-theme .mafia-role-reveal {
-      color: #e8f1f8;
-      text-shadow: 0 0 22px rgba(96,165,250,0.18);
+      color: #f2e7dc;
+      text-shadow: 0 0 24px rgba(178,28,46,0.32);
     }
     body.mafia-game-theme .mafia-hold-btn,
     body.mafia-game-theme .mafia-action-btn {
@@ -1542,9 +1574,8 @@
     }
     body.mafia-game-theme .mafia-rule-row {
       background:
-        linear-gradient(90deg, rgba(147,181,213,0.08) 0 4px, transparent 4px),
-        rgba(10,18,29,0.72);
-      border-color: #2f455d;
+        var(--mafia-card-bg);
+      border-color: var(--mafia-card-border);
       border-radius: 8px;
     }
     body.mafia-game-theme .mafia-rule-label,
@@ -1553,27 +1584,40 @@
     }
     body.mafia-game-theme #screen-dsp-mafia {
       background:
-        linear-gradient(104deg, rgba(210,230,248,0.055) 0 7%, transparent 7% 14%, rgba(210,230,248,0.035) 14% 21%, transparent 21%),
-        radial-gradient(ellipse at 82% 12%, rgba(96,165,250,0.14), transparent 38%),
-        #07111c;
-      color: #e8f1f8;
+        radial-gradient(circle at 75% 10%, rgba(178,28,46,0.50) 0 5.8rem, transparent 6rem),
+        linear-gradient(180deg, #151819 0%, #08100f 100%);
+      background-attachment: fixed;
+      background-size: 100vw 100vh;
+      background-repeat: no-repeat;
+      color: #f2e7dc;
     }
     body.mafia-game-theme #screen-dsp-mafia .dsp-header-bar {
-      background: rgba(8,14,22,0.95);
-      border-bottom-color: #2f455d;
+      background: rgba(8,13,11,0.95);
+      border-bottom-color: #344235;
     }
     body.mafia-game-theme #screen-dsp-mafia .dsp-game-tag,
     body.mafia-game-theme #screen-dsp-mafia #dsp-mafia-phase-label {
-      color: #b8d7f0 !important;
+      color: #f1ded1 !important;
+    }
+    body.mafia-game-theme #screen-dsp-mafia #dsp-mafia-event,
+    body.mafia-game-theme #screen-dsp-mafia .dsp-phase-tag {
+      color: #b6bda8 !important;
     }
     body.mafia-game-theme #screen-dsp-mafia .dsp-mafia-chip,
     body.mafia-game-theme #screen-dsp-mafia .dsp-role-row {
       background:
-        linear-gradient(90deg, rgba(147,181,213,0.10) 0 4px, transparent 4px),
-        rgba(17,29,43,0.92);
-      border-color: #2f455d;
+        linear-gradient(90deg, rgba(159,31,47,0.14) 0 4px, transparent 4px),
+        rgba(24,31,24,0.94);
+      border-color: #344235;
       border-radius: 8px;
-      color: #e8f1f8;
+      color: #f2e7dc;
+    }
+    body.mafia-game-theme #screen-dsp-mafia .dsp-mafia-chip.voted {
+      border-color: #9f1f2f;
+      box-shadow: inset 0 -3px 0 rgba(159,31,47,0.32);
+    }
+    body.mafia-game-theme #screen-dsp-mafia .dsp-vote-count-sub {
+      color: #d65b61;
     }
     body.mafia-game-theme.mafia-phase-sweep::after {
       content: '';
@@ -1582,8 +1626,8 @@
       z-index: 9000;
       pointer-events: none;
       background:
-        repeating-linear-gradient(0deg, rgba(0,0,0,0.72) 0 13px, rgba(147,181,213,0.15) 13px 15px, transparent 15px 26px),
-        linear-gradient(90deg, transparent, rgba(147,181,213,0.14), transparent);
+        linear-gradient(90deg, transparent, rgba(178,28,46,0.18), transparent),
+        repeating-linear-gradient(90deg, rgba(4,7,6,0.88) 0 18px, rgba(106,125,94,0.10) 18px 20px, transparent 20px 34px);
       animation: mafiaBlindsSweep 0.64s ease both;
       mix-blend-mode: screen;
     }
@@ -1594,95 +1638,95 @@
     }
     /* ── Secret Superlatives (legacy ht ids) ── */
     .mafia-theme-role .mafia-wrap {
-      --mafia-accent: #93c5fd;
-      --mafia-accent-strong: #2563eb;
-      --mafia-accent-soft: #dbeafe;
-      --mafia-chip-bg: #10203a;
-      --mafia-chip-border: #1d4ed8;
-      --mafia-hero-bg: linear-gradient(180deg, #122545, #0d1728);
-      --mafia-hero-border: #1d4ed8;
-      --mafia-card-bg: linear-gradient(180deg, #101a2a, #0c1220);
-      --mafia-card-border: #274067;
-      --mafia-event-bg: linear-gradient(180deg, #11294d, #0c1c31);
-      --mafia-event-border: #2563eb;
-      --mafia-button-bg: #101828;
-      --mafia-button-selected-bg: linear-gradient(180deg, #13294b, #0d1c31);
+      --mafia-accent: #b6bda8;
+      --mafia-accent-strong: #6d7c59;
+      --mafia-accent-soft: #e6dccb;
+      --mafia-chip-bg: #1b241b;
+      --mafia-chip-border: #5e6f4d;
+      --mafia-hero-bg: linear-gradient(180deg, #20281f, #0d120f);
+      --mafia-hero-border: #5e6f4d;
+      --mafia-card-bg: linear-gradient(90deg, rgba(106,125,94,0.13) 0 4px, transparent 4px), linear-gradient(180deg, #181f18, #0a0e0c);
+      --mafia-card-border: #3b4b39;
+      --mafia-event-bg: linear-gradient(90deg, rgba(106,125,94,0.22) 0 5px, transparent 5px), linear-gradient(180deg, #20281f, #0d120f);
+      --mafia-event-border: #5e6f4d;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #6d7c59 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #20281f, #0d120f);
     }
     .mafia-theme-discussion .mafia-wrap {
-      --mafia-accent: #86efac;
-      --mafia-accent-strong: #16a34a;
-      --mafia-accent-soft: #dcfce7;
-      --mafia-chip-bg: #102218;
-      --mafia-chip-border: #15803d;
-      --mafia-hero-bg: linear-gradient(180deg, #163622, #0d1e14);
-      --mafia-hero-border: #15803d;
-      --mafia-card-bg: linear-gradient(180deg, #131f19, #0d1510);
-      --mafia-card-border: #23442f;
-      --mafia-event-bg: linear-gradient(180deg, #14341f, #0d2013);
-      --mafia-event-border: #16a34a;
-      --mafia-button-bg: #111b15;
-      --mafia-button-selected-bg: linear-gradient(180deg, #173122, #0f1c14);
+      --mafia-accent: #b7c79a;
+      --mafia-accent-strong: #64794d;
+      --mafia-accent-soft: #e3ead0;
+      --mafia-chip-bg: #182316;
+      --mafia-chip-border: #506843;
+      --mafia-hero-bg: linear-gradient(180deg, #1f2d1d, #0d160d);
+      --mafia-hero-border: #506843;
+      --mafia-card-bg: linear-gradient(90deg, rgba(106,125,94,0.13) 0 4px, transparent 4px), linear-gradient(180deg, #172117, #0a100b);
+      --mafia-card-border: #33462f;
+      --mafia-event-bg: linear-gradient(90deg, rgba(100,121,77,0.24) 0 5px, transparent 5px), linear-gradient(180deg, #1f2d1d, #0d160d);
+      --mafia-event-border: #64794d;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #64794d 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #1f2d1d, #0d160d);
     }
     .mafia-theme-voting .mafia-wrap,
     .mafia-theme-revote .mafia-wrap {
-      --mafia-accent: #fbbf24;
-      --mafia-accent-strong: #d97706;
-      --mafia-accent-soft: #fde68a;
-      --mafia-chip-bg: #2c1908;
-      --mafia-chip-border: #b45309;
-      --mafia-hero-bg: linear-gradient(180deg, #3a240f, #1c130c);
-      --mafia-hero-border: #b45309;
-      --mafia-card-bg: linear-gradient(180deg, #22170f, #14100d);
-      --mafia-card-border: #4a3218;
-      --mafia-event-bg: linear-gradient(180deg, #43270e, #24160c);
-      --mafia-event-border: #d97706;
-      --mafia-button-bg: #1f150f;
-      --mafia-button-selected-bg: linear-gradient(180deg, #36210e, #1d140d);
+      --mafia-accent: #e0a04a;
+      --mafia-accent-strong: #a9651f;
+      --mafia-accent-soft: #f4d49a;
+      --mafia-chip-bg: #2b1d12;
+      --mafia-chip-border: #8d551e;
+      --mafia-hero-bg: linear-gradient(180deg, #302112, #14100b);
+      --mafia-hero-border: #8d551e;
+      --mafia-card-bg: linear-gradient(90deg, rgba(169,101,31,0.20) 0 4px, transparent 4px), linear-gradient(180deg, #24190f, #100d0a);
+      --mafia-card-border: #5b371b;
+      --mafia-event-bg: linear-gradient(90deg, rgba(224,160,74,0.30) 0 5px, transparent 5px), linear-gradient(180deg, #35210f, #17100a);
+      --mafia-event-border: #a9651f;
+      --mafia-button-bg: #1d140d;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a9651f 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #302112, #14100b);
     }
     .mafia-theme-night .mafia-wrap {
-      --mafia-accent: #c4b5fd;
-      --mafia-accent-strong: #7c3aed;
-      --mafia-accent-soft: #ede9fe;
-      --mafia-chip-bg: #1d1338;
-      --mafia-chip-border: #6d28d9;
-      --mafia-hero-bg: linear-gradient(180deg, #25184a, #120d27);
-      --mafia-hero-border: #6d28d9;
-      --mafia-card-bg: linear-gradient(180deg, #1a1430, #100d1f);
-      --mafia-card-border: #3d2c64;
-      --mafia-event-bg: linear-gradient(180deg, #27174c, #160f2b);
-      --mafia-event-border: #7c3aed;
-      --mafia-button-bg: #171225;
-      --mafia-button-selected-bg: linear-gradient(180deg, #241844, #140f28);
+      --mafia-accent: #96a3d7;
+      --mafia-accent-strong: #4d5a8f;
+      --mafia-accent-soft: #d0d5f0;
+      --mafia-chip-bg: #171b2b;
+      --mafia-chip-border: #3d4770;
+      --mafia-hero-bg: linear-gradient(180deg, #1b1f32, #0b0d14);
+      --mafia-hero-border: #3d4770;
+      --mafia-card-bg: linear-gradient(90deg, rgba(77,90,143,0.18) 0 4px, transparent 4px), linear-gradient(180deg, #151a2a, #080b12);
+      --mafia-card-border: #303852;
+      --mafia-event-bg: linear-gradient(90deg, rgba(77,90,143,0.28) 0 5px, transparent 5px), linear-gradient(180deg, #1b1f32, #0b0d14);
+      --mafia-event-border: #4d5a8f;
+      --mafia-button-bg: #111421;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #4d5a8f 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #1b1f32, #0b0d14);
     }
     .mafia-theme-day-result .mafia-wrap {
-      --mafia-accent: #fda4af;
-      --mafia-accent-strong: #e11d48;
-      --mafia-accent-soft: #ffe4e6;
-      --mafia-chip-bg: #37121d;
-      --mafia-chip-border: #be123c;
-      --mafia-hero-bg: linear-gradient(180deg, #431322, #220d14);
-      --mafia-hero-border: #be123c;
-      --mafia-card-bg: linear-gradient(180deg, #22131a, #150d11);
-      --mafia-card-border: #5a2433;
-      --mafia-event-bg: linear-gradient(180deg, #4a1220, #240d13);
-      --mafia-event-border: #e11d48;
-      --mafia-button-bg: #211118;
-      --mafia-button-selected-bg: linear-gradient(180deg, #39131f, #1f0f15);
+      --mafia-accent: #e0716f;
+      --mafia-accent-strong: #a32232;
+      --mafia-accent-soft: #ffd0c1;
+      --mafia-chip-bg: #311817;
+      --mafia-chip-border: #8d2d32;
+      --mafia-hero-bg: linear-gradient(180deg, #311817, #150d0b);
+      --mafia-hero-border: #8d2d32;
+      --mafia-card-bg: linear-gradient(90deg, rgba(163,34,50,0.18) 0 4px, transparent 4px), linear-gradient(180deg, #1f1713, #0f0c0a);
+      --mafia-card-border: #58302c;
+      --mafia-event-bg: linear-gradient(90deg, rgba(224,113,111,0.32) 0 5px, transparent 5px), linear-gradient(180deg, #3b1718, #170b0a);
+      --mafia-event-border: #a32232;
+      --mafia-button-bg: #1b1411;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a32232 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #321615, #150d0b);
     }
     .mafia-theme-night-result .mafia-wrap {
-      --mafia-accent: #67e8f9;
-      --mafia-accent-strong: #0891b2;
-      --mafia-accent-soft: #cffafe;
-      --mafia-chip-bg: #0f2230;
-      --mafia-chip-border: #0e7490;
-      --mafia-hero-bg: linear-gradient(180deg, #143244, #0c1a27);
-      --mafia-hero-border: #0e7490;
-      --mafia-card-bg: linear-gradient(180deg, #10202b, #0b1319);
-      --mafia-card-border: #255169;
-      --mafia-event-bg: linear-gradient(180deg, #133646, #0b1e28);
-      --mafia-event-border: #0891b2;
-      --mafia-button-bg: #101a21;
-      --mafia-button-selected-bg: linear-gradient(180deg, #13313f, #0d1a24);
+      --mafia-accent: #d65b61;
+      --mafia-accent-strong: #9f1f2f;
+      --mafia-accent-soft: #f3b7aa;
+      --mafia-chip-bg: #251815;
+      --mafia-chip-border: #7b2f31;
+      --mafia-hero-bg: linear-gradient(180deg, #20281f, #0d120f);
+      --mafia-hero-border: #7b2f31;
+      --mafia-card-bg: linear-gradient(90deg, rgba(106,125,94,0.13) 0 4px, transparent 4px), linear-gradient(180deg, #181f18, #0a0e0c);
+      --mafia-card-border: #344235;
+      --mafia-event-bg: linear-gradient(90deg, rgba(159,31,47,0.32) 0 5px, transparent 5px), linear-gradient(180deg, #291b19, #100d0b);
+      --mafia-event-border: #9f1f2f;
+      --mafia-button-bg: #111814;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a32232 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #2a1716, #12100d);
     }
     .ht-round-label { font-size: 0.75rem; text-transform: uppercase; letter-spacing: 3px; color: #cfb991; margin-bottom: 1rem; }
     .ht-p-question { font-size: 1.25rem; font-weight: 500; line-height: 1.4; color: #ede9f8; margin-bottom: 1rem; }
@@ -3315,10 +3359,10 @@
     body.light-mode .mafia-killer-mark { color: #d97706; }
     body.light-mode .mafia-action-btn { background: #fff; border-color: #e5d0f5; color: #1a0a2e; }
     body.light-mode .mafia-action-btn.selected-vote { background: var(--mafia-button-selected-bg); }
-    body.light-mode .mafia-hold-btn { background: #f8fbfd; border-color: #8faac0; color: #2f5f89; }
+    body.light-mode .mafia-hold-btn { background: #f5f0e6; border-color: #b88c7b; color: #7d3130; }
     body.light-mode .abstain-row .mafia-player-name { color: #92400e !important; }
     body.light-mode .mafia-toggle { background: #e5d0f5; border-color: #c8b4e0; }
-    body.light-mode .mafia-toggle:checked { background: #2f5f89; }
+    body.light-mode .mafia-toggle:checked { background: #9b3438; }
     body.light-mode .mafia-team-heading { color: var(--mafia-accent); }
     body.light-mode .mafia-joker-ult {
       background: linear-gradient(180deg, #fffbeb, #fef9c3);
@@ -3347,94 +3391,219 @@
     body.light-mode #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row::after {
       background: rgba(245,249,252,0.86);
       border-color: rgba(143,170,192,0.76);
-      color: #2f5f89;
+      color: #7d3130;
+    }
+    body.light-mode.mafia-game-theme .mafia-event-card.good {
+      background: linear-gradient(180deg, #eef1df, #dce4cb);
+      border-color: #8a9b6c;
+      color: #34462b;
+      box-shadow: 0 12px 30px rgba(86,107,60,0.12);
+    }
+    body.light-mode.mafia-game-theme .mafia-event-card.bad,
+    body.light-mode.mafia-game-theme .mafia-event-card.death-bulletin {
+      background:
+        linear-gradient(90deg, rgba(155,52,56,0.22) 0 5px, transparent 5px),
+        linear-gradient(180deg, #f0e0d8, #e5cbc2);
+      border-color: #9b3438;
+      color: #68272b;
+      box-shadow: 0 12px 30px rgba(155,52,56,0.13);
+    }
+    body.light-mode.mafia-game-theme .mafia-event-card.joker {
+      background: linear-gradient(180deg, #f4ead2, #e8d6b7);
+      border-color: #b8883c;
+      color: #654818;
+      box-shadow: 0 12px 30px rgba(184,136,60,0.14);
+    }
+    body.light-mode.mafia-game-theme .mafia-player-sub,
+    body.light-mode.mafia-game-theme .mafia-note {
+      color: #66705f;
+    }
+    body.light-mode.mafia-game-theme .mafia-player-sub.joker-tag,
+    body.light-mode.mafia-game-theme .mafia-role-joker,
+    body.light-mode.mafia-game-theme .mafia-killer-mark {
+      color: #8a641e;
+    }
+    body.light-mode.mafia-game-theme .mafia-majority-note,
+    body.light-mode.mafia-game-theme .mafia-banner-dead,
+    body.light-mode.mafia-game-theme .mafia-role-killer {
+      color: #9b3438;
+    }
+    body.light-mode.mafia-game-theme .mafia-role-town {
+      color: #5f7648;
+    }
+    body.light-mode.mafia-game-theme .mafia-action-btn {
+      background: #f5f0e6;
+      border-color: #c7b9a4;
+      color: #1d2620;
+    }
+    body.light-mode.mafia-game-theme .mafia-hold-btn {
+      background: #f5f0e6;
+      border-color: #b88c7b;
+      color: #7d3130;
+    }
+    body.light-mode.mafia-game-theme .abstain-row .mafia-player-name { color: #7d3130 !important; }
+    body.light-mode.mafia-game-theme .mafia-toggle { background: #d7d6c7; border-color: #b8b39f; }
+    body.light-mode.mafia-game-theme .mafia-toggle:checked { background: #9b3438; }
+    body.light-mode.mafia-game-theme .mafia-joker-ult {
+      background:
+        linear-gradient(180deg, #f0e3d4, #ddd1be);
+      border-color: #b8883c;
+      box-shadow: 0 24px 60px rgba(155,52,56,0.14);
+    }
+    body.light-mode.mafia-game-theme .mafia-joker-ult.win-town {
+      background: linear-gradient(180deg, #eef1df, #dce4cb);
+      border-color: #8a9b6c;
+      box-shadow: 0 24px 60px rgba(86,107,60,0.14);
+    }
+    body.light-mode.mafia-game-theme .mafia-joker-ult.win-killers {
+      background: linear-gradient(180deg, #f0e0d8, #e5cbc2);
+      border-color: #a9474d;
+      box-shadow: 0 24px 60px rgba(155,52,56,0.16);
+    }
+    body.light-mode.mafia-game-theme .mafia-joker-badge { background: rgba(184,136,60,0.12); border-color: #b8883c; color: #654818; }
+    body.light-mode.mafia-game-theme .mafia-joker-title { color: #2a241f; text-shadow: none; }
+    body.light-mode.mafia-game-theme .mafia-joker-name { color: #8a641e; }
+    body.light-mode.mafia-game-theme .mafia-joker-sub { color: #4e5145; }
+    body.light-mode.mafia-game-theme #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row {
+      background: linear-gradient(180deg, rgba(245,240,230,0.78), rgba(221,214,199,0.9));
+      border-color: #b88c7b;
+      box-shadow: inset 0 0 0 1px rgba(155,52,56,0.16);
+    }
+    body.light-mode.mafia-game-theme #screen-mafia-setup.mafia-setup-locked .mafia-toggle-row::after {
+      background: rgba(245,240,230,0.88);
+      border-color: rgba(155,52,56,0.34);
+      color: #7d3130;
     }
 
     body.light-mode.mafia-game-theme {
-      background-color: #e9f0f6;
-      background-image:
-        linear-gradient(104deg, rgba(36,58,80,0.045) 0 7%, transparent 7% 14%, rgba(36,58,80,0.028) 14% 21%, transparent 21%),
-        radial-gradient(ellipse at 82% 12%, rgba(59,130,196,0.10), transparent 38%),
-        radial-gradient(ellipse at 16% 86%, rgba(86,118,146,0.13), transparent 42%),
-        linear-gradient(180deg, #f5f9fc 0%, #dce8f1 100%);
-      color: #152232;
+      background-color: #ddd6c7;
+      background-image: none;
+      color: #1d2620;
     }
     body.light-mode.mafia-game-theme::before {
       background:
-        repeating-linear-gradient(0deg, rgba(36,58,80,0.035) 0 1px, transparent 1px 9px),
-        linear-gradient(90deg, transparent 0 68%, rgba(59,130,196,0.10) 68.2%, transparent 68.6%);
-      opacity: 0.62;
+        radial-gradient(circle at 75% 12%, rgba(164,57,58,0.24) 0 4.5rem, rgba(123,55,58,0.15) 4.55rem 5rem, transparent 5.2rem),
+        radial-gradient(ellipse at 74% 10%, rgba(155,52,56,0.08), transparent 24%),
+        radial-gradient(ellipse at 50% 102%, rgba(119,132,103,0.22), transparent 46%),
+        linear-gradient(180deg, rgba(255,255,255,0.20), transparent 42%),
+        linear-gradient(180deg, #f2efe7 0%, #ddd6c7 100%);
+      background-repeat: no-repeat;
+      background-size: 100% 100%;
+      opacity: 1;
+    }
+    body.light-mode.mafia-game-theme:not(.mafia-phase-sweep)::after {
+      content: none;
     }
     body.light-mode.mafia-game-theme h1,
     body.light-mode.mafia-game-theme .mafia-over-title,
     body.light-mode.mafia-game-theme .mafia-win-title {
-      color: #183653;
-      text-shadow: 0 2px 0 rgba(255,255,255,0.75);
+      color: #2a241f;
+      text-shadow: 0 2px 0 rgba(255,255,255,0.78);
     }
     body.light-mode.mafia-game-theme h2,
     body.light-mode.mafia-game-theme .waiting {
-      color: #536779 !important;
+      color: #66705f !important;
     }
     body.light-mode.mafia-game-theme .mafia-wrap {
-      --mafia-accent: #2f5f89;
-      --mafia-accent-strong: #1f4568;
-      --mafia-accent-soft: #2f5f89;
-      --mafia-chip-bg: #e5eef6;
-      --mafia-chip-border: #8faac0;
+      --mafia-accent: #9b3438;
+      --mafia-accent-strong: #68272b;
+      --mafia-accent-soft: #7d3130;
+      --mafia-chip-bg: #eee7da;
+      --mafia-chip-border: #b88c7b;
       --mafia-hero-bg:
-        linear-gradient(180deg, #f5f9fc, #dbe8f2);
-      --mafia-hero-border: #8faac0;
+        linear-gradient(180deg, #f5f0e6, #ddd6c7);
+      --mafia-hero-border: #b88c7b;
       --mafia-card-bg:
-        linear-gradient(90deg, rgba(47,95,137,0.12) 0 4px, transparent 4px),
-        #f8fbfd;
-      --mafia-card-border: #b7c9d8;
+        linear-gradient(90deg, rgba(79,92,68,0.14) 0 4px, transparent 4px),
+        #f5f0e6;
+      --mafia-card-border: #c7b9a4;
       --mafia-event-bg:
-        linear-gradient(90deg, rgba(47,95,137,0.16) 0 5px, transparent 5px),
-        linear-gradient(180deg, #f5f9fc, #dbe8f2);
-      --mafia-event-border: #8faac0;
-      --mafia-button-bg: #f8fbfd;
-      --mafia-button-selected-bg: linear-gradient(180deg, #dbe8f2, #c6d8e5);
+        linear-gradient(90deg, rgba(155,52,56,0.20) 0 5px, transparent 5px),
+        linear-gradient(180deg, #f5f0e6, #ddd6c7);
+      --mafia-event-border: #b88c7b;
+      --mafia-button-bg: #f5f0e6;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #9b3438 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #efe0d6, #d8cabb);
     }
     body.light-mode.mafia-game-theme .mafia-theme-role .mafia-wrap {
-      --mafia-accent: #395d7c;
-      --mafia-accent-strong: #27445c;
-      --mafia-chip-bg: #e7eef3;
-      --mafia-chip-border: #8ba3b6;
-      --mafia-hero-border: #8ba3b6;
-      --mafia-card-border: #b9c7d0;
-      --mafia-event-border: #8ba3b6;
+      --mafia-accent: #5e6f4d;
+      --mafia-accent-strong: #3f4e35;
+      --mafia-chip-bg: #e8e6d9;
+      --mafia-chip-border: #aeb79c;
+      --mafia-hero-bg: linear-gradient(180deg, #eeecdf, #d9d8c9);
+      --mafia-hero-border: #aeb79c;
+      --mafia-card-bg: linear-gradient(90deg, rgba(94,111,77,0.14) 0 4px, transparent 4px), #f4f1e7;
+      --mafia-card-border: #c2c8b6;
+      --mafia-event-bg: linear-gradient(90deg, rgba(94,111,77,0.18) 0 5px, transparent 5px), linear-gradient(180deg, #eeecdf, #d9d8c9);
+      --mafia-event-border: #aeb79c;
     }
     body.light-mode.mafia-game-theme .mafia-theme-discussion .mafia-wrap {
-      --mafia-accent: #2d668b;
-      --mafia-accent-strong: #214c6b;
-      --mafia-chip-bg: #e5f0f6;
-      --mafia-chip-border: #92b2c6;
-      --mafia-hero-border: #92b2c6;
-      --mafia-card-border: #bdd0dc;
-      --mafia-event-border: #92b2c6;
+      --mafia-accent: #5f7648;
+      --mafia-accent-strong: #425636;
+      --mafia-chip-bg: #e7e7d8;
+      --mafia-chip-border: #adb89a;
+      --mafia-hero-bg: linear-gradient(180deg, #edf0dd, #dce5cc);
+      --mafia-hero-border: #adb89a;
+      --mafia-card-bg: linear-gradient(90deg, rgba(95,118,72,0.16) 0 4px, transparent 4px), #f3f4e8;
+      --mafia-card-border: #c1c9b4;
+      --mafia-event-bg: linear-gradient(90deg, rgba(95,118,72,0.20) 0 5px, transparent 5px), linear-gradient(180deg, #edf0dd, #dce5cc);
+      --mafia-event-border: #adb89a;
     }
     body.light-mode.mafia-game-theme .mafia-theme-voting .mafia-wrap,
     body.light-mode.mafia-game-theme .mafia-theme-revote .mafia-wrap {
-      --mafia-accent: #496d8c;
-      --mafia-accent-strong: #334f68;
-      --mafia-chip-bg: #eef4f8;
-      --mafia-chip-border: #9db4c8;
-      --mafia-hero-border: #9db4c8;
-      --mafia-card-border: #c6d5e1;
-      --mafia-event-border: #9db4c8;
+      --mafia-accent: #a9651f;
+      --mafia-accent-strong: #744012;
+      --mafia-chip-bg: #f3e5d0;
+      --mafia-chip-border: #c69758;
+      --mafia-hero-bg: linear-gradient(180deg, #f2e2ca, #dec7a7);
+      --mafia-hero-border: #c69758;
+      --mafia-card-bg: linear-gradient(90deg, rgba(169,101,31,0.18) 0 4px, transparent 4px), #f5ead8;
+      --mafia-card-border: #d1b486;
+      --mafia-event-bg: linear-gradient(90deg, rgba(169,101,31,0.24) 0 5px, transparent 5px), linear-gradient(180deg, #f2e2ca, #dec7a7);
+      --mafia-event-border: #c69758;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #a9651f 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #ead5b8, #dbc198);
     }
     body.light-mode.mafia-game-theme .mafia-theme-night .mafia-wrap {
-      --mafia-accent: #515b82;
-      --mafia-accent-strong: #38415f;
-      --mafia-chip-bg: #e8e9f1;
-      --mafia-chip-border: #9aa0bd;
-      --mafia-hero-border: #9aa0bd;
-      --mafia-card-border: #c2c5d6;
-      --mafia-event-border: #9aa0bd;
+      --mafia-accent: #4d5a8f;
+      --mafia-accent-strong: #333d67;
+      --mafia-chip-bg: #e3e5ef;
+      --mafia-chip-border: #9aa2c5;
+      --mafia-hero-bg: linear-gradient(180deg, #e6e8f2, #cfd4e8);
+      --mafia-hero-border: #9aa2c5;
+      --mafia-card-bg: linear-gradient(90deg, rgba(77,90,143,0.14) 0 4px, transparent 4px), #f0f1f7;
+      --mafia-card-border: #bbc0d8;
+      --mafia-event-bg: linear-gradient(90deg, rgba(77,90,143,0.20) 0 5px, transparent 5px), linear-gradient(180deg, #e6e8f2, #cfd4e8);
+      --mafia-event-border: #9aa2c5;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #4d5a8f 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #e1e3f0, #c9cee4);
+    }
+    body.light-mode.mafia-game-theme .mafia-theme-day-result .mafia-wrap {
+      --mafia-accent: #9b3438;
+      --mafia-accent-strong: #68272b;
+      --mafia-chip-bg: #f0e4dc;
+      --mafia-chip-border: #b98378;
+      --mafia-hero-bg: linear-gradient(180deg, #f0e0d8, #e5cbc2);
+      --mafia-hero-border: #b98378;
+      --mafia-card-bg: linear-gradient(90deg, rgba(155,52,56,0.18) 0 4px, transparent 4px), #f3e6df;
+      --mafia-card-border: #cdb0a3;
+      --mafia-event-bg: linear-gradient(90deg, rgba(155,52,56,0.24) 0 5px, transparent 5px), linear-gradient(180deg, #f0e0d8, #e5cbc2);
+      --mafia-event-border: #b98378;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #9b3438 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #ead6cf, #ddc1b7);
+    }
+    body.light-mode.mafia-game-theme .mafia-theme-night-result .mafia-wrap {
+      --mafia-accent: #7d3130;
+      --mafia-accent-strong: #68272b;
+      --mafia-chip-bg: #eee7da;
+      --mafia-chip-border: #b88c7b;
+      --mafia-hero-bg: linear-gradient(180deg, #f5f0e6, #ddd6c7);
+      --mafia-hero-border: #b88c7b;
+      --mafia-card-bg: linear-gradient(90deg, rgba(155,52,56,0.14) 0 4px, transparent 4px), #f5f0e6;
+      --mafia-card-border: #c7b9a4;
+      --mafia-event-bg: linear-gradient(90deg, rgba(155,52,56,0.20) 0 5px, transparent 5px), linear-gradient(180deg, #f5f0e6, #ddd6c7);
+      --mafia-event-border: #b88c7b;
+      --mafia-button-selected-bg: radial-gradient(circle at 14% 50%, #9b3438 0 0.56rem, transparent 0.62rem), linear-gradient(180deg, #efe0d6, #d8cabb);
     }
     body.light-mode.mafia-game-theme .mafia-phase-title,
     body.light-mode.mafia-game-theme .mafia-role-reveal {
-      color: #152232;
+      color: #1d2620;
       text-shadow: none;
     }
     body.light-mode.mafia-game-theme .mafia-card,
@@ -3442,23 +3611,22 @@
     body.light-mode.mafia-game-theme .mafia-vote-row,
     body.light-mode.mafia-game-theme .mafia-team-card,
     body.light-mode.mafia-game-theme .mafia-rule-row {
-      box-shadow: 0 12px 28px rgba(36,58,80,0.10);
+      box-shadow: 0 12px 28px rgba(45,52,43,0.11);
     }
     body.light-mode.mafia-game-theme .mafia-event-card {
-      color: #152232;
-      box-shadow: 0 16px 38px rgba(36,58,80,0.13);
+      color: #1d2620;
+      box-shadow: 0 16px 38px rgba(45,52,43,0.14);
     }
     body.light-mode.mafia-game-theme .mafia-player-row.dead {
       background:
-        linear-gradient(12deg, transparent 0 48%, rgba(127,29,29,0.45) 48.4%, rgba(127,29,29,0.45) 50%, transparent 50.4%),
+        linear-gradient(12deg, transparent 0 48%, rgba(155,52,56,0.48) 48.4%, rgba(155,52,56,0.48) 50%, transparent 50.4%),
         var(--mafia-card-bg);
     }
     body.light-mode.mafia-game-theme .mafia-role-hidden {
       background:
-        linear-gradient(90deg, rgba(47,95,137,0.08) 0 4px, transparent 4px),
-        #f8fbfd;
-      border-color: #8faac0;
-      color: #536779;
+        var(--mafia-card-bg);
+      border-color: var(--mafia-card-border);
+      color: #66705f;
     }
     body.light-mode.mafia-game-theme .mafia-rule-label,
     body.light-mode.mafia-game-theme .mafia-team-heading {
@@ -3467,62 +3635,62 @@
     body.light-mode.mafia-game-theme .mafia-rule-text,
     body.light-mode.mafia-game-theme .mafia-action-btn,
     body.light-mode.mafia-game-theme .mafia-player-name {
-      color: #152232;
+      color: #1d2620;
     }
     body.light-mode.mafia-game-theme .mafia-player-sub,
     body.light-mode.mafia-game-theme .mafia-note {
-      color: #536779;
+      color: #66705f;
     }
     body.light-mode.mafia-game-theme .mafia-host-btn {
-      background: #183653;
-      color: #f8fbfd;
+      background: #68272b;
+      color: #fff8ed;
     }
     body.light-mode.mafia-game-theme #screen-mafia-setup .mafia-rules-btn {
-      background: #f8fbfd;
-      border-color: #2f5f89;
-      color: #183653;
-      box-shadow: 0 8px 18px rgba(36,58,80,0.10);
+      background: #f5f0e6;
+      border-color: #9b3438;
+      color: #2a241f;
+      box-shadow: 0 8px 18px rgba(45,52,43,0.10);
     }
     body.light-mode.mafia-game-theme #screen-mafia-setup .mafia-rules-btn:hover,
     body.light-mode.mafia-game-theme #screen-mafia-setup .mafia-rules-btn:active {
-      background: #dbe8f2;
-      color: #102438;
+      background: #eaded0;
+      color: #2a241f;
     }
     body.light-mode.mafia-game-theme #screen-dsp-mafia {
       background:
-        linear-gradient(104deg, rgba(36,58,80,0.045) 0 7%, transparent 7% 14%, rgba(36,58,80,0.028) 14% 21%, transparent 21%),
-        radial-gradient(ellipse at 82% 12%, rgba(59,130,196,0.10), transparent 38%),
-        #e9f0f6;
-      color: #152232;
+        radial-gradient(circle at 75% 12%, rgba(164,57,58,0.22) 0 5rem, transparent 5.2rem),
+        #e8e3d8;
+      background-attachment: fixed;
+      background-size: 100vw 100vh;
+      background-repeat: no-repeat;
+      color: #1d2620;
     }
     body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-header-bar {
-      background: rgba(248,251,253,0.94);
-      border-bottom-color: #b7c9d8;
+      background: rgba(245,240,230,0.94);
+      border-bottom-color: #c7b9a4;
     }
     body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-game-tag,
     body.light-mode.mafia-game-theme #screen-dsp-mafia #dsp-mafia-phase-label {
-      color: #183653 !important;
+      color: #2a241f !important;
     }
     body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-mafia-chip,
     body.light-mode.mafia-game-theme #screen-dsp-mafia .dsp-role-row {
       background:
-        linear-gradient(90deg, rgba(47,95,137,0.12) 0 4px, transparent 4px),
-        #f8fbfd;
-      border-color: #b7c9d8;
-      color: #152232;
+        linear-gradient(90deg, rgba(79,92,68,0.14) 0 4px, transparent 4px),
+        #f5f0e6;
+      border-color: #c7b9a4;
+      color: #1d2620;
     }
     body.light-mode .game-card.mafia-game-card {
       background:
-        linear-gradient(112deg, rgba(36,58,80,0.045) 0 10%, transparent 10% 20%, rgba(36,58,80,0.03) 20% 30%, transparent 30%),
-        radial-gradient(circle at 82% 26%, rgba(59,130,196,0.12), transparent 35%),
-        repeating-linear-gradient(0deg, rgba(36,58,80,0.03) 0 1px, transparent 1px 13px),
-        linear-gradient(180deg, #f5f9fc, #dce8f1);
-      border-color: #8faac0;
-      box-shadow: inset 0 0 0 1px rgba(47,95,137,0.08);
+        radial-gradient(circle at 82% 20%, rgba(164,57,58,0.24) 0 2.3rem, transparent 2.45rem),
+        linear-gradient(180deg, #f5f0e6, #ddd6c7);
+      border-color: #b88c7b;
+      box-shadow: inset 0 0 0 1px rgba(155,52,56,0.09);
     }
-    body.light-mode .game-card.mafia-game-card:active { border-color: #2f5f89; }
-    body.light-mode .game-card.mafia-game-card .game-title { color: #183653; }
-    body.light-mode .game-card.mafia-game-card .game-desc { color: #536779; }
+    body.light-mode .game-card.mafia-game-card:active { border-color: #9b3438; }
+    body.light-mode .game-card.mafia-game-card .game-title { color: #2a241f; }
+    body.light-mode .game-card.mafia-game-card .game-desc { color: #66705f; }
 
     body.light-mode h1,
     body.light-mode .lobby-pin,
@@ -4518,7 +4686,7 @@
     <div class="mafia-note" id="mafia-setup-note">Mafia needs at least 4 players.</div>
     <div class="host-only">
       <button class="mafia-host-btn" id="mafia-begin-btn" onclick="beginMafia()">Start Day 1</button>
-      <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
     <div class="guest-only waiting"><span class="dot"></span> Waiting for host to start the game...</div>
   </div>
@@ -4596,7 +4764,7 @@
     </div>
     <div class="mafia-card" id="mafia-over-poll" style="display:none;"></div>
     <div class="host-only">
-      <button class="btn" onclick="selectGame('mafia')" style="margin-top:1rem;">Play Again</button>
+      <button class="mafia-host-btn" onclick="selectGame('mafia')" style="margin-top:1rem;">Play Again</button>
       <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
@@ -5834,7 +6002,7 @@
         showSiteNotice('Only the host can pick games.');
         return;
       }
-      if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: false });
       socket.emit('start-game', { game });
     }
 
@@ -6291,7 +6459,7 @@
     }
 
     socket.on('game-started', ({ game, debateSettings, auctionSettings, draftBoardSettings, coachAvailable, exposureChance, resume = false }) => {
-      if (typeof stopBgLines === 'function') stopBgLines({ burst: game !== 'debate' });
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: false });
       if (game === 'debate-setup') {
         if (debateSettings) applyDebateSetupSettings(debateSettings);
         setDebateSetupLocked(!isHost);
@@ -7054,6 +7222,14 @@
         btn.textContent = `Start Day ${state.dayNumber + 1}`;
         btn.onclick = startMafiaDiscussion;
         hostWrap.appendChild(btn);
+      }
+      if (state.isHost) {
+        const exitBtn = document.createElement('button');
+        exitBtn.className = 'btn btn-ghost';
+        exitBtn.textContent = 'Exit Game';
+        exitBtn.style.marginTop = '0.4rem';
+        exitBtn.onclick = exitGame;
+        hostWrap.appendChild(exitBtn);
       }
 
       showScreen('screen-mafia-main');

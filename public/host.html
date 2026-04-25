@@ -1320,7 +1320,7 @@
     });
 
     function selectGame(game) {
-      if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
+      if (typeof stopBgLines === 'function') stopBgLines({ burst: false });
       socket.emit('start-game', { game });
     }
 
