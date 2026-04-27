@@ -116,9 +116,9 @@ function getLocalIP() {
 }
 
 const PLAYER_COLORS = [
-  '#f87171', '#fb923c', '#d97706', '#4ade80',
-  '#38bdf8', '#818cf8', '#e879f9', '#f472b6',
-  '#a3e635', '#34d399',
+  '#f87171', '#fb923c', '#4ade80', '#38bdf8',
+  '#a78bfa', '#f472b6', '#facc15', '#34d399',
+  '#60a5fa', '#e879f9',
 ];
 
 const HT_QUESTIONS = [
@@ -489,6 +489,7 @@ function makeAuctionPowerItem(players, lotsAfterCurrent = 0) {
     { type: 'disadvantage2', name: 'Power', targetCount: Math.min(2, Math.max(1, players.length - 1)), count: 1 },
   ];
   powers = powers.filter((power) => {
+    if (power.type === 'drink') return Math.random() < 0.2;
     if (['advantage', 'disadvantage'].includes(power.type)) return lotsAfterCurrent >= 1;
     if (['advantage2', 'disadvantage2'].includes(power.type)) return lotsAfterCurrent >= 2;
     return true;
@@ -574,20 +575,29 @@ function makeAuctionMinigameItem(modifier = null, forcedType = null, allowedType
     item.prompt = 'Follow the prompt. Voters guess whether the spoken word or words are real or made up.';
     item.lie = { words, task, requiredWords: isDis ? 2 : 1, disadvantage: isDis };
   } else if (gameType === 'photoGuess') {
+    const uploadsPerPlayer = isDis ? 2 : 1;
     item.points = isDis ? randInt(11, 15) : isAdv ? randInt(6, 9) : randInt(8, 13);
-    item.name = 'Photo Guess';
-    item.summary = 'Other players upload photos. Guess which photo belongs to the named player.';
-    item.prompt = 'Everyone except the buyer uploads one photo. Then the buyer gets a player name and guesses which uploaded photo is theirs.';
-    item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false };
+    item.name = 'Photo';
+    item.summary = isDis
+      ? 'Other players upload two photos each. Guess which photos belong to the named player.'
+      : isAdv
+        ? 'Other players upload photos. Guess which photo belongs to the named player. You get two guesses, but the second is worth less.'
+        : 'Other players upload photos. Guess which photo belongs to the named player.';
+    item.prompt = isDis
+      ? 'Everyone except the buyer uploads two photos. Then the buyer gets a player name and guesses which uploaded photo is theirs.'
+      : isAdv
+        ? 'Everyone except the buyer uploads one photo. Then the buyer gets a player name and gets two guesses to find which uploaded photo is theirs. The second guess is worth fewer points.'
+        : 'Everyone except the buyer uploads one photo. Then the buyer gets a player name and guesses which uploaded photo is theirs.';
+    item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false, uploadsPerPlayer };
   } else if (gameType === 'trivia') {
-    const trivia = pickRandom(AUCTION_TRIVIA_QUESTIONS);
     item.points = isDis ? randInt(10, 14) : isAdv ? randInt(5, 8) : randInt(7, 12);
     item.name = 'Trivia';
-    item.summary = `Answer one trivia question about ${trivia.topic}.`;
-    item.prompt = `Answer one trivia question about ${trivia.topic}.`;
-    item.trivia = { ...trivia, answers: shuffle(trivia.answers) };
+    item.summary = 'Another player writes a topic. Then answer one trivia question about it.';
+    item.prompt = 'Wait for the topic, then answer the trivia question.';
+    item.trivia = { topicWriterId: null, topicWriterName: '', topic: '', question: '', answers: [], correctAnswer: '', loading: false, error: '' };
   }
 
+  item.listedPoints = item.points;
   if (modifier === 'advantage') item.summary = `Advantage: ${item.summary}`;
   if (modifier === 'disadvantage') item.summary = `Disadvantage: ${item.summary}`;
   return item;
@@ -639,7 +649,7 @@ function publicAuctionListing(listing, reveal = false) {
   if (!listing) return null;
   const pointLabel = (item) => `${item.points} point${item.points === 1 ? '' : 's'}`;
   const publicName = (item) => item.kind === 'minigame' ? `${item.name} Minigame` : item.kind === 'points' ? pointLabel(item) : item.kind === 'power' ? 'Power' : item.name;
-  const publicSummary = (item) => item.kind === 'minigame' ? `Worth ${pointLabel(item)}.` : item.kind === 'points' ? '' : item.summary;
+  const publicSummary = (item) => item.kind === 'minigame' ? `Worth ${pointLabel({ ...item, points: item.listedPoints ?? item.points })}.` : item.kind === 'points' ? '' : item.summary;
   const visibleName = (item, index) => listing.mysteryMask[index] ? 'Mystery Item' : publicName(item);
   const listingName = reveal
     ? (listing.isDouble ? `Double Lot: ${listing.items.map((item) => publicName(item)).join(' + ')}` : publicName(listing.items[0]))
@@ -658,7 +668,7 @@ function publicAuctionListing(listing, reveal = false) {
             gameType: item.gameType,
             icon: getAuctionItemIcon(item),
             name: publicName(item),
-            points: item.points,
+            points: item.listedPoints ?? item.points,
             summary: publicSummary(item),
             rulesSummary: item.summary,
             prompt: reveal ? item.prompt : null,
@@ -675,23 +685,90 @@ function publicAuctionListing(listing, reveal = false) {
 function getAuctionPhotoGuessUploaders(room, item) {
   const photos = item?.photoGuess?.photos || {};
   return Object.keys(photos)
-    .map((playerId) => {
+    .flatMap((playerId) => {
       const player = getAuctionPlayer(room, playerId);
-      if (!player) return null;
-      return { id: player.id, name: player.name, photoData: photos[playerId]?.dataURL || '' };
+      if (!player) return [];
+      const stored = Array.isArray(photos[playerId]) ? photos[playerId] : [photos[playerId]];
+      return stored
+        .map((entry, index) => ({
+          id: `${player.id}:${index}`,
+          ownerId: player.id,
+          name: player.name,
+          photoData: entry?.dataURL || '',
+        }))
+        .filter((entry) => entry.photoData);
     })
-    .filter((entry) => entry && entry.photoData);
 }
 
 function prepareAuctionPhotoGuess(room, item) {
   if (!item || item.gameType !== 'photoGuess') return;
-  if (!item.photoGuess) item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false };
+  if (!item.photoGuess) item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false, uploadsPerPlayer: 1 };
   const uploaders = getAuctionPhotoGuessUploaders(room, item);
-  const target = item.photoGuess.targetId ? getAuctionPlayer(room, item.photoGuess.targetId) : pickRandom(uploaders);
+  const uniqueOwners = [...new Map(uploaders.map((entry) => [entry.ownerId, entry])).values()];
+  const target = item.photoGuess.targetId ? getAuctionPlayer(room, item.photoGuess.targetId) : pickRandom(uniqueOwners);
   if (target) {
-    item.photoGuess.targetId = target.id;
+    item.photoGuess.targetId = target.ownerId || target.id;
     item.photoGuess.targetName = target.name;
   }
+}
+
+function getAuctionPhotoWaitMessage(requiredCount, uploadedCount) {
+  const remaining = Math.max(0, requiredCount - uploadedCount);
+  return `Waiting for ${remaining} more photo${remaining === 1 ? '' : 's'} from players`;
+}
+
+function prepareAuctionTrivia(room, item, buyerId) {
+  if (!item || item.gameType !== 'trivia') return;
+  const candidates = room.players.filter((player) => player.id !== buyerId);
+  const writer = item.trivia?.topicWriterId
+    ? getAuctionPlayer(room, item.trivia.topicWriterId)
+    : pickRandom(candidates);
+  const validWriter = writer && writer.id !== buyerId ? writer : pickRandom(candidates);
+  item.trivia = {
+    topicWriterId: validWriter?.id || '',
+    topicWriterName: validWriter?.name || 'A player',
+    topic: item.trivia?.topic || '',
+    question: item.trivia?.question || '',
+    answers: item.trivia?.answers || [],
+    correctAnswer: item.trivia?.correctAnswer || '',
+    selectedAnswer: item.trivia?.selectedAnswer || '',
+    loading: false,
+    error: '',
+  };
+}
+
+function shapeAuctionTriviaQuestion(question, modifier = null) {
+  if (!question || isTopicMetaTriviaQuestion(question.question, question.correctAnswer)) return null;
+  const correctAnswer = String(question.correctAnswer || '').trim();
+  const baseAnswers = Array.isArray(question.answers) ? question.answers.map((answer) => String(answer || '').trim()).filter(Boolean) : [];
+  const incorrect = baseAnswers.filter((answer) => answer !== correctAnswer);
+  const desiredCount = modifier === 'advantage' ? 3 : modifier === 'disadvantage' ? 6 : 4;
+  const fillerPool = [
+    'None of these',
+    'All of these',
+    'A different answer',
+    'It depends',
+    'Unknown',
+    'Not listed',
+    'Before recorded history',
+    'The Southern Hemisphere',
+    'The nineteenth century',
+    'A federal court',
+    'The Pacific Ocean',
+    'Carbon dioxide',
+  ];
+  const answers = [correctAnswer, ...shuffle(incorrect)];
+  for (const filler of shuffle(fillerPool)) {
+    if (answers.length >= desiredCount) break;
+    if (!answers.includes(filler)) answers.push(filler);
+  }
+  if (answers.length < desiredCount) return null;
+  return {
+    topic: question.topic || '',
+    question: question.question,
+    correctAnswer,
+    answers: shuffle(answers.slice(0, desiredCount)),
+  };
 }
 
 function getAuctionViewerExtras(room, viewerId, isDisplay = false) {
@@ -704,27 +781,48 @@ function getAuctionViewerExtras(room, viewerId, isDisplay = false) {
     const eligibleUploaders = room.players.filter((player) => player.id !== auction.buyerId);
     const uploaders = getAuctionPhotoGuessUploaders(room, item);
     const isBuyer = viewerId === auction.buyerId;
+    const uploadsPerPlayer = item.photoGuess?.uploadsPerPlayer || 1;
+    const myUploadCount = Array.isArray(item.photoGuess?.photos?.[viewerId])
+      ? item.photoGuess.photos[viewerId].length
+      : item.photoGuess?.photos?.[viewerId]
+        ? 1
+        : 0;
+    const correctPhotoIds = uploaders.filter((entry) => entry.ownerId === item.photoGuess?.targetId).map((entry) => entry.id);
     extras.photoGuess = {
       uploadedCount: uploaders.length,
-      requiredCount: eligibleUploaders.length,
-      myUploaded: !!item.photoGuess?.photos?.[viewerId],
+      requiredCount: eligibleUploaders.length * uploadsPerPlayer,
+      uploadsPerPlayer,
+      myUploadCount,
+      myUploaded: myUploadCount > 0,
       canUpload: !isDisplay && viewerId !== auction.buyerId && auction.phase === 'challenge-ready',
       targetName: ['challenge-active', 'voting', 'result'].includes(auction.phase) ? item.photoGuess?.targetName || '' : '',
-      photos: (isBuyer || isDisplay) && ['challenge-active', 'result'].includes(auction.phase)
+      photos: ['challenge-active', 'result'].includes(auction.phase)
         ? uploaders.map((entry, index) => ({ id: entry.id, name: auction.phase === 'result' ? entry.name : `Photo ${index + 1}`, photoData: entry.photoData }))
         : [],
-      correctPhotoId: auction.phase === 'result' ? item.photoGuess?.targetId || '' : '',
+      correctPhotoId: auction.phase === 'result' ? correctPhotoIds[0] || '' : '',
+      correctPhotoIds: auction.phase === 'result' ? correctPhotoIds : [],
       selectedPhotoId: item.photoGuess?.selectedPhotoId || '',
+      selectedPhotoIds: item.photoGuess?.selectedPhotoIds || [],
+      pointsEarned: auction.phase === 'result' ? item.photoGuess?.pointsEarned || 0 : 0,
+      remainingGuesses: Math.max(0, (item.photoGuess?.maxGuesses || 1) - (item.photoGuess?.selectedPhotoIds || []).length),
     };
   }
 
   if (item.gameType === 'trivia' && item.trivia) {
+    if (!item.trivia.topicWriterId || item.trivia.topicWriterId === auction.buyerId || !getAuctionPlayer(room, item.trivia.topicWriterId)) {
+      prepareAuctionTrivia(room, item, auction.buyerId);
+    }
     extras.trivia = {
       topic: item.trivia.topic,
       question: item.trivia.question,
       answers: item.trivia.answers,
       selectedAnswer: item.trivia.selectedAnswer || '',
       correctAnswer: auction.phase === 'result' ? item.trivia.correctAnswer : '',
+      topicWriterId: item.trivia.topicWriterId || '',
+      topicWriterName: item.trivia.topicWriterName || '',
+      canSubmitTopic: !isDisplay && viewerId === item.trivia.topicWriterId && auction.phase === 'challenge-ready' && !item.trivia.question && !item.trivia.loading,
+      loading: !!item.trivia.loading,
+      error: item.trivia.error || '',
     };
   }
 
@@ -827,11 +925,11 @@ function startAuctionBidding(pin) {
   const auction = room.auction;
   auction.phase = 'bidding';
   auction.timerLeft = getAuctionBidSeconds(room);
-  auction.message = 'Bid.';
+  auction.message = 'Waiting for a bid.';
   emitAuctionState(pin);
   const timer = setInterval(() => {
     auction.timerLeft -= 1;
-    auction.message = auction.timerLeft === 2 ? 'Going once...' : auction.timerLeft === 1 ? 'Going twice...' : 'Bid.';
+    auction.message = auction.timerLeft === 2 ? 'Going once...' : auction.timerLeft === 1 ? 'Going twice...' : auction.message || 'Waiting for a bid.';
     if (auction.timerLeft <= 0) {
       clearInterval(timer);
       room.timers = room.timers.filter((entry) => entry !== timer);
@@ -877,7 +975,7 @@ function popAuctionModifier(auction, playerId) {
 }
 
 function getAuctionBidSeconds(room) {
-  return AUCTION_BID_SECONDS + (room.auction?.settings?.longTimer ? AUCTION_LONG_TIMER_BONUS : 0);
+  return AUCTION_BID_SECONDS;
 }
 
 function applyAuctionTimerSettings(room, item) {
@@ -904,10 +1002,17 @@ function resolveNextAuctionItem(pin) {
   auction.targetCount = 0;
 
   if (item.kind === 'points') {
-    auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + item.points;
+    let pointTotal = 0;
+    let lastPointIndex = auction.currentItemIndex;
+    while (auction.currentListing.items[lastPointIndex]?.kind === 'points') {
+      pointTotal += auction.currentListing.items[lastPointIndex].points || 0;
+      lastPointIndex += 1;
+    }
+    auction.currentItemIndex = lastPointIndex - 1;
+    auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + pointTotal;
     auction.phase = 'result';
-    auction.message = `${getAuctionPlayerName(room, auction.buyerId)} gains ${item.points} point${item.points === 1 ? '' : 's'}.`;
-    finishAuctionItem(pin);
+    auction.message = `${getAuctionPlayerName(room, auction.buyerId)} has won ${pointTotal} point${pointTotal === 1 ? '' : 's'}.`;
+    finishAuctionItem(pin, 4, true);
     return;
   }
 
@@ -925,9 +1030,14 @@ function resolveNextAuctionItem(pin) {
 
   if (item.kind === 'minigame') {
     item.modifier = popAuctionModifier(auction, auction.buyerId);
+    const listedPoints = item.listedPoints ?? item.points;
     const adjusted = makeAuctionMinigameItem(item.modifier, item.gameType, auction.settings?.minigameTypes);
+    adjusted.points = listedPoints;
+    adjusted.listedPoints = listedPoints;
     Object.assign(item, adjusted);
-    if (item.gameType === 'photoGuess') item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false };
+    item.points = listedPoints;
+    if (item.gameType === 'photoGuess') item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false, selectedPhotoIds: [], maxGuesses: item.modifier === 'advantage' ? 2 : 1, uploadsPerPlayer: item.modifier === 'disadvantage' ? 2 : 1 };
+    if (item.gameType === 'trivia') prepareAuctionTrivia(room, item, auction.buyerId);
     applyAuctionTimerSettings(room, item);
     auction.phase = 'challenge-ready';
     auction.timerLeft = 0;
@@ -947,14 +1057,21 @@ function startAuctionChallenge(pin) {
   const auction = room.auction;
   const item = auction.currentItem;
   if (item.gameType === 'photoGuess') {
-    const requiredCount = room.players.filter((player) => player.id !== auction.buyerId).length;
+    const requiredCount = room.players.filter((player) => player.id !== auction.buyerId).length * (item.photoGuess?.uploadsPerPlayer || 1);
     const uploadedCount = getAuctionPhotoGuessUploaders(room, item).length;
     if (uploadedCount < requiredCount) {
-      auction.message = `Waiting for photos: ${uploadedCount}/${requiredCount} uploaded.`;
+      auction.message = getAuctionPhotoWaitMessage(requiredCount, uploadedCount);
       emitAuctionState(pin);
       return;
     }
     prepareAuctionPhotoGuess(room, item);
+  }
+  if (item.gameType === 'trivia' && !item.trivia?.question) {
+    auction.message = item.trivia?.loading
+      ? 'Writing the question...'
+      : `Waiting for ${item.trivia?.topicWriterName || 'a player'} to write a topic.`;
+    emitAuctionState(pin);
+    return;
   }
   auction.phase = item.timerSeconds > 0 ? 'challenge-active' : 'voting';
   if (item.gameType === 'photoGuess' || item.gameType === 'trivia') auction.phase = 'challenge-active';
@@ -1013,15 +1130,19 @@ function applyAuctionPower(pin, item, targetIds) {
   finishAuctionItem(pin);
 }
 
-function finishAuctionItem(pin) {
+function finishAuctionItem(pin, delaySeconds = 2, skipListingDelay = false) {
   const room = rooms[pin];
   if (!room || !room.auction) return;
   emitAuctionState(pin);
   const timer = setTimeout(() => {
     room.timers = room.timers.filter((entry) => entry !== timer);
     room.auction.currentItemIndex += 1;
+    if (skipListingDelay && room.auction.currentItemIndex >= (room.auction.currentListing?.items?.length || 0)) {
+      startAuctionListing(pin);
+      return;
+    }
     resolveNextAuctionItem(pin);
-  }, AUCTION_RESULT_SECONDS * 1000);
+  }, delaySeconds * 1000);
   room.timers.push(timer);
 }
 
@@ -1046,8 +1167,10 @@ function resolveAuctionVote(pin) {
     const points = item.lie.disadvantage && !majorityFooled ? 0 : Math.min(item.points, raw);
     auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + points;
     auction.phase = 'result';
-    auction.message = `${getAuctionPlayerName(room, auction.buyerId)} fooled ${fooled} player${fooled === 1 ? '' : 's'} and earns ${points} point${points === 1 ? '' : 's'}.`;
-    finishAuctionItem(pin);
+    auction.message = points > 0
+      ? `${getAuctionPlayerName(room, auction.buyerId)} has won ${points} point${points === 1 ? '' : 's'}.`
+      : `${getAuctionPlayerName(room, auction.buyerId)} fooled ${fooled} player${fooled === 1 ? '' : 's'}.\nNo points.`;
+    finishAuctionItem(pin, points > 0 ? 4 : 2);
     return;
   }
   const yes = Object.values(votes).filter((vote) => vote === 'yes').length;
@@ -1056,9 +1179,9 @@ function resolveAuctionVote(pin) {
   auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + points;
   auction.phase = 'result';
   auction.message = passed
-    ? `${getAuctionPlayerName(room, auction.buyerId)} passes and earns ${points} point${points === 1 ? '' : 's'}.`
+    ? `${getAuctionPlayerName(room, auction.buyerId)} has won ${points} point${points === 1 ? '' : 's'}.`
     : `${getAuctionPlayerName(room, auction.buyerId)} does not pass.\nNo points.`;
-  finishAuctionItem(pin);
+  finishAuctionItem(pin, points > 0 ? 4 : 2);
 }
 
 function queueAuctionNext(pin) {
@@ -1079,7 +1202,8 @@ function endAuctionGame(pin) {
   const maxScore = Math.max(...Object.values(auction.scores));
   auction.winners = room.players.filter((player) => (auction.scores[player.id] || 0) === maxScore).map((player) => player.name);
   auction.phase = 'game-over';
-  auction.message = auction.winners.length === 1 ? `Congratulations, ${auction.winners[0]}!\nI won't eat your soul.` : `${auction.winners.join(' and ')} tie for the win.`;
+  const winnerLine = pickRandom(["I won't eat your soul.", "You're the best buyer.", 'There is no prize.']);
+  auction.message = auction.winners.length === 1 ? `Congratulations, ${auction.winners[0]}!\n${winnerLine}` : `${auction.winners.join(' and ')} tie for the win.`;
   emitAuctionState(pin);
 }
 
@@ -1521,6 +1645,7 @@ async function generateETAnthropicRaw(topic, count, existingQuestions = []) {
       'Return valid JSON only.',
       'The JSON must have the shape {"questions":[{"question":"...","correctAnswer":"...","answers":["...","...","...","..."]}]}',
       'Each question must be factual, clear, and suitable for a party trivia game.',
+      'Ask a real question related to the topic; do not ask what the topic is, what the topic is about, or make the topic itself the answer.',
       'Each answers array must have exactly 4 distinct answers and include the correct answer.',
       'Avoid trick questions, subjective questions, and duplicates.',
       'If the topic is narrow, reinterpret it into the closest fair trivia topic instead of refusing.',
@@ -1630,6 +1755,7 @@ async function generateETOpenAIRaw(topic, count, existingQuestions = []) {
             text: [
               `Generate exactly ${count} multiple-choice trivia question${count === 1 ? '' : 's'} for the given topic.`,
               'The questions must be factual, broadly answerable, and suitable for a party trivia game.',
+              'Ask a real question related to the topic; do not ask what the topic is, what the topic is about, or make the topic itself the answer.',
               'Avoid trick questions, subjective questions, and ambiguous wording.',
               'Each question must have exactly 4 distinct answer choices, with exactly 1 correct answer.',
               'Include the correct answer inside the answers array.',
@@ -1730,6 +1856,17 @@ function extractOpenAITriviaPayload(response) {
   return null;
 }
 
+function isTopicMetaTriviaQuestion(question, correctAnswer = '') {
+  const lowerQuestion = String(question || '').trim().toLowerCase();
+  const lowerAnswer = String(correctAnswer || '').trim().toLowerCase();
+  if (!lowerQuestion) return true;
+  if (/\bwhat (is|are) (this|the) topic\b/.test(lowerQuestion)) return true;
+  if (/\bwhat (is|are) (this|the) topic about\b/.test(lowerQuestion)) return true;
+  if (/\bwhich topic\b/.test(lowerQuestion)) return true;
+  if (/\bname (this|the) topic\b/.test(lowerQuestion)) return true;
+  return lowerAnswer && lowerQuestion.includes('topic') && lowerQuestion.includes('about') && lowerQuestion.length < 90;
+}
+
 function normalizeGeneratedTriviaQuestion(item, idPrefix) {
   if (!item || typeof item.question !== 'string' || typeof item.correctAnswer !== 'string' || !Array.isArray(item.answers)) {
     return null;
@@ -1742,6 +1879,7 @@ function normalizeGeneratedTriviaQuestion(item, idPrefix) {
   const question = htmlDecode(String(item.question).trim());
 
   if (!question || !correctAnswer || answers.length !== 4) return null;
+  if (isTopicMetaTriviaQuestion(question, correctAnswer)) return null;
   if (!answers.includes(correctAnswer)) return null;
   if (new Set(answers).size !== 4) return null;
 
@@ -1975,6 +2113,7 @@ function normalizeETQuestions(response) {
         correctAnswer: htmlDecode(item.correctAnswer),
       };
     })
+    .filter((item) => !isTopicMetaTriviaQuestion(item.question, item.correctAnswer))
     .filter((item) => new Set(item.answers).size === 4);
 }
 
@@ -2072,18 +2211,6 @@ const AUCTION_FIND_CATEGORIES = [
 
 const AUCTION_COMMON_LETTERS = ['S', 'T', 'B', 'C', 'M', 'P', 'R'];
 const AUCTION_RANDOM_LETTERS = 'ABCDEFGHIJKLMNOPQRSTUVWXYZ'.split('');
-const AUCTION_TRIVIA_QUESTIONS = [
-  { topic: 'space', question: 'Which planet is known as the Red Planet?', correctAnswer: 'Mars', answers: ['Mars', 'Venus', 'Jupiter', 'Mercury'] },
-  { topic: 'movies', question: 'In the original Jurassic Park, what type of animal is brought back from extinction?', correctAnswer: 'Dinosaurs', answers: ['Dinosaurs', 'Mammoths', 'Dragons', 'Sabertooth cats'] },
-  { topic: 'geography', question: 'What is the largest ocean on Earth?', correctAnswer: 'Pacific Ocean', answers: ['Pacific Ocean', 'Atlantic Ocean', 'Indian Ocean', 'Arctic Ocean'] },
-  { topic: 'music', question: 'How many strings does a standard guitar usually have?', correctAnswer: '6', answers: ['6', '4', '5', '8'] },
-  { topic: 'history', question: 'Who was the first president of the United States?', correctAnswer: 'George Washington', answers: ['George Washington', 'Abraham Lincoln', 'Thomas Jefferson', 'John Adams'] },
-  { topic: 'science', question: 'What gas do plants absorb from the air during photosynthesis?', correctAnswer: 'Carbon dioxide', answers: ['Carbon dioxide', 'Oxygen', 'Hydrogen', 'Nitrogen'] },
-  { topic: 'sports', question: 'In basketball, how many points is a shot from behind the arc worth?', correctAnswer: '3', answers: ['3', '2', '1', '4'] },
-  { topic: 'food', question: 'What fruit is traditionally used to make guacamole?', correctAnswer: 'Avocado', answers: ['Avocado', 'Lime', 'Tomato', 'Cucumber'] },
-  { topic: 'animals', question: 'What is the fastest land animal?', correctAnswer: 'Cheetah', answers: ['Cheetah', 'Lion', 'Pronghorn', 'Horse'] },
-  { topic: 'technology', question: 'What does CPU stand for?', correctAnswer: 'Central Processing Unit', answers: ['Central Processing Unit', 'Computer Power Unit', 'Central Program Utility', 'Core Processing User'] },
-];
 const AUCTION_NORMAL_QUESTIONS = [
   'What is a version of yourself you miss?',
   'What is something small that changed how you see someone?',
@@ -2224,6 +2351,7 @@ function remapPlayerId(room, oldId, newId) {
     if (a.highBidderId === oldId) a.highBidderId = newId;
     if (a.buyerId === oldId) a.buyerId = newId;
     if (a.selectedTargets) a.selectedTargets = a.selectedTargets.map(id => id === oldId ? newId : id);
+    if (a.currentItem?.trivia && a.currentItem.trivia.topicWriterId === oldId) a.currentItem.trivia.topicWriterId = newId;
   }
 }
 
@@ -5028,7 +5156,7 @@ io.on('connection', (socket) => {
     auction.currentBid = nextBid;
     auction.highBidderId = socket.id;
     auction.timerLeft = getAuctionBidSeconds(room);
-    auction.message = `${getAuctionPlayerName(room, socket.id)} bids ${formatMoney(nextBid)}.`;
+    auction.message = `${getAuctionPlayerName(room, socket.id)} has bid ${formatMoney(nextBid)}.`;
     emitAuctionState(pin);
   });
 
@@ -5071,12 +5199,74 @@ io.on('connection', (socket) => {
     if (!item || item.kind !== 'minigame' || item.gameType !== 'photoGuess') return;
     if (socket.id === auction.buyerId) return;
     if (typeof dataURL !== 'string' || !dataURL.startsWith('data:image/')) return;
-    if (!item.photoGuess) item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false };
-    item.photoGuess.photos[socket.id] = { dataURL };
-    const requiredCount = room.players.filter((player) => player.id !== auction.buyerId).length;
+    if (!item.photoGuess) item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false, selectedPhotoIds: [], maxGuesses: item.modifier === 'advantage' ? 2 : 1, uploadsPerPlayer: item.modifier === 'disadvantage' ? 2 : 1 };
+    const uploadsPerPlayer = item.photoGuess.uploadsPerPlayer || 1;
+    const currentPhotos = Array.isArray(item.photoGuess.photos[socket.id])
+      ? item.photoGuess.photos[socket.id]
+      : item.photoGuess.photos[socket.id]
+        ? [item.photoGuess.photos[socket.id]]
+        : [];
+    if (currentPhotos.length < uploadsPerPlayer) currentPhotos.push({ dataURL });
+    else currentPhotos[currentPhotos.length - 1] = { dataURL };
+    item.photoGuess.photos[socket.id] = currentPhotos;
+    const requiredCount = room.players.filter((player) => player.id !== auction.buyerId).length * uploadsPerPlayer;
     const uploadedCount = getAuctionPhotoGuessUploaders(room, item).length;
-    auction.message = `Photos uploaded: ${uploadedCount}/${requiredCount}.`;
+    auction.message = getAuctionPhotoWaitMessage(requiredCount, uploadedCount);
     emitAuctionState(pin);
+  });
+
+  socket.on('auction-trivia-topic', async ({ topic } = {}) => {
+    const pin = socket.data.pin;
+    const room = rooms[pin];
+    if (!room || !room.auction || room.auction.phase !== 'challenge-ready') return;
+    const auction = room.auction;
+    const item = auction.currentItem;
+    if (!item || item.kind !== 'minigame' || item.gameType !== 'trivia' || !item.trivia) return;
+    if (!item.trivia.topicWriterId || item.trivia.topicWriterId === auction.buyerId || !getAuctionPlayer(room, item.trivia.topicWriterId)) {
+      prepareAuctionTrivia(room, item, auction.buyerId);
+    }
+    if (socket.id !== item.trivia.topicWriterId || item.trivia.loading || item.trivia.question) return;
+    const trimmedTopic = String(topic || '').trim().slice(0, 80);
+    if (trimmedTopic.length < 2) {
+      item.trivia.error = 'Type a longer topic.';
+      emitAuctionState(pin);
+      return;
+    }
+
+    item.trivia.topic = trimmedTopic;
+    item.trivia.loading = true;
+    item.trivia.error = '';
+    auction.message = `${item.trivia.topicWriterName || 'A player'} is writing the question.`;
+    emitAuctionState(pin);
+
+    try {
+      const questions = await fetchETQuestionsForTopic(trimmedTopic);
+      const shaped = (questions || [])
+        .map((question) => shapeAuctionTriviaQuestion(question, item.modifier))
+        .find(Boolean);
+      if (!shaped) throw new Error('No usable trivia question was generated.');
+      const currentRoom = rooms[pin];
+      const currentItem = currentRoom?.auction?.currentItem;
+      if (!currentRoom || currentItem !== item || currentRoom.auction.phase !== 'challenge-ready') return;
+      item.trivia = {
+        ...item.trivia,
+        ...shaped,
+        topic: trimmedTopic,
+        loading: false,
+        error: '',
+      };
+      item.summary = `Answer one trivia question about ${trimmedTopic}.`;
+      item.prompt = item.trivia.question;
+      currentRoom.auction.phase = 'challenge-active';
+      currentRoom.auction.timerLeft = 0;
+      currentRoom.auction.message = 'Trivia.';
+      emitAuctionState(pin);
+    } catch (error) {
+      item.trivia.loading = false;
+      item.trivia.error = "Couldn't make a question for that topic. Try another.";
+      auction.message = `Waiting for ${item.trivia.topicWriterName || 'a player'} to write a topic.`;
+      emitAuctionState(pin);
+    }
   });
 
   socket.on('auction-photo-guess-submit', ({ photoOwnerId } = {}) => {
@@ -5088,16 +5278,30 @@ io.on('connection', (socket) => {
     if (!item || item.kind !== 'minigame' || item.gameType !== 'photoGuess') return;
     if (socket.id !== auction.buyerId || item.photoGuess?.resolved) return;
     const selectedId = String(photoOwnerId || '');
-    const correct = selectedId && selectedId === item.photoGuess.targetId;
+    const selectedPhotoIds = item.photoGuess.selectedPhotoIds || [];
+    if (selectedPhotoIds.includes(selectedId)) return;
+    const selectedOwnerId = selectedId.split(':')[0];
+    const correct = selectedOwnerId && selectedOwnerId === item.photoGuess.targetId;
+    selectedPhotoIds.push(selectedId);
+    item.photoGuess.selectedPhotoIds = selectedPhotoIds;
     item.photoGuess.selectedPhotoId = selectedId;
+    const maxGuesses = item.photoGuess.maxGuesses || 1;
+    const hasMoreGuesses = selectedPhotoIds.length < maxGuesses;
+    if (!correct && hasMoreGuesses) {
+      auction.message = `${getAuctionPlayerName(room, auction.buyerId)} gets one more guess.`;
+      emitAuctionState(pin);
+      return;
+    }
     item.photoGuess.resolved = true;
-    const points = correct ? item.points : 0;
+    const secondGuess = correct && selectedPhotoIds.length > 1;
+    const points = correct ? (secondGuess ? Math.max(1, Math.floor(item.points / 2)) : item.points) : 0;
+    item.photoGuess.pointsEarned = points;
     auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + points;
     auction.phase = 'result';
     auction.message = correct
-      ? `${getAuctionPlayerName(room, auction.buyerId)} found ${item.photoGuess.targetName}'s photo and earns ${points} point${points === 1 ? '' : 's'}.`
+      ? `${getAuctionPlayerName(room, auction.buyerId)} has won ${points} point${points === 1 ? '' : 's'}.`
       : `${getAuctionPlayerName(room, auction.buyerId)} guessed wrong. It was ${item.photoGuess.targetName}'s photo.\nNo points.`;
-    finishAuctionItem(pin);
+    finishAuctionItem(pin, 4);
   });
 
   socket.on('auction-trivia-answer', ({ answer } = {}) => {
@@ -5116,9 +5320,9 @@ io.on('connection', (socket) => {
     auction.scores[auction.buyerId] = (auction.scores[auction.buyerId] || 0) + points;
     auction.phase = 'result';
     auction.message = correct
-      ? `${getAuctionPlayerName(room, auction.buyerId)} answered correctly and earns ${points} point${points === 1 ? '' : 's'}.`
+      ? `${getAuctionPlayerName(room, auction.buyerId)} has won ${points} point${points === 1 ? '' : 's'}.`
       : `${getAuctionPlayerName(room, auction.buyerId)} missed it. Correct answer: ${item.trivia.correctAnswer}.\nNo points.`;
-    finishAuctionItem(pin);
+    finishAuctionItem(pin, points > 0 ? 4 : 2);
   });
 
   socket.on('auction-start', () => {

@@ -267,9 +267,9 @@
       position: relative;
       overflow: hidden;
       background:
-        radial-gradient(circle at 84% 18%, rgba(226,35,52,0.70) 0 2.2rem, transparent 2.35rem),
-        radial-gradient(ellipse at 20% 90%, rgba(83,111,65,0.24), transparent 48%),
-        linear-gradient(180deg, #1a1d1b, #07100e);
+        radial-gradient(circle at 84% 18%, rgba(226,35,52,0.48) 0 2.2rem, transparent 2.35rem),
+        radial-gradient(ellipse at 20% 90%, rgba(83,111,65,0.18), transparent 48%),
+        linear-gradient(180deg, #252927, #111b18);
       border-color: #a93f45;
       box-shadow: inset 0 0 0 1px rgba(239,68,68,0.18), inset 0 -18px 30px rgba(34,55,37,0.20);
     }
@@ -349,11 +349,10 @@
     }
     .game-card.draft-game-card {
       background:
-        linear-gradient(90deg, transparent 0 18px, rgba(255,138,61,0.18) 18px 19px, transparent 19px 100%),
         linear-gradient(90deg, rgba(45,212,191,0.08) 0 1px, transparent 1px 28px),
         linear-gradient(0deg, rgba(45,212,191,0.06) 0 1px, transparent 1px 28px),
         linear-gradient(135deg, #061719, #0e2629);
-      background-size: 100% 100%, 28px 28px, 28px 28px, auto;
+      background-size: 28px 28px, 28px 28px, auto;
       border-color: #24565c;
       box-shadow: inset 0 0 0 1px rgba(45,212,191,0.12);
     }
@@ -663,6 +662,22 @@
       border-color: #7f9db9;
       color: #111;
     }
+    body.pr-theme .confirm-modal-actions .btn {
+      border: 1px solid #003c74;
+      border-radius: 3px;
+      background: linear-gradient(180deg, #fff 0%, #ecebe6 44%, #d6d3c7 45%, #f4f3ee 100%);
+      color: #111;
+      box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #777;
+    }
+    body.pr-theme .confirm-modal-actions .btn:active {
+      background: linear-gradient(180deg, #d6d3c7, #f4f3ee);
+      box-shadow: inset 1px 1px 0 #777, inset -1px -1px 0 #fff;
+    }
+    body.pr-theme .confirm-modal-actions .btn-ghost {
+      background: linear-gradient(180deg, #fdfdfb, #d8d7c9);
+      border-color: #7f9db9;
+      color: #111;
+    }
     body.pr-theme .pr-upload-label.disabled,
     body.pr-theme .btn:disabled {
       background: #d8d5c6;
@@ -801,14 +816,9 @@
 
     body.light-mode .game-card.pr-game-card {
       background:
-        radial-gradient(ellipse at 24% 22%, rgba(255,255,255,0.92) 0 7%, transparent 8%),
-        radial-gradient(ellipse at 30% 21%, rgba(255,255,255,0.82) 0 5%, transparent 6%),
-        radial-gradient(ellipse at 18% 24%, rgba(255,255,255,0.74) 0 4%, transparent 5%),
-        radial-gradient(ellipse at 72% 18%, rgba(255,255,255,0.88) 0 6%, transparent 7%),
-        radial-gradient(ellipse at 78% 17%, rgba(255,255,255,0.78) 0 4%, transparent 5%),
-        radial-gradient(ellipse at 66% 20%, rgba(255,255,255,0.70) 0 4%, transparent 5%),
+        radial-gradient(ellipse 22% 12% at 25% 22%, rgba(255,255,255,0.88) 0 68%, transparent 70%),
         linear-gradient(180deg, rgba(78,159,255,0.62) 0 51%, transparent 52%),
-        linear-gradient(90deg, rgba(86,177,52,0.46) 0 44%, rgba(143,207,70,0.34) 44% 100%),
+        radial-gradient(ellipse 88% 38% at 50% 100%, rgba(86,177,52,0.38), transparent 70%),
         linear-gradient(180deg, #3b99ff, #9fdcff 56%, #7fca48 57%, #2f8b29);
       border-color: #3d8cff;
       box-shadow:
@@ -2457,6 +2467,8 @@
     .draft-category { font-family:'Cinzel',serif; color:#8ee9de; font-size:1.45rem; font-weight:900; line-height:1.1; text-align:center; margin:0.4rem 0 0.65rem; text-shadow:0 0 18px rgba(45,212,191,0.12); }
     .draft-metric-display { display:inline-flex; align-items:center; justify-content:center; margin:0.15rem auto 0.25rem; padding:0.4rem 0.85rem; border:1.5px solid #ff8a3d; border-radius:999px; color:#ffd7bf; background:#231d18; font-weight:900; box-shadow:inset 0 0 0 1px rgba(255,138,61,0.08); }
     body.draft-theme .btn { background:#ff8a3d; color:#082426; border:1px solid #ffad7a; font-weight:900; box-shadow:0 8px 22px rgba(255,138,61,0.16), inset 0 -2px 0 rgba(8,36,38,0.18); }
+    body.draft-theme .draft-easy-weight-btn,
+    body.draft-theme .confirm-modal-actions .btn { font-weight:500; }
     body.draft-theme .btn:active { background:#e66f22; box-shadow:0 4px 14px rgba(255,138,61,0.12), inset 0 -1px 0 rgba(8,36,38,0.18); }
     body.draft-theme .btn-ghost { background:#123338; border-color:#2dd4bf; color:#c7fff6; box-shadow:inset 0 0 0 1px rgba(45,212,191,0.08); }
     body.draft-theme .btn-ghost:active { background:#0e2629; border-color:#ff8a3d; color:#ffd7bf; }
@@ -2537,11 +2549,10 @@
     }
     body.light-mode .game-card.draft-game-card {
       background:
-        linear-gradient(90deg, transparent 0 18px, rgba(194,78,18,0.16) 18px 19px, transparent 19px 100%),
         linear-gradient(90deg, rgba(8,127,122,0.08) 0 1px, transparent 1px 28px),
         linear-gradient(0deg, rgba(8,127,122,0.06) 0 1px, transparent 1px 28px),
         linear-gradient(135deg, #ffffff, #e8f7f7);
-      background-size: 100% 100%, 28px 28px, 28px 28px, auto;
+      background-size: 28px 28px, 28px 28px, auto;
       border-color:#087f7a;
       box-shadow:inset 0 0 0 1px rgba(8,127,122,0.10);
     }
@@ -2655,15 +2666,25 @@
     .auction-modal-actions.two { grid-template-columns:1fr 1fr; }
     .auction-letter-row { display:flex; flex-wrap:wrap; justify-content:center; gap:0.55rem; margin:0.85rem 0; }
     .auction-letter-chip { min-width:3.2rem; height:3.2rem; display:inline-flex; align-items:center; justify-content:center; border:1.5px solid rgba(207,185,145,0.45); border-radius:8px; background:#100b22; color:#cfb991; font-family:'Cinzel',serif; font-size:2rem; font-weight:900; }
+    .auction-photo-target { margin:0.25rem 0 0.65rem; color:#cfb991; font-family:'Cinzel',serif; font-size:1.45rem; font-weight:900; line-height:1.12; text-align:center; text-shadow:0 0 18px rgba(207,185,145,0.24); }
     .auction-photo-grid { display:grid; grid-template-columns:repeat(2,minmax(0,1fr)); gap:0.55rem; margin-top:0.75rem; }
-    .auction-photo-choice { border:1.5px solid #2d1f50; border-radius:8px; background:#100b22; color:#ede9f8; padding:0.45rem; font-family:'Jost',sans-serif; text-align:center; cursor:pointer; }
+    .auction-photo-choice { position:relative; border:1.5px solid #2d1f50; border-radius:8px; background:#100b22; color:#ede9f8; padding:0.45rem; font-family:'Jost',sans-serif; text-align:center; cursor:pointer; transition:transform 0.18s, border-color 0.18s, box-shadow 0.18s, background 0.18s; }
     .auction-photo-choice img { width:100%; aspect-ratio:1/1; object-fit:cover; border-radius:6px; display:block; margin-bottom:0.35rem; background:#08041a; }
-    .auction-photo-choice.correct { border-color:#4ade80; box-shadow:0 0 0 1px rgba(74,222,128,0.22) inset; }
-    .auction-photo-choice.wrong { border-color:#f87171; box-shadow:0 0 0 1px rgba(248,113,113,0.20) inset; }
+    .auction-photo-choice.correct { border-color:#4ade80; background:#0d2b1a; box-shadow:0 0 0 2px rgba(74,222,128,0.34), 0 0 24px rgba(74,222,128,0.18); }
+    .auction-photo-choice.wrong { border-color:#f87171; background:#2a0d18; box-shadow:0 0 0 1px rgba(248,113,113,0.20) inset; }
+    .auction-photo-choice.guessed { transform:translateY(-2px); box-shadow:0 0 0 3px rgba(207,185,145,0.36), 0 0 28px rgba(207,185,145,0.18); }
+    .auction-photo-choice.guessed::after { content:'Guessed'; position:absolute; left:0.45rem; top:0.45rem; padding:0.14rem 0.42rem; border-radius:999px; background:#cfb991; color:#08041a; font-size:0.66rem; font-weight:900; text-transform:uppercase; letter-spacing:0.05em; }
+    .auction-photo-choice:disabled { opacity:0.55; cursor:not-allowed; }
+    .auction-photo-choice.guessed:disabled { opacity:1; }
     .auction-trivia-grid { display:grid; grid-template-columns:1fr; gap:0.5rem; margin-top:0.65rem; }
-    .auction-trivia-answer { padding:0.75rem; border:1.5px solid #2d1f50; border-radius:8px; background:#100b22; color:#ede9f8; text-align:center; }
-    .auction-trivia-answer.correct { border-color:#4ade80; background:#0d2b1a; }
+    .auction-trivia-result { margin:0 0 0.75rem; padding:0.65rem 0.8rem; border-radius:8px; font-weight:900; text-align:center; }
+    .auction-trivia-result.correct { background:#0d2b1a; color:#bbf7d0; border:1px solid #4ade80; }
+    .auction-trivia-result.wrong { background:#2a0d18; color:#fecaca; border:1px solid #f87171; }
+    .auction-trivia-answer { position:relative; padding:0.75rem; border:1.5px solid #2d1f50; border-radius:8px; background:#100b22; color:#ede9f8; text-align:center; }
+    .auction-trivia-answer.correct { border-color:#4ade80; background:#0d2b1a; box-shadow:0 0 0 2px rgba(74,222,128,0.22); }
     .auction-trivia-answer.wrong { border-color:#f87171; background:#2a0d18; }
+    .auction-trivia-answer.selected { box-shadow:0 0 0 3px rgba(207,185,145,0.30); }
+    .auction-trivia-answer.selected::after { content:'Picked'; position:absolute; right:0.55rem; top:50%; transform:translateY(-50%); color:#cfb991; font-size:0.68rem; font-weight:900; text-transform:uppercase; letter-spacing:0.08em; }
     .auction-minigame-picker { margin-top:0.75rem; border:1.5px solid #2d1f50; border-radius:8px; background:#1a1232; color:#c4b5e0; text-align:left; overflow:hidden; }
     .auction-minigame-picker summary { cursor:pointer; padding:0.72rem 0.85rem; color:#cfb991; font-weight:700; }
     .auction-minigame-grid { display:grid; grid-template-columns:1fr 1fr; gap:0.45rem; padding:0 0.75rem 0.8rem; }
@@ -2908,6 +2929,15 @@
     body.light-mode .auction-secret,
     body.light-mode .auction-photo-choice,
     body.light-mode .auction-trivia-answer { color:#1a0a2e; }
+    body.light-mode .auction-photo-target { color:#8b6914; text-shadow:none; }
+    body.light-mode .auction-photo-choice.correct,
+    body.light-mode .auction-trivia-answer.correct,
+    body.light-mode .auction-trivia-result.correct { background:#dcfce7; border-color:#16a34a; color:#14532d; }
+    body.light-mode .auction-photo-choice.wrong,
+    body.light-mode .auction-trivia-answer.wrong,
+    body.light-mode .auction-trivia-result.wrong { background:#fee2e2; border-color:#dc2626; color:#7f1d1d; }
+    body.light-mode .auction-photo-choice.guessed,
+    body.light-mode .auction-trivia-answer.selected { box-shadow:0 0 0 3px rgba(139,105,20,0.28); }
     body.light-mode .auction-modal-backdrop { background:rgba(249,247,244,0.84); }
     body.light-mode .auction-modal { background:#fff; border-color:#c8b4e0; box-shadow:0 20px 60px rgba(0,0,0,0.12); }
     body.light-mode .auction-modal-title,
@@ -3120,22 +3150,38 @@
     body.pr-theme .confirm-modal-actions .btn {
       padding: 0.9rem;
       font-size: 1.05rem;
-      border-radius: 8px;
-      border: none;
-      background: #cfb991;
-      color: #08041a;
-      box-shadow: none;
-      font-family: 'Jost', sans-serif;
+      border-radius: 3px;
+      border: 1px solid #003c74;
+      background: linear-gradient(180deg, #fff 0%, #ecebe6 44%, #d6d3c7 45%, #f4f3ee 100%);
+      color: #111;
+      box-shadow: inset 1px 1px 0 #fff, inset -1px -1px 0 #777;
+      font-family: Tahoma, 'Jost', Arial, sans-serif;
       font-weight: 500;
     }
-    body.pr-theme .confirm-modal-actions .btn:active { background: #b8995e; }
+    body.pr-theme .confirm-modal-actions .btn:active {
+      background: linear-gradient(180deg, #d6d3c7, #f4f3ee);
+      box-shadow: inset 1px 1px 0 #777, inset -1px -1px 0 #fff;
+    }
     body.pr-theme .confirm-modal-actions .btn-ghost {
-      background: transparent;
-      border: 1px solid #4c1d95;
-      color: #c084fc;
+      background: linear-gradient(180deg, #fdfdfb, #d8d7c9);
+      border: 1px solid #7f9db9;
+      color: #111;
+    }
+    body.pr-theme .confirm-modal-actions .btn-ghost:active { background: linear-gradient(180deg, #d6d3c7, #f4f3ee); }
+    body.mafia-game-theme .confirm-modal-actions .btn {
+      background: #8f1d2a;
+      border: 1px solid #d65b61;
+      color: #fff2e6;
+      box-shadow: 0 10px 24px rgba(143,29,42,0.20);
+    }
+    body.mafia-game-theme .confirm-modal-actions .btn:active { background: #6f1721; }
+    body.mafia-game-theme .confirm-modal-actions .btn-ghost {
+      background: rgba(20,8,14,0.86);
+      border-color: #8f1d2a;
+      color: #ffd0bd;
       box-shadow: none;
     }
-    body.pr-theme .confirm-modal-actions .btn-ghost:active { background: #1a1232; }
+    body.mafia-game-theme .confirm-modal-actions .btn-ghost:active { background: #2a1413; }
 
     #bg-lines-canvas {
       position: fixed;
@@ -3688,7 +3734,7 @@
     }
 
     body.light-mode.mafia-game-theme {
-      background-color: #ddd6c7;
+      background-color: #eee7da;
       background-image: none;
       color: #1d2620;
     }
@@ -3702,9 +3748,9 @@
         radial-gradient(circle at 91% 73%, rgba(125,49,48,0.09) 0 0.16rem, transparent 0.20rem),
         radial-gradient(circle at 75% 12%, rgba(164,57,58,0.24) 0 4.5rem, rgba(123,55,58,0.15) 4.55rem 5rem, transparent 5.2rem),
         radial-gradient(ellipse at 74% 10%, rgba(155,52,56,0.08), transparent 24%),
-        radial-gradient(ellipse at 50% 102%, rgba(119,132,103,0.22), transparent 46%),
-        linear-gradient(180deg, rgba(255,255,255,0.20), transparent 42%),
-        linear-gradient(180deg, #f2efe7 0%, #ddd6c7 100%);
+        radial-gradient(ellipse at 50% 102%, rgba(119,132,103,0.12), transparent 46%),
+        linear-gradient(180deg, rgba(255,255,255,0.28), transparent 42%),
+        linear-gradient(180deg, #fbf8f1 0%, #eee7da 100%);
       background-repeat: no-repeat;
       background-size: 100% 100%;
       opacity: 1;
@@ -3863,6 +3909,25 @@
       background: #68272b;
       color: #fff8ed;
     }
+    body.light-mode.mafia-game-theme .confirm-modal-actions .btn {
+      background: #68272b;
+      border-color: #9b3438;
+      color: #fff8ed;
+      box-shadow: 0 8px 18px rgba(45,52,43,0.10);
+    }
+    body.light-mode.mafia-game-theme .confirm-modal-actions .btn:active {
+      background: #541f23;
+    }
+    body.light-mode.mafia-game-theme .confirm-modal-actions .btn-ghost {
+      background: #f5f0e6;
+      border-color: #9b3438;
+      color: #2a241f;
+      box-shadow: none;
+    }
+    body.light-mode.mafia-game-theme .confirm-modal-actions .btn-ghost:active {
+      background: #eaded0;
+      color: #2a241f;
+    }
     body.light-mode.mafia-game-theme #screen-mafia-setup .mafia-rules-btn {
       background: #f5f0e6;
       border-color: #9b3438;
@@ -3903,9 +3968,9 @@
       background:
         radial-gradient(circle at 84% 18%, rgba(190,36,42,0.36) 0 2.2rem, transparent 2.34rem),
         radial-gradient(ellipse at 20% 92%, rgba(79,92,68,0.16), transparent 48%),
-        linear-gradient(180deg, #f5f0e6, #ddd6c7);
+        linear-gradient(180deg, #f8f3ea, #ebe4d6);
       border-color: #ba5a58;
-      box-shadow: inset 0 0 0 1px rgba(190,36,42,0.14), 0 10px 26px rgba(77,68,55,0.10);
+      box-shadow: inset 0 0 0 1px rgba(190,36,42,0.12), 0 10px 22px rgba(77,68,55,0.08);
     }
     body.light-mode .game-card.mafia-game-card:active { border-color: #be242a; }
     body.light-mode .game-card.mafia-game-card .game-title { color: #2a241f; }
@@ -4382,18 +4447,18 @@
       background:
         repeating-linear-gradient(0deg, rgba(38,98,82,0.08) 0 1px, transparent 1px 18px),
         radial-gradient(circle at 84% 24%, rgba(190,132,22,0.15), transparent 34%),
-        #fffaf0;
+        #fff6cf;
       border-color: #4f9d72;
       box-shadow: inset 0 0 0 1px rgba(185,52,52,0.08);
     }
     body.light-mode .game-card.ss-game-card .game-title { color: #25634f; }
     body.light-mode .game-card.ss-game-card .game-desc { color: #6b5945; }
     body.light-mode.ss-theme {
-      background-color: #fffefa;
+      background-color: #fff6cf;
       background-image:
         repeating-linear-gradient(0deg, rgba(70,130,180,0.12) 0 1px, transparent 1px 28px),
         radial-gradient(ellipse at 82% 10%, rgba(190,132,22,0.10), transparent 38%),
-        linear-gradient(180deg, #fffefa 0%, #fbf7ef 100%);
+        linear-gradient(180deg, #fff8d9 0%, #f8efc5 100%);
       color: #17251f;
     }
     body.light-mode.ss-theme::before {
@@ -4439,8 +4504,8 @@
     body.light-mode.ss-theme .ht-p-result-row {
       background:
         repeating-linear-gradient(0deg, rgba(70,130,180,0.11) 0 1px, transparent 1px 26px),
-        rgba(255,255,252,0.95) !important;
-      border-color: #d8caa8 !important;
+        rgba(255,246,203,0.96) !important;
+      border-color: #d6bd72 !important;
       color: #17251f;
       box-shadow: 0 12px 26px rgba(92,67,35,0.08);
     }
@@ -4910,7 +4975,7 @@
     <div class="mafia-note" id="mafia-setup-note">Mafia needs at least 4 players.</div>
     <div class="host-only">
       <button class="mafia-host-btn" id="mafia-begin-btn" onclick="beginMafia()">Start Day 1</button>
-      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+      <button class="mafia-host-btn" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
     <div class="guest-only waiting"><span class="dot"></span> Waiting for host to start the game...</div>
   </div>
@@ -4928,7 +4993,7 @@
     <div class="mafia-note" id="mafia-role-note"></div>
     <div class="host-only" id="mafia-role-host-controls" style="display:none;">
       <button class="mafia-host-btn" onclick="startMafiaDiscussion()">Start Day 1</button>
-      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+      <button class="mafia-host-btn" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
   </div>
 
@@ -4989,7 +5054,7 @@
     <div class="mafia-card" id="mafia-over-poll" style="display:none;"></div>
     <div class="host-only">
       <button class="mafia-host-btn" onclick="selectGame('mafia')" style="margin-top:1rem;">Play Again</button>
-      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+      <button class="mafia-host-btn" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
   </div>
@@ -5174,7 +5239,7 @@
     <h1>Secret Superlatives</h1>
     <h2>All 20 rounds done!</h2>
     <div class="host-only">
-      <button class="btn" onclick="selectGame('hot-takes')" style="margin-top:1rem;">Play Again</button>
+      <button class="btn" onclick="showHTRulesScreen()" style="margin-top:1rem;">Play Again</button>
       <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
@@ -5288,8 +5353,8 @@
     </div>
     <div class="host-only">
       <div class="mafia-note debate-min-note" id="draft-setup-player-note">Draft Board needs at least 2 players.</div>
-      <button class="btn btn-ghost" id="draft-begin-btn" onclick="startDraftBoardGame()" disabled>Begin Game</button>
-      <button class="btn btn-ghost" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
+      <button class="btn btn-ghost draft-easy-weight-btn" id="draft-begin-btn" onclick="startDraftBoardGame()" disabled>Begin Game</button>
+      <button class="btn btn-ghost draft-easy-weight-btn" onclick="exitGame()" style="margin-top:0.4rem;">Exit Game</button>
     </div>
     <div class="non-host-only draft-waiting">Waiting for the host to choose a category.</div>
   </div>
@@ -5322,7 +5387,7 @@
         <div class="debate-forbidden-control">
           <div>
             <div class="debate-forbidden-label">Long Timer Mode</div>
-            <div class="debate-forbidden-sub">Adds 8 seconds to auction timers</div>
+            <div class="debate-forbidden-sub">Adds 8 seconds to minigame timers</div>
           </div>
           <label class="debate-toggle-wrap" aria-label="Long Timer Mode">
             <input type="checkbox" id="auction-long-timer-toggle" />
@@ -5338,7 +5403,7 @@
             <label class="db-tier-btn"><input type="checkbox" value="flip" checked /><span>Flip</span></label>
             <label class="db-tier-btn"><input type="checkbox" value="question" checked /><span>Question</span></label>
             <label class="db-tier-btn"><input type="checkbox" value="lie" checked /><span>Lie?</span></label>
-            <label class="db-tier-btn"><input type="checkbox" value="photoGuess" checked /><span>Photo Guess</span></label>
+            <label class="db-tier-btn"><input type="checkbox" value="photoGuess" checked /><span>Photo</span></label>
             <label class="db-tier-btn"><input type="checkbox" value="trivia" checked /><span>Trivia</span></label>
           </div>
         </details>
@@ -5427,20 +5492,20 @@
     const AUCTION_MIN_PLAYERS = 3;
     const DRAFT_BOARD_MIN_PLAYERS = 2;
     const DRAFT_BOARD_CATEGORIES = [
-      'Things you would bring to a desert island', 'Vacation spots', 'Athletes',
-      'Moments from the past month', 'School subjects', 'Chain restaurants',
+      'Random category', 'Clear the bar to write your own',
+      'Things you would bring to a desert island', 'Vacation spots', 'Chain restaurants',
+      'Moments from the past month', 'School subjects', 'Athletes',
       'Movie & TV characters', 'Songs', 'Things at a gas station', 'Apps',
       'Animals', 'Friend group lore', 'Celebrities', 'Jobs', 'Holidays',
       'Fictional places', 'Childhood toys', 'Foods', 'Video game characters',
-      'Mall stores', 'Bad roommate traits', 'Superpowers', 'Countries',
-      'Villains', 'Random category', 'Clear the bar to write your own'
+      'Mall stores', 'Bad roommate traits', 'Superpowers', 'Countries', 'Villains'
     ];
     const DRAFT_BOARD_METRICS = [
       'Best', 'Worst', 'Would win in a fight', 'Banger party guest list',
       'Best basketball team', 'Would win Survivor', 'Best heist crew',
       "Coach's favorite"
     ];
-    const PLAYER_COLORS = ['#f87171', '#fb923c', '#d97706', '#4ade80', '#38bdf8', '#818cf8', '#e879f9', '#f472b6', '#65a30d', '#34d399'];
+    const PLAYER_COLORS = ['#f87171', '#fb923c', '#4ade80', '#38bdf8', '#a78bfa', '#f472b6', '#facc15', '#34d399', '#60a5fa', '#e879f9'];
     let myName    = '';
     let myPin     = '';
     let isHost    = false;
@@ -5628,6 +5693,7 @@
     }
 
     function applyAuctionSetupSettings(settings = {}) {
+      lastAuctionSetupSettings = JSON.parse(JSON.stringify(settings || {}));
       const fallback = Math.max(1, currentPlayers.length * 2);
       const totalListings = Math.max(1, Math.min(40, Number.parseInt(settings.totalListings, 10) || fallback));
       const input = document.getElementById('auction-listing-count');
@@ -5642,7 +5708,7 @@
         checkbox.checked = selectedTypes.includes(checkbox.value);
       });
       const timerRule = document.getElementById('auction-bid-timer-rule');
-      if (timerRule) timerRule.textContent = `Bidding ends when nobody bids for ${longTimer ? 14 : 6} seconds`;
+      if (timerRule) timerRule.textContent = 'Bidding ends when nobody bids for 6 seconds';
       updateAuctionStartState();
     }
 
@@ -5744,6 +5810,7 @@
     }
 
     function applyDraftBoardSetupSettings(settings = {}) {
+      lastDraftBoardSetupSettings = JSON.parse(JSON.stringify(settings || {}));
       hydrateDraftBoardCategories();
       const category = (settings.category || '').trim();
       const metric = (settings.metric || 'Best').trim() || 'Best';
@@ -6016,16 +6083,16 @@
       });
     }
 
-    function showHTRulesScreen() {
+    function showHTRulesScreen(settings = null) {
       if (!isHost) {
         showSiteNotice('Only the host can pick games.');
         return;
       }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
-      applySSSetupSettings({ exposureChance: 0.10 });
+      applySSSetupSettings(settings || lastSSSetupSettings || { exposureChance: 0.10 });
       setSSSetupLocked(!isHost);
       showScreen('screen-ht-rules');
-      socket.emit('ht-show-rules', getSSSetupSettings());
+      socket.emit('ht-show-rules', settings || lastSSSetupSettings ? getSSSetupSettings() : {});
     }
 
     function getSSSetupSettings() {
@@ -6035,6 +6102,7 @@
     }
 
     function applySSSetupSettings(settings = {}) {
+      lastSSSetupSettings = { exposureChance: settings.exposureChance ?? 0.10 };
       const slider = document.getElementById('ht-exposure-slider');
       const label = document.getElementById('ht-exposure-label');
       const pct = Math.max(0, Math.min(100, Math.round(((settings.exposureChance ?? 0.10) || 0) * 100)));
@@ -6072,6 +6140,7 @@
     }
 
     function applyDebateSetupSettings(settings = {}) {
+      lastDebateSetupSettings = JSON.parse(JSON.stringify(settings || {}));
       const tiers = settings.tiers || {};
       document.getElementById('db-limited-toggle').checked = !!settings.limitedMode;
       document.querySelector('#db-tier-toggles input[value="light"]').checked = !!tiers.light;
@@ -6105,17 +6174,18 @@
       socket.emit('debate-settings-preview', { debateSettings: getDebateSetupSettings() });
     }
 
-    function showDebateRulesScreen() {
+    function showDebateRulesScreen(settings = null) {
       if (!isHost) {
         showSiteNotice('Only the host can pick games.');
         return;
       }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
-      resetDebateSetupDefaults();
+      if (settings || lastDebateSetupSettings) applyDebateSetupSettings(settings || lastDebateSetupSettings);
+      else resetDebateSetupDefaults();
       showScreen('screen-debate-rules');
       setDebateSetupLocked(!isHost);
       updateDebateStartState();
-      socket.emit('debate-show-rules', { debateSettings: getDebateSetupSettings() });
+      socket.emit('debate-show-rules', settings || lastDebateSetupSettings ? { debateSettings: getDebateSetupSettings() } : {});
     }
 
     function resetAuctionSetupDefaults() {
@@ -6135,17 +6205,22 @@
       socket.emit('auction-settings-preview', { auctionSettings: getAuctionSetupSettings() });
     }
 
-    function showAuctionRulesScreen() {
+    function showAuctionRulesScreen(settings = null) {
       if (!isHost) {
         showSiteNotice('Only the host can pick games.');
         return;
       }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
-      resetAuctionSetupDefaults();
+      if (settings || lastAuctionSetupSettings) {
+        applyAuctionSetupSettings(settings || lastAuctionSetupSettings);
+        updateAuctionStartState();
+      } else {
+        resetAuctionSetupDefaults();
+      }
       showScreen('screen-auction-rules');
       setAuctionSetupLocked(false);
       updateAuctionStartState();
-      socket.emit('auction-show-rules', { auctionSettings: getAuctionSetupSettings() });
+      socket.emit('auction-show-rules', settings || lastAuctionSetupSettings ? { auctionSettings: getAuctionSetupSettings() } : {});
     }
 
     function emitDraftBoardSetupSettings() {
@@ -6154,17 +6229,18 @@
       socket.emit('draft-board-settings-preview', { draftBoardSettings: getDraftBoardSetupSettings() });
     }
 
-    function showDraftBoardRulesScreen() {
+    function showDraftBoardRulesScreen(settings = null) {
       if (!isHost) {
         showSiteNotice('Only the host can pick games.');
         return;
       }
       if (typeof stopBgLines === 'function') stopBgLines({ burst: true });
-      resetDraftBoardSetupDefaults();
+      if (settings || lastDraftBoardSetupSettings) applyDraftBoardSetupSettings(settings || lastDraftBoardSetupSettings);
+      else resetDraftBoardSetupDefaults();
       showScreen('screen-draft-rules');
       setDraftBoardSetupLocked(!isHost);
       updateDraftBoardStartState();
-      socket.emit('draft-board-show-rules', { draftBoardSettings: getDraftBoardSetupSettings() });
+      socket.emit('draft-board-show-rules', settings || lastDraftBoardSetupSettings ? { draftBoardSettings: getDraftBoardSetupSettings() } : {});
     }
 
     socket.on('auction-show-rules', ({ auctionSettings } = {}) => {
@@ -6279,7 +6355,7 @@
 
     function exitGame() {
       openConfirmModal({
-        title: 'Exit game?',
+        title: 'Exit Game',
         message: 'Are you sure you want to exit the game? This will end it for everyone.',
         confirmLabel: 'Exit Game',
         onConfirm: () => socket.emit('back-to-game-select')
@@ -6326,6 +6402,10 @@
     let auctionTargetKey = '';
     let auctionLastBid = 0;
     let auctionLastBidListingId = '';
+    let lastSSSetupSettings = null;
+    let lastDebateSetupSettings = null;
+    let lastAuctionSetupSettings = null;
+    let lastDraftBoardSetupSettings = null;
 
     function escapeHtml(value = '') {
       return String(value)
@@ -6334,6 +6414,22 @@
         .replace(/>/g, '&gt;')
         .replace(/"/g, '&quot;')
         .replace(/'/g, '&#039;');
+    }
+
+    function escapeRegExp(value = '') {
+      return String(value).replace(/[.*+?^${}()|[\]\\]/g, '\\$&');
+    }
+
+    function renderAuctionColoredText(text = '', state = auctionState) {
+      const players = [...(state?.scoreboard || [])]
+        .filter((player) => player?.name)
+        .sort((a, b) => b.name.length - a.name.length);
+      let html = escapeHtml(text);
+      if (!players.length) return html.replace(/\n/g, '<br>');
+      const colorByEscapedName = new Map(players.map((player) => [escapeHtml(player.name), getPlayerColor(player.name)]));
+      const pattern = players.map((player) => escapeRegExp(escapeHtml(player.name))).join('|');
+      html = html.replace(new RegExp(pattern, 'g'), (name) => `<span style="color:${colorByEscapedName.get(name) || '#cfb991'}">${name}</span>`);
+      return html.replace(/\n/g, '<br>');
     }
 
     function renderDraftTeams(state, options = {}) {
@@ -6402,7 +6498,7 @@
         ${renderDraftTeams(state, { showScores: true })}
         <div class="host-only" style="margin-top:0.8rem;">
           <button class="btn" onclick="draftBoardPlayAgain()">Play Again</button>
-          <button class="btn btn-ghost" onclick="exitGame()">Exit Game</button>
+          <button class="btn btn-ghost draft-easy-weight-btn" onclick="exitGame()">Exit Game</button>
         </div>`;
     }
 
@@ -6507,6 +6603,12 @@
     function auctionTriviaAnswer(answer) {
       socket.emit('auction-trivia-answer', { answer });
     }
+    function auctionSubmitTriviaTopic(event) {
+      event.preventDefault();
+      const input = event.currentTarget?.querySelector('input[name="auction-trivia-topic"]');
+      const topic = input?.value || '';
+      socket.emit('auction-trivia-topic', { topic });
+    }
     function auctionHostPrimary() {
       if (auctionState?.phase === 'tutorial') auctionStart();
       else if (auctionState?.phase === 'preview') auctionStartBidding();
@@ -6599,14 +6701,14 @@
       if (state.buyerId !== state.myId || isDisplayMode) {
         const note = document.createElement('div');
         note.className = 'auction-message';
-        note.textContent = `${state.buyerName} is choosing target${needed === 1 ? '' : 's'}...`;
+        note.innerHTML = renderAuctionColoredText(`${state.buyerName} is choosing target${needed === 1 ? '' : 's'}...`, state);
         wrap.appendChild(note);
         return;
       }
       if (state.currentItem?.targetPrompt) {
         const prompt = document.createElement('div');
         prompt.className = 'auction-message';
-        prompt.textContent = state.currentItem.targetPrompt;
+        prompt.innerHTML = renderAuctionColoredText(state.currentItem.targetPrompt, state);
         wrap.appendChild(prompt);
       }
       const key = `${state.listing?.id || ''}:${state.currentItemIndex}:${needed}`;
@@ -6641,7 +6743,7 @@
       const options = item.gameType === 'lie'
         ? [{ value: 'real', label: 'Real' }, { value: 'madeup', label: 'Made Up' }]
         : [{ value: 'yes', label: 'Pass' }, { value: 'no', label: 'Fail' }];
-      const prompt = item.gameType === 'lie' ? '' : `<div class="auction-message" style="grid-column:1/-1">Did ${escapeHtml(state.buyerName || 'the player')} succeed?</div>`;
+      const prompt = item.gameType === 'lie' ? '' : `<div class="auction-message" style="grid-column:1/-1">Did ${renderAuctionColoredText(state.buyerName || 'the player', state)} succeed?</div>`;
       return `${prompt}${options.map((option) => `<button class="btn" type="button" ${voted ? 'disabled' : ''} onclick="auctionVote('${option.value}')">${option.label}</button>`).join('')}`;
     }
 
@@ -6663,25 +6765,41 @@
     function getAuctionPhotoGuessMarkup(state) {
       const photoGuess = state.photoGuess || {};
       if (state.phase === 'challenge-ready') {
-        const status = `<div class="auction-message">Photos uploaded: ${photoGuess.uploadedCount || 0}/${photoGuess.requiredCount || 0}</div>`;
+        const remaining = Math.max(0, (photoGuess.requiredCount || 0) - (photoGuess.uploadedCount || 0));
+        const status = `<div class="auction-message">Waiting for ${remaining} more photo${remaining === 1 ? '' : 's'}</div>`;
         if (photoGuess.canUpload) {
-          return `${status}<label class="btn" style="display:block;text-align:center;margin-top:0.7rem;">Upload Photo<input type="file" accept="image/*" style="display:none" onchange="auctionPhotoGuessUpload(this)" /></label>${photoGuess.myUploaded ? '<div class="auction-message">Your photo is uploaded.</div>' : ''}`;
+          const uploadLabel = photoGuess.myUploaded ? 'Change Photo' : 'Upload Photo';
+          const uploadNote = photoGuess.uploadsPerPlayer > 1
+            ? `<div class="auction-message" style="margin-top:0.55rem">Your photos: ${photoGuess.myUploadCount || 0}/${photoGuess.uploadsPerPlayer}</div>`
+            : (photoGuess.myUploaded ? '<div class="auction-message" style="margin-top:0.55rem">Your photo is uploaded.</div>' : '');
+          return `${status}<label class="btn" style="display:block;text-align:center;margin-top:0.7rem;">${uploadLabel}<input type="file" accept="image/*" style="display:none" onchange="auctionPhotoGuessUpload(this)" /></label>${uploadNote}`;
         }
-        return `${status}<div class="auction-message">${state.buyerId === state.myId ? 'Wait for everyone else to upload one photo.' : `Waiting for ${escapeHtml(state.buyerName || 'the buyer')} to start.`}</div>`;
+        const uploadText = photoGuess.uploadsPerPlayer > 1 ? 'two photos' : 'one photo';
+        return `${status}<div class="auction-message">${state.buyerId === state.myId ? `Wait for everyone else to upload ${uploadText}.` : `Waiting for ${renderAuctionColoredText(state.buyerName || 'the buyer', state)} to start.`}</div>`;
       }
 
       if (state.phase === 'challenge-active') {
-        const target = escapeHtml(photoGuess.targetName || 'the named player');
+        const targetName = photoGuess.targetName || 'the named player';
+        const target = escapeHtml(targetName);
+        const buyerName = state.buyerName || 'The buyer';
+        const buyerColor = getPlayerColor(buyerName);
+        const targetColor = getPlayerColor(targetName);
         const photos = photoGuess.photos || [];
+        const selectedPhotoIds = photoGuess.selectedPhotoIds || [];
+        const remainingLine = photoGuess.remainingGuesses > 1 ? '<div class="auction-message">Two guesses available. Second guess is worth less.</div>' : photoGuess.remainingGuesses === 1 && selectedPhotoIds.length ? '<div class="auction-message">One guess left. Second guess is worth less.</div>' : '';
+        const correctPhotoIds = photoGuess.correctPhotoIds || (photoGuess.correctPhotoId ? [photoGuess.correctPhotoId] : []);
         if (state.buyerId !== state.myId || isDisplayMode) {
-          return `<div class="auction-message">${escapeHtml(state.buyerName || 'The buyer')} is looking for ${target}'s photo.</div><div class="auction-photo-grid">${photos.map((photo) => `<div class="auction-photo-choice"><img src="${photo.photoData}" alt="" /><div>${escapeHtml(photo.name || 'Photo')}</div></div>`).join('')}</div>`;
+          return `<div class="auction-photo-target"><span style="color:${buyerColor}">${escapeHtml(buyerName)}</span> is finding <span style="color:${targetColor}">${target}</span>'s photo.</div><div class="auction-photo-grid">${photos.map((photo) => `<div class="auction-photo-choice${selectedPhotoIds.includes(photo.id) ? ' guessed wrong' : ''}"><img src="${photo.photoData}" alt="" /><div>${escapeHtml(photo.name || 'Photo')}</div></div>`).join('')}</div>`;
         }
-        return `<div class="auction-message">Find ${target}'s photo.</div><div class="auction-photo-grid">${photos.map((photo) => `<button class="auction-photo-choice" type="button" onclick="auctionSubmitPhotoGuess(${JSON.stringify(photo.id).replace(/"/g, '&quot;')})"><img src="${photo.photoData}" alt="" /><div>${escapeHtml(photo.name || 'Photo')}</div></button>`).join('')}</div>`;
+        return `<div class="auction-photo-target">Find <span style="color:${targetColor}">${target}</span>'s photo.</div>${remainingLine}<div class="auction-photo-grid">${photos.map((photo) => `<button class="auction-photo-choice${selectedPhotoIds.includes(photo.id) ? ' guessed wrong' : ''}${correctPhotoIds.includes(photo.id) ? ' correct' : ''}" type="button" ${selectedPhotoIds.includes(photo.id) ? 'disabled' : ''} onclick="auctionSubmitPhotoGuess(${JSON.stringify(photo.id).replace(/"/g, '&quot;')})"><img src="${photo.photoData}" alt="" /><div>${escapeHtml(photo.name || 'Photo')}</div></button>`).join('')}</div>`;
       }
 
       if (state.phase === 'result') {
         const photos = photoGuess.photos || [];
-        return `<div class="auction-message">Correct photo: ${escapeHtml(photoGuess.targetName || '')}</div><div class="auction-photo-grid">${photos.map((photo) => `<div class="auction-photo-choice${photo.id === photoGuess.correctPhotoId ? ' correct' : photo.id === photoGuess.selectedPhotoId ? ' wrong' : ''}"><img src="${photo.photoData}" alt="" /><div>${escapeHtml(photo.name || 'Photo')}</div></div>`).join('')}</div>`;
+        const selectedPhotoIds = photoGuess.selectedPhotoIds || (photoGuess.selectedPhotoId ? [photoGuess.selectedPhotoId] : []);
+        const correctPhotoIds = photoGuess.correctPhotoIds || (photoGuess.correctPhotoId ? [photoGuess.correctPhotoId] : []);
+        const pointsLine = photoGuess.pointsEarned > 0 ? `<div class="auction-message" style="text-align:center;color:#4ade80;font-weight:900">+${photoGuess.pointsEarned} point${photoGuess.pointsEarned === 1 ? '' : 's'}</div>` : '';
+        return `<div class="auction-photo-target">Correct photo: <span style="color:${getPlayerColor(photoGuess.targetName || '')}">${escapeHtml(photoGuess.targetName || '')}</span></div>${pointsLine}<div class="auction-photo-grid">${photos.map((photo) => `<div class="auction-photo-choice${correctPhotoIds.includes(photo.id) ? ' correct' : ' wrong'}${selectedPhotoIds.includes(photo.id) ? ' guessed' : ''}"><img src="${photo.photoData}" alt="" /><div>${escapeHtml(photo.name || 'Photo')}</div></div>`).join('')}</div>`;
       }
 
       return '';
@@ -6690,14 +6808,23 @@
     function getAuctionTriviaMarkup(state) {
       const trivia = state.trivia || {};
       const answers = trivia.answers || [];
+      if (state.phase === 'challenge-ready') {
+        const writer = trivia.topicWriterName || 'a player';
+        const canWriteTopic = trivia.canSubmitTopic || (trivia.topicWriterId && trivia.topicWriterId === state.myId && !trivia.question && !trivia.loading);
+        if (canWriteTopic) {
+          return `<form onsubmit="auctionSubmitTriviaTopic(event)"><div class="auction-message">Write a trivia topic for ${renderAuctionColoredText(state.buyerName || 'the buyer', state)}.</div><input class="name-input" name="auction-trivia-topic" maxlength="80" autocomplete="off" placeholder="Trivia topic" style="margin-top:0.75rem" ${trivia.loading ? 'disabled' : ''} /><button class="btn" type="submit" style="width:100%;margin-top:0.65rem" ${trivia.loading ? 'disabled' : ''}>Submit Topic</button>${trivia.error ? `<div class="auction-message" style="margin-top:0.55rem;color:#fca5a5">${escapeHtml(trivia.error)}</div>` : ''}</form>`;
+        }
+        return `<div class="auction-message">${trivia.loading ? 'Writing the question...' : `Waiting for ${renderAuctionColoredText(writer, state)} to write a topic.`}</div>${trivia.error ? `<div class="auction-message" style="margin-top:0.55rem;color:#fca5a5">${escapeHtml(trivia.error)}</div>` : ''}`;
+      }
       if (state.phase === 'challenge-active') {
         if (state.buyerId !== state.myId || isDisplayMode) {
-          return `<div class="auction-message">${escapeHtml(state.buyerName || 'The buyer')} is answering: ${escapeHtml(trivia.question || '')}</div>`;
+          return `<div class="auction-message">${renderAuctionColoredText(state.buyerName || 'The buyer', state)} is answering: ${escapeHtml(trivia.question || '')}</div>`;
         }
         return `<div class="auction-message"><strong>${escapeHtml(trivia.topic || 'Trivia')}</strong></div><div class="auction-item-summary" style="color:inherit;font-size:1rem;margin-bottom:0.7rem">${escapeHtml(trivia.question || '')}</div><div class="auction-trivia-grid">${answers.map((answer) => `<button class="btn" type="button" onclick="auctionTriviaAnswer(${JSON.stringify(answer).replace(/"/g, '&quot;')})">${escapeHtml(answer)}</button>`).join('')}</div>`;
       }
       if (state.phase === 'result') {
-        return `<div class="auction-message"><strong>${escapeHtml(trivia.question || '')}</strong></div><div class="auction-trivia-grid">${answers.map((answer) => `<div class="auction-trivia-answer${answer === trivia.correctAnswer ? ' correct' : answer === trivia.selectedAnswer ? ' wrong' : ''}">${escapeHtml(answer)}</div>`).join('')}</div>`;
+        const gotIt = trivia.selectedAnswer === trivia.correctAnswer;
+        return `<div class="auction-trivia-result ${gotIt ? 'correct' : 'wrong'}">${gotIt ? 'Correct' : 'Missed'}${trivia.selectedAnswer ? `: ${escapeHtml(trivia.selectedAnswer)}` : ''}</div><div class="auction-message"><strong>${escapeHtml(trivia.question || '')}</strong></div><div class="auction-trivia-grid">${answers.map((answer) => `<div class="auction-trivia-answer${answer === trivia.correctAnswer ? ' correct' : ''}${answer === trivia.selectedAnswer && answer !== trivia.correctAnswer ? ' wrong' : ''}${answer === trivia.selectedAnswer ? ' selected' : ''}">${escapeHtml(answer)}</div>`).join('')}</div>`;
       }
       return `<div class="auction-item-summary" style="color:inherit;font-size:1rem">${escapeHtml(state.currentItem?.rulesSummary || state.currentItem?.summary || '')}</div>`;
     }
@@ -6758,12 +6885,15 @@
         timer.textContent = state.timerLeft;
       }
       if (state.phase === 'challenge-ready') {
-        if (isHost && !isDisplayMode && state.buyerId !== state.myId && item.gameType === 'question') {
-          actions.innerHTML = '<button class="btn" type="button" onclick="auctionSkip()">Skip</button>';
+        if (item.gameType === 'trivia') {
+          actions.innerHTML = '';
+        } else if (isHost && !isDisplayMode && state.buyerId !== state.myId) {
+          actions.innerHTML = '';
         } else if ((state.buyerId === state.myId || isHost) && !isDisplayMode) {
-          actions.innerHTML = '<button class="btn" type="button" onclick="auctionReady()">Ready</button>';
+          const photoReady = item.gameType !== 'photoGuess' || (state.photoGuess?.uploadedCount || 0) >= (state.photoGuess?.requiredCount || 0);
+          actions.innerHTML = `<button class="btn" type="button" onclick="auctionReady()" ${photoReady ? '' : 'disabled'}>Ready</button>`;
         } else {
-          actions.innerHTML = `<div class="auction-message">Waiting for ${escapeHtml(state.buyerName || 'the buyer')}...</div>`;
+          actions.innerHTML = `<div class="auction-message">Waiting for ${renderAuctionColoredText(state.buyerName || 'the buyer', state)}...</div>`;
         }
       } else if (state.phase === 'voting') {
         actions.classList.add('two');
@@ -6780,7 +6910,7 @@
       document.getElementById('auction-phase-label').textContent = state.phase === 'tutorial'
         ? 'How to play'
         : (state.phase || '').replace(/-/g, ' ');
-      document.getElementById('auction-bidder-bubble').textContent = state.message || 'Bid.';
+      document.getElementById('auction-bidder-bubble').innerHTML = renderAuctionColoredText(state.message || '', state);
       document.getElementById('auction-current-bid').textContent = `$${state.currentBid || 0}`;
       document.getElementById('auction-timer').textContent = state.timerLeft > 0 ? state.timerLeft : '—';
       const bidStat = document.getElementById('auction-current-bid')?.closest('.auction-stat');
@@ -6798,7 +6928,11 @@
         }
       }
       timerStat?.classList.toggle('timer-danger', state.phase === 'bidding' && state.timerLeft > 0 && state.timerLeft <= 2);
-      document.getElementById('auction-high-bidder').textContent = state.buyerId ? `${state.buyerName} won` : state.highBidderId ? `${state.highBidderName} leads` : 'No bids yet';
+      document.getElementById('auction-high-bidder').innerHTML = state.buyerId
+        ? `${renderAuctionColoredText(state.buyerName, state)} won`
+        : state.highBidderId
+          ? `${renderAuctionColoredText(state.highBidderName, state)} leads`
+          : 'No bids yet';
       document.getElementById('auction-bidder-face').className = `bidder-face${state.phase === 'sold' ? ' sold' : ''}${state.listing?.isMystery ? ' mystery' : ''}`;
       const hostPrimary = document.getElementById('auction-host-primary-btn');
       if (hostPrimary) hostPrimary.textContent = state.phase === 'game-over' ? 'Play Again' : state.phase === 'tutorial' ? 'Start Auction' : state.phase === 'preview' ? 'Start Bidding' : 'Skip';
@@ -7587,7 +7721,7 @@
       }
       if (state.isHost) {
         const exitBtn = document.createElement('button');
-        exitBtn.className = 'btn btn-ghost';
+        exitBtn.className = 'mafia-host-btn';
         exitBtn.textContent = 'Exit Game';
         exitBtn.style.marginTop = '0.4rem';
         exitBtn.onclick = exitGame;
