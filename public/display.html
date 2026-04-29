@@ -458,6 +458,16 @@
   const PLAYER_COLORS = ['#f87171','#fb923c','#4ade80','#38bdf8','#a78bfa','#f472b6','#facc15','#34d399','#60a5fa','#e879f9'];
   let currentPlayers = [];
 
+  function escapeHtml(value = '') {
+    return String(value).replace(/[&<>"']/g, (char) => ({
+      '&': '&amp;',
+      '<': '&lt;',
+      '>': '&gt;',
+      '"': '&quot;',
+      "'": '&#39;',
+    }[char]));
+  }
+
   function getPlayerColor(name) {
     const index = currentPlayers.findIndex(p => p.name === name);
     if (index >= 0) return PLAYER_COLORS[index % PLAYER_COLORS.length];
@@ -623,7 +633,7 @@
       voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
         const row = document.createElement('div');
         row.className = 'ht-expose-row';
-        row.innerHTML = `<span style="color:${voterColor};font-weight:500">${voterName}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:500">${votedForName}</span>`;
+        row.innerHTML = `<span style="color:${voterColor};font-weight:500">${escapeHtml(voterName)}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:500">${escapeHtml(votedForName)}</span>`;
         exposeEl.appendChild(row);
       });
     } else {
@@ -671,7 +681,7 @@
       const row = document.createElement('div');
       row.className = 'pr-reveal-row';
       const pts = pointsThisRound[guesserName] || 0;
-      row.innerHTML = `<span style="color:${getPlayerColor(guesserName)};font-weight:500">${guesserName}</span> <span class="pr-reveal-arrow">→</span> <span style="color:${getPlayerColor(guessedName)}">${guessedName}</span>${pts > 0 ? ` <span style="color:#cfb991;margin-left:auto">+${pts}</span>` : ''}`;
+      row.innerHTML = `<span style="color:${getPlayerColor(guesserName)};font-weight:500">${escapeHtml(guesserName)}</span> <span class="pr-reveal-arrow">→</span> <span style="color:${getPlayerColor(guessedName)}">${escapeHtml(guessedName)}</span>${pts > 0 ? ` <span style="color:#cfb991;margin-left:auto">+${pts}</span>` : ''}`;
       list.appendChild(row);
     });
   });
@@ -688,7 +698,7 @@
       .forEach(([name, pts], i) => {
         const row = document.createElement('div');
         row.className = 'pr-score-row';
-        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i + 1}. ${name}</span><span class="pr-score-pts">${pts}</span>`;
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i + 1}. ${escapeHtml(name)}</span><span class="pr-score-pts">${pts}</span>`;
         list.appendChild(row);
       });
     document.getElementById('pr-phase-tag').textContent = 'Game Over';
@@ -715,7 +725,7 @@
       row.className = 'et-topic-row';
       const chipClass = status === 'ready' ? 'et-status-ready' : status === 'validating' ? 'et-status-validating' : status === 'needs-resubmit' ? 'et-status-redo' : 'et-status-waiting';
       const label = status === 'ready' ? 'Ready' : status === 'validating' ? 'Checking' : status === 'needs-resubmit' ? 'Redo' : 'Waiting';
-      row.innerHTML = `<div><div class="et-topic-name" style="color:${getPlayerColor(playerName)}">${playerName}</div><div class="et-topic-meta">${topic || '…'}</div></div><span class="et-status-chip ${chipClass}">${label}</span>`;
+      row.innerHTML = `<div><div class="et-topic-name" style="color:${getPlayerColor(playerName)}">${escapeHtml(playerName)}</div><div class="et-topic-meta">${escapeHtml(topic || '…')}</div></div><span class="et-status-chip ${chipClass}">${label}</span>`;
       list.appendChild(row);
     });
     showScreen('screen-et');
@@ -771,7 +781,7 @@
       const row = document.createElement('div');
       row.className = 'et-reveal-row ' + (answer ? (isCorrect ? 'correct' : 'wrong') : '');
       const pts = pointsAwarded[playerName] || 0;
-      row.innerHTML = `<div><div class="et-reveal-name" style="color:${getPlayerColor(playerName)}">${playerName}</div><div class="et-reveal-answer">${answer || 'No answer'}</div></div><div class="et-reveal-pts">${pts > 0 ? '+' + pts : '0'}</div>`;
+      row.innerHTML = `<div><div class="et-reveal-name" style="color:${getPlayerColor(playerName)}">${escapeHtml(playerName)}</div><div class="et-reveal-answer">${escapeHtml(answer || 'No answer')}</div></div><div class="et-reveal-pts">${pts > 0 ? '+' + pts : '0'}</div>`;
       list.appendChild(row);
     });
     showSection('et', 'reveal');
@@ -786,7 +796,7 @@
       .forEach(({ name, score, sectionScore }, i) => {
         const row = document.createElement('div');
         row.className = 'et-score-row';
-        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="et-score-pts">+${sectionScore} (${score} total)</span>`;
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${escapeHtml(name)}</span><span class="et-score-pts">+${sectionScore} (${score} total)</span>`;
         list.appendChild(row);
       });
     showSection('et', 'scoreboard');
@@ -799,7 +809,7 @@
     rankings.forEach(({ name, score }, i) => {
       const row = document.createElement('div');
       row.className = 'et-score-row';
-      row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="et-score-pts">${score}</span>`;
+      row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${escapeHtml(name)}</span><span class="et-score-pts">${score}</span>`;
       list.appendChild(row);
     });
     showSection('et', 'gameover');
@@ -870,7 +880,7 @@
       list.forEach(({ name, role }) => {
         const row = document.createElement('div');
         row.className = 'mafia-role-row';
-        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span> <span style="color:#8b7aa8;font-size:0.85rem">${role}</span>`;
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${escapeHtml(name)}</span> <span style="color:#8b7aa8;font-size:0.85rem">${escapeHtml(role)}</span>`;
         col.appendChild(row);
       });
       grid.appendChild(col);
@@ -895,7 +905,7 @@
     Object.entries(state.scores || {}).sort(([,a],[,b]) => b - a).forEach(([name, pts]) => {
       const chip = document.createElement('div');
       chip.className = 'debate-score-chip';
-      chip.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span><span class="debate-score-val">${pts}</span>`;
+      chip.innerHTML = `<span style="color:${getPlayerColor(name)}">${escapeHtml(name)}</span><span class="debate-score-val">${pts}</span>`;
       sb.appendChild(chip);
     });
 
@@ -965,18 +975,24 @@
     showScreen('screen-qc');
   });
 
+  function getQCPlayerName(currentPlayer) {
+    return typeof currentPlayer === 'string' ? currentPlayer : currentPlayer?.name || '';
+  }
+
   socket.on('qc-round-start', ({ currentPlayer }) => {
+    const playerName = getQCPlayerName(currentPlayer);
     document.getElementById('qc-collecting-section').style.display = 'none';
     document.getElementById('qc-spin-section').style.display = 'flex';
-    document.getElementById('qc-current-player').textContent = currentPlayer;
-    document.getElementById('qc-current-player').style.color = getPlayerColor(currentPlayer);
+    document.getElementById('qc-current-player').textContent = playerName;
+    document.getElementById('qc-current-player').style.color = getPlayerColor(playerName);
     document.getElementById('qc-phase-tag').textContent = "It's their turn";
     showScreen('screen-qc');
   });
 
   socket.on('qc-next-turn', ({ currentPlayer }) => {
-    document.getElementById('qc-current-player').textContent = currentPlayer;
-    document.getElementById('qc-current-player').style.color = getPlayerColor(currentPlayer);
+    const playerName = getQCPlayerName(currentPlayer);
+    document.getElementById('qc-current-player').textContent = playerName;
+    document.getElementById('qc-current-player').style.color = getPlayerColor(playerName);
   });
 
   socket.on('qc-game-over', () => {

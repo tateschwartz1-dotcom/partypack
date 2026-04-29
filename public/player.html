@@ -4933,7 +4933,7 @@
     <div class="et-stats-list" id="et-final-stats"></div>
     <div class="host-only">
       <button class="btn" onclick="selectGame('everything-trivia')" style="margin-top:1rem;">Play Again</button>
-      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a different game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
   </div>
@@ -5054,7 +5054,7 @@
     <div class="mafia-card" id="mafia-over-poll" style="display:none;"></div>
     <div class="host-only">
       <button class="mafia-host-btn" onclick="selectGame('mafia')" style="margin-top:1rem;">Play Again</button>
-      <button class="mafia-host-btn" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+      <button class="mafia-host-btn" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a different game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
   </div>
@@ -5142,7 +5142,7 @@
     <!-- Host only -->
     <div class="host-only">
       <button class="btn" onclick="selectGame('questions-challenges')" style="margin-top:1rem;">Play Again</button>
-      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a different game</button>
     </div>
     <div class="guest-only waiting"><span class="dot"></span> Waiting for host...</div>
   </div>
@@ -5240,7 +5240,7 @@
     <h2>All 20 rounds done!</h2>
     <div class="host-only">
       <button class="btn" onclick="showHTRulesScreen()" style="margin-top:1rem;">Play Again</button>
-      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a different game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
   </div>
@@ -5255,7 +5255,7 @@
     <!-- Host only -->
     <div class="host-only">
       <button class="btn" onclick="selectGame('photo-roulette')" style="margin-top:1rem;">Play Again</button>
-      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a Different Game</button>
+      <button class="btn btn-ghost" onclick="backToGameSelect()" style="margin-top:0.4rem;">Pick a different game</button>
     </div>
     <div class="guest-only waiting" style="margin-top:1.5rem;"><span class="dot"></span> Waiting for host...</div>
   </div>
@@ -5988,7 +5988,7 @@
         const isThisHost = p.id === hostId;
         div.className = 'player-item' + (isThisHost ? ' host-item' : '');
 
-        let inner = `<span>${p.name}${p.name === myName ? ' <span style="font-size:0.75rem;color:#5a4a7a;">(you)</span>' : ''}</span>`;
+        let inner = `<span>${escapeHtml(p.name)}${p.name === myName ? ' <span style="font-size:0.75rem;color:#5a4a7a;">(you)</span>' : ''}</span>`;
         if (isThisHost) inner += '<span class="host-badge">Host</span>';
 
         div.innerHTML = inner;
@@ -6078,7 +6078,7 @@
       openConfirmModal({
         title: 'Pick a different game?',
         message: 'This will end the current game for everyone.',
-        confirmLabel: 'Pick Different Game',
+        confirmLabel: 'Pick a different game',
         onConfirm: () => socket.emit('back-to-game-select')
       });
     }
@@ -8485,7 +8485,7 @@
         voteDetails.forEach(({ voterName, voterColor, votedForName, votedForColor }) => {
           const row = document.createElement('div');
           row.className = 'ht-vote-row';
-          row.innerHTML = `<span style="color:${voterColor};font-weight:500">${voterName}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:500">${votedForName}</span>`;
+        row.innerHTML = `<span style="color:${voterColor};font-weight:500">${escapeHtml(voterName)}</span> <span style="color:#5a4a7a">→</span> <span style="color:${votedForColor};font-weight:500">${escapeHtml(votedForName)}</span>`;
           listEl.appendChild(row);
         });
       } else {
@@ -9287,7 +9287,23 @@
       roomHostId = null;
       setHostMode(false);
       setupLobby(pin, playerURL, qrDataURL, players, null);
-      showScreen(gameState === 'game-select' ? 'screen-dsp-game-select' : 'screen-lobby');
+      if (useCustomDisplayScreens) {
+        document.getElementById('dsp-pin').textContent = pin;
+        document.getElementById('dsp-url').textContent = playerURL;
+        const dspQr = document.getElementById('dsp-qr');
+        dspQr.innerHTML = '';
+        if (qrDataURL) {
+          const img = document.createElement('img');
+          img.src = qrDataURL;
+          img.width = 180;
+          img.height = 180;
+          dspQr.appendChild(img);
+        }
+        dspRenderPlayers(players || []);
+      }
+      showScreen(useCustomDisplayScreens
+        ? (gameState === 'game-select' ? 'screen-dsp-game-select' : 'screen-dsp-lobby')
+        : (gameState === 'game-select' ? 'screen-dsp-game-select' : 'screen-lobby'));
     });
 
     function dspRenderPlayers(players) {
@@ -9305,10 +9321,15 @@
       });
     }
 
+    function getQCDisplayPlayerName(currentPlayer) {
+      return typeof currentPlayer === 'string' ? currentPlayer : currentPlayer?.name || '';
+    }
+
     // Override player-list-updated for display mode
     const _origPlayerListUpdated = socket.listeners('player-list-updated')[0];
     socket.off('player-list-updated');
     socket.on('player-list-updated', (data) => {
+      if (isDisplayMode && useCustomDisplayScreens) dspRenderPlayers(data.players || []);
       if (_origPlayerListUpdated) _origPlayerListUpdated(data);
     });
 
@@ -9332,8 +9353,7 @@
     socket.off('game-started');
     socket.on('game-started', (data) => {
       if (!isDisplayMode) { if (_origGameStarted) _origGameStarted(data); return; }
-      if (_origGameStarted) _origGameStarted(data);
-      return;
+      if (!useCustomDisplayScreens) { if (_origGameStarted) _origGameStarted(data); return; }
       const { game } = data;
       if (game === 'hot-takes') { showScreen('screen-dsp-ht'); return; }
       if (game === 'photo-roulette') {
@@ -9442,7 +9462,7 @@
         const pts = pointsThisRound[guesserName] || 0;
         const row = document.createElement('div');
         row.className = 'dsp-reveal-row';
-        row.innerHTML = `<span style="color:${getPlayerColor(guesserName)};font-weight:500">${guesserName}</span><span style="color:#5a4a7a;margin:0 0.4rem">→</span><span style="color:${getPlayerColor(guessedName)}">${guessedName}</span>${pts > 0 ? `<span style="color:#cfb991;margin-left:auto">+${pts}</span>` : ''}`;
+        row.innerHTML = `<span style="color:${getPlayerColor(guesserName)};font-weight:500">${escapeHtml(guesserName)}</span><span style="color:#5a4a7a;margin:0 0.4rem">→</span><span style="color:${getPlayerColor(guessedName)}">${escapeHtml(guessedName)}</span>${pts > 0 ? `<span style="color:#cfb991;margin-left:auto">+${pts}</span>` : ''}`;
         list.appendChild(row);
       });
     });
@@ -9458,7 +9478,7 @@
       Object.entries(scores).sort(([,a],[,b]) => b - a).forEach(([name, pts], i) => {
         const row = document.createElement('div');
         row.className = 'dsp-score-row';
-        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="dsp-score-pts">${pts}</span>`;
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${escapeHtml(name)}</span><span class="dsp-score-pts">${pts}</span>`;
         list.appendChild(row);
       });
     });
@@ -9475,7 +9495,7 @@
         row.className = 'dsp-topic-row';
         const chipClass = status === 'ready' ? 'dsp-status-ready' : status === 'validating' ? 'dsp-status-validating' : status === 'needs-resubmit' ? 'dsp-status-redo' : 'dsp-status-waiting';
         const label = status === 'ready' ? 'Ready' : status === 'validating' ? 'Checking' : status === 'needs-resubmit' ? 'Redo' : 'Waiting';
-        row.innerHTML = `<div><div style="font-weight:500;color:${getPlayerColor(playerName)}">${playerName}</div><div style="font-size:0.85rem;color:#8b7aa8">${topic || '…'}</div></div><span class="dsp-status-chip ${chipClass}">${label}</span>`;
+        row.innerHTML = `<div><div style="font-weight:500;color:${getPlayerColor(playerName)}">${escapeHtml(playerName)}</div><div style="font-size:0.85rem;color:#8b7aa8">${escapeHtml(topic || '…')}</div></div><span class="dsp-status-chip ${chipClass}">${label}</span>`;
         list.appendChild(row);
       });
       dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-topics-section');
@@ -9513,7 +9533,7 @@
         const pts = pointsAwarded[playerName] || 0;
         const row = document.createElement('div');
         row.className = 'dsp-reveal-row ' + (answer ? (isCorrect ? 'correct' : 'wrong') : '');
-        row.innerHTML = `<div><div style="font-weight:500;color:${getPlayerColor(playerName)}">${playerName}</div><div style="font-size:0.85rem;color:#8b7aa8">${answer || 'No answer'}</div></div><div class="dsp-score-pts">${pts > 0 ? '+'+pts : '0'}</div>`;
+        row.innerHTML = `<div><div style="font-weight:500;color:${getPlayerColor(playerName)}">${escapeHtml(playerName)}</div><div style="font-size:0.85rem;color:#8b7aa8">${escapeHtml(answer || 'No answer')}</div></div><div class="dsp-score-pts">${pts > 0 ? '+'+pts : '0'}</div>`;
         list.appendChild(row);
       });
       dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-reveal-section');
@@ -9525,7 +9545,7 @@
       list.innerHTML = '';
       [...leaderboard].sort((a,b) => (b.sectionScore-a.sectionScore)||(b.score-a.score)).forEach(({ name, score, sectionScore }, i) => {
         const row = document.createElement('div'); row.className = 'dsp-score-row';
-        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="dsp-score-pts">+${sectionScore} (${score})</span>`;
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${escapeHtml(name)}</span><span class="dsp-score-pts">+${sectionScore} (${score})</span>`;
         list.appendChild(row);
       });
       dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-scores-section');
@@ -9537,7 +9557,7 @@
       list.innerHTML = '';
       rankings.forEach(({ name, score }, i) => {
         const row = document.createElement('div'); row.className = 'dsp-score-row';
-        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${name}</span><span class="dsp-score-pts">${score}</span>`;
+        row.innerHTML = `<span style="color:${getPlayerColor(name)}">${i+1}. ${escapeHtml(name)}</span><span class="dsp-score-pts">${score}</span>`;
         list.appendChild(row);
       });
       dspShowSection('screen-dsp-et', dspEtSections, 'dsp-et-scores-section');
@@ -9559,7 +9579,7 @@
           if (!list.length) return;
           const col = document.createElement('div'); col.className = 'dsp-gameover-col';
           col.innerHTML = `<div class="dsp-gameover-col-title">${label}</div>`;
-          list.forEach(({ name, role }) => { const row = document.createElement('div'); row.className = 'dsp-role-row'; row.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span> <span style="color:#8b7aa8;font-size:0.8rem">${role}</span>`; col.appendChild(row); });
+          list.forEach(({ name, role }) => { const row = document.createElement('div'); row.className = 'dsp-role-row'; row.innerHTML = `<span style="color:${getPlayerColor(name)}">${escapeHtml(name)}</span> <span style="color:#8b7aa8;font-size:0.8rem">${escapeHtml(role)}</span>`; col.appendChild(row); });
           cols.appendChild(col);
         });
         showScreen('screen-dsp-mafia'); return;
@@ -9575,7 +9595,7 @@
       (state.players || []).forEach(p => {
         const chip = document.createElement('div');
         chip.className = 'dsp-mafia-chip' + (p.alive ? '' : ' dead') + (p.voteCount > 0 ? ' voted' : '');
-        chip.innerHTML = `<div style="color:${getPlayerColor(p.name)}">${p.name}</div>${p.voteCount > 0 ? `<div class="dsp-vote-count-sub">${p.voteCount} vote${p.voteCount!==1?'s':''}</div>` : ''}`;
+        chip.innerHTML = `<div style="color:${getPlayerColor(p.name)}">${escapeHtml(p.name)}</div>${p.voteCount > 0 ? `<div class="dsp-vote-count-sub">${p.voteCount} vote${p.voteCount!==1?'s':''}</div>` : ''}`;
         grid.appendChild(chip);
       });
       showScreen('screen-dsp-mafia');
@@ -9594,7 +9614,7 @@
       sb.innerHTML = '';
       Object.entries(state.scores || {}).sort(([,a],[,b]) => b-a).forEach(([name, pts]) => {
         const chip = document.createElement('div'); chip.className = 'dsp-score-chip';
-        chip.innerHTML = `<span style="color:${getPlayerColor(name)}">${name}</span><span class="dsp-score-pts" style="margin-left:0.4rem">${pts}</span>`;
+        chip.innerHTML = `<span style="color:${getPlayerColor(name)}">${escapeHtml(name)}</span><span class="dsp-score-pts" style="margin-left:0.4rem">${pts}</span>`;
         sb.appendChild(chip);
       });
       if (r.debaterA && r.debaterB) {
@@ -9637,16 +9657,18 @@
     });
     socket.on('qc-round-start', ({ currentPlayer }) => {
       if (!isDisplayMode || !useCustomDisplayScreens) return;
+      const playerName = getQCDisplayPlayerName(currentPlayer);
       document.getElementById('dsp-qc-collecting').style.display = 'none';
       document.getElementById('dsp-qc-turn').style.display = 'flex';
-      document.getElementById('dsp-qc-player').textContent = currentPlayer;
-      document.getElementById('dsp-qc-player').style.color = getPlayerColor(currentPlayer);
+      document.getElementById('dsp-qc-player').textContent = playerName;
+      document.getElementById('dsp-qc-player').style.color = getPlayerColor(playerName);
       showScreen('screen-dsp-qc');
     });
     socket.on('qc-next-turn', ({ currentPlayer }) => {
       if (!isDisplayMode || !useCustomDisplayScreens) return;
-      document.getElementById('dsp-qc-player').textContent = currentPlayer;
-      document.getElementById('dsp-qc-player').style.color = getPlayerColor(currentPlayer);
+      const playerName = getQCDisplayPlayerName(currentPlayer);
+      document.getElementById('dsp-qc-player').textContent = playerName;
+      document.getElementById('dsp-qc-player').style.color = getPlayerColor(playerName);
     });
     // ─── END DISPLAY MODE ─────────────────────────────────────────────────────
 

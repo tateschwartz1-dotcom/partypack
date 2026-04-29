@@ -71,6 +71,7 @@ const PUBLIC_URL = normalizePublicUrl(process.env.PUBLIC_URL || '');
 const app = express();
 const server = http.createServer(app);
 const io = new Server(server, { maxHttpBufferSize: 5e6, path: SOCKET_PATH });
+const STARTED_AT = new Date();
 const ANTHROPIC_API_KEY = process.env.ANTHROPIC_API_KEY || '';
 const ANTHROPIC_TRIVIA_MODEL = process.env.ANTHROPIC_TRIVIA_MODEL || 'claude-haiku-4-5-20251001';
 const ANTHROPIC_COACH_MODEL = process.env.ANTHROPIC_COACH_MODEL || ANTHROPIC_TRIVIA_MODEL;
@@ -79,6 +80,13 @@ const OPENAI_TRIVIA_MODEL = process.env.OPENAI_TRIVIA_MODEL || 'gpt-5-mini';
 const TRIVIA_API_KEY = process.env.TRIVIA_API_KEY || '';
 const DEBATE_MIN_PLAYERS = 3;
 const REJOIN_GRACE_MS = 90000;
+const MAX_IMAGE_DATA_URL_LENGTH = 2_500_000;
+const ALLOWED_IMAGE_DATA_URL_PREFIXES = [
+  'data:image/jpeg;base64,',
+  'data:image/jpg;base64,',
+  'data:image/png;base64,',
+  'data:image/webp;base64,',
+];
 
 LEGACY_BASE_PATHS.forEach((legacyBasePath) => {
   app.get(new RegExp(`^${escapeRegExp(legacyBasePath)}(?:/.*)?$`), (req, res) => {
@@ -101,6 +109,16 @@ app.get(joinBasePath(BASE_PATH, '/host'), (req, res) => {
 
 app.get(joinBasePath(BASE_PATH, '/display'), (req, res) => {
   sendHtmlWithBasePath(res, 'display.html', BASE_PATH);
+});
+
+app.get(joinBasePath(BASE_PATH, '/health'), (req, res) => {
+  res.json({
+    ok: true,
+    app: 'johnbox-games',
+    startedAt: STARTED_AT.toISOString(),
+    uptimeSeconds: Math.floor(process.uptime()),
+    rooms: Object.keys(rooms).length,
+  });
 });
 
 function getLocalIP() {
@@ -2278,6 +2296,12 @@ function clearRoomTimers(room) {
   }
 }
 
+function isAllowedImageDataURL(dataURL) {
+  if (typeof dataURL !== 'string') return false;
+  if (dataURL.length > MAX_IMAGE_DATA_URL_LENGTH) return false;
+  return ALLOWED_IMAGE_DATA_URL_PREFIXES.some((prefix) => dataURL.startsWith(prefix));
+}
+
 function remapPlayerId(room, oldId, newId) {
   if (oldId === newId) return;
   if (room.hostSocketId === oldId) room.hostSocketId = newId;
@@ -2611,6 +2635,159 @@ function reemitStateToPlayer(pin, socket) {
   }
 }
 
+function reemitStateToDisplay(pin, socket) {
+  const room = rooms[pin];
+  if (!room) return;
+
+  const gs = room.gameState;
+  if (gs === 'lobby') return;
+
+  if (gs === 'game-select') {
+    socket.emit('returned-to-game-select');
+    return;
+  }
+
+  if (gs === 'mafia' && room.mafia) {
+    socket.emit('game-started', { game: 'mafia', resume: true });
+    socket.emit('mafia-state', buildMafiaPlayerViewForDisplay(room, socket.id));
+    socket.emit('mafia-display-state', buildMafiaDisplayState(room));
+    return;
+  }
+
+  if (gs === 'debate' && room.debate) {
+    socket.emit('game-started', { game: 'debate-setup', debateSettings: room.debate.settings, resume: true });
+    emitDebateState(pin);
+    return;
+  }
+
+  if (gs === 'hot-takes-setup') {
+    socket.emit('game-started', { game: 'hot-takes-setup', exposureChance: room.pendingHTSettings?.exposureChance ?? 0.10, resume: true });
+    return;
+  }
+
+  if (gs === 'hot-takes' && room.ht) {
+    socket.emit('game-started', { game: 'hot-takes', resume: true });
+    if (room.ht.optionA && room.ht.optionB) {
+      socket.emit('ht-round-start', {
+        question: room.ht.currentQuestionText,
+        optionA: { id: room.ht.optionA.id, name: room.ht.optionA.name },
+        optionB: { id: room.ht.optionB.id, name: room.ht.optionB.name },
+        roundNumber: room.ht.currentRound,
+        totalRounds: room.ht.totalRounds,
+        playerColors: room.ht.playerColors,
+      });
+      socket.emit('ht-vote-count', {
+        count: Object.keys(room.ht.votes || {}).length,
+        total: room.players.length,
+      });
+    }
+    return;
+  }
+
+  if (gs === 'photo-roulette' && room.pr) {
+    socket.emit('game-started', { game: 'photo-roulette', resume: true });
+    socket.emit('pr-photo-count', { count: room.pr.photos.length });
+    if (room.pr.currentPhoto) {
+      const photo = room.pr.currentPhoto;
+      let guessOptions = room.players.map(p => p.name);
+      if (guessOptions.length > 6) {
+        const others = guessOptions.filter(n => n !== photo.playerName);
+        guessOptions = shuffle([photo.playerName, ...shuffle(others).slice(0, 5)]);
+      }
+      socket.emit('pr-guess-prompt', {
+        guessOptions,
+        photoNumber: room.pr.usedIds.size,
+        totalPhotos: room.pr.photos.length,
+        photoData: photo.dataURL,
+        isYourPhoto: false,
+      });
+      socket.emit('pr-display-photo', {
+        photoData: photo.dataURL,
+        photoNumber: room.pr.usedIds.size,
+        totalPhotos: room.pr.photos.length,
+      });
+      if (room.pr.phase === 'revealed') {
+        const remaining = room.pr.photos.filter(p => !room.pr.usedIds.has(p.id));
+        socket.emit('pr-reveal', {
+          photographerName: photo.playerName,
+          guesses: Object.values(room.pr.guesses || {}),
+          pointsThisRound: {},
+          scores: room.pr.scores,
+          hasMorePhotos: remaining.length > 0,
+          advanceTime: 0,
+          revealId: room.pr.revealId || 0,
+        });
+      }
+    }
+    return;
+  }
+
+  if (gs === 'everything-trivia' && room.et) {
+    socket.emit('game-started', { game: 'everything-trivia', resume: true });
+    if (room.et.currentQuestion) {
+      const section = room.et.randomizedTopics[room.et.currentSectionIndex];
+      socket.emit('et-question-start', {
+        topic: section.topic,
+        submittedBy: section.playerName,
+        sectionNumber: room.et.currentSectionIndex + 1,
+        totalSections: room.et.randomizedTopics.length,
+        questionNumber: room.et.currentQuestionIndex + 1,
+        totalQuestionsInSection: section.questions.length,
+        question: room.et.currentQuestion.question,
+        answers: room.et.currentQuestion.answers,
+      });
+      socket.emit('et-answer-count', {
+        count: Object.keys(room.et.currentAnswers).length,
+        total: room.players.length,
+      });
+    } else {
+      const topics = room.players.map(p => {
+        const d = room.et.topicsByPlayerId[p.id] || {};
+        return { playerName: p.name, topic: d.topic || null, status: d.status || 'waiting' };
+      });
+      socket.emit('et-topic-status', {
+        readyCount: topics.filter(t => t.status === 'ready').length,
+        total: room.players.length,
+        topics,
+      });
+    }
+    return;
+  }
+
+  if (gs === 'questions-challenges' && room.qc) {
+    socket.emit('game-started', { game: 'questions-challenges', resume: true });
+    const cp = room.qc.playerOrder[room.qc.currentPlayerIndex];
+    if (cp) {
+      const available = room.qc.submissions.filter(s => !room.qc.usedIds.has(s.id));
+      socket.emit('qc-round-start', { currentPlayer: cp, available });
+    } else {
+      socket.emit('qc-collecting');
+    }
+    return;
+  }
+
+  if (gs === 'auction-setup') {
+    socket.emit('game-started', { game: 'auction-setup', auctionSettings: room.pendingAuctionSettings, resume: true });
+    return;
+  }
+
+  if (gs === 'auction' && room.auction) {
+    socket.emit('game-started', { game: 'auction', resume: true });
+    emitAuctionState(pin);
+    return;
+  }
+
+  if (gs === 'draft-board-setup') {
+    socket.emit('game-started', { game: 'draft-board-setup', draftBoardSettings: room.pendingDraftBoardSettings, coachAvailable: !!ANTHROPIC_API_KEY, resume: true });
+    return;
+  }
+
+  if (gs === 'draft-board' && room.draftBoard) {
+    socket.emit('game-started', { game: 'draft-board', resume: true });
+    emitDraftBoardState(pin);
+  }
+}
+
 io.on('connection', (socket) => {
   socket.use(([event], next) => {
     if (socket.data.isDisplay && event !== 'join-as-display') return;
@@ -2759,10 +2936,7 @@ io.on('connection', (socket) => {
       gameState: room.gameState,
       hostId: room.hostSocketId,
     });
-    if (room.gameState === 'auction' && room.auction) {
-      socket.emit('game-started', { game: 'auction' });
-      emitAuctionState(pin);
-    }
+    reemitStateToDisplay(pin, socket);
   });
 
   socket.on('join-as-spectator', ({ pin }) => {
@@ -2797,6 +2971,7 @@ io.on('connection', (socket) => {
     io.to(targetPlayerId).emit('you-are-now-host');
     socket.emit('host-transferred');
     io.to(pin).emit('host-changed', { newHostId: targetPlayerId });
+    io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
   });
 
   // ── Light mode ────────────────────────────────────────────────
@@ -3211,6 +3386,10 @@ io.on('connection', (socket) => {
     const pin = socket.data.pin;
     const room = rooms[pin];
     if (!room || !room.pr) return;
+    if (!isAllowedImageDataURL(dataURL)) {
+      socket.emit('pr-upload-error', { message: 'That photo is too large or not a supported image type.' });
+      return;
+    }
 
     const myPhotos = room.pr.photos.filter(p => p.playerId === socket.id);
     if (myPhotos.length >= 3) {
@@ -5198,7 +5377,7 @@ io.on('connection', (socket) => {
     const item = auction.currentItem;
     if (!item || item.kind !== 'minigame' || item.gameType !== 'photoGuess') return;
     if (socket.id === auction.buyerId) return;
-    if (typeof dataURL !== 'string' || !dataURL.startsWith('data:image/')) return;
+    if (!isAllowedImageDataURL(dataURL)) return;
     if (!item.photoGuess) item.photoGuess = { photos: {}, targetId: null, targetName: '', resolved: false, selectedPhotoIds: [], maxGuesses: item.modifier === 'advantage' ? 2 : 1, uploadsPerPlayer: item.modifier === 'disadvantage' ? 2 : 1 };
     const uploadsPerPlayer = item.photoGuess.uploadsPerPlayer || 1;
     const currentPhotos = Array.isArray(item.photoGuess.photos[socket.id])
@@ -5532,11 +5711,27 @@ io.on('connection', (socket) => {
 });
 
 const PORT = Number(process.env.PORT) || 3000;
-server.listen(PORT, '0.0.0.0', () => {
+function startServer(port = PORT) {
+  return server.listen(port, '0.0.0.0', () => {
   const ip = getLocalIP();
   console.log('\n================================');
   console.log('   Johnbox Games is running!');
   console.log('================================');
   console.log(`   Everyone joins → http://${ip}:${PORT}`);
   console.log('================================\n');
-});
+  });
+}
+
+if (require.main === module) {
+  startServer();
+}
+
+module.exports = {
+  app,
+  server,
+  io,
+  rooms,
+  startServer,
+  isAllowedImageDataURL,
+  MAX_IMAGE_DATA_URL_LENGTH,
+};
