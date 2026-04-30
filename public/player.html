@@ -2652,6 +2652,12 @@
     .auction-tutorial-step { display:flex; align-items:flex-start; gap:0.55rem; background:#100b22; border:1px solid #2d1f50; border-radius:8px; padding:0.65rem; color:#c4b5e0; line-height:1.3; }
     .auction-tutorial-step span { color:#cfb991; font-family:'Cinzel',serif; font-weight:700; flex:0 0 auto; }
     .auction-secret-word { display:inline-block; color:#cfb991; font-family:'Cinzel',serif; margin:0.18rem 0.25rem; }
+    .auction-lie-reveal { display:grid; gap:0.6rem; margin-top:0.75rem; }
+    .auction-lie-panel { background:#100b22; border:1px solid #2d1f50; border-radius:8px; padding:0.7rem; }
+    .auction-lie-label { color:#8b7aa8; font-size:0.7rem; font-weight:900; text-transform:uppercase; letter-spacing:0.1em; margin-bottom:0.3rem; }
+    .auction-lie-vote-row { display:flex; align-items:center; justify-content:space-between; gap:0.65rem; padding:0.45rem 0; border-bottom:1px solid rgba(45,31,80,0.72); }
+    .auction-lie-vote-row:last-child { border-bottom:0; }
+    .auction-lie-vote-choice { color:#cfb991; font-weight:900; text-transform:uppercase; font-size:0.78rem; letter-spacing:0.06em; }
     .auction-host-skip { text-align:center; margin-top:0.65rem; }
     .auction-modal-backdrop { position:fixed; inset:0; z-index:9600; display:none; align-items:center; justify-content:center; padding:1rem; background:rgba(8,4,26,0.82); backdrop-filter:blur(10px); }
     .auction-modal-backdrop.open { display:flex; }
@@ -2916,6 +2922,7 @@
     body.light-mode .auction-item,
     body.light-mode .auction-stat,
     body.light-mode .auction-secret,
+    body.light-mode .auction-lie-panel,
     body.light-mode .auction-photo-choice,
     body.light-mode .auction-trivia-answer,
     body.light-mode .auction-tutorial-step { background:#f0ece6; border-color:#c8b4e0; }
@@ -2927,6 +2934,7 @@
     body.light-mode .auction-tutorial-step span { color:#8b6914; text-shadow:none; }
     body.light-mode .auction-item-name,
     body.light-mode .auction-secret,
+    body.light-mode .auction-lie-panel,
     body.light-mode .auction-photo-choice,
     body.light-mode .auction-trivia-answer { color:#1a0a2e; }
     body.light-mode .auction-photo-target { color:#8b6914; text-shadow:none; }
@@ -2947,6 +2955,7 @@
     body.light-mode .auction-letter-chip { background:#f0ece6; border-color:#c8b4e0; color:#8b6914; }
     body.light-mode .auction-item-summary,
     body.light-mode .auction-message,
+    body.light-mode .auction-lie-label,
     body.light-mode .auction-topline,
     body.light-mode .auction-tutorial-step { color:#5c4080; }
     body.light-mode .auction-type-icon { background:rgba(139,105,20,0.1); border-color:rgba(139,105,20,0.35); }
@@ -3032,6 +3041,7 @@
     body.light-mode.auction-theme .auction-item-name,
     body.light-mode.auction-theme .auction-modal-body,
     body.light-mode.auction-theme .auction-secret,
+    body.light-mode.auction-theme .auction-lie-panel,
     body.light-mode.auction-theme .debate-rules-list,
     body.light-mode.auction-theme .debate-forbidden-label {
       color:#28141b;
@@ -3047,6 +3057,13 @@
     body.light-mode.auction-theme .auction-secret {
       background:#fbf8ff;
       border-color:#7c4bb3;
+    }
+    body.light-mode.auction-theme .auction-lie-panel {
+      background:#fbf8ff;
+      border-color:#c7b3e4;
+    }
+    body.light-mode.auction-theme .auction-lie-vote-row {
+      border-bottom-color:rgba(184,158,220,0.56);
     }
     body.light-mode.auction-theme .btn,
     body.light-mode.auction-theme .auction-bid-btn {
@@ -6759,7 +6776,49 @@
       const taskText = secret.task === 'real'
         ? `Say ${secret.requiredWords === 2 ? 'two words' : 'a word'} from this list out loud.`
         : `Make up ${secret.requiredWords === 2 ? 'two words' : 'a word'} not on this list and say ${secret.requiredWords === 2 ? 'them' : 'it'} out loud.`;
-      return `<div class="auction-secret" style="display:block"><div style="color:#8b7aa8;font-size:0.75rem;text-transform:uppercase;letter-spacing:0.12em">Secret Lie? Task</div><div style="margin-top:0.35rem">${taskText}</div><div style="margin-top:0.35rem"><strong>Real words:</strong> ${secret.words.map(word => `<span class="auction-secret-word">${escapeHtml(word)}</span>`).join(' ')}</div></div>`;
+      return `<div class="auction-lie-reveal">
+        <div class="auction-lie-panel">
+          <div class="auction-lie-label">Secret Lie? Task</div>
+          <div>${escapeHtml(taskText)}</div>
+        </div>
+        <div class="auction-lie-panel">
+          <div class="auction-lie-label">Words On The List</div>
+          <div>${secret.words.map(word => `<span class="auction-secret-word">${escapeHtml(word)}</span>`).join(' ')}</div>
+        </div>
+      </div>`;
+    }
+
+    function getAuctionLiePromptMarkup(state, rules) {
+      if (state.myLieSecret) return getAuctionSecretMarkup(state);
+      return `<div class="auction-lie-reveal">
+        <div class="auction-lie-panel">
+          <div class="auction-lie-label">${state.phase === 'voting' ? 'Vote Prompt' : 'Prompt'}</div>
+          <div>${escapeHtml(rules || '')}</div>
+        </div>
+      </div>`;
+    }
+
+    function getAuctionLieRevealMarkup(state) {
+      const reveal = state.lieReveal;
+      if (!reveal) return '';
+      const taskText = reveal.task === 'real'
+        ? `Say ${reveal.requiredWords === 2 ? 'two words' : 'a word'} from the list.`
+        : `Make up ${reveal.requiredWords === 2 ? 'two words' : 'a word'} not on the list.`;
+      const voteLabel = (vote) => vote === 'real' ? 'Real' : vote === 'madeup' ? 'Made Up' : 'No Vote';
+      return `<div class="auction-lie-reveal">
+        <div class="auction-lie-panel">
+          <div class="auction-lie-label">Task</div>
+          <div>${escapeHtml(taskText)}</div>
+        </div>
+        <div class="auction-lie-panel">
+          <div class="auction-lie-label">Words On The List</div>
+          <div>${(reveal.words || []).map(word => `<span class="auction-secret-word">${escapeHtml(word)}</span>`).join(' ')}</div>
+        </div>
+        <div class="auction-lie-panel">
+          <div class="auction-lie-label">Votes</div>
+          ${(reveal.votes || []).map(({ name, vote }) => `<div class="auction-lie-vote-row"><span style="color:${getPlayerColor(name)}">${escapeHtml(name)}</span><span class="auction-lie-vote-choice">${voteLabel(vote)}</span></div>`).join('') || '<div class="auction-message">No votes.</div>'}
+        </div>
+      </div>`;
     }
 
     function getAuctionPhotoGuessMarkup(state) {
@@ -6875,9 +6934,12 @@
       const letters = item.gameType === 'stack' && ['challenge-active','voting'].includes(state.phase) && item.letters?.length
         ? `<div class="auction-letter-row">${item.letters.map(letter => `<span class="auction-letter-chip">${escapeHtml(letter)}</span>`).join('')}</div>`
         : '';
-      let challengeMarkup = `${letters}<div class="auction-item-summary" style="color:inherit;font-size:1rem">${escapeHtml(rules)}</div>${secret}`;
+      let challengeMarkup = item.gameType === 'lie'
+        ? getAuctionLiePromptMarkup(state, rules)
+        : `${letters}<div class="auction-item-summary" style="color:inherit;font-size:1rem">${escapeHtml(rules)}</div>${secret}`;
       if (item.gameType === 'photoGuess') challengeMarkup = getAuctionPhotoGuessMarkup(state);
       if (item.gameType === 'trivia') challengeMarkup = getAuctionTriviaMarkup(state);
+      if (item.gameType === 'lie' && state.phase === 'result') challengeMarkup = getAuctionLieRevealMarkup(state);
       body.innerHTML = `${pointsLine}${challengeMarkup}`;
       if (state.phase === 'challenge-active') {
         body.classList.add('center');

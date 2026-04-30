@@ -795,6 +795,21 @@ function getAuctionViewerExtras(room, viewerId, isDisplay = false) {
   if (!item || item.kind !== 'minigame') return {};
   const extras = {};
 
+  if (item.gameType === 'lie' && item.lie && auction.phase === 'result') {
+    extras.lieReveal = {
+      task: item.lie.task,
+      requiredWords: item.lie.requiredWords || 1,
+      words: item.lie.words || [],
+      votes: room.players
+        .filter((player) => player.id !== auction.buyerId)
+        .map((player) => ({
+          id: player.id,
+          name: player.name,
+          vote: auction.votes?.[player.id] || '',
+        })),
+    };
+  }
+
   if (item.gameType === 'photoGuess') {
     const eligibleUploaders = room.players.filter((player) => player.id !== auction.buyerId);
     const uploaders = getAuctionPhotoGuessUploaders(room, item);
@@ -1188,7 +1203,7 @@ function resolveAuctionVote(pin) {
     auction.message = points > 0
       ? `${getAuctionPlayerName(room, auction.buyerId)} has won ${points} point${points === 1 ? '' : 's'}.`
       : `${getAuctionPlayerName(room, auction.buyerId)} fooled ${fooled} player${fooled === 1 ? '' : 's'}.\nNo points.`;
-    finishAuctionItem(pin, points > 0 ? 4 : 2);
+    finishAuctionItem(pin, 8);
     return;
   }
   const yes = Object.values(votes).filter((vote) => vote === 'yes').length;
