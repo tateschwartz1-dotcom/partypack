@@ -1277,10 +1277,20 @@ function normalizeDraftPickText(value = '') {
     .toLowerCase();
 }
 
+function shuffledDraftPlayers(players) {
+  const shuffled = [...players];
+  for (let i = shuffled.length - 1; i > 0; i -= 1) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [shuffled[i], shuffled[j]] = [shuffled[j], shuffled[i]];
+  }
+  return shuffled;
+}
+
 function buildDraftBoardOrder(players, pickCount) {
+  const randomizedPlayers = shuffledDraftPlayers(players);
   const order = [];
   for (let round = 0; round < pickCount; round++) {
-    const roundPlayers = round % 2 === 0 ? players : [...players].reverse();
+    const roundPlayers = round % 2 === 0 ? randomizedPlayers : [...randomizedPlayers].reverse();
     roundPlayers.forEach((player) => order.push(player.id));
   }
   return order;
@@ -1291,8 +1301,9 @@ function createDraftBoardState(room, settings) {
   const scores = {};
   room.players.forEach((player) => {
     teamsByPlayerId[player.id] = [];
-    scores[player.id] = 0;
+    scores[player.id] = room.draftBoardScores?.[player.id] || 0;
   });
+  room.draftBoardScores = scores;
   return {
     settings,
     phase: 'drafting',
@@ -1307,6 +1318,44 @@ function createDraftBoardState(room, settings) {
     coachResult: null,
     message: '',
   };
+}
+
+function addDraftBoardScore(room, playerId, points = 1) {
+  if (!room || !playerId) return;
+  if (!room.draftBoardScores) room.draftBoardScores = {};
+  room.draftBoardScores[playerId] = (room.draftBoardScores[playerId] || 0) + points;
+  if (room.draftBoard?.scores) {
+    room.draftBoard.scores[playerId] = room.draftBoardScores[playerId];
+  }
+}
+
+function removeDraftBoardPlayerFromState(room, playerId) {
+  const db = room?.draftBoard;
+  if (!db || !playerId) return;
+  const previousTurnIndex = db.currentTurnIndex || 0;
+  let removedBeforeTurn = 0;
+  db.draftOrder = (db.draftOrder || []).filter((id, index) => {
+    const remove = id === playerId;
+    if (remove && index < previousTurnIndex) removedBeforeTurn += 1;
+    return !remove;
+  });
+  db.currentTurnIndex = Math.max(0, previousTurnIndex - removedBeforeTurn);
+  delete db.teamsByPlayerId[playerId];
+  delete db.votes[playerId];
+  delete db.scores[playerId];
+  delete db.voteScores[playerId];
+  if (room.draftBoardScores) delete room.draftBoardScores[playerId];
+  Object.keys(db.votes || {}).forEach((voterId) => {
+    if (db.votes[voterId] === playerId) delete db.votes[voterId];
+  });
+  db.playerChoiceWinners = (db.playerChoiceWinners || []).filter((id) => id !== playerId);
+  if (db.coachResult?.winnerId === playerId) db.coachResult = null;
+  if (db.phase === 'drafting' && db.currentTurnIndex >= db.draftOrder.length) {
+    db.phase = room.players.length <= 2 ? 'coach' : 'voting';
+    db.message = room.players.length <= 2
+      ? (db.settings.coachEnabled ? 'Coach is reviewing the boards...' : DRAFT_BOARD_COACH_ERROR)
+      : `Draft complete. Vote: ${db.settings.metric}.`;
+  }
 }
 
 function buildDraftBoardStatePayload(room, viewerId = null) {
@@ -1397,7 +1446,7 @@ function resolveDraftBoardVotes(pin) {
     ? room.players.filter((player) => voteScores[player.id] === maxScore).map((player) => player.id)
     : [];
   db.playerChoiceWinners.forEach((playerId) => {
-    db.scores[playerId] = (db.scores[playerId] || 0) + 1;
+    addDraftBoardScore(room, playerId, 1);
   });
 }
 
@@ -1516,7 +1565,7 @@ async function finishDraftBoardGame(pin) {
     if (!room.draftBoard || room.draftBoard !== db) return;
     if (coachResult) {
       db.coachResult = coachResult;
-      db.scores[coachResult.winnerId] = (db.scores[coachResult.winnerId] || 0) + 1;
+      addDraftBoardScore(room, coachResult.winnerId, 1);
       db.message = '';
     } else {
       db.coachResult = null;
@@ -2378,6 +2427,7 @@ function remapPlayerId(room, oldId, newId) {
     if (db.playerChoiceWinners) db.playerChoiceWinners = db.playerChoiceWinners.map(id => id === oldId ? newId : id);
     if (db.coachResult?.winnerId === oldId) db.coachResult.winnerId = newId;
   }
+  if (room.draftBoardScores) remapKey(room.draftBoardScores);
 
   if (room.qc) {
     room.qc.submissions?.forEach(s => { if (s.playerId === oldId) s.playerId = newId; });
@@ -2833,6 +2883,7 @@ io.on('connection', (socket) => {
       recentlyLeft: {},
       pendingHTSettings: { exposureChance: 0.10 },
       pendingDraftBoardSettings: normalizeDraftBoardSettings(),
+      draftBoardScores: {},
     };
 
     socket.join(pin);
@@ -3013,6 +3064,7 @@ io.on('connection', (socket) => {
     room.pendingMafiaSettings = null;
     room.pendingAuctionSettings = null;
     room.pendingDraftBoardSettings = normalizeDraftBoardSettings();
+    room.draftBoardScores = {};
     io.to(pin).emit('returned-to-game-select');
     io.to(pin).emit('game-select-shown');
   });
@@ -3277,6 +3329,7 @@ io.on('connection', (socket) => {
     room.pendingMafiaSettings = null;
     room.pendingAuctionSettings = null;
     room.pendingDraftBoardSettings = normalizeDraftBoardSettings();
+    room.draftBoardScores = {};
     io.to(pin).emit('returned-to-lobby');
   });
 
@@ -3300,6 +3353,7 @@ io.on('connection', (socket) => {
     room.pendingMafiaSettings = null;
     room.pendingAuctionSettings = null;
     room.pendingDraftBoardSettings = normalizeDraftBoardSettings();
+    room.draftBoardScores = {};
     io.to(pin).emit('returned-to-game-select');
     io.to(pin).emit('game-select-shown');
   });
@@ -5644,10 +5698,19 @@ io.on('connection', (socket) => {
         }
 
         if (currentRoom.gameState === 'draft-board' && currentRoom.draftBoard) {
-          clearRoomTimers(currentRoom);
-          currentRoom.gameState = 'lobby';
-          currentRoom.draftBoard = null;
-          io.to(pin).emit('draft-board-stopped', { reason: 'Draft Board ended because a player left.' });
+          removeDraftBoardPlayerFromState(currentRoom, socket.id);
+          if (currentRoom.players.length < DRAFT_BOARD_MIN_PLAYERS) {
+            clearRoomTimers(currentRoom);
+            currentRoom.gameState = 'lobby';
+            currentRoom.draftBoard = null;
+            io.to(pin).emit('draft-board-stopped', { reason: `Draft Board ended because there are fewer than ${DRAFT_BOARD_MIN_PLAYERS} players.` });
+          } else if (currentRoom.draftBoard?.phase === 'coach') {
+            finishDraftBoardGame(pin);
+          } else if (currentRoom.draftBoard?.phase === 'voting' && Object.keys(currentRoom.draftBoard.votes || {}).length >= currentRoom.players.length) {
+            finishDraftBoardGame(pin);
+          } else {
+            emitDraftBoardState(pin);
+          }
         }
       }, REJOIN_GRACE_MS);
     }
@@ -5710,6 +5773,7 @@ io.on('connection', (socket) => {
     }
 
     if (!room.recentlyLeft?.[socket.data.name] && room.gameState === 'draft-board' && room.draftBoard) {
+      removeDraftBoardPlayerFromState(room, socket.id);
       if (room.players.length < DRAFT_BOARD_MIN_PLAYERS) {
         clearRoomTimers(room);
         room.gameState = 'lobby';
@@ -5717,7 +5781,9 @@ io.on('connection', (socket) => {
         io.to(pin).emit('draft-board-stopped', { reason: `Draft Board ended because there are fewer than ${DRAFT_BOARD_MIN_PLAYERS} players.` });
         return;
       }
-      emitDraftBoardState(pin);
+      if (room.draftBoard?.phase === 'coach') finishDraftBoardGame(pin);
+      else if (room.draftBoard?.phase === 'voting' && Object.keys(room.draftBoard.votes || {}).length >= room.players.length) finishDraftBoardGame(pin);
+      else emitDraftBoardState(pin);
     }
 
     // Send updated list after hostId is finalized
