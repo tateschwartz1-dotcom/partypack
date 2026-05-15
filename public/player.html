@@ -2219,6 +2219,40 @@
     }
     .site-notice { position:fixed; left:50%; bottom:1rem; transform:translate(-50%, 1rem); z-index:300; width:min(360px, calc(100% - 2rem)); padding:0.85rem 1rem; border-radius:10px; border:1px solid #7c3aed; background:#1a1232; color:#ede9f8; box-shadow:0 18px 45px rgba(0,0,0,0.35); opacity:0; pointer-events:none; transition:opacity 0.18s ease, transform 0.18s ease; font-size:0.92rem; text-align:left; }
     .site-notice.show { opacity:1; transform:translate(-50%, 0); }
+    .host-pin-badge {
+      position: fixed;
+      top: 0.75rem;
+      left: 0.75rem;
+      z-index: 9700;
+      display: none;
+      align-items: center;
+      gap: 0.45rem;
+      padding: 0.45rem 0.65rem;
+      border-radius: 8px;
+      border: 1px solid rgba(207,185,145,0.42);
+      background: rgba(15,10,32,0.9);
+      color: #ede9f8;
+      box-shadow: 0 12px 28px rgba(0,0,0,0.28);
+      backdrop-filter: blur(10px);
+      font-size: 0.78rem;
+      line-height: 1;
+      pointer-events: none;
+    }
+    .host-pin-badge.show { display: flex; }
+    .host-pin-badge-label {
+      color: #8b7aa8;
+      font-size: 0.68rem;
+      font-weight: 700;
+      letter-spacing: 0.12em;
+      text-transform: uppercase;
+    }
+    .host-pin-badge-value {
+      color: #cfb991;
+      font-family: 'Cinzel', serif;
+      font-size: 1.05rem;
+      font-weight: 900;
+      letter-spacing: 0.12em;
+    }
     .db-p-timer-wrap { margin: 0.6rem 0; }
     .db-p-bar-bg { height: 6px; background: #2d1f50; border-radius: 999px; overflow: hidden; margin-bottom: 0.4rem; }
     .db-p-bar { height: 100%; background: #a78bfa; border-radius: 999px; transition: width 1s linear; width: 100%; }
@@ -3447,6 +3481,12 @@
       background: #fffaf0;
       border-color: #9a7742;
       color: #1b2028;
+    }
+    body.light-mode .host-pin-badge {
+      background: rgba(248,244,238,0.92);
+      color: #1a0a2e;
+      border-color: #d4c9b0;
+      box-shadow: 0 12px 28px rgba(74,55,28,0.18);
     }
     body.light-mode.debate-theme #screen-dsp-debate {
       background:
@@ -4749,6 +4789,10 @@
 <body>
   <canvas id="bg-lines-canvas"></canvas>
   <div class="site-notice" id="site-notice" role="status" aria-live="polite"></div>
+  <div class="host-pin-badge" id="host-pin-badge" aria-hidden="true">
+    <span class="host-pin-badge-label">PIN</span>
+    <span class="host-pin-badge-value" id="host-pin-badge-value"></span>
+  </div>
   <script>
     if (window.__jbInitialLightMode) document.body.classList.add('light-mode');
   </script>
@@ -5655,6 +5699,7 @@
       document.body.classList.toggle('ss-theme', id.startsWith('screen-ht') || id === 'screen-dsp-ht');
       if (enteringSS) generateSSChalkDoodles();
       if (id.endsWith('-over')) launchConfetti();
+      updateHostPinBadge();
     }
 
     function setHostMode(h) {
@@ -5667,6 +5712,23 @@
       updateDebateStartState();
       updateAuctionStartState();
       updateDraftBoardStartState();
+      updateHostPinBadge();
+    }
+
+    function updateHostPinBadge() {
+      const badge = document.getElementById('host-pin-badge');
+      const value = document.getElementById('host-pin-badge-value');
+      if (!badge || !value) return;
+
+      const activeScreenId = getActiveScreenId();
+      const shouldShow = !!myPin
+        && isHost
+        && activeScreenId !== 'screen-home'
+        && activeScreenId !== 'screen-spectator';
+
+      value.textContent = myPin || '';
+      badge.classList.toggle('show', shouldShow);
+      badge.setAttribute('aria-hidden', shouldShow ? 'false' : 'true');
     }
 
     let siteNoticeTimer = null;

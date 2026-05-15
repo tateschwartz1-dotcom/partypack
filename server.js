@@ -79,7 +79,17 @@ const OPENAI_API_KEY = process.env.OPENAI_API_KEY || '';
 const OPENAI_TRIVIA_MODEL = process.env.OPENAI_TRIVIA_MODEL || 'gpt-5-mini';
 const TRIVIA_API_KEY = process.env.TRIVIA_API_KEY || '';
 const DEBATE_MIN_PLAYERS = 3;
-const REJOIN_GRACE_MS = 90000;
+const REJOIN_GRACE_MS = 5 * 60 * 1000;
+const ACTIVE_REJOIN_STATES = new Set([
+  'mafia',
+  'debate',
+  'hot-takes',
+  'photo-roulette',
+  'everything-trivia',
+  'questions-challenges',
+  'auction',
+  'draft-board',
+]);
 const MAX_IMAGE_DATA_URL_LENGTH = 2_500_000;
 const ALLOWED_IMAGE_DATA_URL_PREFIXES = [
   'data:image/jpeg;base64,',
@@ -2366,9 +2376,16 @@ function isAllowedImageDataURL(dataURL) {
   return ALLOWED_IMAGE_DATA_URL_PREFIXES.some((prefix) => dataURL.startsWith(prefix));
 }
 
+function shouldHoldDisconnectedPlayer(room) {
+  return !!room && ACTIVE_REJOIN_STATES.has(room.gameState);
+}
+
 function remapPlayerId(room, oldId, newId) {
   if (oldId === newId) return;
   if (room.hostSocketId === oldId) room.hostSocketId = newId;
+  room.players?.forEach((player) => {
+    if (player.id === oldId) player.id = newId;
+  });
 
   const remapKey = (obj) => {
     if (obj && oldId in obj) { obj[newId] = obj[oldId]; delete obj[oldId]; }
@@ -5646,20 +5663,33 @@ io.on('connection', (socket) => {
 
     if (socket.data.isSpectator) return;
 
+    const holdDisconnectedPlayer = shouldHoldDisconnectedPlayer(room);
+
     // Save for potential mid-game rejoin (90s window)
     if (socket.data.name) {
       const leftName = socket.data.name;
-      room.recentlyLeft[leftName] = { oldSocketId: socket.id, leftAt: Date.now(), wasHost: !!socket.data.isHost };
+      room.recentlyLeft[leftName] = { oldSocketId: socket.id, leftAt: Date.now(), wasHost: !!socket.data.isHost, heldInPlayers: holdDisconnectedPlayer };
       setTimeout(() => {
         const currentRoom = rooms[pin];
         const entry = currentRoom?.recentlyLeft?.[leftName];
         if (!currentRoom || !entry || entry.oldSocketId !== socket.id) return;
         delete currentRoom.recentlyLeft[leftName];
 
+        currentRoom.players = currentRoom.players.filter((p) => p.id !== socket.id);
+
         if (currentRoom.players.length === 0) {
           clearRoomTimers(currentRoom);
           delete rooms[pin];
           return;
+        }
+
+        if (entry.wasHost) {
+          const newHost = currentRoom.players[0];
+          currentRoom.hostSocketId = newHost.id;
+          const newHostSocket = io.sockets.sockets.get(newHost.id);
+          if (newHostSocket) newHostSocket.data.isHost = true;
+          io.to(newHost.id).emit('you-are-now-host');
+          io.to(pin).emit('host-changed', { newHostId: newHost.id });
         }
 
         if (currentRoom.gameState === 'debate' && currentRoom.debate) {
@@ -5712,7 +5742,13 @@ io.on('connection', (socket) => {
             emitDraftBoardState(pin);
           }
         }
+        io.to(pin).emit('player-list-updated', { players: currentRoom.players, hostId: currentRoom.hostSocketId });
       }, REJOIN_GRACE_MS);
+    }
+
+    if (holdDisconnectedPlayer) {
+      io.to(pin).emit('player-list-updated', { players: room.players, hostId: room.hostSocketId });
+      return;
     }
 
     // Host is now a player too — remove from players list
